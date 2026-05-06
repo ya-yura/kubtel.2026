@@ -1,0 +1,28 @@
+---
+type FaqItem = {
+  question: string;
+  answer: string;
+  priority: number;
+};
+
+type Props = {
+  items: FaqItem[];
+};
+
+const { items } = Astro.props;
+---
+
+<section class="section-pad faq-section">
+  <div class="section-heading">
+    <p class="eyebrow">FAQ</p>
+    <h2>Ответы, которые снимают тревогу</h2>
+  </div>
+  <div class="faq-list">
+    {items.map((item) => (
+      <details>
+        <summary>{item.question}</summary>
+        <p>{item.answer}</p>
+      </details>
+    ))}
+  </div>
+</section>

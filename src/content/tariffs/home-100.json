@@ -1,0 +1,24 @@
+{
+  "title": "Дом 100",
+  "slug": "home-100",
+  "audience": ["families", "remote-work"],
+  "speedDownload": 100,
+  "speedUpload": 100,
+  "priceMonth": 500,
+  "promoPrice": null,
+  "promoPeriod": null,
+  "benefitDescription": "Базовый домашний интернет для видео, учебы, рабочих созвонов и повседневных задач.",
+  "bestFor": ["квартира", "1-3 устройства", "видеозвонки", "онлайн-учеба"],
+  "includedServices": ["домашний интернет"],
+  "availableOptions": ["routerRent", "staticIp", "tvPack"],
+  "connectionPrice": null,
+  "routerRentPrice": 150,
+  "staticIpPrice": 150,
+  "isFeatured": false,
+  "sortOrder": 10,
+  "proof": {
+    "label": "Статус данных",
+    "value": "Черновой тариф, требуется сверка с коммерческими условиями Kubtel",
+    "status": "draft"
+  }
+}

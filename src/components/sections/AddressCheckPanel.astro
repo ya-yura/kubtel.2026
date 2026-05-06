@@ -1,0 +1,33 @@
+---
+type Props = {
+  title?: string;
+};
+
+const { title = "Проверьте возможность подключения" } = Astro.props;
+---
+
+<section class="address-panel section-pad" id="address-check">
+  <div>
+    <p class="eyebrow">Проверка адреса</p>
+    <h2>{title}</h2>
+    <p>
+      Первая версия отправляет адрес на ручную проверку. После подключения адресной базы этот блок будет возвращать статус автоматически.
+    </p>
+  </div>
+  <form class="lead-form" method="post">
+    <label>
+      <span>Имя</span>
+      <input name="name" type="text" autocomplete="name" placeholder="Как к вам обращаться" />
+    </label>
+    <label>
+      <span>Телефон</span>
+      <input name="phone" type="tel" autocomplete="tel" placeholder="+7" />
+    </label>
+    <label>
+      <span>Адрес</span>
+      <input name="address" type="text" autocomplete="street-address" placeholder="Улица, дом, квартира" />
+    </label>
+    <button type="submit">Отправить заявку</button>
+    <p class="form-note">Нажимая кнопку, пользователь соглашается на обработку персональных данных. Финальный юридический текст требуется согласовать.</p>
+  </form>
+</section>

@@ -1,0 +1,12 @@
+{
+  "title": "Краснодар",
+  "slug": "krasnodar",
+  "type": "city",
+  "city": "Краснодар",
+  "district": null,
+  "streets": [],
+  "houses": [],
+  "connectionStatus": "draft",
+  "availableTariffs": ["home-100", "home-300", "family-tv"],
+  "contactHint": "Введите адрес, чтобы команда Kubtel проверила возможность подключения."
+}

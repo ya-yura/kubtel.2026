@@ -1,0 +1,25 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import TariffGrid from "@components/sections/TariffGrid.astro";
+import AddressCheckPanel from "@components/sections/AddressCheckPanel.astro";
+import type { Tariff } from "@models/domain";
+
+const tariffEntries = await getCollection("tariffs");
+const tariffs = tariffEntries
+  .map((entry) => entry.data as Tariff)
+  .sort((a, b) => a.sortOrder - b.sortOrder);
+---
+
+<BaseLayout
+  title="Тарифы"
+  description="Черновая тарифная сетка Kubtel для домашнего интернета и ТВ."
+>
+  <section class="page-intro section-pad">
+    <p class="eyebrow">Тарифы Kubtel</p>
+    <h1>Понятная скорость, понятная цена, понятный следующий шаг</h1>
+    <p>Финальные цены и условия будут сверены с коммерческой командой перед публикацией.</p>
+  </section>
+  <TariffGrid tariffs={tariffs} title="Выберите базовый сценарий" lead="Каждая карточка объясняет, кому подходит тариф и какие данные еще требуют подтверждения." />
+  <AddressCheckPanel title="Проверить адрес под выбранный тариф" />
+</BaseLayout>

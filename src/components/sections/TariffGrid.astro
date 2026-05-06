@@ -1,0 +1,27 @@
+---
+import TariffCard from "@components/ui/TariffCard.astro";
+import type { Tariff } from "@models/domain";
+
+type Props = {
+  tariffs: Tariff[];
+  title?: string;
+  lead?: string;
+};
+
+const {
+  tariffs,
+  title = "Тарифы без тумана в условиях",
+  lead = "Показываем скорость, сценарии использования и стоимость до заявки."
+} = Astro.props;
+---
+
+<section class="section-pad tariffs-section">
+  <div class="section-heading">
+    <p class="eyebrow">Тарифная сетка</p>
+    <h2>{title}</h2>
+    <p>{lead}</p>
+  </div>
+  <div class="tariff-grid">
+    {tariffs.map((tariff) => <TariffCard tariff={tariff} />)}
+  </div>
+</section>

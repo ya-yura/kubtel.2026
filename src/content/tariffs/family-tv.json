@@ -1,0 +1,24 @@
+{
+  "title": "Семейный + ТВ",
+  "slug": "family-tv",
+  "audience": ["families"],
+  "speedDownload": 200,
+  "speedUpload": 200,
+  "priceMonth": 850,
+  "promoPrice": null,
+  "promoPeriod": null,
+  "benefitDescription": "Интернет и ТВ в одном предложении для семьи, фильмов, спорта и детского контента.",
+  "bestFor": ["семья", "ТВ", "кино", "детский контент"],
+  "includedServices": ["домашний интернет", "цифровое ТВ"],
+  "availableOptions": ["routerRent", "staticIp"],
+  "connectionPrice": null,
+  "routerRentPrice": 150,
+  "staticIpPrice": 150,
+  "isFeatured": false,
+  "sortOrder": 30,
+  "proof": {
+    "label": "Статус данных",
+    "value": "Черновой тариф, требуется сверка с коммерческими условиями Kubtel",
+    "status": "draft"
+  }
+}

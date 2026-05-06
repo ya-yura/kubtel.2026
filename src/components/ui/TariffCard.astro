@@ -1,0 +1,32 @@
+---
+import { formatRubles } from "@lib/format";
+import { calculateMonthlyPrice } from "@lib/pricing";
+import type { Tariff } from "@models/domain";
+
+type Props = {
+  tariff: Tariff;
+};
+
+const { tariff } = Astro.props;
+const price = calculateMonthlyPrice(tariff);
+---
+
+<article class:list={["tariff-card", { "is-featured": tariff.isFeatured }]}>
+  <div class="tariff-card-head">
+    <div>
+      <p class="eyebrow">{tariff.isFeatured ? "Рекомендуем" : "Тариф"}</p>
+      <h3>{tariff.title}</h3>
+    </div>
+    <span class="speed">{tariff.speedDownload} Мбит/с</span>
+  </div>
+  <p>{tariff.benefitDescription}</p>
+  <ul class="tag-list" aria-label="Кому подходит">
+    {tariff.bestFor.map((item) => <li>{item}</li>)}
+  </ul>
+  <div class="tariff-price">
+    <strong>{formatRubles(price.total)}</strong>
+    <span>в месяц</span>
+  </div>
+  <p class:list={["proof", tariff.proof.status]}>{tariff.proof.value}</p>
+  <a class="card-action" href={`/connect/?tariff=${tariff.slug}`}>Выбрать тариф</a>
+</article>

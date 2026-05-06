@@ -1,0 +1,24 @@
+{
+  "title": "Дом 300",
+  "slug": "home-300",
+  "audience": ["families", "gamers", "remote-work"],
+  "speedDownload": 300,
+  "speedUpload": 300,
+  "priceMonth": 700,
+  "promoPrice": null,
+  "promoPeriod": null,
+  "benefitDescription": "Скорость для 4K, удаленной работы, игр и нескольких активных устройств вечером.",
+  "bestFor": ["4K-видео", "онлайн-игры", "удаленная работа", "5+ устройств"],
+  "includedServices": ["домашний интернет"],
+  "availableOptions": ["routerRent", "staticIp", "tvPack"],
+  "connectionPrice": null,
+  "routerRentPrice": 150,
+  "staticIpPrice": 150,
+  "isFeatured": true,
+  "sortOrder": 20,
+  "proof": {
+    "label": "Статус данных",
+    "value": "Черновой тариф, требуется сверка с коммерческими условиями Kubtel",
+    "status": "draft"
+  }
+}
