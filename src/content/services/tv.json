@@ -12,5 +12,13 @@
     }
   ],
   "benefits": ["единая заявка с интернетом", "семейные сценарии", "понятная итоговая стоимость"],
-  "relatedTariffs": ["family-tv"]
+  "relatedTariffs": ["family-tv"],
+  "contentSource": {
+    "status": "needs_verification",
+    "type": "editorial_assumption",
+    "label": "Смысловая модель ТВ-предложения",
+    "checkedAt": null,
+    "responsible": "commercial",
+    "note": "Нужно подтвердить состав ТВ-пакетов, цены, оборудование и ограничения по адресу."
+  }
 }

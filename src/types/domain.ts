@@ -6,6 +6,32 @@ export type ProofPoint = {
   status: VerificationStatus;
 };
 
+export type ContentSourceType =
+  | "kubtel_team"
+  | "public_site"
+  | "legacy_site"
+  | "technical_audit"
+  | "editorial_assumption";
+
+export type ContentSource = {
+  status: VerificationStatus;
+  type: ContentSourceType;
+  label: string;
+  checkedAt: string | null;
+  responsible: string;
+  note: string;
+};
+
+export type CommercialReview = {
+  status: VerificationStatus;
+  priceStatus: VerificationStatus;
+  speedStatus: VerificationStatus;
+  optionsStatus: VerificationStatus;
+  connectionStatus: VerificationStatus;
+  requiredEvidence: string[];
+  note: string;
+};
+
 export type TariffOption = "routerRent" | "staticIp" | "tvPack";
 
 export type Tariff = {
@@ -27,6 +53,8 @@ export type Tariff = {
   isFeatured: boolean;
   sortOrder: number;
   proof: ProofPoint;
+  contentSource: ContentSource;
+  commercialReview: CommercialReview;
 };
 
 export type PriceBreakdown = {

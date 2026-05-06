@@ -12,5 +12,13 @@
     }
   ],
   "benefits": ["понятные тарифы", "локальная команда", "проверка адреса перед заявкой"],
-  "relatedTariffs": ["home-100", "home-300", "family-tv"]
+  "relatedTariffs": ["home-100", "home-300", "family-tv"],
+  "contentSource": {
+    "status": "needs_verification",
+    "type": "editorial_assumption",
+    "label": "Смысловая модель этапа 1",
+    "checkedAt": null,
+    "responsible": "content",
+    "note": "Позиционирование услуги сформулировано для прототипа и требует сверки с фактическими зонами, SLA и техническими ограничениями Kubtel."
+  }
 }

@@ -12,5 +12,13 @@
     }
   ],
   "benefits": ["удаленный доступ", "поддержка рабочих сценариев", "понятная месячная стоимость"],
-  "relatedTariffs": ["home-100", "home-300", "family-tv"]
+  "relatedTariffs": ["home-100", "home-300", "family-tv"],
+  "contentSource": {
+    "status": "draft",
+    "type": "editorial_assumption",
+    "label": "Черновое описание опции",
+    "checkedAt": null,
+    "responsible": "commercial",
+    "note": "Нужно подтвердить доступность, цену, ограничения и порядок подключения статического IP."
+  }
 }

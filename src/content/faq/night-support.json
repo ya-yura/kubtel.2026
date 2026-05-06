@@ -3,5 +3,18 @@
   "answer": "В первой версии сайта мы честно показываем сценарий обращения: пользователь оставляет заявку или использует контакт поддержки, а команда Kubtel получает обращение по установленному регламенту. Точный ночной SLA нужно подтвердить у операционной команды перед публикацией.",
   "category": "support",
   "priority": 10,
-  "relatedServices": ["internet"]
+  "relatedServices": ["internet"],
+  "proof": {
+    "label": "Статус ответа",
+    "value": "Нужен подтвержденный регламент ночной поддержки и каналов обращения",
+    "status": "needs_verification"
+  },
+  "contentSource": {
+    "status": "needs_verification",
+    "type": "editorial_assumption",
+    "label": "FAQ-тревога этапа 1",
+    "checkedAt": null,
+    "responsible": "operations",
+    "note": "Ответ можно публиковать только после сверки SLA, каналов связи и времени реакции."
+  }
 }

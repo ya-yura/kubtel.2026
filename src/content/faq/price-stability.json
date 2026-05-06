@@ -3,5 +3,18 @@
   "answer": "Финальный текст должен ссылаться только на реальные условия договора и акции. Если цена акционная, сайт обязан показывать срок действия акции и стоимость после окончания периода.",
   "category": "pricing",
   "priority": 20,
-  "relatedServices": ["internet", "tv"]
+  "relatedServices": ["internet", "tv"],
+  "proof": {
+    "label": "Статус ответа",
+    "value": "Нужны договорные условия, правила акций и цена после промопериода",
+    "status": "needs_verification"
+  },
+  "contentSource": {
+    "status": "needs_verification",
+    "type": "editorial_assumption",
+    "label": "FAQ-тревога этапа 1",
+    "checkedAt": null,
+    "responsible": "commercial",
+    "note": "Ответ не должен обещать неизменность цены без подтвержденного юридического и коммерческого основания."
+  }
 }

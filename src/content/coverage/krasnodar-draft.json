@@ -8,5 +8,13 @@
   "houses": [],
   "connectionStatus": "draft",
   "availableTariffs": ["home-100", "home-300", "family-tv"],
-  "contactHint": "Введите адрес, чтобы команда Kubtel проверила возможность подключения."
+  "contactHint": "Введите адрес, чтобы команда Kubtel проверила возможность подключения.",
+  "contentSource": {
+    "status": "draft",
+    "type": "editorial_assumption",
+    "label": "Черновой город присутствия",
+    "checkedAt": null,
+    "responsible": "coverage",
+    "note": "Нужна подтвержденная адресная база: районы, улицы, дома, ЖК, частный сектор и статусы подключения."
+  }
 }

@@ -3,5 +3,18 @@
   "answer": "Да, этот сценарий должен быть одним из ключевых для Kubtel. Пользователь вводит адрес, после чего сайт показывает доступность подключения или отправляет адрес на ручную проверку.",
   "category": "coverage",
   "priority": 30,
-  "relatedServices": ["internet"]
+  "relatedServices": ["internet"],
+  "proof": {
+    "label": "Статус ответа",
+    "value": "Нужна карта частного сектора и правила ручной проверки адреса",
+    "status": "needs_verification"
+  },
+  "contentSource": {
+    "status": "needs_verification",
+    "type": "editorial_assumption",
+    "label": "FAQ-тревога этапа 1",
+    "checkedAt": null,
+    "responsible": "coverage",
+    "note": "Финальный ответ должен учитывать реальные зоны подключения и возможные технические ограничения."
+  }
 }

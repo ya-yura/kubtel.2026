@@ -1,8 +1,12 @@
 ---
+import { getVerificationLabel } from "@lib/verification";
+import type { ProofPoint } from "@models/domain";
+
 type FaqItem = {
   question: string;
   answer: string;
   priority: number;
+  proof?: ProofPoint;
 };
 
 type Props = {
@@ -22,6 +26,11 @@ const { items } = Astro.props;
       <details>
         <summary>{item.question}</summary>
         <p>{item.answer}</p>
+        {item.proof && (
+          <p class:list={["data-status", item.proof.status]}>
+            {getVerificationLabel(item.proof.status)}: {item.proof.value}
+          </p>
+        )}
       </details>
     ))}
   </div>

@@ -20,5 +20,28 @@
     "label": "Статус данных",
     "value": "Черновой тариф, требуется сверка с коммерческими условиями Kubtel",
     "status": "draft"
+  },
+  "contentSource": {
+    "status": "draft",
+    "type": "editorial_assumption",
+    "label": "Рабочая тарифная гипотеза этапа 0",
+    "checkedAt": null,
+    "responsible": "content",
+    "note": "Название, цена, скорость и опции используются только для прототипа до получения актуальной тарифной матрицы Kubtel."
+  },
+  "commercialReview": {
+    "status": "draft",
+    "priceStatus": "draft",
+    "speedStatus": "draft",
+    "optionsStatus": "draft",
+    "connectionStatus": "needs_verification",
+    "requiredEvidence": [
+      "актуальная цена в месяц",
+      "скорость загрузки и отдачи",
+      "стоимость подключения",
+      "условия аренды роутера",
+      "стоимость статического IP"
+    ],
+    "note": "Пока нельзя использовать как публично утвержденное коммерческое предложение."
   }
 }

@@ -10,5 +10,18 @@
   ],
   "relatedTariffs": ["home-100", "home-300"],
   "targetArea": "Краснодар",
-  "ctaLabel": "Проверить адрес"
+  "ctaLabel": "Проверить адрес",
+  "proof": {
+    "label": "Статус акции",
+    "value": "Промо-механика не подтверждена коммерческой командой",
+    "status": "draft"
+  },
+  "contentSource": {
+    "status": "draft",
+    "type": "editorial_assumption",
+    "label": "Гипотеза промо этапа 1",
+    "checkedAt": null,
+    "responsible": "commercial",
+    "note": "Нужны финальные условия, период действия, ограничения, юридическая формулировка и экономика акции."
+  }
 }

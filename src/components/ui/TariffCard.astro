@@ -1,6 +1,7 @@
 ---
 import { formatRubles } from "@lib/format";
 import { calculateMonthlyPrice } from "@lib/pricing";
+import { getVerificationLabel } from "@lib/verification";
 import type { Tariff } from "@models/domain";
 
 type Props = {
@@ -27,6 +28,12 @@ const price = calculateMonthlyPrice(tariff);
     <strong>{formatRubles(price.total)}</strong>
     <span>в месяц</span>
   </div>
-  <p class:list={["proof", tariff.proof.status]}>{tariff.proof.value}</p>
+  <p class:list={["proof", tariff.proof.status]}>
+    <strong>{tariff.proof.label}:</strong>
+    {tariff.proof.value}
+  </p>
+  <p class:list={["data-status", tariff.commercialReview.status]}>
+    Коммерческие данные: {getVerificationLabel(tariff.commercialReview.status)}
+  </p>
   <a class="card-action" href={`/connect/?tariff=${tariff.slug}`}>Выбрать тариф</a>
 </article>
