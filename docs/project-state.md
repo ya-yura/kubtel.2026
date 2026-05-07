@@ -52,6 +52,7 @@
 - Этап 2 завершен как структурный UX-прототип: добавлены сценарий воронки, сравнение тарифов, расширенная форма проверки адреса, карта состояний и mobile sticky CTA.
 - UX-карта этапа 2 зафиксирована в `docs/ux-prototype.md`.
 - Этап 3 завершен как первая визуальная система: обновлены дизайн-токены, responsive-типографика без viewport-зависимого масштабирования, CTA/hover/focus/checked/invalid-состояния, контактные карточки и документ `docs/visual-system.md`.
+- QA этапа 3 зафиксирован в `docs/visual-qa.md`: 6 страниц проверены на mobile/desktop, без console errors, горизонтального overflow и мелких критичных targets.
 
 ## Активные допущения
 
@@ -128,6 +129,9 @@
 - [x] FAQ, таблица сравнения, support pathways, address states и contact cards приведены к единой системе.
 - [x] Типографика не масштабируется через viewport width.
 - [x] Учтен `prefers-reduced-motion`.
+- [x] Проведен bundled Playwright QA на 6 страницах в mobile и desktop viewport.
+- [x] Горизонтальный overflow и console errors не обнаружены.
+- [x] Контраст ключевых цветовых пар зафиксирован в `docs/visual-qa.md`.
 - [x] Сборка `npm run build` проходит без ошибок.
 - [ ] Финальные брендовые материалы Kubtel подтверждены.
 - [ ] Финальные фото, иконки или медиа-активы Kubtel получены.
