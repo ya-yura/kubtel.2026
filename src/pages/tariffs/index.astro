@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import TariffGrid from "@components/sections/TariffGrid.astro";
+import TariffComparison from "@components/sections/TariffComparison.astro";
 import AddressCheckPanel from "@components/sections/AddressCheckPanel.astro";
 import type { Tariff } from "@models/domain";
 
@@ -21,5 +22,6 @@ const tariffs = tariffEntries
     <p>Финальные цены и условия будут сверены с коммерческой командой перед публикацией.</p>
   </section>
   <TariffGrid tariffs={tariffs} title="Выберите базовый сценарий" lead="Каждая карточка объясняет, кому подходит тариф и какие данные еще требуют подтверждения." />
-  <AddressCheckPanel title="Проверить адрес под выбранный тариф" />
+  <TariffComparison tariffs={tariffs} />
+  <AddressCheckPanel tariffs={tariffs} title="Проверить адрес под выбранный тариф" />
 </BaseLayout>

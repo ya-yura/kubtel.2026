@@ -142,3 +142,86 @@
 - этап закрыт как техническая и смысловая модель, а не как подтверждение коммерческих условий.
 
 Статус: completed.
+
+### Завершен этап 2: UX-прототип
+
+Файлы:
+
+- `docs/ux-prototype.md`;
+- `docs/project-state.md`;
+- `src/components/layout/StickyCta.astro`;
+- `src/components/sections/FunnelOverview.astro`;
+- `src/components/sections/TariffComparison.astro`;
+- `src/components/sections/AddressStateMap.astro`;
+- `src/components/sections/SupportPathways.astro`;
+- `src/components/sections/AddressCheckPanel.astro`;
+- `src/components/sections/FaqList.astro`;
+- `src/components/sections/Hero.astro`;
+- `src/components/layout/Header.astro`;
+- `src/layouts/BaseLayout.astro`;
+- `src/pages/index.astro`;
+- `src/pages/tariffs/index.astro`;
+- `src/pages/connect.astro`;
+- `src/pages/support.astro`;
+- `src/styles/global.css`.
+
+Результат:
+
+- главная получила структурный сценарий подключения от адреса к заявке;
+- тарифы дополнены таблицей сравнения по скорости, цене, опциям и подключению;
+- форма проверки адреса расширена до прототипа заявки с выбором тарифа, опций и контактов;
+- страница подключения получила карту состояний адресной проверки и ошибок;
+- поддержка разделена на быстрые сценарии: авария, тарифы и новое подключение;
+- добавлен mobile sticky CTA, который ведет к проверке адреса;
+- UX-карта, состояния формы, sticky CTA и список компонентов зафиксированы в `docs/ux-prototype.md`.
+
+Проверка:
+
+- `npm run build` выполнен;
+- `astro check`: 0 ошибок, 0 предупреждений;
+- `astro build`: собрано 6 страниц;
+- локальный URL `http://127.0.0.1:4321/` отвечает 200 OK.
+
+Ограничения:
+
+- адресная проверка и отправка заявки остаются структурным прототипом до этапа бизнес-логики и интеграций;
+- фактические тарифы, зоны покрытия, SLA, контакты и юридический текст требуют подтверждения Kubtel.
+
+Статус: completed.
+
+### Завершен этап 3: визуальная система
+
+Файлы:
+
+- `docs/visual-system.md`;
+- `docs/project-state.md`;
+- `docs/implementation-log.md`;
+- `src/styles/global.css`;
+- `src/components/layout/Header.astro`;
+- `src/components/sections/AddressCheckPanel.astro`;
+- `src/pages/contacts.astro`.
+
+Результат:
+
+- зафиксирован визуальный DNA первой версии: локальная технологичность, светлая интерфейсная основа, графитовый контраст и теплый CTA;
+- глобальные стили переведены на системные дизайн-токены для цвета, радиусов, теней, сетки, состояний и responsive-слоя;
+- типографика переведена на rem/breakpoint-подход без viewport-зависимого масштабирования;
+- добавлены hover, active, focus-visible, checked, invalid и active navigation состояния;
+- тарифные карточки, таблица сравнения, FAQ, address states, support pathways, форма заявки и sticky CTA приведены к единому визуальному языку;
+- шапка получила `aria-current` для активного раздела;
+- форма заявки получила обязательные поля адреса, имени и телефона, `aria-describedby` и input mode для телефона;
+- страница контактов получила первые contact cards для сценариев подключения, поддержки и уточняемых офисных данных;
+- правила визуальной системы, палитры, контраста, микро-взаимодействий и адаптивности описаны в `docs/visual-system.md`.
+
+Проверка:
+
+- `npm run build` выполнен;
+- `astro check`: 0 ошибок, 0 предупреждений;
+- `astro build`: собрано 6 страниц.
+
+Ограничения:
+
+- финальные брендовые материалы, фотографии, иконки, контакты и офисные данные Kubtel не подтверждены;
+- визуальная система закрывает технический UI-слой, но финальный брендовый аудит нужен после получения реальных медиа и фирменных материалов.
+
+Статус: completed.

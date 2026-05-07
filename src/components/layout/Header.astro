@@ -3,8 +3,15 @@ const navItems = [
   { href: "/tariffs/", label: "Тарифы" },
   { href: "/connect/", label: "Подключение" },
   { href: "/support/", label: "Поддержка" },
-  { href: "/about/", label: "О компании" }
+  { href: "/about/", label: "О компании" },
+  { href: "/contacts/", label: "Контакты" }
 ];
+
+const currentPath = Astro.url.pathname;
+
+function isCurrentPath(href: string) {
+  return href === "/" ? currentPath === href : currentPath.startsWith(href);
+}
 ---
 
 <header class="site-header">
@@ -13,7 +20,11 @@ const navItems = [
     <span>Kubtel</span>
   </a>
   <nav class="site-nav" aria-label="Основная навигация">
-    {navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+    {navItems.map((item) => (
+      <a href={item.href} aria-current={isCurrentPath(item.href) ? "page" : undefined}>
+        {item.label}
+      </a>
+    ))}
   </nav>
-  <a class="header-action" href="/connect/">Проверить адрес</a>
+  <a class="header-action" href="/connect/#address-check">Проверить адрес</a>
 </header>

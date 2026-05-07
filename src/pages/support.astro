@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import FaqList from "@components/sections/FaqList.astro";
+import SupportPathways from "@components/sections/SupportPathways.astro";
 
 const faqEntries = await getCollection("faq");
 const faqItems = faqEntries
@@ -18,5 +19,6 @@ const faqItems = faqEntries
     <h1>Поддержка должна объяснять, а не прятаться за регламентом</h1>
     <p>Финальные SLA и каналы связи будут добавлены после сверки с операционной командой Kubtel.</p>
   </section>
+  <SupportPathways />
   <FaqList items={faqItems} />
 </BaseLayout>

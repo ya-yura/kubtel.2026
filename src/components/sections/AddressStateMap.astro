@@ -1,0 +1,45 @@
+---
+const addressStates = [
+  {
+    status: "available",
+    label: "Адрес подключается",
+    title: "Показываем тарифы и ближайший слот",
+    description: "После подтверждения адреса пользователь видит доступные тарифы, стоимость и следующий шаг заявки."
+  },
+  {
+    status: "manual",
+    label: "Нужна ручная проверка",
+    title: "Берем адрес в работу",
+    description: "Если адресной базы не хватает, заявка уходит оператору без обещания мгновенного подключения."
+  },
+  {
+    status: "unavailable",
+    label: "Пока недоступно",
+    title: "Не продаем невозможное",
+    description: "Пользователь получает честный отказ и может оставить контакт для уведомления о расширении сети."
+  },
+  {
+    status: "error",
+    label: "Адрес не распознан",
+    title: "Просим уточнить ввод",
+    description: "Форма подсвечивает улицу, дом или телефон и не отправляет пустую заявку в отдел продаж."
+  }
+];
+---
+
+<section class="section-pad state-map-section" id="address-states">
+  <div class="section-heading">
+    <p class="eyebrow">Состояния формы</p>
+    <h2>Адресная проверка не должна быть черным ящиком</h2>
+    <p>Прототип фиксирует ответы формы до интеграции с адресной базой и CRM.</p>
+  </div>
+  <div class="state-grid">
+    {addressStates.map((item) => (
+      <article class:list={["state-card", item.status]}>
+        <span>{item.label}</span>
+        <h3>{item.title}</h3>
+        <p>{item.description}</p>
+      </article>
+    ))}
+  </div>
+</section>

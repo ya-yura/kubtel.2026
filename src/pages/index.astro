@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Hero from "@components/sections/Hero.astro";
+import FunnelOverview from "@components/sections/FunnelOverview.astro";
 import TariffGrid from "@components/sections/TariffGrid.astro";
 import HumanScenarios from "@components/sections/HumanScenarios.astro";
 import FaqList from "@components/sections/FaqList.astro";
@@ -25,8 +26,9 @@ const faqItems = faqEntries
   description="Kubtel: домашний интернет, ТВ и подключение по адресу в Краснодаре."
 >
   <Hero />
+  <FunnelOverview />
   <HumanScenarios />
   <TariffGrid tariffs={tariffs} />
-  <AddressCheckPanel />
+  <AddressCheckPanel tariffs={tariffs} />
   <FaqList items={faqItems} />
 </BaseLayout>

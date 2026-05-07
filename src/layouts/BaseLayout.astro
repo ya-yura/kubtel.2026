@@ -1,6 +1,7 @@
 ---
 import Header from "@components/layout/Header.astro";
 import Footer from "@components/layout/Footer.astro";
+import StickyCta from "@components/layout/StickyCta.astro";
 import "@styles/global.css";
 
 type Props = {
@@ -26,6 +27,7 @@ const siteTitle = `${title} | Kubtel`;
     <main>
       <slot />
     </main>
+    <StickyCta />
     <Footer />
   </body>
 </html>

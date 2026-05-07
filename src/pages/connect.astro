@@ -1,6 +1,17 @@
 ---
+import { getCollection } from "astro:content";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import AddressCheckPanel from "@components/sections/AddressCheckPanel.astro";
+import AddressStateMap from "@components/sections/AddressStateMap.astro";
+import type { Tariff } from "@models/domain";
+
+const tariffEntries = await getCollection("tariffs");
+const tariffs = tariffEntries
+  .map((entry) => entry.data as Tariff)
+  .sort((a, b) => a.sortOrder - b.sortOrder);
+
+const selectedTariff = Astro.url.searchParams.get("tariff");
+const initialAddress = Astro.url.searchParams.get("address");
 ---
 
 <BaseLayout
@@ -12,5 +23,6 @@ import AddressCheckPanel from "@components/sections/AddressCheckPanel.astro";
     <h1>Проверим адрес и подберем понятный тариф</h1>
     <p>Этот сценарий станет основой конверсионной воронки: адрес, тариф, опции, заявка, уведомление отдела продаж.</p>
   </section>
-  <AddressCheckPanel />
+  <AddressCheckPanel tariffs={tariffs} selectedTariff={selectedTariff} initialAddress={initialAddress} />
+  <AddressStateMap />
 </BaseLayout>

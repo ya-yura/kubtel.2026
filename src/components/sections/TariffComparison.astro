@@ -1,0 +1,69 @@
+---
+import { formatRubles } from "@lib/format";
+import { calculateMonthlyPrice } from "@lib/pricing";
+import type { Tariff, TariffOption } from "@models/domain";
+
+type Props = {
+  tariffs: Tariff[];
+};
+
+const { tariffs } = Astro.props;
+
+const optionLabels: Record<TariffOption, string> = {
+  routerRent: "Роутер",
+  staticIp: "Статический IP",
+  tvPack: "ТВ"
+};
+---
+
+<section class="section-pad comparison-section" id="tariff-compare">
+  <div class="section-heading">
+    <p class="eyebrow">Сравнение</p>
+    <h2>Тарифы можно сравнить без звонка менеджеру</h2>
+    <p>Сетка держит рядом цену, скорость, сценарий и открытые вопросы по коммерческим данным.</p>
+  </div>
+  <div class="comparison-scroll" tabindex="0" aria-label="Таблица сравнения тарифов">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th scope="col">Тариф</th>
+          <th scope="col">Скорость</th>
+          <th scope="col">Цена</th>
+          <th scope="col">Лучше всего</th>
+          <th scope="col">Опции</th>
+          <th scope="col">Подключение</th>
+          <th scope="col">Шаг</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          tariffs.map((tariff) => {
+            const price = calculateMonthlyPrice(tariff);
+            const options = tariff.availableOptions
+              .map((option) => optionLabels[option as TariffOption])
+              .join(", ");
+            const connectionPrice =
+              tariff.connectionPrice === null
+                ? "после проверки адреса"
+                : formatRubles(tariff.connectionPrice);
+
+            return (
+              <tr>
+                <th scope="row">
+                  <strong>{tariff.title}</strong>
+                  {tariff.isFeatured && <span>Рекомендуем</span>}
+                </th>
+                <td>{tariff.speedDownload} Мбит/с</td>
+                <td>{formatRubles(price.total)} / мес.</td>
+                <td>{tariff.bestFor.slice(0, 3).join(", ")}</td>
+                <td>{options}</td>
+                <td>{connectionPrice}</td>
+                <td><a href={`/connect/?tariff=${tariff.slug}#address-check`}>Выбрать</a></td>
+              </tr>
+            );
+          })
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
