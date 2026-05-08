@@ -814,3 +814,44 @@
 - реальные коммерческие таблицы, SLA, coverage, legal texts и production CRM routing всё ещё требуют входных данных Kubtel.
 
 Статус: completed для Prompt 08; design token source of truth pending.
+
+### Выполнен Prompt 09: дизайн-токены как source of truth
+
+Файлы:
+
+- `docs/design-tokens-source-of-truth.md`;
+- `docs/project-state.md`;
+- `docs/implementation-log.md`.
+
+Контекст:
+
+- текущий `src/styles/global.css` уже содержит первый набор CSS-переменных, но primitive values, semantic roles, component states и legacy aliases смешаны в одном файле;
+- B2B-раздел добавил новые UI-состояния и proof/status-блоки, поэтому перед следующим углублением интерфейса нужен token boundary;
+- Prompt 18 будет фактической реализацией `src/design/tokens/**`, build script и generated `tokens.css`, а Prompt 09 должен подготовить архитектуру и migration checklist.
+
+Результат:
+
+- описана target file structure: `src/design/tokens/primitives.json`, `semantic.json`, `components.json`, `business.json`, `themes/light.json`, `themes/dark.json`, `scripts/build-tokens.mjs`, `src/styles/tokens.css`;
+- подготовлена token taxonomy для color, typography, spacing, radius, shadow, motion, breakpoint, z-index, layout, component и state;
+- зафиксирован naming convention: JSON dot paths и generated CSS variables с префиксом `--kb-*`;
+- описано правило backward compatibility через временные legacy aliases для текущих `--color-*`, `--radius*`, `--shadow-*`, `--max-page` и `--header-height`;
+- добавлены примеры JSON для primitives, semantic, component, business и theme tokens;
+- добавлен пример generated `tokens.css`;
+- описан build script contract для будущих `npm run tokens:build` и `npm run tokens:check`;
+- зафиксированы CMS/editor governance правила: редактор выбирает только governed variants, а не raw colors/rem/CSS;
+- подготовлены visual smoke rules и поэтапный migration checklist из `global.css`;
+- отдельно зафиксирован raw value audit по текущему `global.css`.
+
+Проверка:
+
+- текущие переменные и raw styling values сверены по `src/styles/global.css`;
+- visual principles сверены с `docs/visual-system.md`;
+- acceptance checklist Prompt 09 закрыт в `docs/design-tokens-source-of-truth.md`.
+
+Ограничения:
+
+- token source of truth пока спроектирован, но не реализован как JSON/build script/generated CSS;
+- raw values в `global.css` пока не заменены;
+- CMS `DesignTheme` governance будет детализирован в Prompt 10.
+
+Статус: completed для Prompt 09; CMS design governance pending.
