@@ -654,3 +654,33 @@
 - Prompt 06 должен спроектировать модели под Strapi-first POC, но сохранить возможность заменить Strapi на Directus через adapter.
 
 Статус: completed для Prompt 05; CMS models and adapter planning pending.
+
+### Выполнен Prompt 06: CMS-модели
+
+Файл:
+
+- `docs/cms-content-models.md`.
+
+Контекст:
+
+- после CMS ADR нужно спроектировать модели так, чтобы Strapi 5 был первым POC-target, но Astro-компоненты оставались независимыми от конкретной CMS;
+- входами стали текущие Astro content collections, domain types, lead schema, B2B IA/воронка и CMS ADR.
+
+Результат:
+
+- описана двухслойная модель: Strapi CMS layer и internal TypeScript/Zod layer;
+- зафиксирован workflow `draft -> ready_for_review -> commercial_approved -> legal_approved -> published -> archived`;
+- описаны роли admin, developer, content editor, commercial reviewer и legal reviewer;
+- для моделей Page, NavigationItem, SeoMeta, MediaAsset, ProofPoint, ContentSource, CommercialReview, Tariff, TariffOption, Service, BusinessService, BusinessSegment, BusinessSolution, BusinessOffer, BusinessCalculator, CalculatorOption, HardwareItem, SLAFeature, CaseStudy, FAQItem, CoverageArea, Promo, LeadFormVariant, LegalDocument, DesignTheme и DesignTokenSet зафиксированы поля, типы, обязательность, связи, владельцы, workflow/validation, использование в Astro и private/server-only поля;
+- подготовлены Zod-псевдосхемы для будущего `src/lib/cms/schemas.ts`;
+- описаны Strapi collection types, reusable components и разрешенные Dynamic Zones;
+- подготовлена migration map из текущих `src/content/tariffs`, `services`, `faq`, `coverage`, `promos` и `src/config/routes.ts`;
+- добавлены import order и редакторский guide для менеджеров.
+
+Ограничения:
+
+- CMS пока не поднята и не подключена;
+- Zod-схемы пока являются проектным контрактом в документации, а не кодом в `src/lib/cms`;
+- фактические коммерческие данные, SLA, legal texts и production CRM-routing по-прежнему требуют подтверждения Kubtel.
+
+Статус: completed для Prompt 06; Astro CMS integration layer pending.

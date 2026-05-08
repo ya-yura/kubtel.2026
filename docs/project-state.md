@@ -10,7 +10,7 @@
 - Git remote: `https://github.com/ya-yura/kubtel.2026.git`.
 - Локальный dev URL: `http://127.0.0.1:4321/`.
 - Текущий этап: Этап 10 - B2B, CMS и дизайн-токены.
-- Общий статус: technical launch-control completed, B2B strategy/IA/funnel completed, CMS POC decision accepted.
+- Общий статус: technical launch-control completed, B2B strategy/IA/funnel completed, CMS POC decision and content models accepted.
 
 ## Принципы ведения
 
@@ -34,7 +34,7 @@
 | 7    | SEO, производительность и доступность     | completed                               | Усилены метаданные, Schema.org, sitemap/robots, клавиатурная доступность и Lighthouse mobile проверки                                                                                           |
 | 8    | Предрелизное тестирование                 | completed                               | Предрелизный QA-контур добавлен, критичные технические дефекты исправлены, внешние launch-блокеры явно зафиксированы                                                                            |
 | 9    | Запуск и пострелизный контроль            | technical completed, production blocked | Реализованы health endpoint, launch-readiness audit, postrelease checklist, BAT-запуск и документация доступа; production DNS/SSL/CRM/Telegram/analytics/контент требуют внешнего подтверждения |
-| 10   | B2B, CMS и дизайн-токены                  | in progress                             | Подготовлен prompt pack; выполнены Prompts 01-05: B2B-аудит, позиционирование, IA, воронка и CMS ADR                                                                                            |
+| 10   | B2B, CMS и дизайн-токены                  | in progress                             | Подготовлен prompt pack; выполнены Prompts 01-06: B2B-аудит, позиционирование, IA, воронка, CMS ADR и CMS-модели                                                                                |
 
 ## Выполненные результаты
 
@@ -72,6 +72,7 @@
 - Подготовлен последовательный prompt pack `docs/b2b-cms-design-token-prompt-pack.md` для B2B, CMS и дизайн-токенов.
 - Выполнены Prompt 01-04 и зафиксированы в `docs/b2b-strategy-ia-funnel.md`: B2B-инвентаризация истины, недостающие данные, страницы для переноса, positioning statement, сегментная матрица, карта маршрутов `/business/**`, B2B-компоненты, conversion flow map, lead scoring, analytics events и CRM payload contract.
 - Выполнен Prompt 05 и зафиксирован в `docs/cms-selection-adr.md`: основным CMS POC выбран Strapi 5 self-hosted + PostgreSQL, запасным вариантом оставлен Directus self-hosted + PostgreSQL.
+- Выполнен Prompt 06 и зафиксирован в `docs/cms-content-models.md`: описаны CMS-модели, Strapi mapping, внутренние Zod-псевдосхемы, migration map из текущего `src/content/**`, import order и editorial guide.
 
 ## Активные допущения
 
@@ -90,7 +91,7 @@
 
 ## Следующий шаг
 
-Перейти к Prompt 06 из `docs/b2b-cms-design-token-prompt-pack.md`: спроектировать CMS-модели Kubtel под Strapi-first POC, сохранив источник-независимые Astro contracts и fallback на local content. Production launch-входы из этапа 9 остаются актуальными и не отменяются.
+Перейти к Prompt 07 из `docs/b2b-cms-design-token-prompt-pack.md`: спроектировать и начать реализацию Astro CMS integration layer (`src/lib/cms/`) с adapters, нормализацией, Zod validation, preview/fallback strategy и тестами. Production launch-входы из этапа 9 остаются актуальными и не отменяются.
 
 ## Чекап этапа 0
 
@@ -301,9 +302,11 @@
 - [x] Prompt 05 выполнен: CMS ADR зафиксирован в `docs/cms-selection-adr.md`.
 - [x] Основной CMS POC выбран: Strapi 5 self-hosted + PostgreSQL.
 - [x] Запасной CMS вариант выбран: Directus self-hosted + PostgreSQL.
-- [ ] CMS-модели Prompt 06 не спроектированы.
+- [x] Prompt 06 выполнен: CMS-модели зафиксированы в `docs/cms-content-models.md`.
+- [x] Для CMS-моделей определены поля, типы, обязательность, связи, владельцы редактирования, workflow, validation, Astro usage и server-only/private поля.
+- [x] Подготовлены JSON/Zod-псевдосхемы, migration map из `src/content/**` и editorial guide для менеджеров.
 - [ ] CMS не подключена к Astro.
 - [ ] B2B-раздел в коде не реализован.
 - [ ] Token source of truth не реализован.
 
-Этап 10 начат как стратегическое расширение после launch-control. Prompts 01-05 закрывают продуктовую основу B2B и CMS ADR; следующий практический шаг - CMS-модели и интеграционный слой.
+Этап 10 начат как стратегическое расширение после launch-control. Prompts 01-06 закрывают продуктовую основу B2B, CMS ADR и CMS-модели; следующий практический шаг - Astro CMS integration layer.
