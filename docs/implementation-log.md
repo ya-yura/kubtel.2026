@@ -776,3 +776,41 @@
 - Strapi runtime пока не поднят, B2B seed content живет в `src/lib/business/content.ts`.
 
 Статус: visible B2B MVP completed; deeper calculators/CMS migration pending.
+
+### Выполнен Prompt 08: миграция контента в CMS
+
+Файлы:
+
+- `docs/cms-migration-plan.md`;
+- `docs/project-state.md`;
+- `docs/implementation-log.md`.
+
+Контекст:
+
+- следующий незакрытый prompt после CMS adapter layer - подготовить перенос контента в Strapi-first CMS;
+- текущий проект уже имеет local content collections, B2B seed content, route metadata и adapter fallback, поэтому миграционный план должен связать эти источники с CMS-моделями;
+- старые публичные B2B URL `/legal/**` нужно сохранить через redirects на новые `/business/**` маршруты.
+
+Результат:
+
+- подготовлен migration checklist для текущих local JSON, `src/config/routes.ts`, `src/lib/business/content.ts`, публичного kubtel.ru и будущих коммерческих таблиц Kubtel;
+- зафиксирована URL redirect table для `/legal/** -> /business/**` с `301 Permanent`, canonical targets, source attribution, publish gates и QA;
+- описан current routes to CMS mapping для B2C и B2B страниц;
+- подготовлены model mapping details для `Page`, `NavigationItem`, `SeoMeta`, `Tariff`, `Service`, `BusinessService`, `BusinessSegment`, `BusinessOffer`, `BusinessCalculator`, `LeadFormVariant`, `LegalDocument`, `DesignTheme` и других CMS-моделей;
+- добавлен content freeze plan: editorial, commercial, legal, CMS import, preview QA, cutover и post-cutover monitoring;
+- зафиксирован CMS import order с зависимостями между моделями;
+- отдельно перечислено, что нельзя публиковать без commercial, operations/coverage и legal confirmation;
+- добавлены manual editorial QA, redirect QA, CMS import QA и rollback plan.
+
+Проверка:
+
+- план сверён с `docs/cms-content-models.md`, `docs/b2b-strategy-ia-funnel.md`, `src/content.config.ts`, `src/lib/business/content.ts` и `src/config/routes.ts`;
+- acceptance checklist Prompt 08 закрыт в `docs/cms-migration-plan.md`.
+
+Ограничения:
+
+- Strapi runtime пока не поднят и collection types не созданы в админке;
+- redirects пока описаны как контракт cutover, но не реализованы в server/reverse-proxy config;
+- реальные коммерческие таблицы, SLA, coverage, legal texts и production CRM routing всё ещё требуют входных данных Kubtel.
+
+Статус: completed для Prompt 08; design token source of truth pending.

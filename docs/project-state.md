@@ -10,7 +10,7 @@
 - Git remote: `https://github.com/ya-yura/kubtel.2026.git`.
 - Локальный dev URL: `http://127.0.0.1:4321/`.
 - Текущий этап: Этап 10 - B2B, CMS и дизайн-токены.
-- Общий статус: technical launch-control completed, B2B strategy/IA/funnel completed, CMS adapter layer implemented.
+- Общий статус: technical launch-control completed, B2B strategy/IA/funnel completed, CMS adapter layer implemented, CMS migration plan completed.
 
 ## Принципы ведения
 
@@ -34,7 +34,7 @@
 | 7    | SEO, производительность и доступность     | completed                               | Усилены метаданные, Schema.org, sitemap/robots, клавиатурная доступность и Lighthouse mobile проверки                                                                                           |
 | 8    | Предрелизное тестирование                 | completed                               | Предрелизный QA-контур добавлен, критичные технические дефекты исправлены, внешние launch-блокеры явно зафиксированы                                                                            |
 | 9    | Запуск и пострелизный контроль            | technical completed, production blocked | Реализованы health endpoint, launch-readiness audit, postrelease checklist, BAT-запуск и документация доступа; production DNS/SSL/CRM/Telegram/analytics/контент требуют внешнего подтверждения |
-| 10   | B2B, CMS и дизайн-токены                  | in progress                             | Подготовлен prompt pack; выполнены Prompts 01-07: B2B-аудит, позиционирование, IA, воронка, CMS ADR, CMS-модели и Astro CMS adapter layer                                                       |
+| 10   | B2B, CMS и дизайн-токены                  | in progress                             | Подготовлен prompt pack; выполнены Prompts 01-08: B2B-аудит, позиционирование, IA, воронка, CMS ADR, CMS-модели, Astro CMS adapter layer и CMS migration plan                                   |
 
 ## Выполненные результаты
 
@@ -75,6 +75,7 @@
 - Выполнен Prompt 06 и зафиксирован в `docs/cms-content-models.md`: описаны CMS-модели, Strapi mapping, внутренние Zod-псевдосхемы, migration map из текущего `src/content/**`, import order и editorial guide.
 - Выполнен Prompt 07 и зафиксирован в `docs/cms-integration-layer.md`: добавлен `src/lib/cms/` с source-independent adapter interface, local content adapter, Strapi adapter, Zod validation, normalizers, cache/preview/fallback strategy и тестами.
 - После замечания пользователя о невидимости результата добавлен первый видимый B2B-раздел в коде: `/business/`, сервисные и сегментные страницы, `/business/request/`, навигация, sitemap metadata, mobile sticky CTA и серверная B2B-заявка с outbox fallback.
+- Выполнен Prompt 08 и зафиксирован в `docs/cms-migration-plan.md`: подготовлены CMS migration checklist, URL redirect table для `/legal/** -> /business/**`, content freeze plan, CMS import order, список данных без права публикации и ручной QA для редакторов.
 
 ## Активные допущения
 
@@ -93,7 +94,7 @@
 
 ## Следующий шаг
 
-Перейти к Prompt 08 из `docs/b2b-cms-design-token-prompt-pack.md`: подготовить план миграции контента в Strapi-first CMS, URL redirect table, content freeze plan, import order и QA checklist. Production launch-входы из этапа 9 остаются актуальными и не отменяются.
+Перейти к Prompt 09 из `docs/b2b-cms-design-token-prompt-pack.md`: спроектировать дизайн-токены как source of truth, naming convention, JSON token taxonomy, generated CSS example и migration checklist из `global.css`. Production launch-входы из этапа 9 остаются актуальными и не отменяются.
 
 ## Чекап этапа 0
 
@@ -314,8 +315,10 @@
 - [x] Добавлен видимый B2B-раздел: `/business/`, `/business/internet/`, `/business/telephony/`, `/business/cctv/`, `/business/wifi-auth/`, `/business/vps/`, `/business/vdi/`, `/business/colocation/`, `/business/datacenter-access/`, `/business/smb/`, `/business/operators/`, `/business/government/`, `/business/request/`.
 - [x] B2B-раздел добавлен в header, footer, sitemap metadata и mobile sticky CTA.
 - [x] B2B-заявка отправляется через отдельный Astro Action `submitBusinessLead`, не смешивается с домашней заявкой и использует CRM/outbox fallback.
+- [x] Prompt 08 выполнен: CMS migration plan зафиксирован в `docs/cms-migration-plan.md`.
+- [x] Подготовлены URL redirect table, current routes to CMS mapping, content freeze plan, CMS import order, redirect QA и manual editorial QA.
 - [ ] Strapi runtime не поднят и не подключен к production.
 - [x] B2B-раздел в коде реализован как первый visible MVP.
 - [ ] Token source of truth не реализован.
 
-Этап 10 начат как стратегическое расширение после launch-control. Prompts 01-07 закрывают продуктовую основу B2B, CMS ADR, CMS-модели и adapter boundary; дополнительно добавлен видимый B2B MVP. Следующий практический шаг - миграция контента в CMS и углубление B2B-калькуляторов.
+Этап 10 начат как стратегическое расширение после launch-control. Prompts 01-08 закрывают продуктовую основу B2B, CMS ADR, CMS-модели, adapter boundary и план миграции в Strapi-first CMS; дополнительно добавлен видимый B2B MVP. Следующий практический шаг - дизайн-токены как source of truth и затем углубление B2B-калькуляторов.
