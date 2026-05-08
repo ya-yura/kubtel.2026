@@ -1,4 +1,4 @@
-import { getCollection } from "astro:content";
+import { createCmsAdapter } from "@lib/cms";
 import type { CoverageArea, FaqItem, Promo, Service, Tariff } from "@models/domain";
 
 function bySortOrder(a: Tariff, b: Tariff): number {
@@ -10,32 +10,23 @@ function byPriority(a: FaqItem, b: FaqItem): number {
 }
 
 export async function getTariffs(): Promise<Tariff[]> {
-  const entries = await getCollection("tariffs");
-
-  return entries.map((entry) => entry.data as Tariff).sort(bySortOrder);
+  return (await createCmsAdapter().getTariffs()).sort(bySortOrder);
 }
 
 export async function getFaqItems(options: { limit?: number } = {}): Promise<FaqItem[]> {
-  const entries = await getCollection("faq");
-  const items = entries.map((entry) => entry.data as FaqItem).sort(byPriority);
+  const items = (await createCmsAdapter().getFaqItems()).sort(byPriority);
 
   return typeof options.limit === "number" ? items.slice(0, options.limit) : items;
 }
 
 export async function getServices(): Promise<Service[]> {
-  const entries = await getCollection("services");
-
-  return entries.map((entry) => entry.data as Service);
+  return createCmsAdapter().getServices();
 }
 
 export async function getCoverageAreas(): Promise<CoverageArea[]> {
-  const entries = await getCollection("coverage");
-
-  return entries.map((entry) => entry.data as CoverageArea);
+  return createCmsAdapter().getCoverageAreas();
 }
 
 export async function getPromos(): Promise<Promo[]> {
-  const entries = await getCollection("promos");
-
-  return entries.map((entry) => entry.data as Promo);
+  return createCmsAdapter().getPromos();
 }

@@ -10,7 +10,7 @@
 - Git remote: `https://github.com/ya-yura/kubtel.2026.git`.
 - Локальный dev URL: `http://127.0.0.1:4321/`.
 - Текущий этап: Этап 10 - B2B, CMS и дизайн-токены.
-- Общий статус: technical launch-control completed, B2B strategy/IA/funnel completed, CMS POC decision and content models accepted.
+- Общий статус: technical launch-control completed, B2B strategy/IA/funnel completed, CMS adapter layer implemented.
 
 ## Принципы ведения
 
@@ -34,7 +34,7 @@
 | 7    | SEO, производительность и доступность     | completed                               | Усилены метаданные, Schema.org, sitemap/robots, клавиатурная доступность и Lighthouse mobile проверки                                                                                           |
 | 8    | Предрелизное тестирование                 | completed                               | Предрелизный QA-контур добавлен, критичные технические дефекты исправлены, внешние launch-блокеры явно зафиксированы                                                                            |
 | 9    | Запуск и пострелизный контроль            | technical completed, production blocked | Реализованы health endpoint, launch-readiness audit, postrelease checklist, BAT-запуск и документация доступа; production DNS/SSL/CRM/Telegram/analytics/контент требуют внешнего подтверждения |
-| 10   | B2B, CMS и дизайн-токены                  | in progress                             | Подготовлен prompt pack; выполнены Prompts 01-06: B2B-аудит, позиционирование, IA, воронка, CMS ADR и CMS-модели                                                                                |
+| 10   | B2B, CMS и дизайн-токены                  | in progress                             | Подготовлен prompt pack; выполнены Prompts 01-07: B2B-аудит, позиционирование, IA, воронка, CMS ADR, CMS-модели и Astro CMS adapter layer                                                       |
 
 ## Выполненные результаты
 
@@ -73,6 +73,7 @@
 - Выполнены Prompt 01-04 и зафиксированы в `docs/b2b-strategy-ia-funnel.md`: B2B-инвентаризация истины, недостающие данные, страницы для переноса, positioning statement, сегментная матрица, карта маршрутов `/business/**`, B2B-компоненты, conversion flow map, lead scoring, analytics events и CRM payload contract.
 - Выполнен Prompt 05 и зафиксирован в `docs/cms-selection-adr.md`: основным CMS POC выбран Strapi 5 self-hosted + PostgreSQL, запасным вариантом оставлен Directus self-hosted + PostgreSQL.
 - Выполнен Prompt 06 и зафиксирован в `docs/cms-content-models.md`: описаны CMS-модели, Strapi mapping, внутренние Zod-псевдосхемы, migration map из текущего `src/content/**`, import order и editorial guide.
+- Выполнен Prompt 07 и зафиксирован в `docs/cms-integration-layer.md`: добавлен `src/lib/cms/` с source-independent adapter interface, local content adapter, Strapi adapter, Zod validation, normalizers, cache/preview/fallback strategy и тестами.
 
 ## Активные допущения
 
@@ -91,7 +92,7 @@
 
 ## Следующий шаг
 
-Перейти к Prompt 07 из `docs/b2b-cms-design-token-prompt-pack.md`: спроектировать и начать реализацию Astro CMS integration layer (`src/lib/cms/`) с adapters, нормализацией, Zod validation, preview/fallback strategy и тестами. Production launch-входы из этапа 9 остаются актуальными и не отменяются.
+Перейти к Prompt 08 из `docs/b2b-cms-design-token-prompt-pack.md`: подготовить план миграции контента в Strapi-first CMS, URL redirect table, content freeze plan, import order и QA checklist. Production launch-входы из этапа 9 остаются актуальными и не отменяются.
 
 ## Чекап этапа 0
 
@@ -305,8 +306,12 @@
 - [x] Prompt 06 выполнен: CMS-модели зафиксированы в `docs/cms-content-models.md`.
 - [x] Для CMS-моделей определены поля, типы, обязательность, связи, владельцы редактирования, workflow, validation, Astro usage и server-only/private поля.
 - [x] Подготовлены JSON/Zod-псевдосхемы, migration map из `src/content/**` и editorial guide для менеджеров.
-- [ ] CMS не подключена к Astro.
+- [x] Prompt 07 выполнен: Astro CMS integration layer зафиксирован в `docs/cms-integration-layer.md` и реализован в `src/lib/cms/`.
+- [x] Добавлены `localContentAdapter`, `strapiAdapter`, adapter selection, fallback на local content, preview mode, in-memory cache и private-field stripping.
+- [x] `src/lib/content.ts` переведен на `createCmsAdapter()`, сохраняя текущий contract для существующих страниц.
+- [x] Добавлены тесты на CMS-схемы, Strapi normalizers и Strapi adapter.
+- [ ] Strapi runtime не поднят и не подключен к production.
 - [ ] B2B-раздел в коде не реализован.
 - [ ] Token source of truth не реализован.
 
-Этап 10 начат как стратегическое расширение после launch-control. Prompts 01-06 закрывают продуктовую основу B2B, CMS ADR и CMS-модели; следующий практический шаг - Astro CMS integration layer.
+Этап 10 начат как стратегическое расширение после launch-control. Prompts 01-07 закрывают продуктовую основу B2B, CMS ADR, CMS-модели и adapter boundary; следующий практический шаг - миграция контента в CMS.

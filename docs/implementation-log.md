@@ -684,3 +684,51 @@
 - фактические коммерческие данные, SLA, legal texts и production CRM-routing по-прежнему требуют подтверждения Kubtel.
 
 Статус: completed для Prompt 06; Astro CMS integration layer pending.
+
+### Выполнен Prompt 07: Astro CMS integration layer
+
+Файлы:
+
+- `src/lib/cms/types.ts`;
+- `src/lib/cms/schemas.ts`;
+- `src/lib/cms/normalizers.ts`;
+- `src/lib/cms/cms-adapter.ts`;
+- `src/lib/cms/local-content-adapter.ts`;
+- `src/lib/cms/strapi-adapter.ts`;
+- `src/lib/cms/index.ts`;
+- `src/lib/cms/*.test.ts`;
+- `src/lib/content.ts`;
+- `.env.example`;
+- `docs/cms-integration-layer.md`;
+- `docs/project-state.md`;
+- `docs/implementation-log.md`.
+
+Контекст:
+
+- после CMS-моделей нужно было ввести source-independent boundary, чтобы текущие Astro-компоненты не зависели от Strapi;
+- текущие страницы уже использовали `src/lib/content.ts`, поэтому этот файл стал стабильной фасадной точкой поверх нового `src/lib/cms/`.
+
+Результат:
+
+- добавлен `CmsAdapter` interface с local и Strapi provider-ами;
+- добавлен `localContentAdapter`, который читает текущие Astro content collections и валидирует их через Zod-схемы;
+- добавлен `strapiAdapter`, который читает Strapi REST endpoints, нормализует payload, поддерживает preview mode, bearer token и in-memory cache;
+- добавлены normalizers для Strapi entity/list shape и recursive stripping private CMS fields;
+- добавлен fallback strategy: `CMS_PROVIDER=strapi` может возвращаться к local content при `CMS_FALLBACK_TO_LOCAL=true`;
+- `src/lib/content.ts` переведен на `createCmsAdapter()`, сохранив текущие public functions для страниц;
+- `.env.example` расширен CMS-переменными;
+- добавлены тесты для схем, normalizers и Strapi adapter.
+
+Проверка:
+
+- `npm test` выполнен: 11 test files, 29 tests passed;
+- `npm run check` выполнен: 0 errors, 0 warnings, 0 hints.
+
+Ограничения:
+
+- Strapi runtime пока не поднят;
+- реальные Strapi collection API IDs и populate strategy нужно подтвердить на POC;
+- preview route и webhook invalidation будут частью следующих CMS implementation этапов;
+- B2B routes пока не реализованы, но adapter уже содержит B2B read methods.
+
+Статус: completed для Prompt 07; migration plan pending.
