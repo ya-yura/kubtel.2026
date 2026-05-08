@@ -1,7 +1,16 @@
 ---
+import { actions } from "astro:actions";
 import { formatRubles } from "@lib/format";
 import { calculateMonthlyPrice } from "@lib/pricing";
+import type { LeadActionResult } from "@lib/leads/submission";
 import type { Tariff, TariffOption } from "@models/domain";
+
+type LeadActionResultLike = {
+  data?: LeadActionResult;
+  error?: {
+    message?: string;
+  };
+};
 
 type Props = {
   title?: string;
@@ -9,6 +18,8 @@ type Props = {
   tariffs?: Tariff[];
   selectedTariff?: string | null;
   initialAddress?: string | null;
+  actionResult?: LeadActionResultLike;
+  staticPreview?: boolean;
 };
 
 const {
@@ -16,7 +27,9 @@ const {
   lead = "Первая версия отправляет адрес на ручную проверку. После подключения адресной базы этот блок будет возвращать статус автоматически.",
   tariffs = [],
   selectedTariff = null,
-  initialAddress = null
+  initialAddress = null,
+  actionResult = undefined,
+  staticPreview = false
 } = Astro.props;
 
 const optionLabels: Record<TariffOption, string> = {
@@ -27,22 +40,39 @@ const optionLabels: Record<TariffOption, string> = {
 
 const requestedTariff = tariffs.find((tariff) => tariff.slug === selectedTariff);
 const defaultTariffSlug =
-  requestedTariff?.slug ?? tariffs.find((tariff) => tariff.isFeatured)?.slug ?? tariffs[0]?.slug ?? "";
+  requestedTariff?.slug ??
+  tariffs.find((tariff) => tariff.isFeatured)?.slug ??
+  tariffs[0]?.slug ??
+  "";
 const selectedTariffData = tariffs.find((tariff) => tariff.slug === defaultTariffSlug);
 const selectedPrice = selectedTariffData ? calculateMonthlyPrice(selectedTariffData).total : null;
-const selectedPriceLabel = selectedPrice !== null ? `${formatRubles(selectedPrice)} / мес. до дополнительных опций` : "";
+const selectedPriceLabel =
+  selectedPrice !== null ? `${formatRubles(selectedPrice)} / мес. до дополнительных опций` : "";
 const availableOptions = Array.from(new Set(tariffs.flatMap((tariff) => tariff.availableOptions)));
+const formStartedAt = Date.now().toString();
+const actionData = actionResult?.data;
+const actionError = actionResult?.error;
+const formStatusId = "lead-form-status";
+const describedBy = actionData || actionError ? `lead-form-note ${formStatusId}` : "lead-form-note";
 
 function getOptionHint(option: TariffOption): string {
   const optionPrice = tariffs
-    .map((tariff) => calculateMonthlyPrice(tariff, [option]).options.find((item) => item.id === option)?.amount)
+    .map(
+      (tariff) =>
+        calculateMonthlyPrice(tariff, [option]).options.find((item) => item.id === option)?.amount
+    )
     .find((amount): amount is number => typeof amount === "number");
 
   return optionPrice ? `+${formatRubles(optionPrice)} / мес.` : "по выбранному тарифу";
 }
 ---
 
-<section class="address-panel section-pad" id="address-check" data-address-check>
+<section
+  class="address-panel section-pad"
+  id="address-check"
+  data-address-check
+  data-static-preview={staticPreview ? "true" : undefined}
+>
   <div class="address-copy">
     <p class="eyebrow">Проверка адреса</p>
     <h2>{title}</h2>
@@ -53,15 +83,54 @@ function getOptionHint(option: TariffOption): string {
       <li>Контакт</li>
       <li>Ответ оператора</li>
     </ol>
-    {selectedTariffData && selectedPrice !== null && (
-      <div class="price-summary" data-price-summary>
-        <span>Выбранный сценарий</span>
-        <strong data-price-title>{selectedTariffData.title}</strong>
-        <p data-price-value>{selectedPriceLabel}</p>
-      </div>
-    )}
+    {
+      selectedTariffData && selectedPrice !== null && (
+        <div class="price-summary" data-price-summary aria-live="polite">
+          <span>Выбранный сценарий</span>
+          <strong data-price-title>{selectedTariffData.title}</strong>
+          <p data-price-value>{selectedPriceLabel}</p>
+        </div>
+      )
+    }
   </div>
-  <form class="lead-form" id="lead-form" method="post" action="/connect/" aria-describedby="lead-form-note">
+  <form
+    class="lead-form"
+    id="lead-form"
+    method="post"
+    action={staticPreview ? "#address-check" : actions.submitLead}
+    aria-describedby={describedBy}
+  >
+    {
+      actionData && (
+        <div class="form-status is-success" id={formStatusId} role="status" tabindex="-1">
+          <strong>{actionData.message}</strong>
+          <span>Номер заявки: {actionData.leadId}</span>
+          <span>
+            {actionData.addressStatusLabel}. Тариф: {actionData.tariffTitle},{" "}
+            {formatRubles(actionData.monthlyTotal)} / мес.
+          </span>
+        </div>
+      )
+    }
+    {
+      actionError && (
+        <div class="form-status is-error" id={formStatusId} role="alert" tabindex="-1">
+          <strong>Заявка не отправлена</strong>
+          <span>
+            {actionError.message ??
+              "Проверьте телефон, адрес, тариф и согласие на обработку данных."}
+          </span>
+        </div>
+      )
+    }
+
+    <input name="sourcePath" type="hidden" value={Astro.url.pathname} />
+    <input name="formStartedAt" type="hidden" value={formStartedAt} />
+    <label class="visually-hidden">
+      <span>Оставьте это поле пустым</span>
+      <input name="website" type="text" tabindex="-1" autocomplete="off" />
+    </label>
+
     <fieldset class="form-group">
       <legend>1. Адрес подключения</legend>
       <label>
@@ -77,70 +146,104 @@ function getOptionHint(option: TariffOption): string {
       </label>
     </fieldset>
 
-    {tariffs.length > 0 && (
-      <fieldset class="form-group">
-        <legend>2. Тариф</legend>
-        <div class="choice-grid">
-          {tariffs.map((tariff) => {
-            const price = calculateMonthlyPrice(tariff);
+    {
+      tariffs.length > 0 && (
+        <fieldset class="form-group">
+          <legend>2. Тариф</legend>
+          <div class="choice-grid">
+            {tariffs.map((tariff) => {
+              const price = calculateMonthlyPrice(tariff);
 
-            return (
-              <label
-                class:list={["choice-card", { "is-selected": tariff.slug === defaultTariffSlug }]}
-                data-tariff-title={tariff.title}
-                data-tariff-price={`${formatRubles(price.total)} / мес. до дополнительных опций`}
-              >
-                <input
-                  name="tariff"
-                  type="radio"
-                  value={tariff.slug}
-                  checked={tariff.slug === defaultTariffSlug}
-                />
-                <span>
-                  <strong>{tariff.title}</strong>
-                  <small>{tariff.speedDownload} Мбит/с</small>
-                  <em>{formatRubles(price.total)} / мес.</em>
-                </span>
-              </label>
-            );
-          })}
-        </div>
-      </fieldset>
-    )}
+              return (
+                <label
+                  class:list={["choice-card", { "is-selected": tariff.slug === defaultTariffSlug }]}
+                  data-tariff-title={tariff.title}
+                  data-tariff-price={`${formatRubles(price.total)} / мес. до дополнительных опций`}
+                  data-available-options={tariff.availableOptions.join(" ")}
+                >
+                  <input
+                    name="tariff"
+                    type="radio"
+                    value={tariff.slug}
+                    checked={tariff.slug === defaultTariffSlug}
+                  />
+                  <span>
+                    <strong>{tariff.title}</strong>
+                    <small>{tariff.speedDownload} Мбит/с</small>
+                    <em>{formatRubles(price.total)} / мес.</em>
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+        </fieldset>
+      )
+    }
 
-    {availableOptions.length > 0 && (
-      <fieldset class="form-group">
-        <legend>3. Опции</legend>
-        <div class="option-grid">
-          {availableOptions.map((option) => (
-            <label>
-              <input name="options" type="checkbox" value={option} />
-              <span>
-                <strong>{optionLabels[option]}</strong>
-                <small>{getOptionHint(option)}</small>
-              </span>
-            </label>
-          ))}
-        </div>
-      </fieldset>
-    )}
+    {
+      availableOptions.length > 0 && (
+        <fieldset class="form-group">
+          <legend>3. Опции</legend>
+          <div class="option-grid">
+            {availableOptions.map((option) => {
+              const optionHint = getOptionHint(option);
+
+              return (
+                <label class="option-choice" data-option={option}>
+                  <input name="options" type="checkbox" value={option} />
+                  <span>
+                    <strong>{optionLabels[option]}</strong>
+                    <small data-option-hint data-default-hint={optionHint}>
+                      {optionHint}
+                    </small>
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+        </fieldset>
+      )
+    }
 
     <fieldset class="form-group">
       <legend>4. Контакт</legend>
       <div class="contact-grid">
         <label>
           <span>Имя</span>
-          <input name="name" type="text" autocomplete="name" placeholder="Как к вам обращаться" required />
+          <input
+            name="name"
+            type="text"
+            autocomplete="name"
+            placeholder="Как к вам обращаться"
+            required
+          />
         </label>
         <label>
           <span>Телефон</span>
-          <input name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7" required />
+          <input
+            name="phone"
+            type="tel"
+            autocomplete="tel"
+            inputmode="tel"
+            placeholder="+7"
+            required
+          />
         </label>
       </div>
     </fieldset>
 
+    <label class="consent-check">
+      <input name="consent" type="checkbox" value="true" required />
+      <span>
+        Согласен на обработку персональных данных для проверки адреса и обратного звонка.
+      </span>
+    </label>
+
     <button type="submit">Отправить заявку</button>
-    <p class="form-note" id="lead-form-note">Нажимая кнопку, пользователь соглашается на обработку персональных данных. Финальный юридический текст требуется согласовать.</p>
+    <p class="form-note" id="lead-form-note">
+      Заявка обрабатывается на сервере. Финальный юридический текст и политика персональных данных
+      требуют согласования.
+    </p>
   </form>
 </section>
 
@@ -152,7 +255,14 @@ function getOptionHint(option: TariffOption): string {
     const requestedAddress = params.get("address");
     const requestedTariff = params.get("tariff");
     const addressInput = panel.querySelector<HTMLInputElement>('input[name="address"]');
-    const tariffInputs = Array.from(panel.querySelectorAll<HTMLInputElement>('input[name="tariff"]'));
+    const formStatus = panel.querySelector<HTMLElement>("#lead-form-status");
+    const tariffInputs = Array.from(
+      panel.querySelectorAll<HTMLInputElement>('input[name="tariff"]')
+    );
+
+    if (formStatus) {
+      formStatus.focus({ preventScroll: true });
+    }
 
     if (requestedAddress && addressInput) {
       addressInput.value = requestedAddress;
@@ -161,12 +271,30 @@ function getOptionHint(option: TariffOption): string {
     const requestedInput = tariffInputs.find((input) => input.value === requestedTariff);
     if (requestedInput) {
       requestedInput.checked = true;
-      syncSelectedTariff(requestedInput);
+    }
+
+    const activeInput = requestedInput ?? tariffInputs.find((input) => input.checked);
+
+    if (activeInput) {
+      syncSelectedTariff(activeInput);
     }
 
     tariffInputs.forEach((input) => {
       input.addEventListener("change", () => syncSelectedTariff(input));
     });
+
+    const form = panel.querySelector<HTMLFormElement>("#lead-form");
+
+    if (panel.getAttribute("data-static-preview") === "true" && form) {
+      form.addEventListener("submit", (event) => {
+        if (!form.checkValidity()) {
+          return;
+        }
+
+        event.preventDefault();
+        showStaticPreviewStatus(form);
+      });
+    }
   }
 
   function syncSelectedTariff(input: HTMLInputElement) {
@@ -175,6 +303,9 @@ function getOptionHint(option: TariffOption): string {
     const summary = panel?.querySelector<HTMLElement>("[data-price-summary]");
     const title = summary?.querySelector<HTMLElement>("[data-price-title]");
     const value = summary?.querySelector<HTMLElement>("[data-price-value]");
+    const supportedOptions = new Set(
+      (choice?.dataset.availableOptions ?? "").split(" ").filter(Boolean)
+    );
 
     panel?.querySelectorAll(".choice-card").forEach((item) => item.classList.remove("is-selected"));
     choice?.classList.add("is-selected");
@@ -183,5 +314,61 @@ function getOptionHint(option: TariffOption): string {
       title.textContent = choice.dataset.tariffTitle ?? "";
       value.textContent = choice.dataset.tariffPrice ?? "";
     }
+
+    panel?.querySelectorAll<HTMLElement>("[data-option]").forEach((item) => {
+      const option = item.dataset.option ?? "";
+      const checkbox = item.querySelector<HTMLInputElement>('input[type="checkbox"]');
+      const hint = item.querySelector<HTMLElement>("[data-option-hint]");
+      const isSupported = supportedOptions.has(option);
+
+      item.classList.toggle("is-disabled", !isSupported);
+      item.setAttribute("aria-disabled", String(!isSupported));
+
+      if (checkbox) {
+        checkbox.disabled = !isSupported;
+
+        if (!isSupported) {
+          checkbox.checked = false;
+        }
+      }
+
+      if (hint) {
+        hint.textContent = isSupported
+          ? (hint.dataset.defaultHint ?? "")
+          : "Недоступно для выбранного тарифа";
+      }
+    });
+  }
+
+  function showStaticPreviewStatus(form: HTMLFormElement) {
+    const existingStatus = form.querySelector<HTMLElement>("#lead-form-status");
+    const status = existingStatus ?? document.createElement("div");
+    const tariff = form.querySelector<HTMLInputElement>('input[name="tariff"]:checked');
+    const choice = tariff?.closest(".choice-card") as HTMLElement | null;
+    const title = choice?.dataset.tariffTitle ?? "выбранный тариф";
+    const price = choice?.dataset.tariffPrice ?? "стоимость после проверки адреса";
+
+    status.className = "form-status is-success";
+    status.id = "lead-form-status";
+    status.setAttribute("role", "status");
+    status.setAttribute("tabindex", "-1");
+    status.replaceChildren(
+      createStatusLine("strong", "Демо-заявка принята в онлайн-превью."),
+      createStatusLine("span", "Для боевой отправки подключите Node-хостинг, CRM и Telegram env."),
+      createStatusLine("span", `Тариф: ${title}, ${price}.`)
+    );
+
+    if (!existingStatus) {
+      form.prepend(status);
+    }
+
+    status.focus({ preventScroll: true });
+  }
+
+  function createStatusLine(tagName: "strong" | "span", text: string) {
+    const element = document.createElement(tagName);
+    element.textContent = text;
+
+    return element;
   }
 </script>

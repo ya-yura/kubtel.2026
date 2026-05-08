@@ -1,6 +1,11 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
+import { glob } from "astro/loaders";
+import { z } from "astro/zod";
+import { tariffOptions } from "@models/domain";
 
 const verificationStatus = z.enum(["confirmed", "needs_verification", "draft"]);
+const responsibleRole = z.enum(["commercial", "operations", "coverage", "content"]);
+const tariffOption = z.enum(tariffOptions);
 const sourceType = z.enum([
   "kubtel_team",
   "public_site",
@@ -20,7 +25,7 @@ const contentSourceSchema = z.object({
   type: sourceType,
   label: z.string(),
   checkedAt: z.string().nullable(),
-  responsible: z.string(),
+  responsible: responsibleRole,
   note: z.string()
 });
 
@@ -35,7 +40,7 @@ const commercialReviewSchema = z.object({
 });
 
 const tariffCollection = defineCollection({
-  type: "data",
+  loader: glob({ pattern: "**/*.json", base: "./src/content/tariffs" }),
   schema: z.object({
     title: z.string(),
     slug: z.string(),
@@ -48,7 +53,7 @@ const tariffCollection = defineCollection({
     benefitDescription: z.string(),
     bestFor: z.array(z.string()),
     includedServices: z.array(z.string()),
-    availableOptions: z.array(z.string()),
+    availableOptions: z.array(tariffOption),
     connectionPrice: z.number().nullable(),
     routerRentPrice: z.number().nullable(),
     staticIpPrice: z.number().nullable(),
@@ -61,7 +66,7 @@ const tariffCollection = defineCollection({
 });
 
 const serviceCollection = defineCollection({
-  type: "data",
+  loader: glob({ pattern: "**/*.json", base: "./src/content/services" }),
   schema: z.object({
     title: z.string(),
     slug: z.string(),
@@ -76,7 +81,7 @@ const serviceCollection = defineCollection({
 });
 
 const faqCollection = defineCollection({
-  type: "data",
+  loader: glob({ pattern: "**/*.json", base: "./src/content/faq" }),
   schema: z.object({
     question: z.string(),
     answer: z.string(),
@@ -89,7 +94,7 @@ const faqCollection = defineCollection({
 });
 
 const coverageCollection = defineCollection({
-  type: "data",
+  loader: glob({ pattern: "**/*.json", base: "./src/content/coverage" }),
   schema: z.object({
     title: z.string(),
     slug: z.string(),
@@ -106,7 +111,7 @@ const coverageCollection = defineCollection({
 });
 
 const promoCollection = defineCollection({
-  type: "data",
+  loader: glob({ pattern: "**/*.json", base: "./src/content/promos" }),
   schema: z.object({
     title: z.string(),
     slug: z.string(),

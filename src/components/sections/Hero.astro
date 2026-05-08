@@ -1,14 +1,29 @@
+---
+import { getSitePath } from "@config/site";
+---
+
 <section class="hero section-pad">
   <div class="hero-copy">
     <p class="eyebrow">Краснодар, квартиры, ЖК и частный сектор</p>
     <h1>Интернет Kubtel для дома, работы и спокойных вечеров</h1>
     <p class="hero-lead">
-      Проверяем адрес, показываем понятные условия и передаем заявку локальной команде без лишней бюрократии.
+      Проверяем адрес, показываем понятные условия и передаем заявку локальной команде без лишней
+      бюрократии.
     </p>
-    <form class="address-inline" action="/connect/#address-check" method="get">
+    <form
+      class="address-inline"
+      action={getSitePath("/connect/#address-check")}
+      method="get"
+      aria-label="Быстрая проверка адреса"
+    >
       <label>
         <span>Адрес подключения</span>
-        <input name="address" type="text" placeholder="Улица, дом, квартира" autocomplete="street-address" />
+        <input
+          name="address"
+          type="text"
+          placeholder="Улица, дом, квартира"
+          autocomplete="street-address"
+        />
       </label>
       <button type="submit">Проверить</button>
     </form>

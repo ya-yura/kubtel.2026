@@ -1,28 +1,42 @@
 ---
-import { getCollection } from "astro:content";
+import { actions } from "astro:actions";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import AddressCheckPanel from "@components/sections/AddressCheckPanel.astro";
 import AddressStateMap from "@components/sections/AddressStateMap.astro";
-import type { Tariff } from "@models/domain";
+import { getTariffs } from "@lib/content";
+import { buildInternetServiceSchema } from "@lib/seo/schema";
 
-const tariffEntries = await getCollection("tariffs");
-const tariffs = tariffEntries
-  .map((entry) => entry.data as Tariff)
-  .sort((a, b) => a.sortOrder - b.sortOrder);
+const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
+export const prerender = false;
+
+const tariffs = await getTariffs();
 
 const selectedTariff = Astro.url.searchParams.get("tariff");
 const initialAddress = Astro.url.searchParams.get("address");
+const leadActionResult = isStaticPreview ? undefined : Astro.getActionResult(actions.submitLead);
+const pageSchema = buildInternetServiceSchema(tariffs, "/connect/");
 ---
 
 <BaseLayout
-  title="Подключение"
-  description="Проверка адреса и заявка на подключение Kubtel в Краснодаре."
+  title="Проверка адреса подключения"
+  description="Форма заявки Kubtel: адрес, тариф, опции, контакт и серверная проверка возможности подключения."
+  canonicalPath="/connect/"
+  schema={pageSchema}
 >
   <section class="page-intro section-pad">
     <p class="eyebrow">Подключение</p>
     <h1>Проверим адрес и подберем понятный тариф</h1>
-    <p>Этот сценарий станет основой конверсионной воронки: адрес, тариф, опции, заявка, уведомление отдела продаж.</p>
+    <p>
+      Этот сценарий станет основой конверсионной воронки: адрес, тариф, опции, заявка, уведомление
+      отдела продаж.
+    </p>
   </section>
-  <AddressCheckPanel tariffs={tariffs} selectedTariff={selectedTariff} initialAddress={initialAddress} />
+  <AddressCheckPanel
+    tariffs={tariffs}
+    selectedTariff={selectedTariff}
+    initialAddress={initialAddress}
+    actionResult={leadActionResult}
+    staticPreview={isStaticPreview}
+  />
   <AddressStateMap />
 </BaseLayout>

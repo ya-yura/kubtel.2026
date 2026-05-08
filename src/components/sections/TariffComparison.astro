@@ -1,6 +1,7 @@
 ---
 import { formatRubles } from "@lib/format";
 import { calculateMonthlyPrice } from "@lib/pricing";
+import { getSitePath } from "@config/site";
 import type { Tariff, TariffOption } from "@models/domain";
 
 type Props = {
@@ -58,7 +59,9 @@ const optionLabels: Record<TariffOption, string> = {
                 <td>{tariff.bestFor.slice(0, 3).join(", ")}</td>
                 <td>{options}</td>
                 <td>{connectionPrice}</td>
-                <td><a href={`/connect/?tariff=${tariff.slug}#address-check`}>Выбрать</a></td>
+                <td>
+                  <a href={getSitePath(`/connect/?tariff=${tariff.slug}#address-check`)}>Выбрать</a>
+                </td>
               </tr>
             );
           })

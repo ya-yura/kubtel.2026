@@ -1,0 +1,5 @@
+dist
+node_modules
+.astro
+dev-server*.log
+dev-server*.err

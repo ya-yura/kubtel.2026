@@ -7,14 +7,29 @@
     "dev": "astro dev --host 127.0.0.1 --port 4321",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "start": "node ./dist/server/entry.mjs",
+    "test": "vitest run",
+    "test:prelaunch": "vitest run src/lib/prelaunch",
+    "test:launch": "vitest run src/lib/launch",
+    "test:ux": "node scripts/ux-smoke.mjs",
+    "launch:check": "npm audit --omit=dev && npm run test:prelaunch && npm run test:launch && npm run check && npm run build",
+    "check": "astro check",
+    "lint": "astro check",
+    "format": "prettier --write \"src/**/*.{astro,ts,css,json}\" \"scripts/**/*.{js,mjs,ts}\" \"*.{json,mjs,md,ts}\"",
+    "format:check": "prettier --check \"src/**/*.{astro,ts,css,json}\" \"scripts/**/*.{js,mjs,ts}\" \"*.{json,mjs,md,ts}\""
   },
   "dependencies": {
-    "astro": "^5.8.0",
+    "astro": "^6.3.0",
     "zod": "^3.24.4"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.4",
-    "typescript": "^5.8.3"
+    "@astrojs/check": "^0.9.9",
+    "@astrojs/node": "^10.1.0",
+    "@types/node": "^25.6.0",
+    "lighthouse": "^12.8.2",
+    "prettier": "^3.8.3",
+    "prettier-plugin-astro": "^0.14.1",
+    "typescript": "^5.8.3",
+    "vitest": "^4.1.5"
   }
 }

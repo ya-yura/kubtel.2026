@@ -1,13 +1,6 @@
 ---
 import { getVerificationLabel } from "@lib/verification";
-import type { ProofPoint } from "@models/domain";
-
-type FaqItem = {
-  question: string;
-  answer: string;
-  priority: number;
-  proof?: ProofPoint;
-};
+import type { FaqItem } from "@models/domain";
 
 type Props = {
   items: FaqItem[];
@@ -22,16 +15,18 @@ const { items } = Astro.props;
     <h2>Ответы, которые снимают тревогу</h2>
   </div>
   <div class="faq-list">
-    {items.map((item) => (
-      <details>
-        <summary>{item.question}</summary>
-        <p>{item.answer}</p>
-        {item.proof && (
-          <p class:list={["data-status", item.proof.status]}>
-            {getVerificationLabel(item.proof.status)}: {item.proof.value}
-          </p>
-        )}
-      </details>
-    ))}
+    {
+      items.map((item) => (
+        <details>
+          <summary>{item.question}</summary>
+          <p>{item.answer}</p>
+          {item.proof && (
+            <p class:list={["data-status", item.proof.status]}>
+              {getVerificationLabel(item.proof.status)}: {item.proof.value}
+            </p>
+          )}
+        </details>
+      ))
+    }
   </div>
 </section>

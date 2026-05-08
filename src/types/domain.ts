@@ -13,12 +13,14 @@ export type ContentSourceType =
   | "technical_audit"
   | "editorial_assumption";
 
+export type ResponsibleRole = "commercial" | "operations" | "coverage" | "content";
+
 export type ContentSource = {
   status: VerificationStatus;
   type: ContentSourceType;
   label: string;
   checkedAt: string | null;
-  responsible: string;
+  responsible: ResponsibleRole;
   note: string;
 };
 
@@ -32,7 +34,9 @@ export type CommercialReview = {
   note: string;
 };
 
-export type TariffOption = "routerRent" | "staticIp" | "tvPack";
+export const tariffOptions = ["routerRent", "staticIp", "tvPack"] as const;
+
+export type TariffOption = (typeof tariffOptions)[number];
 
 export type Tariff = {
   title: string;
@@ -65,4 +69,54 @@ export type PriceBreakdown = {
     amount: number;
   }>;
   total: number;
+};
+
+export type Service = {
+  title: string;
+  slug: string;
+  category: string;
+  shortDescription: string;
+  fullDescription: string;
+  facts: ProofPoint[];
+  benefits: string[];
+  relatedTariffs: string[];
+  contentSource: ContentSource;
+};
+
+export type FaqItem = {
+  question: string;
+  answer: string;
+  category: string;
+  priority: number;
+  relatedServices: string[];
+  proof: ProofPoint;
+  contentSource: ContentSource;
+};
+
+export type CoverageArea = {
+  title: string;
+  slug: string;
+  type: "city" | "district" | "street" | "housing_complex" | "private_sector";
+  city: string;
+  district: string | null;
+  streets: string[];
+  houses: string[];
+  connectionStatus: "available" | "manual_check" | "unavailable" | "draft";
+  availableTariffs: string[];
+  contactHint: string;
+  contentSource: ContentSource;
+};
+
+export type Promo = {
+  title: string;
+  slug: string;
+  startDate: string;
+  endDate: string | null;
+  description: string;
+  conditions: string[];
+  relatedTariffs: string[];
+  targetArea: string | null;
+  ctaLabel: string;
+  proof: ProofPoint;
+  contentSource: ContentSource;
 };

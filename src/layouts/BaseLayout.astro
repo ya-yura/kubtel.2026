@@ -2,29 +2,87 @@
 import Header from "@components/layout/Header.astro";
 import Footer from "@components/layout/Footer.astro";
 import StickyCta from "@components/layout/StickyCta.astro";
+import { getAbsoluteUrl, SITE } from "@config/site";
+import { getRouteMetadata } from "@config/routes";
+import {
+  buildBaseStructuredData,
+  serializeJsonLd,
+  type JsonLdObject,
+  type PageSchemaType
+} from "@lib/seo/schema";
 import "@styles/global.css";
 
 type Props = {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
+  canonicalPath?: string;
+  noindex?: boolean;
+  pageType?: PageSchemaType;
+  schema?: JsonLdObject | JsonLdObject[];
 };
 
-const { title, description } = Astro.props;
-const siteTitle = `${title} | Kubtel`;
+const {
+  title: providedTitle,
+  description: providedDescription,
+  canonicalPath = Astro.url.pathname,
+  noindex = false,
+  pageType = "WebPage",
+  schema = []
+} = Astro.props;
+
+const normalizedCanonicalPath = canonicalPath.startsWith("/") ? canonicalPath : `/${canonicalPath}`;
+const routeMetadata = getRouteMetadata(normalizedCanonicalPath);
+const title = providedTitle ?? routeMetadata?.title ?? SITE.defaultTitle;
+const description = providedDescription ?? routeMetadata?.description ?? SITE.defaultDescription;
+const pageTitle =
+  title === SITE.defaultTitle ? SITE.defaultTitle : SITE.titleTemplate.replace("%s", title);
+const canonicalUrl = getAbsoluteUrl(normalizedCanonicalPath);
+const robotsContent = noindex ? "noindex,nofollow" : "index,follow";
+const pageSchema = buildBaseStructuredData({
+  pageType,
+  title: pageTitle,
+  description,
+  canonicalPath: normalizedCanonicalPath,
+  canonicalUrl,
+  breadcrumbLabel: routeMetadata?.label
+});
+const pageStructuredData = [...pageSchema, ...(Array.isArray(schema) ? schema : [schema])].filter(
+  Boolean
+);
 ---
 
 <!doctype html>
-<html lang="ru">
+<html lang={SITE.language}>
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
+    <meta name="robots" content={robotsContent} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content={SITE.themeColor} />
+    <meta name="application-name" content={SITE.name} />
+    <meta name="format-detection" content="telephone=no" />
     <meta name="generator" content={Astro.generator} />
-    <title>{siteTitle}</title>
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:locale" content={SITE.locale} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    {
+      pageStructuredData.map((item) => (
+        <script is:inline type="application/ld+json" set:html={serializeJsonLd(item)} />
+      ))
+    }
+    <title>{pageTitle}</title>
   </head>
   <body>
+    <a class="skip-link" href="#main-content">К основному содержимому</a>
     <Header />
-    <main>
+    <main id="main-content" tabindex="-1">
       <slot />
     </main>
     <StickyCta />

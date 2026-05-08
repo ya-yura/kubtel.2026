@@ -1,34 +1,41 @@
 ---
-import { getCollection } from "astro:content";
+import { actions } from "astro:actions";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Hero from "@components/sections/Hero.astro";
 import FunnelOverview from "@components/sections/FunnelOverview.astro";
 import TariffGrid from "@components/sections/TariffGrid.astro";
 import HumanScenarios from "@components/sections/HumanScenarios.astro";
+import ServiceCards from "@components/sections/ServiceCards.astro";
 import FaqList from "@components/sections/FaqList.astro";
 import AddressCheckPanel from "@components/sections/AddressCheckPanel.astro";
-import type { Tariff } from "@models/domain";
+import { getFaqItems, getServices, getTariffs } from "@lib/content";
+import { buildFaqSchema, buildInternetServiceSchema } from "@lib/seo/schema";
 
-const tariffEntries = await getCollection("tariffs");
-const tariffs = tariffEntries
-  .map((entry) => entry.data as Tariff)
-  .sort((a, b) => a.sortOrder - b.sortOrder);
+const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
+export const prerender = false;
 
-const faqEntries = await getCollection("faq");
-const faqItems = faqEntries
-  .map((entry) => entry.data)
-  .sort((a, b) => a.priority - b.priority)
-  .slice(0, 3);
+const tariffs = await getTariffs();
+const services = await getServices();
+const faqItems = await getFaqItems({ limit: 3 });
+const leadActionResult = isStaticPreview ? undefined : Astro.getActionResult(actions.submitLead);
+const pageSchema = [buildInternetServiceSchema(tariffs, "/"), buildFaqSchema(faqItems, "/")];
 ---
 
 <BaseLayout
   title="Интернет в Краснодаре"
   description="Kubtel: домашний интернет, ТВ и подключение по адресу в Краснодаре."
+  canonicalPath="/"
+  schema={pageSchema}
 >
   <Hero />
   <FunnelOverview />
   <HumanScenarios />
+  <ServiceCards services={services} tariffs={tariffs} />
   <TariffGrid tariffs={tariffs} />
-  <AddressCheckPanel tariffs={tariffs} />
+  <AddressCheckPanel
+    tariffs={tariffs}
+    actionResult={leadActionResult}
+    staticPreview={isStaticPreview}
+  />
   <FaqList items={faqItems} />
 </BaseLayout>

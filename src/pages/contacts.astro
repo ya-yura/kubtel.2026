@@ -1,34 +1,47 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { getSitePath } from "@config/site";
 ---
 
 <BaseLayout
-  title="Контакты"
-  description="Контакты Kubtel для подключения и поддержки."
+  title="Контакты для подключения"
+  description="Основные сценарии обращения в Kubtel: проверка адреса, поддержка и уточнение офисных контактов."
+  canonicalPath="/contacts/"
+  pageType="ContactPage"
 >
   <section class="page-intro section-pad">
     <p class="eyebrow">Контакты</p>
     <h1>Связь с Kubtel</h1>
-    <p>Телефоны, адреса офисов и режим работы будут добавлены после сверки с актуальными данными компании.</p>
+    <p>
+      Телефоны, адреса офисов и режим работы будут добавлены после сверки с актуальными данными
+      компании.
+    </p>
   </section>
   <section class="section-pad contact-cards" aria-label="Основные сценарии обращения">
     <article class="contact-card">
       <span>Подключение</span>
       <h2>Проверка адреса</h2>
-      <p>Новый клиент начинает не с общего телефона, а с адреса, тарифа и понятного следующего шага.</p>
-      <a class="card-action" href="/connect/#address-check">Проверить адрес</a>
+      <p>
+        Новый клиент начинает не с общего телефона, а с адреса, тарифа и понятного следующего шага.
+      </p>
+      <a class="card-action" href={getSitePath("/connect/#address-check")}>Проверить адрес</a>
     </article>
     <article class="contact-card">
       <span>Поддержка</span>
       <h2>Вопрос по услуге</h2>
-      <p>Аварийные обращения, тарифы и новое подключение разделены, чтобы пользователь быстрее нашел нужный путь.</p>
-      <a class="card-action" href="/support/">Перейти в поддержку</a>
+      <p>
+        Аварийные обращения, тарифы и новое подключение разделены, чтобы пользователь быстрее нашел
+        нужный путь.
+      </p>
+      <a class="card-action" href={getSitePath("/support/")}>Перейти в поддержку</a>
     </article>
     <article class="contact-card">
       <span>Офис</span>
       <h2>Данные уточняются</h2>
-      <p>Финальные адреса, режим работы и номера телефонов попадут сюда после подтверждения Kubtel.</p>
-      <a class="card-action" href="/about/">О компании</a>
+      <p>
+        Финальные адреса, режим работы и номера телефонов попадут сюда после подтверждения Kubtel.
+      </p>
+      <a class="card-action" href={getSitePath("/about/")}>О компании</a>
     </article>
   </section>
 </BaseLayout>

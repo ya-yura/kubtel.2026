@@ -1,0 +1,87 @@
+---
+import { getVerificationLabel } from "@lib/verification";
+import { getSitePath } from "@config/site";
+import type { Service, Tariff } from "@models/domain";
+
+type Props = {
+  services: Service[];
+  tariffs?: Tariff[];
+  title?: string;
+  lead?: string;
+};
+
+const {
+  services,
+  tariffs = [],
+  title = "Услуги собраны вокруг реальных домашних сценариев",
+  lead = "Интернет, ТВ и опции показываются как понятные задачи пользователя, а не как сухой список технических позиций."
+} = Astro.props;
+
+const categoryLabels: Record<string, string> = {
+  connectivity: "Связь",
+  media: "Медиа",
+  options: "Опции"
+};
+
+const tariffTitleBySlug = new Map(tariffs.map((tariff) => [tariff.slug, tariff.title]));
+---
+
+<section class="section-pad services-section" id="services">
+  <div class="section-heading">
+    <p class="eyebrow">Услуги</p>
+    <h2>{title}</h2>
+    <p>{lead}</p>
+  </div>
+  <div class="service-grid">
+    {
+      services.map((service) => {
+        const primaryFact = service.facts[0];
+        const relatedTariffs = service.relatedTariffs
+          .map((slug) => tariffTitleBySlug.get(slug) ?? slug)
+          .slice(0, 3);
+
+        return (
+          <article class="service-card">
+            <div class="service-card-head">
+              <span class="service-category">
+                {categoryLabels[service.category] ?? service.category}
+              </span>
+              <span class:list={["data-status", service.contentSource.status]}>
+                {getVerificationLabel(service.contentSource.status)}
+              </span>
+            </div>
+            <h3>{service.title}</h3>
+            <p>{service.shortDescription}</p>
+            <ul class="service-benefits" aria-label={`Польза услуги ${service.title}`}>
+              {service.benefits.map((benefit) => (
+                <li>{benefit}</li>
+              ))}
+            </ul>
+            {primaryFact && (
+              <p class:list={["proof", primaryFact.status]}>
+                <strong>{primaryFact.label}:</strong>
+                {primaryFact.value}
+              </p>
+            )}
+            {relatedTariffs.length > 0 && (
+              <div class="related-tariffs">
+                <span>Связанные тарифы</span>
+                <ul>
+                  {relatedTariffs.map((title) => (
+                    <li>{title}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <a
+              class="card-action"
+              href={getSitePath(`/connect/?service=${service.slug}#address-check`)}
+            >
+              Проверить адрес
+            </a>
+          </article>
+        );
+      })
+    }
+  </div>
+</section>

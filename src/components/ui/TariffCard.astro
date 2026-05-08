@@ -2,6 +2,7 @@
 import { formatRubles } from "@lib/format";
 import { calculateMonthlyPrice } from "@lib/pricing";
 import { getVerificationLabel } from "@lib/verification";
+import { getSitePath } from "@config/site";
 import type { Tariff } from "@models/domain";
 
 type Props = {
@@ -35,5 +36,5 @@ const price = calculateMonthlyPrice(tariff);
   <p class:list={["data-status", tariff.commercialReview.status]}>
     Коммерческие данные: {getVerificationLabel(tariff.commercialReview.status)}
   </p>
-  <a class="card-action" href={`/connect/?tariff=${tariff.slug}`}>Выбрать тариф</a>
+  <a class="card-action" href={getSitePath(`/connect/?tariff=${tariff.slug}`)}>Выбрать тариф</a>
 </article>

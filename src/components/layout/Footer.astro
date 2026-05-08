@@ -1,11 +1,14 @@
+---
+import { footerNavItems } from "@config/routes";
+import { getSitePath, SITE } from "@config/site";
+---
+
 <footer class="site-footer">
   <div>
-    <strong>Kubtel</strong>
-    <p>Локальная цифровая платформа для подключения жителей Краснодара.</p>
+    <strong>{SITE.name}</strong>
+    <p>{SITE.shortDescription}</p>
   </div>
   <nav aria-label="Нижняя навигация">
-    <a href="/tariffs/">Тарифы</a>
-    <a href="/support/">Поддержка</a>
-    <a href="/contacts/">Контакты</a>
+    {footerNavItems.map((item) => <a href={getSitePath(item.href)}>{item.label}</a>)}
   </nav>
 </footer>

@@ -1,7 +1,11 @@
+---
+import { getSitePath } from "@config/site";
+---
+
 <aside class="sticky-cta" aria-label="Быстрая проверка адреса">
   <div>
     <strong>Проверить адрес</strong>
     <span>Перед выбором тарифа</span>
   </div>
-  <a href="/connect/#address-check">Начать</a>
+  <a href={getSitePath("/connect/#address-check")} aria-label="Перейти к проверке адреса">Начать</a>
 </aside>

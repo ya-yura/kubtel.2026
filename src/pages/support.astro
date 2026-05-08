@@ -1,18 +1,19 @@
 ---
-import { getCollection } from "astro:content";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import FaqList from "@components/sections/FaqList.astro";
 import SupportPathways from "@components/sections/SupportPathways.astro";
+import { getFaqItems } from "@lib/content";
+import { buildFaqSchema } from "@lib/seo/schema";
 
-const faqEntries = await getCollection("faq");
-const faqItems = faqEntries
-  .map((entry) => entry.data)
-  .sort((a, b) => a.priority - b.priority);
+const faqItems = await getFaqItems();
+const pageSchema = buildFaqSchema(faqItems, "/support/");
 ---
 
 <BaseLayout
-  title="Поддержка"
-  description="FAQ и сценарии поддержки Kubtel."
+  title="Поддержка и FAQ"
+  description="Ответы Kubtel по подключению, тарифам, частному сектору и сценариям обращения в поддержку."
+  canonicalPath="/support/"
+  schema={pageSchema}
 >
   <section class="page-intro section-pad">
     <p class="eyebrow">Поддержка</p>

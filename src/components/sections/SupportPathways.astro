@@ -1,15 +1,21 @@
+---
+import { getSitePath } from "@config/site";
+---
+
 <section class="section-pad support-pathways" id="support-pathways">
   <div class="section-heading">
     <p class="eyebrow">Поддержка</p>
     <h2>Три частых повода должны решаться с первого экрана</h2>
-    <p>Страница поддержки разделяет аварийный сценарий, вопросы по тарифам и заявку на подключение.</p>
+    <p>
+      Страница поддержки разделяет аварийный сценарий, вопросы по тарифам и заявку на подключение.
+    </p>
   </div>
   <div class="pathway-grid">
     <article>
       <span>Нет интернета</span>
       <h3>Проверка линии</h3>
       <p>Пользователь сразу видит канал обращения и ожидаемый следующий ответ оператора.</p>
-      <a href="/contacts/">Связаться</a>
+      <a href={getSitePath("/contacts/")}>Связаться</a>
     </article>
     <article>
       <span>Тариф и оплата</span>
@@ -21,7 +27,7 @@
       <span>Новое подключение</span>
       <h3>Проверка адреса</h3>
       <p>Потенциальный клиент не ищет форму по сайту, а сразу переходит в основную воронку.</p>
-      <a href="/connect/#address-check">Проверить адрес</a>
+      <a href={getSitePath("/connect/#address-check")}>Проверить адрес</a>
     </article>
   </div>
 </section>

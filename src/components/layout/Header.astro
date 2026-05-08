@@ -1,11 +1,6 @@
 ---
-const navItems = [
-  { href: "/tariffs/", label: "Тарифы" },
-  { href: "/connect/", label: "Подключение" },
-  { href: "/support/", label: "Поддержка" },
-  { href: "/about/", label: "О компании" },
-  { href: "/contacts/", label: "Контакты" }
-];
+import { mainNavItems } from "@config/routes";
+import { getSitePath, SITE } from "@config/site";
 
 const currentPath = Astro.url.pathname;
 
@@ -15,16 +10,40 @@ function isCurrentPath(href: string) {
 ---
 
 <header class="site-header">
-  <a class="brand" href="/" aria-label="Kubtel, на главную">
+  <a class="brand" href={getSitePath("/")} aria-label={`${SITE.name}, на главную`}>
     <span class="brand-mark">K</span>
-    <span>Kubtel</span>
+    <span>{SITE.name}</span>
   </a>
   <nav class="site-nav" aria-label="Основная навигация">
-    {navItems.map((item) => (
-      <a href={item.href} aria-current={isCurrentPath(item.href) ? "page" : undefined}>
-        {item.label}
-      </a>
-    ))}
+    {
+      mainNavItems.map((item) => (
+        <a
+          href={getSitePath(item.href)}
+          aria-current={isCurrentPath(item.href) ? "page" : undefined}
+        >
+          {item.label}
+        </a>
+      ))
+    }
   </nav>
-  <a class="header-action" href="/connect/#address-check">Проверить адрес</a>
+  <details class="mobile-nav">
+    <summary aria-label="Открыть основное меню">
+      <span class="nav-toggle-lines" aria-hidden="true"></span>
+      <span class="visually-hidden">Открыть основное меню</span>
+    </summary>
+    <nav aria-label="Мобильная навигация" id="mobile-nav-panel">
+      {
+        mainNavItems.map((item) => (
+          <a
+            href={getSitePath(item.href)}
+            aria-current={isCurrentPath(item.href) ? "page" : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+      <a class="mobile-nav-action" href={getSitePath("/connect/#address-check")}>Проверить адрес</a>
+    </nav>
+  </details>
+  <a class="header-action" href={getSitePath("/connect/#address-check")}>Проверить адрес</a>
 </header>

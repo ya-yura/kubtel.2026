@@ -1,27 +1,45 @@
 ---
-import { getCollection } from "astro:content";
+import { actions } from "astro:actions";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import TariffGrid from "@components/sections/TariffGrid.astro";
 import TariffComparison from "@components/sections/TariffComparison.astro";
 import AddressCheckPanel from "@components/sections/AddressCheckPanel.astro";
-import type { Tariff } from "@models/domain";
+import { getTariffs } from "@lib/content";
+import { buildInternetServiceSchema, buildOfferCatalogSchema } from "@lib/seo/schema";
 
-const tariffEntries = await getCollection("tariffs");
-const tariffs = tariffEntries
-  .map((entry) => entry.data as Tariff)
-  .sort((a, b) => a.sortOrder - b.sortOrder);
+const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
+export const prerender = false;
+
+const tariffs = await getTariffs();
+const leadActionResult = isStaticPreview ? undefined : Astro.getActionResult(actions.submitLead);
+const pageSchema = [
+  buildInternetServiceSchema(tariffs, "/tariffs/"),
+  buildOfferCatalogSchema(tariffs, "/tariffs/")
+];
 ---
 
 <BaseLayout
-  title="Тарифы"
-  description="Черновая тарифная сетка Kubtel для домашнего интернета и ТВ."
+  title="Тарифы домашнего интернета"
+  description="Сравнение тарифов Kubtel для квартиры, семьи, удаленной работы и ТВ с переходом к проверке адреса."
+  canonicalPath="/tariffs/"
+  pageType="CollectionPage"
+  schema={pageSchema}
 >
   <section class="page-intro section-pad">
     <p class="eyebrow">Тарифы Kubtel</p>
     <h1>Понятная скорость, понятная цена, понятный следующий шаг</h1>
     <p>Финальные цены и условия будут сверены с коммерческой командой перед публикацией.</p>
   </section>
-  <TariffGrid tariffs={tariffs} title="Выберите базовый сценарий" lead="Каждая карточка объясняет, кому подходит тариф и какие данные еще требуют подтверждения." />
+  <TariffGrid
+    tariffs={tariffs}
+    title="Выберите базовый сценарий"
+    lead="Каждая карточка объясняет, кому подходит тариф и какие данные еще требуют подтверждения."
+  />
   <TariffComparison tariffs={tariffs} />
-  <AddressCheckPanel tariffs={tariffs} title="Проверить адрес под выбранный тариф" />
+  <AddressCheckPanel
+    tariffs={tariffs}
+    title="Проверить адрес под выбранный тариф"
+    actionResult={leadActionResult}
+    staticPreview={isStaticPreview}
+  />
 </BaseLayout>
