@@ -732,3 +732,47 @@
 - B2B routes пока не реализованы, но adapter уже содержит B2B read methods.
 
 Статус: completed для Prompt 07; migration plan pending.
+
+### Добавлен видимый B2B-раздел
+
+Файлы:
+
+- `src/lib/business/content.ts`;
+- `src/pages/business/index.astro`;
+- `src/pages/business/[slug].astro`;
+- `src/pages/business/request.astro`;
+- `src/lib/leads/business-schema.ts`;
+- `src/lib/leads/business-submission.ts`;
+- `src/actions/index.ts`;
+- `src/lib/leads/outbox.ts`;
+- `src/lib/integrations/crm.ts`;
+- `src/lib/analytics/server.ts`;
+- `src/config/routes.ts`;
+- `src/components/layout/StickyCta.astro`;
+- `src/styles/global.css`;
+- `docs/project-state.md`;
+- `docs/implementation-log.md`.
+
+Контекст:
+
+- пользователь справедливо указал, что после CMS/strategy этапов не видит раздела для бизнеса на сайте;
+- вместо продолжения только документального Prompt 08 добавлен первый visible B2B MVP, чтобы `/business/**` появился в интерфейсе.
+
+Результат:
+
+- добавлен B2B hub `/business/`;
+- добавлены страницы услуг: `/business/internet/`, `/business/telephony/`, `/business/cctv/`, `/business/wifi-auth/`, `/business/vps/`, `/business/vdi/`, `/business/colocation/`, `/business/datacenter-access/`;
+- добавлены страницы сегментов: `/business/smb/`, `/business/operators/`, `/business/government/`;
+- добавлена страница `/business/request/`;
+- B2B-раздел добавлен в header, footer, sitemap metadata и mobile sticky CTA;
+- B2B-заявка обрабатывается отдельным Astro Action `submitBusinessLead`, получает `leadType=b2b`, компанию, контакт, сегмент, услугу, срочность и конфигурацию;
+- B2B-заявка отправляется в CRM webhook при наличии env, иначе сохраняется в `.lead-outbox/`;
+- B2B analytics events добавлены в server analytics type.
+
+Ограничения:
+
+- цены и SLA остаются `needs_verification`;
+- калькуляторы пока представлены как конфигурационные поля и CTA, без расчетных формул Prompt 12;
+- Strapi runtime пока не поднят, B2B seed content живет в `src/lib/business/content.ts`.
+
+Статус: visible B2B MVP completed; deeper calculators/CMS migration pending.

@@ -74,6 +74,7 @@
 - Выполнен Prompt 05 и зафиксирован в `docs/cms-selection-adr.md`: основным CMS POC выбран Strapi 5 self-hosted + PostgreSQL, запасным вариантом оставлен Directus self-hosted + PostgreSQL.
 - Выполнен Prompt 06 и зафиксирован в `docs/cms-content-models.md`: описаны CMS-модели, Strapi mapping, внутренние Zod-псевдосхемы, migration map из текущего `src/content/**`, import order и editorial guide.
 - Выполнен Prompt 07 и зафиксирован в `docs/cms-integration-layer.md`: добавлен `src/lib/cms/` с source-independent adapter interface, local content adapter, Strapi adapter, Zod validation, normalizers, cache/preview/fallback strategy и тестами.
+- После замечания пользователя о невидимости результата добавлен первый видимый B2B-раздел в коде: `/business/`, сервисные и сегментные страницы, `/business/request/`, навигация, sitemap metadata, mobile sticky CTA и серверная B2B-заявка с outbox fallback.
 
 ## Активные допущения
 
@@ -310,8 +311,11 @@
 - [x] Добавлены `localContentAdapter`, `strapiAdapter`, adapter selection, fallback на local content, preview mode, in-memory cache и private-field stripping.
 - [x] `src/lib/content.ts` переведен на `createCmsAdapter()`, сохраняя текущий contract для существующих страниц.
 - [x] Добавлены тесты на CMS-схемы, Strapi normalizers и Strapi adapter.
+- [x] Добавлен видимый B2B-раздел: `/business/`, `/business/internet/`, `/business/telephony/`, `/business/cctv/`, `/business/wifi-auth/`, `/business/vps/`, `/business/vdi/`, `/business/colocation/`, `/business/datacenter-access/`, `/business/smb/`, `/business/operators/`, `/business/government/`, `/business/request/`.
+- [x] B2B-раздел добавлен в header, footer, sitemap metadata и mobile sticky CTA.
+- [x] B2B-заявка отправляется через отдельный Astro Action `submitBusinessLead`, не смешивается с домашней заявкой и использует CRM/outbox fallback.
 - [ ] Strapi runtime не поднят и не подключен к production.
-- [ ] B2B-раздел в коде не реализован.
+- [x] B2B-раздел в коде реализован как первый visible MVP.
 - [ ] Token source of truth не реализован.
 
-Этап 10 начат как стратегическое расширение после launch-control. Prompts 01-07 закрывают продуктовую основу B2B, CMS ADR, CMS-модели и adapter boundary; следующий практический шаг - миграция контента в CMS.
+Этап 10 начат как стратегическое расширение после launch-control. Prompts 01-07 закрывают продуктовую основу B2B, CMS ADR, CMS-модели и adapter boundary; дополнительно добавлен видимый B2B MVP. Следующий практический шаг - миграция контента в CMS и углубление B2B-калькуляторов.

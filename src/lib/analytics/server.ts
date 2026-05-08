@@ -2,9 +2,16 @@ import { createHmac } from "node:crypto";
 import type { DeliveryResult } from "@lib/integrations/types";
 
 export type ServerAnalyticsEvent = {
-  name: "lead_submitted" | "lead_delivery_failed" | "lead_spam_blocked";
+  name:
+    | "lead_submitted"
+    | "lead_delivery_failed"
+    | "lead_spam_blocked"
+    | "b2b_lead_submitted"
+    | "b2b_lead_delivery_failed"
+    | "b2b_lead_spam_blocked";
   leadId?: string;
   tariff?: string;
+  serviceInterest?: string;
   addressStatus?: string;
   optionsCount?: number;
   sourcePath?: string;

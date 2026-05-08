@@ -1,0 +1,115 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getAbsoluteUrl, getSitePath } from "@config/site";
+import { businessProofStrip, businessSegments, businessServices } from "@lib/business/content";
+import type { JsonLdObject } from "@lib/seo/schema";
+
+const pageSchema: JsonLdObject = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": `${getAbsoluteUrl("/business/")}#business-services`,
+  name: "Kubtel для бизнеса",
+  serviceType: "Телеком-услуги для бизнеса",
+  areaServed: {
+    "@type": "AdministrativeArea",
+    name: "Краснодар и Краснодарский край"
+  },
+  provider: {
+    "@type": "Organization",
+    name: "Kubtel",
+    url: getAbsoluteUrl("/")
+  },
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "B2B-услуги Kubtel",
+    itemListElement: businessServices.map((service, index) => ({
+      "@type": "Offer",
+      position: index + 1,
+      name: service.title,
+      url: getAbsoluteUrl(`/business/${service.slug}/`)
+    }))
+  }
+};
+---
+
+<BaseLayout
+  title="Kubtel для бизнеса"
+  description="Интернет, телефония, видеонаблюдение, Wi-Fi авторизация, VPS, VDI и colocation для бизнеса Краснодара."
+  canonicalPath="/business/"
+  schema={pageSchema}
+>
+  <section class="business-hero section-pad">
+    <div class="business-hero-copy">
+      <p class="eyebrow">Бизнесу</p>
+      <h1>Kubtel для бизнеса: связь, сервисы и инфраструктура в Краснодаре</h1>
+      <p>
+        Отдельная B2B-ветка для офисов, точек продаж, операторов, IT-команд и учреждений:
+        корпоративный интернет, телефония, видеонаблюдение, Wi-Fi авторизация, VPS, VDI и размещение
+        оборудования.
+      </p>
+      <div class="business-actions">
+        <a class="card-action" href={getSitePath("/business/request/")}>Рассчитать решение</a>
+        <a class="business-link" href={getSitePath("/business/internet/")}>Начать с интернета</a>
+      </div>
+    </div>
+    <div class="business-hero-panel" aria-label="Ключевые факты Kubtel для бизнеса">
+      {
+        businessProofStrip.map((proof) => (
+          <article>
+            <span>{proof.label}</span>
+            <strong>{proof.value}</strong>
+            <small>{proof.status}</small>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section-pad">
+    <div class="section-heading">
+      <p class="eyebrow">Услуги</p>
+      <h2>Выберите бизнес-задачу</h2>
+      <p>Цены и SLA помечены как требующие коммерческого подтверждения до production-публикации.</p>
+    </div>
+    <div class="business-card-grid">
+      {
+        businessServices.map((service) => (
+          <article class="business-card">
+            <span class="service-category">{service.category}</span>
+            <h3>{service.title}</h3>
+            <p>{service.summary}</p>
+            <ul class="business-mini-list">
+              {service.proofPoints.slice(0, 2).map((proof) => (
+                <li>
+                  {proof.label}: {proof.value}
+                </li>
+              ))}
+            </ul>
+            <a class="card-action" href={getSitePath(`/business/${service.slug}/`)}>
+              {service.ctaLabel}
+            </a>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section-pad business-band">
+    <div class="section-heading">
+      <p class="eyebrow">Сегменты</p>
+      <h2>От точки продаж до операторской инфраструктуры</h2>
+    </div>
+    <div class="business-segment-grid">
+      {
+        businessSegments.map((segment) => (
+          <article class="business-segment-card">
+            <h3>{segment.title}</h3>
+            <p>{segment.summary}</p>
+            <strong>{segment.trigger}</strong>
+            <a href={getSitePath(`/business/${segment.slug}/`)}>{segment.ctaLabel}</a>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

@@ -1,9 +1,10 @@
 import { createHmac } from "node:crypto";
 import type { DeliveryResult } from "@lib/integrations/types";
+import type { BusinessLeadSubmission } from "@lib/leads/business-submission";
 import type { LeadSubmission } from "@lib/leads/submission";
 
 export async function sendLeadToCrm(
-  lead: LeadSubmission,
+  lead: LeadSubmission | BusinessLeadSubmission,
   env = process.env
 ): Promise<DeliveryResult> {
   const webhookUrl = env.CRM_WEBHOOK_URL;

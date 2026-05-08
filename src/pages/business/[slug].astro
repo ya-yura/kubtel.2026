@@ -1,0 +1,170 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getAbsoluteUrl, getSitePath } from "@config/site";
+import {
+  businessSegments,
+  businessServices,
+  getRelatedBusinessServices,
+  type BusinessSegment,
+  type BusinessService
+} from "@lib/business/content";
+import type { JsonLdObject } from "@lib/seo/schema";
+
+type PageEntry =
+  | { kind: "service"; entry: BusinessService }
+  | { kind: "segment"; entry: BusinessSegment };
+
+export function getStaticPaths() {
+  return [
+    ...businessServices.map((entry) => ({
+      params: { slug: entry.slug },
+      props: { kind: "service", entry } satisfies PageEntry
+    })),
+    ...businessSegments.map((entry) => ({
+      params: { slug: entry.slug },
+      props: { kind: "segment", entry } satisfies PageEntry
+    }))
+  ];
+}
+
+const { kind, entry } = Astro.props as PageEntry;
+const isService = kind === "service";
+const title = isService ? entry.seoTitle : entry.seoTitle;
+const description = isService ? entry.seoDescription : entry.seoDescription;
+const canonicalPath = `/business/${entry.slug}/`;
+const relatedServices = isService
+  ? getRelatedBusinessServices(entry.relatedServices)
+  : getRelatedBusinessServices(entry.serviceSlugs);
+const pageSchema: JsonLdObject = isService
+  ? {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "@id": `${getAbsoluteUrl(canonicalPath)}#service`,
+      name: entry.title,
+      description: entry.summary,
+      serviceType: entry.category,
+      provider: {
+        "@type": "Organization",
+        name: "Kubtel",
+        url: getAbsoluteUrl("/")
+      },
+      areaServed: {
+        "@type": "AdministrativeArea",
+        name: "Краснодар и Краснодарский край"
+      }
+    }
+  : {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "@id": `${getAbsoluteUrl(canonicalPath)}#segment`,
+      name: entry.title,
+      description: entry.summary
+    };
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalPath={canonicalPath}
+  schema={pageSchema}
+>
+  <section class="page-intro section-pad business-page-intro">
+    <p class="eyebrow">{isService ? "B2B-услуга" : "B2B-сегмент"}</p>
+    <h1>{entry.title}</h1>
+    <p>{isService ? entry.businessBenefit : entry.summary}</p>
+    <div class="business-actions">
+      <a
+        class="card-action"
+        href={getSitePath(
+          `/business/request/?${isService ? `service=${entry.slug}` : `segment=${entry.slug}`}`
+        )}
+      >
+        {isService ? entry.ctaLabel : entry.ctaLabel}
+      </a>
+      <a class="business-link" href={getSitePath("/business/")}>Все бизнес-услуги</a>
+    </div>
+  </section>
+
+  {
+    isService ? (
+      <>
+        <section class="section-pad business-detail-grid">
+          <article class="business-detail-card">
+            <p class="eyebrow">Что входит</p>
+            <h2>Параметры для расчета</h2>
+            <ul class="business-mini-list">
+              {entry.options.map((option) => (
+                <li>{option}</li>
+              ))}
+            </ul>
+          </article>
+          <article class="business-detail-card">
+            <p class="eyebrow">Конфигуратор</p>
+            <h2>Что спросим в заявке</h2>
+            <ul class="business-mini-list">
+              {entry.calculatorFields.map((field) => (
+                <li>{field}</li>
+              ))}
+            </ul>
+          </article>
+          <article class="business-detail-card">
+            <p class="eyebrow">Доказательства</p>
+            <h2>Статусы фактов</h2>
+            <div class="business-proof-list">
+              {entry.proofPoints.map((proof) => (
+                <span>
+                  <strong>{proof.label}</strong>
+                  {proof.value}
+                  <small>{proof.status}</small>
+                </span>
+              ))}
+            </div>
+          </article>
+        </section>
+      </>
+    ) : (
+      <section class="section-pad business-detail-grid">
+        <article class="business-detail-card">
+          <p class="eyebrow">Боль</p>
+          <h2>Что закрываем</h2>
+          <p>{entry.pain}</p>
+        </article>
+        <article class="business-detail-card">
+          <p class="eyebrow">Триггер</p>
+          <h2>Когда обращаться</h2>
+          <p>{entry.trigger}</p>
+        </article>
+        <article class="business-detail-card">
+          <p class="eyebrow">Поля заявки</p>
+          <h2>Что уточним</h2>
+          <ul class="business-mini-list">
+            {entry.fields.map((field) => (
+              <li>{field}</li>
+            ))}
+          </ul>
+        </article>
+      </section>
+    )
+  }
+
+  <section class="section-pad">
+    <div class="section-heading">
+      <p class="eyebrow">Связанные услуги</p>
+      <h2>Собрать решение без разрозненных заявок</h2>
+    </div>
+    <div class="business-card-grid">
+      {
+        relatedServices.map((service) => (
+          <article class="business-card">
+            <span class="service-category">{service.category}</span>
+            <h3>{service.title}</h3>
+            <p>{service.summary}</p>
+            <a class="card-action" href={getSitePath(`/business/${service.slug}/`)}>
+              {service.ctaLabel}
+            </a>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

@@ -1,11 +1,17 @@
 ---
 import { getSitePath } from "@config/site";
+
+const isBusinessPath = Astro.url.pathname.startsWith("/business/");
+const label = isBusinessPath ? "B2B-заявка" : "Проверить адрес";
+const hint = isBusinessPath ? "Для расчета услуги" : "Перед выбором тарифа";
+const href = isBusinessPath ? "/business/request/" : "/connect/#address-check";
+const actionLabel = isBusinessPath ? "Оставить" : "Начать";
 ---
 
-<aside class="sticky-cta" aria-label="Быстрая проверка адреса">
+<aside class="sticky-cta" aria-label={label}>
   <div>
-    <strong>Проверить адрес</strong>
-    <span>Перед выбором тарифа</span>
+    <strong>{label}</strong>
+    <span>{hint}</span>
   </div>
-  <a href={getSitePath("/connect/#address-check")} aria-label="Перейти к проверке адреса">Начать</a>
+  <a href={getSitePath(href)} aria-label={label}>{actionLabel}</a>
 </aside>

@@ -3,14 +3,17 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { DeliveryResult } from "@lib/integrations/types";
 import type { LeadSubmission } from "@lib/leads/submission";
+import type { BusinessLeadSubmission } from "@lib/leads/business-submission";
+
+type OutboxLead = LeadSubmission | BusinessLeadSubmission;
 
 type LeadOutboxRecord = {
-  lead: LeadSubmission;
+  lead: OutboxLead;
   delivery: DeliveryResult[];
 };
 
 export async function saveLeadToOutbox(
-  lead: LeadSubmission,
+  lead: OutboxLead,
   delivery: DeliveryResult[],
   env = process.env
 ): Promise<DeliveryResult> {

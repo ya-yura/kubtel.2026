@@ -5,6 +5,15 @@ import { sendLeadToTelegram } from "@lib/integrations/telegram";
 import type { DeliveryResult } from "@lib/integrations/types";
 import { getCoverageAreas, getTariffs } from "@lib/content";
 import { saveLeadToOutbox } from "@lib/leads/outbox";
+import {
+  businessLeadFormSchema,
+  hasHoneypotValue as hasBusinessHoneypotValue,
+  isSuspiciousSubmitSpeed as isSuspiciousBusinessSubmitSpeed
+} from "@lib/leads/business-schema";
+import {
+  buildBusinessLeadSubmission,
+  type BusinessLeadActionResult
+} from "@lib/leads/business-submission";
 import { hasHoneypotValue, isSuspiciousSubmitSpeed, leadFormSchema } from "@lib/leads/schema";
 import {
   buildLeadSubmission,
@@ -117,6 +126,80 @@ export const server = {
         tariffTitle: lead.tariff.title,
         monthlyTotal: lead.pricing.total,
         deliveryMode
+      };
+    }
+  }),
+  submitBusinessLead: defineAction({
+    accept: "form",
+    input: businessLeadFormSchema,
+    handler: async (input, context): Promise<BusinessLeadActionResult> => {
+      if (hasBusinessHoneypotValue(input) || isSuspiciousBusinessSubmitSpeed(input)) {
+        await trackServerEvent({
+          name: "b2b_lead_spam_blocked",
+          sourcePath: input.sourcePath
+        });
+
+        throw new ActionError({
+          code: "BAD_REQUEST",
+          message: "Заявку не удалось отправить. Обновите страницу и попробуйте еще раз."
+        });
+      }
+
+      const clientKey = hashRateLimitKey(`${getClientIp(context.request.headers)}:${input.phone}`);
+      const rateLimit = checkRateLimit(clientKey);
+
+      if (!rateLimit.allowed) {
+        throw new ActionError({
+          code: "TOO_MANY_REQUESTS",
+          message: `Слишком много отправок подряд. Попробуйте еще раз примерно через ${Math.ceil(
+            rateLimit.retryAfterSeconds / 60
+          )} мин.`
+        });
+      }
+
+      const lead = buildBusinessLeadSubmission({
+        input,
+        userAgent: context.request.headers.get("user-agent")
+      });
+      const crmDelivery = await sendLeadToCrm(lead);
+      const outboxResult =
+        crmDelivery.status === "sent"
+          ? createSkippedOutboxResult()
+          : await saveLeadToOutbox(lead, [crmDelivery]);
+      const allDelivery = [crmDelivery, outboxResult];
+
+      if (!allDelivery.some((result) => result.status === "sent")) {
+        await trackServerEvent({
+          name: "b2b_lead_delivery_failed",
+          leadId: lead.id,
+          sourcePath: lead.sourcePath,
+          delivery: summarizeDelivery(allDelivery)
+        });
+
+        throw new ActionError({
+          code: "INTERNAL_SERVER_ERROR",
+          message:
+            "Заявку не удалось надежно сохранить или отправить. Пожалуйста, попробуйте еще раз."
+        });
+      }
+
+      await trackServerEvent({
+        name: "b2b_lead_submitted",
+        leadId: lead.id,
+        serviceInterest: lead.qualification.serviceInterest,
+        sourcePath: lead.sourcePath,
+        delivery: summarizeDelivery(allDelivery)
+      });
+
+      return {
+        success: true,
+        leadId: lead.id,
+        message:
+          crmDelivery.status === "sent"
+            ? "B2B-заявка принята и отправлена в отдел продаж."
+            : "B2B-заявка принята и сохранена в серверный резерв до настройки CRM.",
+        serviceInterest: lead.qualification.serviceInterest,
+        deliveryMode: crmDelivery.status === "sent" ? "sent" : "reserved"
       };
     }
   })

@@ -1,0 +1,179 @@
+---
+import { actions } from "astro:actions";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import {
+  businessSegments,
+  businessServices,
+  getBusinessSegment,
+  getBusinessService
+} from "@lib/business/content";
+
+export const prerender = false;
+
+const selectedService = Astro.url.searchParams.get("service") ?? "";
+const selectedSegment = Astro.url.searchParams.get("segment") ?? "";
+const service = selectedService ? getBusinessService(selectedService) : undefined;
+const segment = selectedSegment ? getBusinessSegment(selectedSegment) : undefined;
+const contextTitle = service?.title ?? segment?.title ?? "B2B-заявка";
+const formStartedAt = Date.now().toString();
+const actionResult = Astro.getActionResult(actions.submitBusinessLead);
+const actionData = actionResult?.data;
+const actionError = actionResult?.error;
+---
+
+<BaseLayout
+  title="Заявка для бизнеса"
+  description="B2B-заявка Kubtel: компания, контакт, услуга, сегмент, срочность и конфигурация для расчета."
+  canonicalPath="/business/request/"
+  pageType="ContactPage"
+>
+  <section class="page-intro section-pad business-page-intro">
+    <p class="eyebrow">B2B-заявка</p>
+    <h1>Расскажите, что нужно подключить для бизнеса</h1>
+    <p>
+      Передайте компанию, контакт, услугу и срочность. Для неподтвержденных цен заявка уходит как
+      индивидуальный расчет.
+    </p>
+  </section>
+
+  <section class="section-pad business-request-layout">
+    <form class="business-request-form" method="post" action={actions.submitBusinessLead}>
+      {
+        actionData && (
+          <div class="form-status is-success" id="business-form-status" role="status" tabindex="-1">
+            <strong>{actionData.message}</strong>
+            <span>Номер заявки: {actionData.leadId}</span>
+          </div>
+        )
+      }
+      {
+        actionError && (
+          <div class="form-status is-error" id="business-form-status" role="alert" tabindex="-1">
+            <strong>B2B-заявка не отправлена</strong>
+            <span>{actionError.message ?? "Проверьте поля и попробуйте еще раз."}</span>
+          </div>
+        )
+      }
+      <input name="sourcePath" type="hidden" value={Astro.url.pathname} />
+      <input name="formStartedAt" type="hidden" value={formStartedAt} />
+      <label class="visually-hidden">
+        <span>Оставьте это поле пустым</span>
+        <input name="website" type="text" tabindex="-1" autocomplete="off" />
+      </label>
+      <fieldset class="form-group">
+        <legend>Компания и контакт</legend>
+        <div class="contact-grid">
+          <label>
+            Компания
+            <input
+              name="companyName"
+              type="text"
+              autocomplete="organization"
+              maxlength="160"
+              required
+            />
+          </label>
+          <label>
+            Контактное лицо
+            <input name="contactPerson" type="text" autocomplete="name" maxlength="120" required />
+          </label>
+          <label>
+            Телефон
+            <input
+              name="phone"
+              type="tel"
+              autocomplete="tel"
+              inputmode="tel"
+              maxlength="32"
+              required
+            />
+          </label>
+          <label>
+            Email
+            <input name="email" type="email" autocomplete="email" maxlength="120" />
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="form-group">
+        <legend>Задача</legend>
+        <div class="contact-grid">
+          <label>
+            Сегмент
+            <select name="segment">
+              <option value="">Выберите сегмент</option>
+              {
+                businessSegments.map((item) => (
+                  <option value={item.slug} selected={item.slug === selectedSegment}>
+                    {item.title}
+                  </option>
+                ))
+              }
+            </select>
+          </label>
+          <label>
+            Услуга
+            <select name="service" required>
+              <option value="">Выберите услугу</option>
+              {
+                businessServices.map((item) => (
+                  <option value={item.slug} selected={item.slug === selectedService}>
+                    {item.title}
+                  </option>
+                ))
+              }
+            </select>
+          </label>
+          <label>
+            Город или адрес
+            <input name="city" type="text" autocomplete="street-address" maxlength="200" />
+          </label>
+          <label>
+            Срочность
+            <select name="urgency">
+              <option value="planning">Планируем</option>
+              <option value="30_days">До 30 дней</option>
+              <option value="7_days">До 7 дней</option>
+              <option value="asap">Срочно</option>
+            </select>
+          </label>
+        </div>
+      </fieldset>
+
+      <label class="message-field">
+        Конфигурация или комментарий
+        <textarea
+          name="message"
+          rows="5"
+          maxlength="800"
+          placeholder="Например: офис на 20 сотрудников, нужен интернет 300 Мбит/с, 2 статических IP и телефония"
+        ></textarea>
+      </label>
+
+      <label class="consent-line">
+        <input type="checkbox" name="consent" required />
+        <span>Согласен на обработку данных для связи по заявке.</span>
+      </label>
+
+      <button type="submit">Отправить B2B-заявку</button>
+      <p class="form-note">
+        B2B-заявка обрабатывается отдельно от домашнего подключения. Цены и SLA уточняются после
+        коммерческой проверки.
+      </p>
+    </form>
+
+    <aside class="business-request-summary" aria-label="Контекст заявки">
+      <span class="service-category">Контекст</span>
+      <h2>{contextTitle}</h2>
+      <p>
+        Поля B2B-заявки уже отделены от домашнего подключения: компания, сегмент, услуга, срочность
+        и конфигурация.
+      </p>
+      <ul class="business-mini-list">
+        <li>Отдельная обработка бизнес-заявок</li>
+        <li>Индивидуальный расчет при неподтвержденной цене</li>
+        <li>Контекст услуги передается вместе с заявкой</li>
+      </ul>
+    </aside>
+  </section>
+</BaseLayout>
