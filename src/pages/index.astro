@@ -1,5 +1,4 @@
 ---
-import { actions } from "astro:actions";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Hero from "@components/sections/Hero.astro";
 import FunnelOverview from "@components/sections/FunnelOverview.astro";
@@ -9,6 +8,7 @@ import ServiceCards from "@components/sections/ServiceCards.astro";
 import FaqList from "@components/sections/FaqList.astro";
 import AddressCheckPanel from "@components/sections/AddressCheckPanel.astro";
 import { getFaqItems, getServices, getTariffs } from "@lib/content";
+import { handleLeadFormPost } from "@lib/leads/form-handlers";
 import { buildFaqSchema, buildInternetServiceSchema } from "@lib/seo/schema";
 
 const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
@@ -17,7 +17,10 @@ export const prerender = false;
 const tariffs = await getTariffs();
 const services = await getServices();
 const faqItems = await getFaqItems({ limit: 3 });
-const leadActionResult = isStaticPreview ? undefined : Astro.getActionResult(actions.submitLead);
+const leadActionResult =
+  !isStaticPreview && Astro.request.method === "POST"
+    ? await handleLeadFormPost(await Astro.request.formData(), Astro.request)
+    : undefined;
 const pageSchema = [buildInternetServiceSchema(tariffs, "/"), buildFaqSchema(faqItems, "/")];
 ---
 
@@ -36,6 +39,7 @@ const pageSchema = [buildInternetServiceSchema(tariffs, "/"), buildFaqSchema(faq
     tariffs={tariffs}
     actionResult={leadActionResult}
     staticPreview={isStaticPreview}
+    formAction={Astro.url.pathname}
   />
   <FaqList items={faqItems} />
 </BaseLayout>

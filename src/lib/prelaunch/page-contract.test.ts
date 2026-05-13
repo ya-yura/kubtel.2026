@@ -20,8 +20,8 @@ describe("lead form page contract", () => {
     expect(source, `${routePath} must be server-rendered by default`).toContain(
       "export const prerender = false"
     );
-    expect(source, `${routePath} must read the submitLead action result`).toContain(
-      "Astro.getActionResult(actions.submitLead)"
+    expect(source, `${routePath} must handle POST submissions on demand`).toContain(
+      "handleLeadFormPost(await Astro.request.formData(), Astro.request)"
     );
     expect(source, `${routePath} must pass actionResult into AddressCheckPanel`).toContain(
       "actionResult={leadActionResult}"

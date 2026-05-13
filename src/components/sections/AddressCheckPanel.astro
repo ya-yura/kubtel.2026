@@ -1,5 +1,4 @@
 ---
-import { actions } from "astro:actions";
 import { formatRubles } from "@lib/format";
 import { calculateMonthlyPrice } from "@lib/pricing";
 import type { LeadActionResult } from "@lib/leads/submission";
@@ -20,6 +19,7 @@ type Props = {
   initialAddress?: string | null;
   actionResult?: LeadActionResultLike;
   staticPreview?: boolean;
+  formAction?: string;
 };
 
 const {
@@ -29,7 +29,8 @@ const {
   selectedTariff = null,
   initialAddress = null,
   actionResult = undefined,
-  staticPreview = false
+  staticPreview = false,
+  formAction = "#address-check"
 } = Astro.props;
 
 const optionLabels: Record<TariffOption, string> = {
@@ -97,7 +98,7 @@ function getOptionHint(option: TariffOption): string {
     class="lead-form"
     id="lead-form"
     method="post"
-    action={staticPreview ? "#address-check" : actions.submitLead}
+    action={staticPreview ? "#address-check" : formAction}
     aria-describedby={describedBy}
   >
     {

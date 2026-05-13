@@ -1,5 +1,4 @@
 ---
-import { actions } from "astro:actions";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import {
   businessSegments,
@@ -7,7 +6,9 @@ import {
   getBusinessSegment,
   getBusinessService
 } from "@lib/business/content";
+import { handleBusinessLeadFormPost } from "@lib/leads/form-handlers";
 
+const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
 export const prerender = false;
 
 const selectedService = Astro.url.searchParams.get("service") ?? "";
@@ -16,7 +17,11 @@ const service = selectedService ? getBusinessService(selectedService) : undefine
 const segment = selectedSegment ? getBusinessSegment(selectedSegment) : undefined;
 const contextTitle = service?.title ?? segment?.title ?? "B2B-заявка";
 const formStartedAt = Date.now().toString();
-const actionResult = Astro.getActionResult(actions.submitBusinessLead);
+const actionResult = isStaticPreview
+  ? undefined
+  : Astro.request.method === "POST"
+    ? await handleBusinessLeadFormPost(await Astro.request.formData(), Astro.request)
+    : undefined;
 const actionData = actionResult?.data;
 const actionError = actionResult?.error;
 ---
@@ -36,8 +41,14 @@ const actionError = actionResult?.error;
     </p>
   </section>
 
-  <section class="section-pad business-request-layout">
-    <form class="business-request-form" method="post" action={actions.submitBusinessLead}>
+  <section class="section-pad business-request-layout" id="business-request">
+    <form
+      class="business-request-form"
+      method="post"
+      action={isStaticPreview ? "#business-request" : Astro.url.pathname}
+      data-business-request-form
+      data-static-preview={isStaticPreview ? "true" : undefined}
+    >
       {
         actionData && (
           <div class="form-status is-success" id="business-form-status" role="status" tabindex="-1">
@@ -199,3 +210,53 @@ const actionError = actionResult?.error;
     </aside>
   </section>
 </BaseLayout>
+
+<script>
+  const businessForm = document.querySelector<HTMLFormElement>("[data-business-request-form]");
+
+  if (businessForm?.dataset.staticPreview === "true") {
+    businessForm.addEventListener("submit", (event) => {
+      if (!businessForm.checkValidity()) {
+        return;
+      }
+
+      event.preventDefault();
+      showBusinessPreviewStatus(businessForm);
+    });
+  }
+
+  function showBusinessPreviewStatus(form: HTMLFormElement) {
+    const existingStatus = form.querySelector<HTMLElement>("#business-form-status");
+    const status = existingStatus ?? document.createElement("div");
+    const company =
+      form.querySelector<HTMLInputElement>('input[name="companyName"]')?.value.trim() || "Компания";
+    const service = form.querySelector<HTMLSelectElement>('select[name="service"]');
+    const serviceTitle = service?.selectedOptions[0]?.textContent?.trim() || "выбранная услуга";
+
+    status.className = "form-status is-success";
+    status.id = "business-form-status";
+    status.setAttribute("role", "status");
+    status.setAttribute("tabindex", "-1");
+    status.replaceChildren(
+      createBusinessStatusLine("strong", "Демо B2B-заявка принята в онлайн-превью."),
+      createBusinessStatusLine("span", `${company}: ${serviceTitle}.`),
+      createBusinessStatusLine(
+        "span",
+        "Для боевой отправки подключите Node-хостинг, CRM, Telegram и analytics env."
+      )
+    );
+
+    if (!existingStatus) {
+      form.prepend(status);
+    }
+
+    status.focus({ preventScroll: true });
+  }
+
+  function createBusinessStatusLine(tagName: "strong" | "span", text: string) {
+    const element = document.createElement(tagName);
+    element.textContent = text;
+
+    return element;
+  }
+</script>

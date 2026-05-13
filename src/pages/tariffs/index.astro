@@ -1,17 +1,20 @@
 ---
-import { actions } from "astro:actions";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import TariffGrid from "@components/sections/TariffGrid.astro";
 import TariffComparison from "@components/sections/TariffComparison.astro";
 import AddressCheckPanel from "@components/sections/AddressCheckPanel.astro";
 import { getTariffs } from "@lib/content";
+import { handleLeadFormPost } from "@lib/leads/form-handlers";
 import { buildInternetServiceSchema, buildOfferCatalogSchema } from "@lib/seo/schema";
 
 const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
 export const prerender = false;
 
 const tariffs = await getTariffs();
-const leadActionResult = isStaticPreview ? undefined : Astro.getActionResult(actions.submitLead);
+const leadActionResult =
+  !isStaticPreview && Astro.request.method === "POST"
+    ? await handleLeadFormPost(await Astro.request.formData(), Astro.request)
+    : undefined;
 const pageSchema = [
   buildInternetServiceSchema(tariffs, "/tariffs/"),
   buildOfferCatalogSchema(tariffs, "/tariffs/")
@@ -41,5 +44,6 @@ const pageSchema = [
     title="Проверить адрес под выбранный тариф"
     actionResult={leadActionResult}
     staticPreview={isStaticPreview}
+    formAction={Astro.url.pathname}
   />
 </BaseLayout>

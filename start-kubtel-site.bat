@@ -2,6 +2,7 @@
 setlocal
 
 cd /d "%~dp0"
+set "URL=http://127.0.0.1:4321/"
 
 echo Kubtel site launcher
 echo Project: %CD%
@@ -32,10 +33,21 @@ if not exist node_modules (
   )
 )
 
+powershell -NoProfile -ExecutionPolicy Bypass -Command "try { $r = Invoke-WebRequest -Uri '%URL%' -UseBasicParsing -TimeoutSec 2; if ($r.StatusCode -eq 200) { exit 0 } exit 1 } catch { exit 1 }" >nul 2>nul
+if not errorlevel 1 (
+  echo Local site is already running.
+  echo URL: %URL%
+  start "" "%URL%"
+  echo.
+  pause
+  exit /b 0
+)
+
 echo Starting local dev server...
-echo URL: http://127.0.0.1:4321/
+echo URL: %URL%
 echo Press Ctrl+C to stop.
 echo.
 
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 2; Start-Process '%URL%'" >nul 2>nul
 call npm run dev
 pause

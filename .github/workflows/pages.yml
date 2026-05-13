@@ -43,9 +43,7 @@ jobs:
         run: npm run format:check && npm test && npm run launch:check
 
       - name: Build static preview
-        run: |
-          node scripts/prepare-pages-preview.mjs
-          npm run build
+        run: node scripts/prepare-pages-preview.mjs
         env:
           STATIC_PREVIEW: "true"
           PUBLIC_STATIC_PREVIEW: "true"

@@ -1,9 +1,9 @@
 ---
-import { actions } from "astro:actions";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import AddressCheckPanel from "@components/sections/AddressCheckPanel.astro";
 import AddressStateMap from "@components/sections/AddressStateMap.astro";
 import { getTariffs } from "@lib/content";
+import { handleLeadFormPost } from "@lib/leads/form-handlers";
 import { buildInternetServiceSchema } from "@lib/seo/schema";
 
 const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
@@ -13,7 +13,10 @@ const tariffs = await getTariffs();
 
 const selectedTariff = Astro.url.searchParams.get("tariff");
 const initialAddress = Astro.url.searchParams.get("address");
-const leadActionResult = isStaticPreview ? undefined : Astro.getActionResult(actions.submitLead);
+const leadActionResult =
+  !isStaticPreview && Astro.request.method === "POST"
+    ? await handleLeadFormPost(await Astro.request.formData(), Astro.request)
+    : undefined;
 const pageSchema = buildInternetServiceSchema(tariffs, "/connect/");
 ---
 
@@ -37,6 +40,7 @@ const pageSchema = buildInternetServiceSchema(tariffs, "/connect/");
     initialAddress={initialAddress}
     actionResult={leadActionResult}
     staticPreview={isStaticPreview}
+    formAction={Astro.url.pathname}
   />
   <AddressStateMap />
 </BaseLayout>
