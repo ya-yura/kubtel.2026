@@ -855,3 +855,37 @@
 - CMS `DesignTheme` governance будет детализирован в Prompt 10.
 
 Статус: completed для Prompt 09; CMS design governance pending.
+
+### Детализирован Prompt 04: B2B-конверсионная воронка
+
+Файлы:
+
+- `docs/b2b-conversion-funnel.md`;
+- `docs/project-state.md`;
+- `docs/implementation-log.md`.
+
+Контекст:
+
+- пользователь отдельно запросил роль growth product lead/CRO и артефакты Prompt 04;
+- базовая воронка уже была в `docs/b2b-strategy-ia-funnel.md`, но для CRM, аналитики и будущих калькуляторов нужен отдельный прикладной контракт.
+
+Результат:
+
+- для семи B2B-воронок описаны микро-конверсия, поля формы, MQL, SQL, analytics events, CRM payload и UI тревоги;
+- воронки покрывают интернет в офис, телефонию, видеонаблюдение, VPS/VDI, colocation, Wi-Fi авторизацию и операторскую партнерскую заявку;
+- lead scoring rules расширены до score/qualification/priority;
+- analytics event map отделяет B2B-события от B2C и ограничивает client-safe payload;
+- CRM payload contract закрепляет `leadType=b2b`, `serviceInterest`, `qualification`, `configuration`, `routing` и `system.deliveryStatus`;
+- отдельно зафиксированы implementation gaps текущего MVP: `inn`, `employeesOrSites`, `address`, `configurationSummary`, estimates, scoring, routing pipelines, Telegram summary, analytics events and tests.
+
+Проверка:
+
+- документ сверён с текущей MVP-схемой `src/lib/leads/business-schema.ts` и существующим B2B Action;
+- критерий приемки закрыт на уровне продуктового и интеграционного контракта: B2B-заявки квалифицируются и измеряются отдельно от B2C.
+
+Ограничения:
+
+- scoring, расширенный payload и calculator events пока не реализованы в коде;
+- production CRM pipeline и sales SLA требуют подтверждения Kubtel.
+
+Статус: standalone Prompt 04 CRO artifact completed; engineering implementation pending in later prompts.

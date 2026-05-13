@@ -71,6 +71,7 @@
 - Выявлен стратегический пробел: текущая реализация не покрывает полноценный B2B-раздел, хотя публичный kubtel.ru содержит отдельные услуги для бизнеса.
 - Подготовлен последовательный prompt pack `docs/b2b-cms-design-token-prompt-pack.md` для B2B, CMS и дизайн-токенов.
 - Выполнены Prompt 01-04 и зафиксированы в `docs/b2b-strategy-ia-funnel.md`: B2B-инвентаризация истины, недостающие данные, страницы для переноса, positioning statement, сегментная матрица, карта маршрутов `/business/**`, B2B-компоненты, conversion flow map, lead scoring, analytics events и CRM payload contract.
+- B2B-конверсионная воронка Prompt 04 дополнительно вынесена в `docs/b2b-conversion-funnel.md`: по каждой воронке зафиксированы микро-конверсия, поля формы, MQL/SQL, analytics events, CRM payload, UI тревоги и implementation gaps текущего MVP.
 - Выполнен Prompt 05 и зафиксирован в `docs/cms-selection-adr.md`: основным CMS POC выбран Strapi 5 self-hosted + PostgreSQL, запасным вариантом оставлен Directus self-hosted + PostgreSQL.
 - Выполнен Prompt 06 и зафиксирован в `docs/cms-content-models.md`: описаны CMS-модели, Strapi mapping, внутренние Zod-псевдосхемы, migration map из текущего `src/content/**`, import order и editorial guide.
 - Выполнен Prompt 07 и зафиксирован в `docs/cms-integration-layer.md`: добавлен `src/lib/cms/` с source-independent adapter interface, local content adapter, Strapi adapter, Zod validation, normalizers, cache/preview/fallback strategy и тестами.
@@ -303,6 +304,7 @@
 - [x] Prompt 01-04 выполнены как реализационный этап и зафиксированы в `docs/b2b-strategy-ia-funnel.md`.
 - [x] Для каждой B2B-услуги зафиксированы бизнес-смысл, публичные факты, слабые места, CMS/коммерческие поля, CTA и приоритет.
 - [x] Спроектированы B2B positioning, сегментная матрица, IA маршрутов `/business/**` и отдельная B2B-конверсионная воронка.
+- [x] Prompt 04 детализирован отдельным CRO-артефактом `docs/b2b-conversion-funnel.md`: conversion flow map, lead scoring rules, analytics event map и CRM payload contract.
 - [x] Prompt 05 выполнен: CMS ADR зафиксирован в `docs/cms-selection-adr.md`.
 - [x] Основной CMS POC выбран: Strapi 5 self-hosted + PostgreSQL.
 - [x] Запасной CMS вариант выбран: Directus self-hosted + PostgreSQL.
