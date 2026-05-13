@@ -8,6 +8,8 @@
 - Добавлен фактический Chrome UX smoke: `scripts/ux-smoke.mjs`.
 - Добавлен единый pre-release/launch скрипт: `npm run launch:check`.
 - Добавлен ручной/локальный UX-скрипт: `npm run test:ux`.
+- `npm run launch:check` теперь включает `npm run tokens:check`.
+- UX smoke расширен на B2B-маршруты, B2B-заявку и legacy redirects `/legal/** -> /business/**`.
 - Production dependency advisory закрыт обновлением до `astro@^6.3.0` и `@astrojs/node@^10.1.0`.
 - Добавлен простой Windows launcher: `start-kubtel-site.bat`.
 - Описана текущая система управления сайтом и доступы: `docs/site-management-access.md`.
@@ -46,12 +48,14 @@ npm run test:ux
 
 Проверяется:
 
-- 6 ключевых маршрутов на desktop;
+- ключевые B2C и B2B маршруты на desktop;
 - отсутствие горизонтального overflow;
 - `/api/health.json`;
+- legacy B2B redirect `/legal/smallbusiness/inet/ -> /business/internet/`;
 - переход из тарифной CTA в форму подключения;
 - mobile sticky CTA и mobile menu;
 - отправка тестовой заявки и success-состояние формы.
+- отправка тестовой B2B-заявки и success-состояние формы.
 
 ## Production checklist
 
@@ -63,8 +67,9 @@ npm run test:ux
 - `/api/health.json` отвечает `status: "ok"`.
 - Форма заявки отправляется с production и доходит в CRM, Telegram или серверный outbox.
 - Analytics получает событие `lead_submitted`.
+- Analytics получает события `b2b_lead_submitted` и `b2b_lead_success`.
 - Ошибки runtime и деградация скорости видны в мониторинге.
-- Отдел продаж подтвердил, где видит заявки и куда передает обратную связь.
+- Отдел продаж подтвердил, где видит B2C и B2B заявки, как различает pipeline и куда передает обратную связь.
 
 ## Остаточные production-блокеры
 
@@ -75,6 +80,7 @@ npm run test:ux
 - Адресная база покрытия не подтверждена.
 - Финальная политика обработки персональных данных, согласие и реквизиты оператора не подтверждены.
 - Production DNS, SSL и redirects нельзя проверить без доступа к боевому домену.
+- Feedback loop отдела продаж нельзя подтвердить без участия sales owner и тестовой production-заявки.
 
 ## План первых дней после запуска
 

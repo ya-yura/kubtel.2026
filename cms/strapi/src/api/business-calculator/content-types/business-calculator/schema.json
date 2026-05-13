@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "business_calculators",
+  "info": {
+    "singularName": "business-calculator",
+    "pluralName": "business-calculators",
+    "displayName": "Business Calculator"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "slug": { "type": "uid", "targetField": "title", "required": true },
+    "calculatorType": {
+      "type": "enumeration",
+      "enum": ["internet", "telephony", "cctv", "vps", "vdi", "colocation", "wifi_auth"],
+      "required": true
+    },
+    "formulaVersion": { "type": "string", "required": true },
+    "disclaimer": { "type": "text", "required": true },
+    "requiredConsultation": { "type": "boolean", "default": true },
+    "pricingStatus": {
+      "type": "enumeration",
+      "enum": ["confirmed", "needs_verification", "draft"],
+      "default": "needs_verification"
+    },
+    "optionSlugs": { "type": "json" },
+    "workflowStatus": {
+      "type": "enumeration",
+      "enum": [
+        "draft",
+        "ready_for_review",
+        "commercial_approved",
+        "legal_approved",
+        "published",
+        "archived"
+      ],
+      "default": "draft"
+    }
+  }
+}

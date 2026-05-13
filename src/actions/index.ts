@@ -161,17 +161,23 @@ export const server = {
         input,
         userAgent: context.request.headers.get("user-agent")
       });
-      const crmDelivery = await sendLeadToCrm(lead);
-      const outboxResult =
-        crmDelivery.status === "sent"
-          ? createSkippedOutboxResult()
-          : await saveLeadToOutbox(lead, [crmDelivery]);
-      const allDelivery = [crmDelivery, outboxResult];
+      const delivery = await Promise.all([sendLeadToCrm(lead), sendLeadToTelegram(lead)]);
+      const shouldSaveToOutbox =
+        delivery.some((result) => result.status === "failed") ||
+        delivery.every((result) => result.status === "skipped");
+      const outboxResult = shouldSaveToOutbox
+        ? await saveLeadToOutbox(lead, delivery)
+        : createSkippedOutboxResult();
+      const allDelivery = [...delivery, outboxResult];
 
       if (!allDelivery.some((result) => result.status === "sent")) {
         await trackServerEvent({
           name: "b2b_lead_delivery_failed",
           leadId: lead.id,
+          serviceInterest: lead.qualification.serviceInterest,
+          leadScore: lead.qualification.leadScore,
+          qualification: lead.qualification.qualification,
+          priority: lead.qualification.priority,
           sourcePath: lead.sourcePath,
           delivery: summarizeDelivery(allDelivery)
         });
@@ -187,6 +193,22 @@ export const server = {
         name: "b2b_lead_submitted",
         leadId: lead.id,
         serviceInterest: lead.qualification.serviceInterest,
+        leadScore: lead.qualification.leadScore,
+        qualification: lead.qualification.qualification,
+        priority: lead.qualification.priority,
+        routingPipeline: lead.routing.pipeline,
+        sourcePath: lead.sourcePath,
+        delivery: summarizeDelivery(allDelivery)
+      });
+
+      await trackServerEvent({
+        name: "b2b_lead_success",
+        leadId: lead.id,
+        serviceInterest: lead.qualification.serviceInterest,
+        leadScore: lead.qualification.leadScore,
+        qualification: lead.qualification.qualification,
+        priority: lead.qualification.priority,
+        routingPipeline: lead.routing.pipeline,
         sourcePath: lead.sourcePath,
         delivery: summarizeDelivery(allDelivery)
       });
@@ -194,12 +216,11 @@ export const server = {
       return {
         success: true,
         leadId: lead.id,
-        message:
-          crmDelivery.status === "sent"
-            ? "B2B-заявка принята и отправлена в отдел продаж."
-            : "B2B-заявка принята и сохранена в серверный резерв до настройки CRM.",
+        message: delivery.some((result) => result.status === "sent")
+          ? "B2B-заявка принята и отправлена в отдел продаж."
+          : "B2B-заявка принята и сохранена в серверный резерв до настройки CRM или Telegram.",
         serviceInterest: lead.qualification.serviceInterest,
-        deliveryMode: crmDelivery.status === "sent" ? "sent" : "reserved"
+        deliveryMode: delivery.some((result) => result.status === "sent") ? "sent" : "reserved"
       };
     }
   })

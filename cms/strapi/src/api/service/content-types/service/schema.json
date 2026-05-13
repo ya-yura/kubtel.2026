@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "services",
+  "info": {
+    "singularName": "service",
+    "pluralName": "services",
+    "displayName": "Service"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "slug": { "type": "uid", "targetField": "title", "required": true },
+    "category": { "type": "string", "required": true },
+    "shortDescription": { "type": "text", "required": true },
+    "fullDescription": { "type": "richtext", "required": true },
+    "facts": { "type": "json" },
+    "benefits": { "type": "json" },
+    "relatedTariffSlugs": { "type": "json" },
+    "contentSource": { "type": "json" },
+    "workflowStatus": {
+      "type": "enumeration",
+      "enum": [
+        "draft",
+        "ready_for_review",
+        "commercial_approved",
+        "legal_approved",
+        "published",
+        "archived"
+      ],
+      "default": "draft"
+    }
+  }
+}

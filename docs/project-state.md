@@ -9,8 +9,8 @@
 - Базовое ТЗ: `docs/kubtel-project-tz.md`.
 - Git remote: `https://github.com/ya-yura/kubtel.2026.git`.
 - Локальный dev URL: `http://127.0.0.1:4321/`.
-- Текущий этап: Этап 10 - B2B, CMS и дизайн-токены.
-- Общий статус: technical launch-control completed, B2B strategy/IA/funnel completed, CMS adapter layer implemented, CMS migration plan completed, design token architecture completed.
+- Текущий этап: Этап 10 - B2B, CMS, дизайн-токены и production launch QA.
+- Общий статус: technical launch-control completed, B2B strategy/IA/funnel completed, B2B MVP/calculators/scoring implemented, CMS adapter layer implemented, Strapi CMS scaffold added, design token source-of-truth implemented, production launch blocked by external Kubtel inputs.
 
 ## Принципы ведения
 
@@ -34,7 +34,7 @@
 | 7    | SEO, производительность и доступность     | completed                               | Усилены метаданные, Schema.org, sitemap/robots, клавиатурная доступность и Lighthouse mobile проверки                                                                                           |
 | 8    | Предрелизное тестирование                 | completed                               | Предрелизный QA-контур добавлен, критичные технические дефекты исправлены, внешние launch-блокеры явно зафиксированы                                                                            |
 | 9    | Запуск и пострелизный контроль            | technical completed, production blocked | Реализованы health endpoint, launch-readiness audit, postrelease checklist, BAT-запуск и документация доступа; production DNS/SSL/CRM/Telegram/analytics/контент требуют внешнего подтверждения |
-| 10   | B2B, CMS и дизайн-токены                  | in progress                             | Подготовлен prompt pack; выполнены Prompts 01-09: B2B-аудит, позиционирование, IA, воронка, CMS ADR, CMS-модели, Astro CMS adapter layer, CMS migration plan и token architecture               |
+| 10   | B2B, CMS и дизайн-токены                  | technical completed, production blocked | Выполнены Prompts 01-20 на уровне локального проекта: B2B MVP, calculators/scoring, CRM/Telegram/analytics separation, Strapi scaffold, token source of truth, editor guide и final QA docs     |
 
 ## Выполненные результаты
 
@@ -78,12 +78,19 @@
 - После замечания пользователя о невидимости результата добавлен первый видимый B2B-раздел в коде: `/business/`, сервисные и сегментные страницы, `/business/request/`, навигация, sitemap metadata, mobile sticky CTA и серверная B2B-заявка с outbox fallback.
 - Выполнен Prompt 08 и зафиксирован в `docs/cms-migration-plan.md`: подготовлены CMS migration checklist, URL redirect table для `/legal/** -> /business/**`, content freeze plan, CMS import order, список данных без права публикации и ручной QA для редакторов.
 - Выполнен Prompt 09 и зафиксирован в `docs/design-tokens-source-of-truth.md`: подготовлены token taxonomy, naming convention, target file structure, JSON token examples, generated CSS example, build script contract, CMS/editor governance, visual smoke rules и migration checklist из `global.css`.
+- Выполнены Prompts 10-20 и зафиксированы в `docs/b2b-cms-design-final-qa.md`: design governance, B2B UI contracts, calculators, forms/CRM/analytics, B2B copy/SEO, CMS MVP, token implementation и финальный QA.
+- Добавлен Strapi CMS scaffold `cms/strapi`: модели B2C+B2B, DesignTheme, roles/workflow baseline, seed контент, preview/fallback docs и editor/developer guide.
+- Реализован token source of truth в коде: `src/design/tokens/**`, `scripts/build-tokens.mjs`, generated `src/styles/tokens.css`, `npm run tokens:build` и `npm run tokens:check`.
+- Реализованы B2B калькуляторы, lead scoring, расширенный CRM payload, Telegram summary, B2B analytics events и middleware redirects `/legal/** -> /business/**`.
+- UX smoke расширен на B2B routes, B2B form submit и legacy redirect check.
+- Внешние входы Kubtel для production зафиксированы в `docs/external-inputs-kubtel.md`; без них production запуск остается неподтвержденным.
 
 ## Активные допущения
 
 - Пока нет подтвержденной выгрузки тарифов, зон покрытия, CRM и биллинга Kubtel.
 - Первая техническая версия строится на локальных структурированных данных, чтобы позже заменить источник на Headless CMS без переписывания UI.
 - В отсутствие production-доступов интеграции реализованы через изолированные адаптеры и переменные окружения; если CRM/Telegram не настроены, заявка сохраняется в серверный outbox.
+- Strapi CMS добавлен как scaffold в репозиторий, но его runtime, PostgreSQL, роли в админке и production API token еще не подтверждены.
 
 ## Открытые вопросы
 
@@ -91,12 +98,14 @@
 - Нужна карта районов, улиц, ЖК и частного сектора, где возможно подключение.
 - Нужно предоставить production CRM webhook или выбрать временный webhook для заявок.
 - Нужно предоставить Telegram bot token и sales chat id для боевого чата отдела продаж.
+- Нужно предоставить analytics webhook и подтвердить прием B2C/B2B событий.
 - Нужно определить production-хранилище или регламент обработки outbox-заявок.
 - Нужно определить источник адресной нормализации: внутренняя база, Dadata или ручная проверка.
+- Нужно подтвердить production домен, DNS, SSL, redirects и sales feedback loop.
 
 ## Следующий шаг
 
-Перейти к Prompt 10 из `docs/b2b-cms-design-token-prompt-pack.md`: определить, какие design settings доступны редакторам CMS, какие токены locked/governed/content-level, permission matrix, editorial guardrails, contrast safety rules и preview QA checklist. Production launch-входы из этапа 9 остаются актуальными и не отменяются.
+Перед сдачей production нужно получить и проверить внешние входы Kubtel из `docs/external-inputs-kubtel.md`: актуальные цены/покрытие/SLA/юридику, production CRM/Telegram/analytics env, Strapi runtime, домен/DNS/SSL/redirects и подтверждение feedback loop отдела продаж.
 
 ## Чекап этапа 0
 
@@ -322,8 +331,22 @@
 - [x] Подготовлены URL redirect table, current routes to CMS mapping, content freeze plan, CMS import order, redirect QA и manual editorial QA.
 - [x] Prompt 09 выполнен: design token source-of-truth architecture зафиксирована в `docs/design-tokens-source-of-truth.md`.
 - [x] Подготовлены token taxonomy, naming convention, JSON examples, generated CSS example, build script contract, CMS/editor governance, visual smoke rules и migration checklist из `global.css`.
+- [x] Prompt 10 выполнен: design governance, DesignTheme model, permission matrix, editorial guardrails, contrast safety rules и preview QA checklist зафиксированы.
+- [x] Prompt 11 выполнен: B2B UI component contracts, states, accessibility, analytics, token dependency и mobile behavior зафиксированы.
+- [x] Prompt 12 выполнен: pure B2B calculator functions, pricing catalog contract, unknownItems и tests реализованы в `src/lib/business/`.
+- [x] Prompt 13 выполнен: B2B form schema, CRM routing, Telegram summary, analytics events, scoring и outbox fallback реализованы.
+- [x] Prompt 14-15 выполнены: B2B copy/SEO map, schema plan и redirect map зафиксированы и частично реализованы в коде.
+- [x] Prompt 16 выполнен: B2B MVP работает как отдельная конверсионная ветка.
+- [x] Prompt 17 выполнен на уровне repo scaffold: Strapi workspace, schemas, seed, roles/workflow baseline, preview/fallback docs и Astro adapter готовы.
+- [x] Prompt 18 выполнен: token source of truth реализован в `src/design/tokens/**`, `scripts/build-tokens.mjs`, `src/styles/tokens.css`.
+- [x] Prompt 19 выполнен: редакторская инструкция добавлена в `docs/editor-guide.md`.
+- [x] Prompt 20 выполнен как локальный QA contract и blocker list в `docs/b2b-cms-design-final-qa.md`.
 - [ ] Strapi runtime не поднят и не подключен к production.
 - [x] B2B-раздел в коде реализован как первый visible MVP.
-- [ ] Token source of truth не реализован в коде как `src/design/tokens/**`, `scripts/build-tokens.mjs` и generated `src/styles/tokens.css`.
+- [x] Token source of truth реализован в коде как `src/design/tokens/**`, `scripts/build-tokens.mjs` и generated `src/styles/tokens.css`.
+- [x] Legacy B2B redirects реализованы и покрыты unit/UX smoke contract.
+- [ ] Production формы не проверены на боевых CRM/Telegram/analytics env.
+- [ ] Production домен, DNS, SSL, redirects и Lighthouse/accessibility на production не подтверждены.
+- [ ] Feedback loop отдела продаж не подтвержден на production заявке.
 
-Этап 10 начат как стратегическое расширение после launch-control. Prompts 01-09 закрывают продуктовую основу B2B, CMS ADR, CMS-модели, adapter boundary, план миграции в Strapi-first CMS и архитектуру дизайн-токенов; дополнительно добавлен видимый B2B MVP. Следующий практический шаг - CMS design governance и затем углубление B2B-калькуляторов.
+Этап 10 технически закрывает B2B/CMS/design-token контур внутри репозитория. Фактическая сдача production остается заблокированной внешними входами Kubtel: реальные цены/покрытие/SLA/юридика, production CMS/CRM/Telegram/analytics, домен/DNS/SSL/redirects и подтвержденный sales feedback loop.

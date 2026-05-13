@@ -8,7 +8,10 @@ if (process.env.PUBLIC_STATIC_PREVIEW !== "true") {
 
 for (const file of files) {
   const source = await readFile(file, "utf8");
-  const nextSource = source.replace("export const prerender = false;", "export const prerender = true;");
+  const nextSource = source.replace(
+    "export const prerender = false;",
+    "export const prerender = true;"
+  );
 
   if (source === nextSource) {
     throw new Error(`Could not enable prerender in ${file}`);

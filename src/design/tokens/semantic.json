@@ -1,0 +1,92 @@
+{
+  "color": {
+    "text": {
+      "primary": { "value": "{color.neutral.950}", "type": "color" },
+      "secondary": { "value": "{color.neutral.500}", "type": "color" },
+      "subtle": { "value": "{color.neutral.450}", "type": "color" },
+      "placeholder": { "value": "{color.neutral.400}", "type": "color" },
+      "inverse": { "value": "{color.neutral.0}", "type": "color" }
+    },
+    "surface": {
+      "page": { "value": "{color.neutral.0}", "type": "color" },
+      "raised": { "value": "{color.neutral.0}", "type": "color" },
+      "soft": { "value": "{color.neutral.50}", "type": "color" },
+      "disabled": { "value": "{color.neutral.75}", "type": "color" },
+      "warm": { "value": "{color.orange.50}", "type": "color" },
+      "dark": { "value": "{color.neutral.600}", "type": "color" },
+      "darkRaised": { "value": "{color.neutral.650}", "type": "color" },
+      "darkRaisedAlt": { "value": "{color.neutral.700}", "type": "color" },
+      "darkDeep": { "value": "{color.neutral.900}", "type": "color" }
+    },
+    "border": {
+      "default": { "value": "{color.neutral.100}", "type": "color" },
+      "strong": { "value": "{color.neutral.200}", "type": "color" },
+      "hover": { "value": "{color.neutral.300}", "type": "color" },
+      "action": { "value": "{color.orange.500}", "type": "color" }
+    },
+    "action": {
+      "primary": { "value": "{color.orange.500}", "type": "color" },
+      "primaryHover": { "value": "{color.orange.600}", "type": "color" },
+      "primaryActive": { "value": "{color.orange.700}", "type": "color" },
+      "primaryText": { "value": "{color.orange.950}", "type": "color" }
+    },
+    "status": {
+      "success": { "value": "{color.green.700}", "type": "color" },
+      "successSoft": { "value": "{color.green.50}", "type": "color" },
+      "successSurface": { "value": "{color.green.75}", "type": "color" },
+      "successBorder": { "value": "{color.green.300}", "type": "color" },
+      "info": { "value": "{color.blue.600}", "type": "color" },
+      "infoSoft": { "value": "{color.blue.50}", "type": "color" },
+      "danger": { "value": "{color.red.700}", "type": "color" },
+      "dangerSoft": { "value": "{color.red.50}", "type": "color" },
+      "dangerSurface": { "value": "{color.red.75}", "type": "color" },
+      "dangerBorder": { "value": "{color.red.300}", "type": "color" }
+    },
+    "alpha": {
+      "white72": { "value": "rgba(255, 255, 255, 0.72)", "type": "color" },
+      "white78": { "value": "rgba(255, 255, 255, 0.78)", "type": "color" },
+      "white94": { "value": "rgba(255, 255, 255, 0.94)", "type": "color" },
+      "white97": { "value": "rgba(255, 255, 255, 0.97)", "type": "color" },
+      "white98": { "value": "rgba(255, 255, 255, 0.98)", "type": "color" },
+      "white08": { "value": "rgba(255, 255, 255, 0.08)", "type": "color" },
+      "darkBorder": { "value": "rgba(255, 255, 255, 0.12)", "type": "color" },
+      "focus": { "value": "rgba(31, 103, 178, 0.48)", "type": "color" },
+      "focusSoft": { "value": "rgba(31, 103, 178, 0.12)", "type": "color" },
+      "dangerSoftRing": { "value": "rgba(186, 53, 31, 0.1)", "type": "color" },
+      "accent24": { "value": "rgba(244, 123, 32, 0.24)", "type": "color" },
+      "accent28": { "value": "rgba(244, 123, 32, 0.28)", "type": "color" },
+      "accent54": { "value": "rgba(244, 123, 32, 0.54)", "type": "color" }
+    }
+  },
+  "layout": {
+    "page": {
+      "maxWidth": { "value": "1180px", "type": "dimension" }
+    },
+    "header": {
+      "height": { "value": "68px", "type": "dimension" }
+    },
+    "touchTarget": {
+      "min": { "value": "44px", "type": "dimension" },
+      "input": { "value": "48px", "type": "dimension" }
+    },
+    "sticky": {
+      "bottomPadding": { "value": "78px", "type": "dimension" }
+    }
+  },
+  "state": {
+    "focus": {
+      "outline": { "value": "3px solid {color.alpha.focus}", "type": "border" },
+      "outlineOffset": { "value": "3px", "type": "dimension" },
+      "ring": { "value": "0 0 0 4px {color.alpha.focusSoft}", "type": "shadow" }
+    },
+    "invalid": {
+      "border": { "value": "{color.status.danger}", "type": "color" },
+      "ring": { "value": "0 0 0 4px {color.alpha.dangerSoftRing}", "type": "shadow" }
+    },
+    "selected": {
+      "background": { "value": "{color.surface.warm}", "type": "color" },
+      "border": { "value": "{color.action.primary}", "type": "color" },
+      "ring": { "value": "inset 0 0 0 1px {color.alpha.accent28}", "type": "shadow" }
+    }
+  }
+}

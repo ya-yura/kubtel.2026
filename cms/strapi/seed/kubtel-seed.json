@@ -1,0 +1,312 @@
+{
+  "collections": {
+    "tariffs": [
+      {
+        "title": "Дом 300",
+        "slug": "home-300",
+        "market": "b2c",
+        "audience": ["families", "gamers", "remote-work"],
+        "speedDownload": 300,
+        "speedUpload": 300,
+        "priceMonth": 700,
+        "promoPrice": null,
+        "promoPeriod": null,
+        "benefitDescription": "Скорость для 4K, удаленной работы, игр и нескольких активных устройств вечером.",
+        "bestFor": ["4K-видео", "онлайн-игры", "удаленная работа", "5+ устройств"],
+        "includedServices": ["домашний интернет"],
+        "availableOptionSlugs": ["routerRent", "staticIp", "tvPack"],
+        "isFeatured": true,
+        "sortOrder": 20,
+        "proof": {
+          "label": "Статус данных",
+          "value": "Черновой тариф, требуется сверка с коммерческими условиями Kubtel",
+          "status": "draft"
+        },
+        "contentSource": {
+          "status": "draft",
+          "type": "editorial_assumption",
+          "label": "Рабочая тарифная гипотеза этапа 0",
+          "checkedAt": null,
+          "responsible": "content",
+          "note": "Нужна актуальная тарифная матрица Kubtel."
+        },
+        "commercialReview": {
+          "status": "draft",
+          "priceStatus": "draft",
+          "speedStatus": "draft",
+          "optionsStatus": "draft",
+          "connectionStatus": "needs_verification",
+          "requiredEvidence": [
+            "актуальная цена в месяц",
+            "скорость загрузки и отдачи",
+            "стоимость подключения",
+            "условия аренды роутера",
+            "стоимость статического IP"
+          ],
+          "note": "Пока нельзя использовать как публично утвержденное коммерческое предложение."
+        },
+        "workflowStatus": "ready_for_review"
+      }
+    ],
+    "services": [
+      {
+        "title": "Домашний интернет",
+        "slug": "internet",
+        "category": "connectivity",
+        "shortDescription": "Стабильный доступ в интернет для квартир, домов и частного сектора Краснодара.",
+        "fullDescription": "Kubtel должен объяснять домашний интернет через реальные сценарии: рабочие звонки, видео в высоком качестве, игры, учебу и связь с близкими. Финальные обещания по скорости и стабильности требуют подтверждения техническими данными.",
+        "facts": [
+          {
+            "label": "Локальная зона работы",
+            "value": "Краснодар и отдельные зоны подключения",
+            "status": "needs_verification"
+          }
+        ],
+        "benefits": ["понятные тарифы", "локальная команда", "проверка адреса перед заявкой"],
+        "relatedTariffSlugs": ["home-100", "home-300", "family-tv"],
+        "contentSource": {
+          "status": "needs_verification",
+          "type": "editorial_assumption",
+          "label": "Смысловая модель этапа 1",
+          "checkedAt": null,
+          "responsible": "content",
+          "note": "Требуется сверка с фактическими зонами, SLA и техническими ограничениями Kubtel."
+        },
+        "workflowStatus": "ready_for_review"
+      }
+    ],
+    "faq-items": [
+      {
+        "question": "Почему цена не изменится через 3 месяца?",
+        "answer": "Финальный текст должен ссылаться только на реальные условия договора и акции. Если цена акционная, сайт обязан показывать срок действия акции и стоимость после окончания периода.",
+        "category": "pricing",
+        "priority": 20,
+        "relatedServices": ["internet", "tv"],
+        "proof": {
+          "label": "Статус ответа",
+          "value": "Нужны договорные условия, правила акций и цена после промопериода",
+          "status": "needs_verification"
+        },
+        "contentSource": {
+          "status": "needs_verification",
+          "type": "editorial_assumption",
+          "label": "FAQ-тревога этапа 1",
+          "checkedAt": null,
+          "responsible": "commercial",
+          "note": "Ответ нельзя публиковать без коммерческого и юридического основания."
+        },
+        "workflowStatus": "ready_for_review"
+      }
+    ],
+    "coverage-areas": [
+      {
+        "title": "Краснодар",
+        "slug": "krasnodar",
+        "type": "city",
+        "city": "Краснодар",
+        "district": null,
+        "streets": [],
+        "houses": [],
+        "connectionStatus": "draft",
+        "availableTariffSlugs": ["home-100", "home-300", "family-tv"],
+        "availableServiceSlugs": ["internet"],
+        "contactHint": "Введите адрес, чтобы команда Kubtel проверила возможность подключения.",
+        "contentSource": {
+          "status": "draft",
+          "type": "editorial_assumption",
+          "label": "Черновой город присутствия",
+          "checkedAt": null,
+          "responsible": "coverage",
+          "note": "Нужна подтвержденная адресная база."
+        },
+        "workflowStatus": "ready_for_review"
+      }
+    ],
+    "promos": [
+      {
+        "title": "Переход к локальному провайдеру",
+        "slug": "switch-local",
+        "startDate": "2026-05-01",
+        "endDate": null,
+        "description": "Черновая промо-механика для проверки сценария перехода. Финальные условия должны быть утверждены коммерческой и юридической командами.",
+        "conditions": ["условия требуют подтверждения", "сроки требуют подтверждения"],
+        "relatedTariffSlugs": ["home-300"],
+        "relatedServiceSlugs": ["internet"],
+        "targetArea": "Краснодар",
+        "ctaLabel": "Проверить адрес",
+        "proof": {
+          "label": "Статус акции",
+          "value": "Черновая механика",
+          "status": "draft"
+        },
+        "contentSource": {
+          "status": "draft",
+          "type": "editorial_assumption",
+          "label": "Рабочая промо-гипотеза",
+          "checkedAt": null,
+          "responsible": "commercial",
+          "note": "Нельзя публиковать как подтвержденную акцию."
+        },
+        "commercialReview": {
+          "status": "draft",
+          "requiredEvidence": ["условия", "сроки", "юридические ограничения"],
+          "note": "Нужна коммерческая и юридическая проверка."
+        },
+        "workflowStatus": "ready_for_review"
+      }
+    ],
+    "design-themes": [
+      {
+        "title": "Kubtel default",
+        "slug": "kubtel-default",
+        "pageAccent": "default",
+        "heroVariant": "standard",
+        "sectionDensity": "comfortable",
+        "ctaVariant": "primary",
+        "serviceCardLayout": "grid",
+        "proofVisibility": true,
+        "allowedTokenRefs": [
+          "business.hero.panelBackground",
+          "business.proof.confirmed",
+          "component.button.primary",
+          "component.card"
+        ],
+        "notes": "Редактор выбирает только presets. Raw color, radius, shadow and typography tokens stay locked in code.",
+        "workflowStatus": "ready_for_review"
+      }
+    ],
+    "business-services": [
+      {
+        "title": "Интернет в офис",
+        "slug": "internet",
+        "category": "internet",
+        "summary": "Корпоративный интернет для офиса, магазина, склада или точки обслуживания.",
+        "businessBenefit": "Рабочие сервисы, кассы, телефония и видеонаблюдение остаются на связи.",
+        "ctaLabel": "Рассчитать интернет",
+        "priority": "P0",
+        "relatedSegmentSlugs": ["smb", "government"],
+        "calculatorSlug": "internet-office",
+        "formVariantSlug": "b2b-request",
+        "workflowStatus": "ready_for_review",
+        "verificationStatus": "needs_verification"
+      },
+      {
+        "title": "Colocation",
+        "slug": "colocation",
+        "category": "colocation",
+        "summary": "Размещение серверного оборудования на площадках Kubtel.",
+        "businessBenefit": "Серверы переезжают из офисной серверной в контролируемую инфраструктуру.",
+        "ctaLabel": "Рассчитать размещение",
+        "priority": "P0",
+        "relatedSegmentSlugs": ["operators", "government"],
+        "calculatorSlug": "colocation",
+        "formVariantSlug": "b2b-request",
+        "workflowStatus": "ready_for_review",
+        "verificationStatus": "needs_verification"
+      }
+    ],
+    "business-segments": [
+      {
+        "title": "Малому и среднему бизнесу",
+        "slug": "smb",
+        "audience": ["офисы", "магазины", "кафе", "клиники", "склады"],
+        "painPoints": [
+          "Нужны интернет, телефония, камеры и гостевой Wi-Fi без разрозненных подрядчиков."
+        ],
+        "triggers": ["Открытие точки", "переезд", "рост нагрузки", "запуск видеонаблюдения"],
+        "primaryCta": "Подобрать связь для точки",
+        "relatedServiceSlugs": ["internet", "telephony", "cctv", "wifi-auth"],
+        "formVariantSlug": "b2b-request",
+        "workflowStatus": "ready_for_review"
+      }
+    ],
+    "business-calculators": [
+      {
+        "title": "Интернет в офис",
+        "slug": "internet-office",
+        "calculatorType": "internet",
+        "formulaVersion": "b2b-calculators-v1",
+        "disclaimer": "Цены требуют коммерческого подтверждения Kubtel.",
+        "requiredConsultation": true,
+        "pricingStatus": "needs_verification",
+        "optionSlugs": ["internet-speed-300", "internet-static-ip"],
+        "workflowStatus": "ready_for_review"
+      }
+    ],
+    "calculator-options": [
+      {
+        "title": "Интернет 300 Мбит/с",
+        "slug": "internet-speed-300",
+        "fieldKey": "internet.speed.300",
+        "inputType": "radio",
+        "valueType": "number",
+        "unit": "month",
+        "min": null,
+        "max": null,
+        "step": null,
+        "defaultValue": 300,
+        "priceMonthly": null,
+        "priceOneTime": null,
+        "requiredConsultation": true,
+        "sortOrder": 10,
+        "workflowStatus": "ready_for_review"
+      }
+    ],
+    "lead-form-variants": [
+      {
+        "title": "B2B-заявка",
+        "slug": "b2b-request",
+        "leadType": "b2b",
+        "formKey": "business-request",
+        "fields": [
+          {
+            "key": "companyName",
+            "label": "Компания",
+            "type": "text",
+            "required": true,
+            "maxLength": 160,
+            "options": []
+          },
+          {
+            "key": "contactPerson",
+            "label": "Контактное лицо",
+            "type": "text",
+            "required": true,
+            "maxLength": 120,
+            "options": []
+          },
+          {
+            "key": "phone",
+            "label": "Телефон",
+            "type": "tel",
+            "required": true,
+            "maxLength": 32,
+            "options": []
+          },
+          {
+            "key": "service",
+            "label": "Услуга",
+            "type": "select",
+            "required": true,
+            "maxLength": null,
+            "options": [
+              "internet",
+              "telephony",
+              "cctv",
+              "wifi-auth",
+              "vps",
+              "vdi",
+              "colocation",
+              "operators"
+            ]
+          }
+        ],
+        "requiredFields": ["companyName", "contactPerson", "phone", "service", "consent"],
+        "routingKey": "business_sales",
+        "crmPipeline": "b2b",
+        "consentDocumentSlug": "personal-data-consent",
+        "workflowStatus": "ready_for_review"
+      }
+    ]
+  }
+}

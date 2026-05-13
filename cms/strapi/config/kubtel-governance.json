@@ -1,0 +1,58 @@
+{
+  "roles": [
+    {
+      "name": "admin",
+      "purpose": "Full CMS administration, users, tokens, schemas and emergency publishing.",
+      "canPublish": true,
+      "canEditCommercialFields": true,
+      "canEditLegalFields": true,
+      "canEditDesignThemes": true
+    },
+    {
+      "name": "developer",
+      "purpose": "Schemas, API tokens, preview, webhooks, backups and adapter contracts.",
+      "canPublish": false,
+      "canEditCommercialFields": false,
+      "canEditLegalFields": false,
+      "canEditDesignThemes": true
+    },
+    {
+      "name": "content_editor",
+      "purpose": "Draft copy, FAQ, page structure, media and safe design presets.",
+      "canPublish": false,
+      "canEditCommercialFields": false,
+      "canEditLegalFields": false,
+      "canEditDesignThemes": false
+    },
+    {
+      "name": "commercial_reviewer",
+      "purpose": "Tariffs, prices, options, SLA, B2B calculators and commercial approval.",
+      "canPublish": false,
+      "canEditCommercialFields": true,
+      "canEditLegalFields": false,
+      "canEditDesignThemes": false
+    },
+    {
+      "name": "legal_reviewer",
+      "purpose": "Consent, policy, promo conditions, Wi-Fi authorization and datacenter access rules.",
+      "canPublish": false,
+      "canEditCommercialFields": false,
+      "canEditLegalFields": true,
+      "canEditDesignThemes": false
+    }
+  ],
+  "workflow": [
+    "draft",
+    "ready_for_review",
+    "commercial_approved",
+    "legal_approved",
+    "published",
+    "archived"
+  ],
+  "publishRule": "Do not publish records with verificationStatus=draft or needs_verification unless the page explicitly shows an individual calculation or verification notice.",
+  "preview": {
+    "astroEnv": "CMS_PREVIEW_MODE=true",
+    "secretEnv": "STRAPI_PREVIEW_SECRET",
+    "fallbackEnv": "CMS_FALLBACK_TO_LOCAL=true"
+  }
+}

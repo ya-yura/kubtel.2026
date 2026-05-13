@@ -26,11 +26,11 @@
 
 ## Матрица форм
 
-| Страница | Контракт | Статус |
-| --- | --- | --- |
-| `/` | on-demand, `submitLead`, success/error state | passed |
-| `/connect/` | on-demand, query `tariff/address`, `submitLead`, success/error state | passed |
-| `/tariffs/` | on-demand, `submitLead`, success/error state | fixed and passed |
+| Страница    | Контракт                                                             | Статус           |
+| ----------- | -------------------------------------------------------------------- | ---------------- |
+| `/`         | on-demand, `submitLead`, success/error state                         | passed           |
+| `/connect/` | on-demand, query `tariff/address`, `submitLead`, success/error state | passed           |
+| `/tariffs/` | on-demand, `submitLead`, success/error state                         | fixed and passed |
 
 ## Интеграции и аналитика
 

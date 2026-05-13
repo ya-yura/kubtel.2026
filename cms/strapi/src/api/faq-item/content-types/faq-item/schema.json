@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "faq_items",
+  "info": {
+    "singularName": "faq-item",
+    "pluralName": "faq-items",
+    "displayName": "FAQ Item"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "question": { "type": "string", "required": true },
+    "answer": { "type": "text", "required": true },
+    "category": { "type": "string", "required": true },
+    "priority": { "type": "integer", "default": 100 },
+    "relatedServices": { "type": "json" },
+    "proof": { "type": "json" },
+    "contentSource": { "type": "json" },
+    "workflowStatus": {
+      "type": "enumeration",
+      "enum": [
+        "draft",
+        "ready_for_review",
+        "commercial_approved",
+        "legal_approved",
+        "published",
+        "archived"
+      ],
+      "default": "draft"
+    }
+  }
+}

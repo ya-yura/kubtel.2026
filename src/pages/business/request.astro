@@ -92,6 +92,10 @@ const actionError = actionResult?.error;
             Email
             <input name="email" type="email" autocomplete="email" maxlength="120" />
           </label>
+          <label>
+            ИНН
+            <input name="inn" type="text" inputmode="numeric" maxlength="12" />
+          </label>
         </div>
       </fieldset>
 
@@ -129,6 +133,14 @@ const actionError = actionResult?.error;
             <input name="city" type="text" autocomplete="street-address" maxlength="200" />
           </label>
           <label>
+            Адрес объекта
+            <input name="address" type="text" autocomplete="street-address" maxlength="240" />
+          </label>
+          <label>
+            Сотрудников или площадок
+            <input name="employeesOrSites" type="number" min="0" step="1" inputmode="numeric" />
+          </label>
+          <label>
             Срочность
             <select name="urgency">
               <option value="planning">Планируем</option>
@@ -143,10 +155,20 @@ const actionError = actionResult?.error;
       <label class="message-field">
         Конфигурация или комментарий
         <textarea
-          name="message"
+          name="configurationSummary"
           rows="5"
-          maxlength="800"
+          maxlength="1200"
           placeholder="Например: офис на 20 сотрудников, нужен интернет 300 Мбит/с, 2 статических IP и телефония"
+        ></textarea>
+      </label>
+
+      <label class="message-field">
+        Дополнительный комментарий
+        <textarea
+          name="message"
+          rows="3"
+          maxlength="800"
+          placeholder="Например: удобное время звонка, текущий подрядчик, ограничения по срокам"
         ></textarea>
       </label>
 

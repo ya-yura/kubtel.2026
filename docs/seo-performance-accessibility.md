@@ -42,12 +42,12 @@
 
 Аудит выполнен 2026-05-07 на `http://127.0.0.1:4321/` в production preview после `npm run build`.
 
-| Страница | Performance | Accessibility | SEO | Best Practices |
-| --- | ---: | ---: | ---: | ---: |
-| `/` | 100 | 100 | 100 | 96 |
-| `/connect/` | 100 | 100 | 100 | 96 |
-| `/tariffs/` | 100 | 96 | 100 | 96 |
-| `/support/` | 100 | 100 | 100 | 96 |
+| Страница    | Performance | Accessibility | SEO | Best Practices |
+| ----------- | ----------: | ------------: | --: | -------------: |
+| `/`         |         100 |           100 | 100 |             96 |
+| `/connect/` |         100 |           100 | 100 |             96 |
+| `/tariffs/` |         100 |            96 | 100 |             96 |
+| `/support/` |         100 |           100 | 100 |             96 |
 
 Отчеты сохранены в `dist/lighthouse-*-mobile-preview.json`; `dist/` не попадает в git.
 

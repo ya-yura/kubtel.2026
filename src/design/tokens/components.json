@@ -1,0 +1,49 @@
+{
+  "component": {
+    "button": {
+      "primary": {
+        "background": { "value": "{color.action.primary}", "type": "color" },
+        "backgroundHover": { "value": "{color.action.primaryHover}", "type": "color" },
+        "backgroundActive": { "value": "{color.action.primaryActive}", "type": "color" },
+        "text": { "value": "{color.action.primaryText}", "type": "color" },
+        "radius": { "value": "{radius.md}", "type": "borderRadius" },
+        "minHeight": { "value": "{layout.touchTarget.min}", "type": "dimension" },
+        "shadow": { "value": "0 10px 24px rgba(244, 123, 32, 0.22)", "type": "shadow" },
+        "shadowHover": { "value": "0 14px 30px rgba(244, 123, 32, 0.28)", "type": "shadow" },
+        "shadowActive": { "value": "0 8px 18px rgba(244, 123, 32, 0.22)", "type": "shadow" }
+      }
+    },
+    "card": {
+      "background": { "value": "{color.surface.raised}", "type": "color" },
+      "border": { "value": "{color.border.default}", "type": "color" },
+      "borderHover": { "value": "{color.border.strong}", "type": "color" },
+      "radius": { "value": "{radius.md}", "type": "borderRadius" },
+      "shadowHover": { "value": "{shadow.soft}", "type": "shadow" }
+    },
+    "input": {
+      "background": { "value": "{color.surface.page}", "type": "color" },
+      "border": { "value": "{color.border.strong}", "type": "color" },
+      "borderHover": { "value": "{color.border.hover}", "type": "color" },
+      "borderFocus": { "value": "{color.status.info}", "type": "color" },
+      "radius": { "value": "{radius.md}", "type": "borderRadius" },
+      "radiusSmall": { "value": "{radius.sm}", "type": "borderRadius" },
+      "minHeight": { "value": "{layout.touchTarget.input}", "type": "dimension" },
+      "placeholder": { "value": "{color.text.placeholder}", "type": "color" }
+    },
+    "header": {
+      "background": { "value": "{color.alpha.white94}", "type": "color" },
+      "border": { "value": "rgba(217, 224, 232, 0.86)", "type": "color" },
+      "backdropBlur": { "value": "blur(18px)", "type": "blur" }
+    },
+    "status": {
+      "success": {
+        "background": { "value": "{color.status.successSurface}", "type": "color" },
+        "border": { "value": "{color.status.successBorder}", "type": "color" }
+      },
+      "error": {
+        "background": { "value": "{color.status.dangerSurface}", "type": "color" },
+        "border": { "value": "{color.status.dangerBorder}", "type": "color" }
+      }
+    }
+  }
+}

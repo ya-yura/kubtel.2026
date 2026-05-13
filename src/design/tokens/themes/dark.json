@@ -1,0 +1,13 @@
+{
+  "theme": {
+    "name": { "value": "dark", "type": "string" },
+    "colorScheme": { "value": "dark", "type": "string" },
+    "overrides": {
+      "color.surface.page": { "value": "{color.neutral.600}", "type": "color" },
+      "color.surface.raised": { "value": "{color.neutral.650}", "type": "color" },
+      "color.text.primary": { "value": "{color.neutral.0}", "type": "color" },
+      "color.text.secondary": { "value": "{color.alpha.white78}", "type": "color" },
+      "color.border.default": { "value": "{color.alpha.darkBorder}", "type": "color" }
+    }
+  }
+}

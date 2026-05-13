@@ -1,8 +1,9 @@
 import type { DeliveryResult } from "@lib/integrations/types";
+import type { BusinessLeadSubmission } from "@lib/leads/business-submission";
 import type { LeadSubmission } from "@lib/leads/submission";
 
 export async function sendLeadToTelegram(
-  lead: LeadSubmission,
+  lead: LeadSubmission | BusinessLeadSubmission,
   env = process.env
 ): Promise<DeliveryResult> {
   const token = env.TELEGRAM_BOT_TOKEN;
@@ -48,7 +49,11 @@ export async function sendLeadToTelegram(
   }
 }
 
-function formatTelegramLead(lead: LeadSubmission): string {
+function formatTelegramLead(lead: LeadSubmission | BusinessLeadSubmission): string {
+  if (isBusinessLead(lead)) {
+    return formatTelegramBusinessLead(lead);
+  }
+
   const optionList = lead.options.length > 0 ? lead.options.join(", ") : "без доп. опций";
 
   return [
@@ -62,6 +67,37 @@ function formatTelegramLead(lead: LeadSubmission): string {
     `Стоимость: ${lead.pricing.total} руб./мес.`,
     `Статус адреса: ${escapeHtml(lead.coverage.statusLabel)}`
   ].join("\n");
+}
+
+function isBusinessLead(
+  lead: LeadSubmission | BusinessLeadSubmission
+): lead is BusinessLeadSubmission {
+  return "leadType" in lead && lead.leadType === "b2b";
+}
+
+function formatTelegramBusinessLead(lead: BusinessLeadSubmission): string {
+  return [
+    `<b>Новая B2B-заявка Kubtel</b>`,
+    `ID: <code>${escapeHtml(lead.id)}</code>`,
+    `Компания: ${escapeHtml(lead.contact.companyName)}`,
+    lead.contact.inn ? `ИНН: ${escapeHtml(lead.contact.inn)}` : null,
+    `Контакт: ${escapeHtml(lead.contact.contactPerson)}`,
+    `Телефон: ${escapeHtml(lead.contact.phone)}`,
+    lead.contact.email ? `Email: ${escapeHtml(lead.contact.email)}` : null,
+    lead.contact.address ? `Адрес: ${escapeHtml(lead.contact.address)}` : null,
+    `Услуга: ${escapeHtml(lead.qualification.serviceInterest)}`,
+    lead.qualification.businessSegment
+      ? `Сегмент: ${escapeHtml(lead.qualification.businessSegment)}`
+      : null,
+    `Срочность: ${escapeHtml(lead.qualification.urgency)}`,
+    `Квалификация: ${escapeHtml(lead.qualification.qualification)} / ${lead.qualification.leadScore}`,
+    `Приоритет: ${escapeHtml(lead.routing.priority)}`,
+    `Pipeline: ${escapeHtml(lead.routing.pipeline)}`,
+    `Конфигурация: ${escapeHtml(lead.configuration.summary)}`,
+    `Неизвестные позиции: ${escapeHtml(lead.configuration.unknownItems.join(", "))}`
+  ]
+    .filter((line): line is string => Boolean(line))
+    .join("\n");
 }
 
 async function postTelegramMessage(

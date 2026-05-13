@@ -1,0 +1,120 @@
+{
+  "color": {
+    "neutral": {
+      "0": { "value": "#ffffff", "type": "color" },
+      "50": { "value": "#f4f7fa", "type": "color" },
+      "75": { "value": "#f5f7fa", "type": "color" },
+      "100": { "value": "#d9e0e8", "type": "color" },
+      "200": { "value": "#c3ccd7", "type": "color" },
+      "300": { "value": "#aab5c2", "type": "color" },
+      "400": { "value": "#8c96a3", "type": "color" },
+      "450": { "value": "#7a8492", "type": "color" },
+      "500": { "value": "#5f6875", "type": "color" },
+      "600": { "value": "#20242a", "type": "color" },
+      "650": { "value": "#2a2f36", "type": "color" },
+      "700": { "value": "#313942", "type": "color" },
+      "900": { "value": "#111317", "type": "color" },
+      "950": { "value": "#15171a", "type": "color" }
+    },
+    "orange": {
+      "50": { "value": "#fff5ec", "type": "color" },
+      "500": { "value": "#f47b20", "type": "color" },
+      "600": { "value": "#e46d16", "type": "color" },
+      "700": { "value": "#bf540c", "type": "color" },
+      "950": { "value": "#1a120b", "type": "color" }
+    },
+    "blue": {
+      "50": { "value": "#edf5ff", "type": "color" },
+      "600": { "value": "#1f67b2", "type": "color" }
+    },
+    "green": {
+      "50": { "value": "#e7f5ee", "type": "color" },
+      "75": { "value": "#edf7f0", "type": "color" },
+      "300": { "value": "#8bc59c", "type": "color" },
+      "700": { "value": "#137a4b", "type": "color" }
+    },
+    "red": {
+      "50": { "value": "#fff0ec", "type": "color" },
+      "75": { "value": "#fff1ed", "type": "color" },
+      "300": { "value": "#e0a18f", "type": "color" },
+      "700": { "value": "#ba351f", "type": "color" }
+    }
+  },
+  "typography": {
+    "family": {
+      "sans": {
+        "value": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "type": "fontFamily"
+      }
+    },
+    "size": {
+      "xs": { "value": "0.76rem", "type": "fontSize" },
+      "sm": { "value": "0.82rem", "type": "fontSize" },
+      "base": { "value": "1rem", "type": "fontSize" },
+      "lg": { "value": "1.08rem", "type": "fontSize" },
+      "xl": { "value": "1.25rem", "type": "fontSize" },
+      "2xl": { "value": "1.45rem", "type": "fontSize" },
+      "displaySm": { "value": "2.35rem", "type": "fontSize" },
+      "displayMd": { "value": "3.35rem", "type": "fontSize" },
+      "displayLg": { "value": "4.6rem", "type": "fontSize" }
+    },
+    "weight": {
+      "regular": { "value": "400", "type": "fontWeight" },
+      "medium": { "value": "650", "type": "fontWeight" },
+      "strong": { "value": "720", "type": "fontWeight" },
+      "bold": { "value": "800", "type": "fontWeight" },
+      "black": { "value": "900", "type": "fontWeight" }
+    },
+    "lineHeight": {
+      "tight": { "value": "1.06", "type": "lineHeight" },
+      "heading": { "value": "1.18", "type": "lineHeight" },
+      "body": { "value": "1.62", "type": "lineHeight" }
+    }
+  },
+  "spacing": {
+    "0": { "value": "0", "type": "dimension" },
+    "1": { "value": "0.25rem", "type": "dimension" },
+    "2": { "value": "0.45rem", "type": "dimension" },
+    "3": { "value": "0.65rem", "type": "dimension" },
+    "4": { "value": "0.75rem", "type": "dimension" },
+    "5": { "value": "1rem", "type": "dimension" },
+    "6": { "value": "1.25rem", "type": "dimension" },
+    "7": { "value": "1.5rem", "type": "dimension" },
+    "8": { "value": "2rem", "type": "dimension" },
+    "9": { "value": "3.5rem", "type": "dimension" },
+    "10": { "value": "4.5rem", "type": "dimension" }
+  },
+  "radius": {
+    "sm": { "value": "6px", "type": "borderRadius" },
+    "md": { "value": "8px", "type": "borderRadius" },
+    "pill": { "value": "999px", "type": "borderRadius" }
+  },
+  "shadow": {
+    "soft": { "value": "0 18px 44px rgba(21, 23, 26, 0.08)", "type": "shadow" },
+    "lift": { "value": "0 22px 56px rgba(21, 23, 26, 0.12)", "type": "shadow" },
+    "sticky": { "value": "0 -14px 38px rgba(20, 24, 29, 0.12)", "type": "shadow" }
+  },
+  "motion": {
+    "duration": {
+      "fast": { "value": "160ms", "type": "duration" },
+      "base": { "value": "180ms", "type": "duration" },
+      "slow": { "value": "420ms", "type": "duration" }
+    },
+    "easing": {
+      "standard": { "value": "ease", "type": "cubicBezier" }
+    }
+  },
+  "breakpoint": {
+    "xs": { "value": "420px", "type": "dimension" },
+    "sm": { "value": "520px", "type": "dimension" },
+    "md": { "value": "720px", "type": "dimension" },
+    "lg": { "value": "900px", "type": "dimension" },
+    "xl": { "value": "980px", "type": "dimension" }
+  },
+  "z": {
+    "header": { "value": "20", "type": "number" },
+    "sticky": { "value": "30", "type": "number" },
+    "menu": { "value": "40", "type": "number" },
+    "skipLink": { "value": "100", "type": "number" }
+  }
+}

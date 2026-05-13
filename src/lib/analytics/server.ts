@@ -7,11 +7,16 @@ export type ServerAnalyticsEvent = {
     | "lead_delivery_failed"
     | "lead_spam_blocked"
     | "b2b_lead_submitted"
+    | "b2b_lead_success"
     | "b2b_lead_delivery_failed"
     | "b2b_lead_spam_blocked";
   leadId?: string;
   tariff?: string;
   serviceInterest?: string;
+  leadScore?: number;
+  qualification?: string;
+  priority?: string;
+  routingPipeline?: string;
   addressStatus?: string;
   optionsCount?: number;
   sourcePath?: string;

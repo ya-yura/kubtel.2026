@@ -137,11 +137,16 @@ try {
   await checkRoute(client, sessionId, "/support/", "Поддержка");
   await checkRoute(client, sessionId, "/contacts/", "Контакты");
   await checkRoute(client, sessionId, "/about/", "Kubtel");
+  await checkRoute(client, sessionId, "/business/", "Kubtel для бизнеса");
+  await checkRoute(client, sessionId, "/business/internet/", "Интернет в офис");
+  await checkRoute(client, sessionId, "/business/request/", "B2B-заявка");
 
   await assertHealthEndpoint();
+  await assertLegacyRedirect();
   await checkTariffCtaPath(client, sessionId);
   await checkMobilePath(client, sessionId);
   await submitLeadForm(client, sessionId);
+  await submitBusinessLeadForm(client, sessionId);
 
   await client.close();
   console.log("UX smoke passed");
@@ -192,6 +197,18 @@ async function assertHealthEndpoint() {
     "health endpoint has failed checks"
   );
   results.push("health endpoint ok: /api/health.json");
+}
+
+async function assertLegacyRedirect() {
+  const response = await fetch(new URL("/legal/smallbusiness/inet/?utm=ux-smoke", baseUrl), {
+    redirect: "manual"
+  });
+  const location = response.headers.get("location") ?? "";
+
+  assert(response.status === 301, "legacy B2B URL did not return 301");
+  assert(location.includes("/business/internet/"), "legacy B2B redirect target is wrong");
+  assert(location.includes("utm=ux-smoke"), "legacy B2B redirect did not preserve query string");
+  results.push("legacy B2B redirect ok");
 }
 
 async function checkTariffCtaPath(client, sessionId) {
@@ -300,6 +317,52 @@ async function submitLeadForm(client, sessionId) {
     "lead form shows lead number"
   );
   results.push("lead form submit path ok");
+}
+
+async function submitBusinessLeadForm(client, sessionId) {
+  await setViewport(client, sessionId, desktopViewport());
+  await navigate(client, sessionId, "/business/request/?service=internet");
+  await delay(1300);
+  const load = client.waitForEvent("Page.loadEventFired", { sessionId, timeoutMs: 15000 });
+  await evaluate(
+    client,
+    sessionId,
+    `(() => {
+      const form = document.querySelector(".business-request-form");
+      if (!form) return "missing-form";
+      form.querySelector('input[name="formStartedAt"]').value = String(Date.now() - 5000);
+      form.querySelector('input[name="companyName"]').value = "Тест Бизнес";
+      form.querySelector('input[name="contactPerson"]').value = "Иван Тестов";
+      form.querySelector('input[name="phone"]').value = "+7 900 765 43 21";
+      form.querySelector('input[name="email"]').value = "sales-test@example.com";
+      form.querySelector('input[name="inn"]').value = "2300000000";
+      form.querySelector('select[name="segment"]').value = "smb";
+      form.querySelector('select[name="service"]').value = "internet";
+      form.querySelector('input[name="city"]').value = "Краснодар";
+      form.querySelector('input[name="address"]').value = "Красная, 1";
+      form.querySelector('input[name="employeesOrSites"]').value = "12";
+      form.querySelector('select[name="urgency"]').value = "30_days";
+      form.querySelector('textarea[name="configurationSummary"]').value = "Офис на 12 сотрудников, интернет 300 Мбит/с и статический IP";
+      form.querySelector('input[name="consent"]').checked = true;
+      form.requestSubmit();
+      return "submitted";
+    })()`
+  );
+  await load.catch(() => undefined);
+  await waitForReady(client, sessionId);
+  await assertExpression(
+    client,
+    sessionId,
+    `document.querySelector(".form-status.is-success")?.innerText.includes("B2B-заявка принята") === true`,
+    "business lead form shows success state"
+  );
+  await assertExpression(
+    client,
+    sessionId,
+    `document.querySelector(".form-status.is-success")?.innerText.includes("KBT-B2B-") === true`,
+    "business lead form shows B2B lead number"
+  );
+  results.push("business lead form submit path ok");
 }
 
 async function navigate(client, sessionId, path) {

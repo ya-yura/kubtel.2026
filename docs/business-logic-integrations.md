@@ -23,29 +23,29 @@
 
 ## Модули
 
-| Модуль | Роль |
-| --- | --- |
-| `src/actions/index.ts` | Astro Action `submitLead` и orchestration заявки |
-| `src/lib/leads/schema.ts` | Zod-валидация формы, нормализация телефона, honeypot/speed checks |
-| `src/lib/leads/submission.ts` | Сборка доменной заявки, проверка тарифа/опций, расчет цены |
-| `src/lib/leads/address.ts` | Локальная проверка адреса по coverage areas |
-| `src/lib/leads/outbox.ts` | Серверный резерв заявок при ошибке или отсутствии интеграций |
-| `src/lib/integrations/crm.ts` | CRM/webhook adapter с опциональной HMAC-подписью |
-| `src/lib/integrations/telegram.ts` | Telegram Bot API adapter для отдела продаж |
-| `src/lib/analytics/server.ts` | Серверная аналитика без передачи персональных данных |
-| `src/lib/spam/rate-limit.ts` | In-memory rate limiting для формы |
+| Модуль                             | Роль                                                              |
+| ---------------------------------- | ----------------------------------------------------------------- |
+| `src/actions/index.ts`             | Astro Action `submitLead` и orchestration заявки                  |
+| `src/lib/leads/schema.ts`          | Zod-валидация формы, нормализация телефона, honeypot/speed checks |
+| `src/lib/leads/submission.ts`      | Сборка доменной заявки, проверка тарифа/опций, расчет цены        |
+| `src/lib/leads/address.ts`         | Локальная проверка адреса по coverage areas                       |
+| `src/lib/leads/outbox.ts`          | Серверный резерв заявок при ошибке или отсутствии интеграций      |
+| `src/lib/integrations/crm.ts`      | CRM/webhook adapter с опциональной HMAC-подписью                  |
+| `src/lib/integrations/telegram.ts` | Telegram Bot API adapter для отдела продаж                        |
+| `src/lib/analytics/server.ts`      | Серверная аналитика без передачи персональных данных              |
+| `src/lib/spam/rate-limit.ts`       | In-memory rate limiting для формы                                 |
 
 ## Переменные окружения
 
-| Переменная | Назначение |
-| --- | --- |
-| `TELEGRAM_BOT_TOKEN` | Токен Telegram-бота для уведомлений |
-| `TELEGRAM_SALES_CHAT_ID` | Chat ID отдела продаж |
-| `CRM_WEBHOOK_URL` | Временный или production webhook CRM |
-| `CRM_WEBHOOK_SECRET` | Секрет для HMAC-подписи CRM payload |
-| `ANALYTICS_WEBHOOK_URL` | Webhook серверной аналитики |
-| `ANALYTICS_WEBHOOK_SECRET` | Секрет для подписи analytics payload |
-| `LEAD_OUTBOX_DIR` | Локальная папка резерва заявок, по умолчанию `.lead-outbox` |
+| Переменная                 | Назначение                                                  |
+| -------------------------- | ----------------------------------------------------------- |
+| `TELEGRAM_BOT_TOKEN`       | Токен Telegram-бота для уведомлений                         |
+| `TELEGRAM_SALES_CHAT_ID`   | Chat ID отдела продаж                                       |
+| `CRM_WEBHOOK_URL`          | Временный или production webhook CRM                        |
+| `CRM_WEBHOOK_SECRET`       | Секрет для HMAC-подписи CRM payload                         |
+| `ANALYTICS_WEBHOOK_URL`    | Webhook серверной аналитики                                 |
+| `ANALYTICS_WEBHOOK_SECRET` | Секрет для подписи analytics payload                        |
+| `LEAD_OUTBOX_DIR`          | Локальная папка резерва заявок, по умолчанию `.lead-outbox` |
 
 `.lead-outbox/` добавлен в `.gitignore`, потому что записи содержат персональные данные заявки.
 

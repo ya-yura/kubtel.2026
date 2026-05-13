@@ -1,0 +1,29 @@
+{
+  "business": {
+    "hero": {
+      "panelBackground": {
+        "value": "linear-gradient(135deg, rgba(31, 103, 178, 0.14), transparent 42%), linear-gradient(160deg, {color.surface.dark}, {color.surface.darkRaisedAlt})",
+        "type": "gradient"
+      },
+      "panelItemBackground": { "value": "{color.alpha.white08}", "type": "color" },
+      "proofText": { "value": "{color.alpha.white72}", "type": "color" }
+    },
+    "proof": {
+      "confirmed": {
+        "background": { "value": "{color.status.successSoft}", "type": "color" },
+        "border": { "value": "rgba(19, 122, 75, 0.18)", "type": "color" },
+        "text": { "value": "{color.status.success}", "type": "color" }
+      },
+      "needsVerification": {
+        "background": { "value": "{color.surface.warm}", "type": "color" },
+        "border": { "value": "{color.alpha.accent24}", "type": "color" },
+        "text": { "value": "{color.action.primaryActive}", "type": "color" }
+      },
+      "draft": {
+        "background": { "value": "{color.surface.soft}", "type": "color" },
+        "border": { "value": "{color.border.default}", "type": "color" },
+        "text": { "value": "{color.text.secondary}", "type": "color" }
+      }
+    }
+  }
+}

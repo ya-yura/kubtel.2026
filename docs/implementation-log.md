@@ -1,5 +1,51 @@
 # Kubtel.ru: журнал реализации
 
+## 2026-05-13
+
+### Завершен технический контур B2B/CMS/design tokens и production launch QA
+
+Файлы:
+
+- `src/design/tokens/**`;
+- `scripts/build-tokens.mjs`;
+- `src/styles/tokens.css`;
+- `src/styles/global.css`;
+- `src/lib/business/**`;
+- `src/lib/leads/business-*`;
+- `src/lib/integrations/telegram.ts`;
+- `src/actions/index.ts`;
+- `src/lib/redirects/business-legacy.ts`;
+- `src/middleware.ts`;
+- `scripts/ux-smoke.mjs`;
+- `cms/strapi/**`;
+- `docs/editor-guide.md`;
+- `docs/external-inputs-kubtel.md`;
+- `docs/b2b-cms-design-final-qa.md`.
+
+Результат:
+
+- реализован design token source of truth с генерацией `tokens.css`, проверкой актуальности и запретом raw hex в source-стилях;
+- исправлена генерация nested token references, чтобы CSS получал реальные значения вместо `[object Object]`;
+- добавлены pure B2B calculators для internet/telephony/cctv/VPS/VDI/colocation/Wi-Fi authorization;
+- добавлены B2B lead scoring, расширенный CRM payload, pipeline routing, Telegram summary и B2B analytics events;
+- B2B форма расширена полями ИНН, адреса, размера компании/площадок и конфигурации;
+- legacy B2B redirects вынесены в тестируемый модуль и подключены через Astro middleware;
+- UX smoke расширен на B2B routes, B2B form submit и legacy redirect check;
+- добавлен Strapi CMS scaffold: content-type schemas, DesignTheme, seed B2C+B2B контента, roles/workflow baseline, preview/fallback docs;
+- подготовлены редакторский гид, внешний production inputs checklist и финальный QA/blocker report для Prompts 10-20.
+
+Проверка:
+
+- `npm run tokens:build` выполнен;
+- `npm run tokens:check` выполнен.
+
+Ограничения:
+
+- Strapi runtime, PostgreSQL, production API token и реальные роли в админке не подняты без внешних доступов;
+- production CRM/Telegram/analytics, домен/DNS/SSL/redirects, Lighthouse на боевом origin и feedback loop отдела продаж требуют Kubtel-доступов и production проверки.
+
+Статус: technical completed, production blocked by external inputs.
+
 ## 2026-05-06
 
 ### Создано базовое ТЗ

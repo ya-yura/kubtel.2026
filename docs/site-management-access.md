@@ -4,34 +4,37 @@
 
 ## Коротко
 
-В текущей версии у сайта нет отдельной веб-админки с адресом вида `/admin`, логином и паролем.
+В текущей production-ready версии сайта основной публичный frontend уже отделен от контента, а Strapi CMS MVP добавлен как отдельный workspace `cms/strapi`. Пока Strapi не поднят на production, текущий безопасный fallback остается local content layer.
 
 Система управления сейчас состоит из:
 
 - GitHub-репозитория;
 - локальной рабочей папки;
 - JSON-файлов контента;
+- Strapi CMS scaffold для B2C+B2B контента;
 - Astro-шаблонов и компонентов;
 - production-переменных окружения на хостинге;
 - проверочных команд `npm`.
 
-Это сделано осознанно: контент уже отделен от интерфейса, поэтому позже можно подключить Headless CMS без переписывания страниц.
+Это сделано осознанно: Astro получает данные через adapter boundary и может работать с local content, Strapi или local fallback без переписывания страниц.
 
 ## Где находится управление
 
-| Зона | Где находится | Для чего нужна |
-| --- | --- | --- |
-| Репозиторий | `https://github.com/ya-yura/kubtel.2026.git` | код, контент, шаблоны, история изменений |
-| Локальная папка | `O:\Dev\kubtel-best-redesign` | рабочая копия проекта |
-| Контент | `src/content/**` | тарифы, услуги, FAQ, покрытие, промо |
-| Шаблоны страниц | `src/pages/**` | структура отдельных URL |
-| Общий layout | `src/layouts/BaseLayout.astro` | HTML-каркас, SEO, JSON-LD, общая обертка |
-| Компоненты | `src/components/**` | секции, карточки, форма, header/footer |
-| Стили | `src/styles/global.css` | визуальная система и адаптивность |
-| Конфиги сайта | `src/config/site.ts`, `src/config/routes.ts` | бренд, origin, навигация, title/description, sitemap |
-| Схемы контента | `src/content.config.ts` | правила полей для JSON-контента |
-| Интеграции | `src/actions/**`, `src/lib/integrations/**`, `src/lib/leads/**` | заявки, CRM, Telegram, outbox, антиспам |
-| Health endpoint | `/api/health.json` | runtime-проверка production |
+| Зона            | Где находится                                                   | Для чего нужна                                       |
+| --------------- | --------------------------------------------------------------- | ---------------------------------------------------- |
+| Репозиторий     | `https://github.com/ya-yura/kubtel.2026.git`                    | код, контент, шаблоны, история изменений             |
+| Локальная папка | `O:\Dev\kubtel-best-redesign`                                   | рабочая копия проекта                                |
+| Контент         | `src/content/**`                                                | тарифы, услуги, FAQ, покрытие, промо                 |
+| Strapi CMS MVP  | `cms/strapi`                                                    | модели, seed, роли/workflow, preview/fallback docs   |
+| Шаблоны страниц | `src/pages/**`                                                  | структура отдельных URL                              |
+| Общий layout    | `src/layouts/BaseLayout.astro`                                  | HTML-каркас, SEO, JSON-LD, общая обертка             |
+| Компоненты      | `src/components/**`                                             | секции, карточки, форма, header/footer               |
+| Стили           | `src/styles/global.css`                                         | визуальная система и адаптивность                    |
+| Дизайн-токены   | `src/design/tokens/**`, `src/styles/tokens.css`                 | source of truth и generated CSS                      |
+| Конфиги сайта   | `src/config/site.ts`, `src/config/routes.ts`                    | бренд, origin, навигация, title/description, sitemap |
+| Схемы контента  | `src/content.config.ts`                                         | правила полей для JSON-контента                      |
+| Интеграции      | `src/actions/**`, `src/lib/integrations/**`, `src/lib/leads/**` | заявки, CRM, Telegram, outbox, антиспам              |
+| Health endpoint | `/api/health.json`                                              | runtime-проверка production                          |
 
 ## Доступы и роли
 
@@ -101,16 +104,22 @@
 
 Шаблон лежит в `.env.example`. Локальный `.env` и production env не хранятся в git.
 
-| Переменная | Назначение |
-| --- | --- |
-| `PUBLIC_SITE_URL` | боевой HTTPS origin сайта |
-| `CRM_WEBHOOK_URL` | endpoint CRM для заявок |
-| `CRM_WEBHOOK_SECRET` | секрет подписи CRM-запроса, если используется |
-| `TELEGRAM_BOT_TOKEN` | токен Telegram-бота |
-| `TELEGRAM_SALES_CHAT_ID` | чат отдела продаж |
-| `ANALYTICS_WEBHOOK_URL` | endpoint серверной аналитики |
-| `ANALYTICS_WEBHOOK_SECRET` | секрет аналитического webhook |
-| `LEAD_OUTBOX_DIR` | путь серверного резерва заявок |
+| Переменная                 | Назначение                                    |
+| -------------------------- | --------------------------------------------- |
+| `PUBLIC_SITE_URL`          | боевой HTTPS origin сайта                     |
+| `CRM_WEBHOOK_URL`          | endpoint CRM для заявок                       |
+| `CRM_WEBHOOK_SECRET`       | секрет подписи CRM-запроса, если используется |
+| `TELEGRAM_BOT_TOKEN`       | токен Telegram-бота                           |
+| `TELEGRAM_SALES_CHAT_ID`   | чат отдела продаж                             |
+| `ANALYTICS_WEBHOOK_URL`    | endpoint серверной аналитики                  |
+| `ANALYTICS_WEBHOOK_SECRET` | секрет аналитического webhook                 |
+| `LEAD_OUTBOX_DIR`          | путь серверного резерва заявок                |
+| `CMS_PROVIDER`             | `local` или `strapi`                          |
+| `CMS_PREVIEW_MODE`         | режим preview для CMS                         |
+| `CMS_FALLBACK_TO_LOCAL`    | fallback на local content при ошибке CMS      |
+| `STRAPI_URL`               | server-only URL Strapi                        |
+| `STRAPI_API_TOKEN`         | server-only API token Strapi                  |
+| `STRAPI_PREVIEW_SECRET`    | секрет preview                                |
 
 Если CRM/Telegram не настроены, заявка сохраняется в outbox. Для production это резервный режим, а не полноценная замена CRM.
 
@@ -184,6 +193,12 @@ Production-сборка:
 npm run build
 ```
 
+Проверка дизайн-токенов:
+
+```bash
+npm run tokens:check
+```
+
 Единая проверка перед релизом:
 
 ```bash
@@ -204,6 +219,26 @@ UX smoke запускается отдельно, когда dev-сервер у
 npm run dev
 npm run test:ux
 ```
+
+## Strapi CMS MVP
+
+CMS workspace:
+
+```text
+cms/strapi
+```
+
+Запуск для разработчика описан в `cms/strapi/README.md`.
+
+Главные сущности:
+
+- `Tariff`, `Service`, `FAQ Item`, `Coverage Area`, `Promo` для B2C;
+- `Business Service`, `Business Segment`, `Business Calculator`, `Calculator Option`, `Lead Form Variant` для B2B;
+- `Design Theme` для governed дизайн-настроек.
+
+Роли и workflow описаны в `cms/strapi/config/kubtel-governance.json`.
+
+Редакторская инструкция для неинженерной команды: `docs/editor-guide.md`.
 
 ## Как устроены шаблоны
 
@@ -284,13 +319,13 @@ npm run test:ux
 
 Контент лежит в `src/content/**`.
 
-| Что меняем | Где менять |
-| --- | --- |
-| тарифы | `src/content/tariffs/*.json` |
-| услуги | `src/content/services/*.json` |
-| FAQ | `src/content/faq/*.json` |
-| покрытие | `src/content/coverage/*.json` |
-| акции | `src/content/promos/*.json` |
+| Что меняем | Где менять                    |
+| ---------- | ----------------------------- |
+| тарифы     | `src/content/tariffs/*.json`  |
+| услуги     | `src/content/services/*.json` |
+| FAQ        | `src/content/faq/*.json`      |
+| покрытие   | `src/content/coverage/*.json` |
+| акции      | `src/content/promos/*.json`   |
 
 Схемы полей описаны в `src/content.config.ts`. Если добавить новое обязательное поле, нужно обновить:
 
@@ -464,7 +499,7 @@ npm run test:ux
 
 ```text
 /api/health.json
-/ 
+/
 /tariffs/
 /connect/
 /support/

@@ -21,6 +21,24 @@ const formStartedAtSchema = z.preprocess((value) => {
   return Number(value);
 }, z.number().int().positive().nullable());
 
+const nullableText = (maxLength: number) =>
+  z
+    .preprocess((value) => value ?? "", z.string().trim().max(maxLength))
+    .transform((value) => (value ? value : null));
+
+const optionalText = (maxLength: number) =>
+  z
+    .preprocess((value) => value ?? "", z.string().trim().max(maxLength))
+    .transform((value) => (value ? value : ""));
+
+const nullableNumber = z.preprocess((value) => {
+  if (value === undefined || value === null || value === "") {
+    return null;
+  }
+
+  return Number(value);
+}, z.number().nonnegative().nullable());
+
 export const businessLeadFormSchema = z.object({
   companyName: z
     .string("Укажите компанию")
@@ -39,17 +57,18 @@ export const businessLeadFormSchema = z.object({
     .max(32, "Телефон слишком длинный")
     .transform(normalizePhone)
     .refine((phone) => phonePattern.test(phone), "Укажите телефон в международном формате"),
-  email: z
-    .string()
-    .trim()
-    .max(120, "Email слишком длинный")
-    .optional()
-    .transform((value) => (value ? value : null)),
-  segment: z.string().trim().max(80).optional().default(""),
+  email: nullableText(120),
+  inn: nullableText(12),
+  segment: optionalText(80),
   service: z.string("Выберите услугу").trim().min(1, "Выберите услугу").max(80),
-  city: z.string().trim().max(200).optional().default(""),
+  city: optionalText(200),
+  address: nullableText(240),
   urgency: z.enum(["planning", "30_days", "7_days", "asap"]).default("planning"),
-  message: z.string().trim().max(800).optional().default(""),
+  employeesOrSites: nullableNumber.default(null),
+  configurationSummary: nullableText(1200),
+  monthlyEstimate: nullableNumber.default(null),
+  oneTimeEstimate: nullableNumber.default(null),
+  message: optionalText(800),
   consent: consentSchema,
   website: honeypotSchema.default(""),
   formStartedAt: formStartedAtSchema.default(null),
