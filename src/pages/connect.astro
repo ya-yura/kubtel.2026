@@ -1,7 +1,6 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import AddressCheckPanel from "@components/sections/AddressCheckPanel.astro";
-import AddressStateMap from "@components/sections/AddressStateMap.astro";
 import { getTariffs } from "@lib/content";
 import { handleLeadFormPost } from "@lib/leads/form-handlers";
 import { buildInternetServiceSchema } from "@lib/seo/schema";
@@ -13,6 +12,7 @@ const tariffs = await getTariffs();
 
 const selectedTariff = Astro.url.searchParams.get("tariff");
 const initialAddress = Astro.url.searchParams.get("address");
+const initialPhone = Astro.url.searchParams.get("phone");
 const leadActionResult =
   !isStaticPreview && Astro.request.method === "POST"
     ? await handleLeadFormPost(await Astro.request.formData(), Astro.request)
@@ -21,26 +21,26 @@ const pageSchema = buildInternetServiceSchema(tariffs, "/connect/");
 ---
 
 <BaseLayout
-  title="Проверка адреса подключения"
-  description="Форма заявки Kubtel: адрес, тариф, опции, контакт и серверная проверка возможности подключения."
+  title="Заявка на подключение"
+  description="Оставьте телефон для обратного звонка Kubtel: специалист уточнит задачу и предложит подключение без скрытых условий."
   canonicalPath="/connect/"
   schema={pageSchema}
 >
   <section class="page-intro section-pad">
     <p class="eyebrow">Подключение</p>
-    <h1>Проверим адрес и подберем понятный тариф</h1>
+    <h1>Оставьте телефон - мы перезвоним и разберемся по-человечески</h1>
     <p>
-      Этот сценарий станет основой конверсионной воронки: адрес, тариф, опции, заявка, уведомление
-      отдела продаж.
+      Адрес можно назвать уже в разговоре. Главное - получить контакт, быстро понять вашу ситуацию
+      и предложить надежный домашний интернет без скрытых платежей и лишней бюрократии.
     </p>
   </section>
   <AddressCheckPanel
     tariffs={tariffs}
     selectedTariff={selectedTariff}
     initialAddress={initialAddress}
+    initialPhone={initialPhone}
     actionResult={leadActionResult}
     staticPreview={isStaticPreview}
     formAction={Astro.url.pathname}
   />
-  <AddressStateMap />
 </BaseLayout>

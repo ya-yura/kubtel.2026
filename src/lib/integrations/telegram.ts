@@ -61,11 +61,11 @@ function formatTelegramLead(lead: LeadSubmission | BusinessLeadSubmission): stri
     `ID: <code>${escapeHtml(lead.id)}</code>`,
     `Имя: ${escapeHtml(lead.customer.name)}`,
     `Телефон: ${escapeHtml(lead.customer.phone)}`,
-    `Адрес: ${escapeHtml(lead.address)}`,
+    `Адрес: ${lead.address ? escapeHtml(lead.address) : "уточнить на звонке"}`,
     `Тариф: ${escapeHtml(lead.tariff.title)}`,
     `Опции: ${escapeHtml(optionList)}`,
     `Стоимость: ${lead.pricing.total} руб./мес.`,
-    `Статус адреса: ${escapeHtml(lead.coverage.statusLabel)}`
+    `Следующий шаг: ${escapeHtml(lead.coverage.message)}`
   ].join("\n");
 }
 

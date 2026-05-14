@@ -2,9 +2,9 @@
 import { getSitePath } from "@config/site";
 
 const isBusinessPath = Astro.url.pathname.startsWith("/business/");
-const label = isBusinessPath ? "B2B-заявка" : "Проверить адрес";
-const hint = isBusinessPath ? "Для расчета услуги" : "Перед выбором тарифа";
-const href = isBusinessPath ? "/business/request/" : "/connect/#address-check";
+const label = isBusinessPath ? "B2B-заявка" : "Оставить телефон";
+const hint = isBusinessPath ? "Для расчета услуги" : "Перезвоним с предложением";
+const href = isBusinessPath ? "/business/request/" : "/connect/#callback-request";
 const actionLabel = isBusinessPath ? "Оставить" : "Начать";
 ---
 

@@ -949,6 +949,7 @@ input[type="radio"] {
 }
 
 .mini-flow {
+  counter-reset: mini-flow;
   display: grid;
   gap: 0.55rem;
   list-style: none;
@@ -972,7 +973,8 @@ input[type="radio"] {
   background: var(--color-graphite);
   border-radius: 999px;
   color: var(--kb-color-text-inverse);
-  content: counter(list-item);
+  content: counter(mini-flow);
+  counter-increment: mini-flow;
   display: inline-grid;
   flex: 0 0 24px;
   font-size: 0.78rem;
@@ -1717,9 +1719,9 @@ input[type="radio"] {
   border-radius: var(--radius) var(--radius) 0 0;
   bottom: 0;
   box-shadow: var(--kb-shadow-sticky);
-  display: flex;
+  display: grid;
   gap: 0.75rem;
-  justify-content: space-between;
+  grid-template-columns: minmax(0, 1fr) auto;
   left: 0;
   padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
   position: fixed;
@@ -1730,7 +1732,9 @@ input[type="radio"] {
 
 .sticky-cta div {
   display: grid;
+  flex: 1 1 0;
   gap: 0.15rem;
+  min-width: 0;
 }
 
 .sticky-cta strong {
@@ -1743,8 +1747,15 @@ input[type="radio"] {
   font-size: 0.82rem;
 }
 
+.sticky-cta strong,
+.sticky-cta span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .sticky-cta a {
-  flex: 0 0 auto;
+  justify-self: end;
   padding: 0.65rem 0.9rem;
 }
 

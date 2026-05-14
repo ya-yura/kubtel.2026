@@ -58,10 +58,16 @@ export function buildLeadSubmission({
   now?: Date;
   userAgent?: string | null;
 }): LeadSubmission {
-  const tariff = tariffs.find((item) => item.slug === input.tariff);
+  const requestedTariff = input.tariff ? tariffs.find((item) => item.slug === input.tariff) : null;
+
+  if (input.tariff && !requestedTariff) {
+    throw new LeadSubmissionError("tariff", "Выбранный тариф не найден");
+  }
+
+  const tariff = requestedTariff ?? tariffs.find((item) => item.isFeatured) ?? tariffs[0];
 
   if (!tariff) {
-    throw new LeadSubmissionError("tariff", "Выбранный тариф не найден");
+    throw new LeadSubmissionError("tariff", "Тарифы временно недоступны");
   }
 
   const invalidOptions = input.options.filter(

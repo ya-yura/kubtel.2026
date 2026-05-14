@@ -17,20 +17,22 @@ type Props = {
   tariffs?: Tariff[];
   selectedTariff?: string | null;
   initialAddress?: string | null;
+  initialPhone?: string | null;
   actionResult?: LeadActionResultLike;
   staticPreview?: boolean;
   formAction?: string;
 };
 
 const {
-  title = "Проверьте возможность подключения",
-  lead = "Первая версия отправляет адрес на ручную проверку. После подключения адресной базы этот блок будет возвращать статус автоматически.",
+  title = "Оставьте телефон - специалист Kubtel перезвонит",
+  lead = "Никакой имитации технической базы: нам важен ваш номер. Менеджер уточнит район, задачу и предложит честный вариант подключения.",
   tariffs = [],
   selectedTariff = null,
   initialAddress = null,
+  initialPhone = null,
   actionResult = undefined,
   staticPreview = false,
-  formAction = "#address-check"
+  formAction = "#callback-request"
 } = Astro.props;
 
 const optionLabels: Record<TariffOption, string> = {
@@ -70,24 +72,25 @@ function getOptionHint(option: TariffOption): string {
 
 <section
   class="address-panel section-pad"
-  id="address-check"
+  id="callback-request"
   data-address-check
   data-static-preview={staticPreview ? "true" : undefined}
 >
+  <span class="visually-hidden" id="address-check" aria-hidden="true"></span>
   <div class="address-copy">
-    <p class="eyebrow">Проверка адреса</p>
+    <p class="eyebrow">Обратный звонок</p>
     <h2>{title}</h2>
     <p>{lead}</p>
     <ol class="mini-flow" aria-label="Шаги заявки">
-      <li>Адрес</li>
-      <li>Тариф</li>
-      <li>Контакт</li>
-      <li>Ответ оператора</li>
+      <li>Телефон</li>
+      <li>Живой звонок</li>
+      <li>Понятное предложение</li>
+      <li>Подключение без сюрпризов</li>
     </ol>
     {
       selectedTariffData && selectedPrice !== null && (
         <div class="price-summary" data-price-summary aria-live="polite">
-          <span>Выбранный сценарий</span>
+          <span>Ориентир для разговора</span>
           <strong data-price-title>{selectedTariffData.title}</strong>
           <p data-price-value>{selectedPriceLabel}</p>
         </div>
@@ -98,7 +101,7 @@ function getOptionHint(option: TariffOption): string {
     class="lead-form"
     id="lead-form"
     method="post"
-    action={staticPreview ? "#address-check" : formAction}
+    action={staticPreview ? "#callback-request" : formAction}
     aria-describedby={describedBy}
   >
     {
@@ -107,8 +110,8 @@ function getOptionHint(option: TariffOption): string {
           <strong>{actionData.message}</strong>
           <span>Номер заявки: {actionData.leadId}</span>
           <span>
-            {actionData.addressStatusLabel}. Тариф: {actionData.tariffTitle},{" "}
-            {formatRubles(actionData.monthlyTotal)} / мес.
+            Специалист перезвонит, уточнит детали и предложит вариант. Ориентир:{" "}
+            {actionData.tariffTitle}, {formatRubles(actionData.monthlyTotal)} / мес.
           </span>
         </div>
       )
@@ -133,24 +136,31 @@ function getOptionHint(option: TariffOption): string {
     </label>
 
     <fieldset class="form-group">
-      <legend>1. Адрес подключения</legend>
-      <label>
-        <span>Адрес</span>
-        <input
-          name="address"
-          type="text"
-          autocomplete="street-address"
-          placeholder="Улица, дом, квартира"
-          value={initialAddress ?? ""}
-          required
-        />
-      </label>
+      <legend>Телефон для звонка</legend>
+      <div class="contact-grid">
+        <label>
+          <span>Телефон</span>
+          <input
+            name="phone"
+            type="tel"
+            autocomplete="tel"
+            inputmode="tel"
+            placeholder="+7"
+            value={initialPhone ?? ""}
+            required
+          />
+        </label>
+        <label>
+          <span>Имя, если удобно</span>
+          <input name="name" type="text" autocomplete="name" placeholder="Как к вам обращаться" />
+        </label>
+      </div>
     </fieldset>
 
     {
       tariffs.length > 0 && (
         <fieldset class="form-group">
-          <legend>2. Тариф</legend>
+          <legend>Ориентир по тарифу</legend>
           <div class="choice-grid">
             {tariffs.map((tariff) => {
               const price = calculateMonthlyPrice(tariff);
@@ -184,7 +194,7 @@ function getOptionHint(option: TariffOption): string {
     {
       availableOptions.length > 0 && (
         <fieldset class="form-group">
-          <legend>3. Опции</legend>
+          <legend>Пожелания к подключению</legend>
           <div class="option-grid">
             {availableOptions.map((option) => {
               const optionHint = getOptionHint(option);
@@ -207,43 +217,30 @@ function getOptionHint(option: TariffOption): string {
     }
 
     <fieldset class="form-group">
-      <legend>4. Контакт</legend>
-      <div class="contact-grid">
-        <label>
-          <span>Имя</span>
-          <input
-            name="name"
-            type="text"
-            autocomplete="name"
-            placeholder="Как к вам обращаться"
-            required
-          />
-        </label>
-        <label>
-          <span>Телефон</span>
-          <input
-            name="phone"
-            type="tel"
-            autocomplete="tel"
-            inputmode="tel"
-            placeholder="+7"
-            required
-          />
-        </label>
-      </div>
+      <legend>Район или адрес, если уже знаете</legend>
+      <label>
+        <span>Адрес не обязателен</span>
+        <input
+          name="address"
+          type="text"
+          autocomplete="street-address"
+          placeholder="Например: ФМР, ул. Красная, частный дом"
+          value={initialAddress ?? ""}
+        />
+      </label>
     </fieldset>
 
     <label class="consent-check">
       <input name="consent" type="checkbox" value="true" required />
       <span>
-        Согласен на обработку персональных данных для проверки адреса и обратного звонка.
+        Согласен на обработку персональных данных для обратного звонка и подготовки предложения.
       </span>
     </label>
 
-    <button type="submit">Отправить заявку</button>
+    <button type="submit">Жду звонка</button>
     <p class="form-note" id="lead-form-note">
-      Заявка обрабатывается на сервере. Финальный юридический текст и политика персональных данных
-      требуют согласования.
+      Достаточно телефона. Адрес, тариф и дополнительные пожелания можно уточнить уже в разговоре
+      со специалистом Kubtel.
     </p>
   </form>
 </section>
@@ -254,8 +251,10 @@ function getOptionHint(option: TariffOption): string {
   if (panel) {
     const params = new URLSearchParams(window.location.search);
     const requestedAddress = params.get("address");
+    const requestedPhone = params.get("phone");
     const requestedTariff = params.get("tariff");
     const addressInput = panel.querySelector<HTMLInputElement>('input[name="address"]');
+    const phoneInput = panel.querySelector<HTMLInputElement>('input[name="phone"]');
     const formStatus = panel.querySelector<HTMLElement>("#lead-form-status");
     const tariffInputs = Array.from(
       panel.querySelectorAll<HTMLInputElement>('input[name="tariff"]')
@@ -267,6 +266,10 @@ function getOptionHint(option: TariffOption): string {
 
     if (requestedAddress && addressInput) {
       addressInput.value = requestedAddress;
+    }
+
+    if (requestedPhone && phoneInput) {
+      phoneInput.value = requestedPhone;
     }
 
     const requestedInput = tariffInputs.find((input) => input.value === requestedTariff);
@@ -347,7 +350,7 @@ function getOptionHint(option: TariffOption): string {
     const tariff = form.querySelector<HTMLInputElement>('input[name="tariff"]:checked');
     const choice = tariff?.closest(".choice-card") as HTMLElement | null;
     const title = choice?.dataset.tariffTitle ?? "выбранный тариф";
-    const price = choice?.dataset.tariffPrice ?? "стоимость после проверки адреса";
+    const price = choice?.dataset.tariffPrice ?? "стоимость уточним на звонке";
 
     status.className = "form-status is-success";
     status.id = "lead-form-status";
@@ -355,8 +358,8 @@ function getOptionHint(option: TariffOption): string {
     status.setAttribute("tabindex", "-1");
     status.replaceChildren(
       createStatusLine("strong", "Демо-заявка принята в онлайн-превью."),
-      createStatusLine("span", "Для боевой отправки подключите Node-хостинг, CRM и Telegram env."),
-      createStatusLine("span", `Тариф: ${title}, ${price}.`)
+      createStatusLine("span", "В боевом режиме менеджер получает телефон и перезванивает."),
+      createStatusLine("span", `Ориентир: ${title}, ${price}.`)
     );
 
     if (!existingStatus) {

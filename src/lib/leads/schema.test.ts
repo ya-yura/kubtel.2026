@@ -9,25 +9,23 @@ import {
 describe("leadFormSchema", () => {
   it("normalizes Russian phone numbers and selected options", () => {
     const result = leadFormSchema.parse({
-      name: "Юрий",
       phone: "8 (918) 123-45-67",
-      address: "Краснодар, Красная, 10",
       tariff: "home-300",
       options: "routerRent",
       consent: "true",
       sourcePath: "/connect/"
     });
 
+    expect(result.name).toBe("Не указано");
     expect(result.phone).toBe("+79181234567");
+    expect(result.address).toBe("");
     expect(result.options).toEqual(["routerRent"]);
     expect(result.consent).toBe(true);
   });
 
   it("rejects a lead without personal data consent", () => {
     const result = leadFormSchema.safeParse({
-      name: "Юрий",
       phone: "+79181234567",
-      address: "Краснодар, Красная, 10",
       tariff: "home-300",
       consent: false
     });

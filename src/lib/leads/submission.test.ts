@@ -67,11 +67,9 @@ const coverage: CoverageArea = {
 };
 
 describe("buildLeadSubmission", () => {
-  it("builds a priced lead with address status", () => {
+  it("builds a priced lead when only phone is required", () => {
     const input = leadFormSchema.parse({
-      name: "Юрий",
       phone: "+79181234567",
-      address: "Краснодар, Красная, 10",
       tariff: "home-300",
       options: ["routerRent"],
       consent: true,
@@ -86,8 +84,26 @@ describe("buildLeadSubmission", () => {
     });
 
     expect(lead.id).toMatch(/^KBT-20260507-/);
+    expect(lead.customer.name).toBe("Не указано");
+    expect(lead.address).toBe("");
     expect(lead.pricing.total).toBe(850);
     expect(lead.coverage.status).toBe("manual_check");
+    expect(lead.coverage.statusLabel).toBe("Адрес уточнит оператор");
+  });
+
+  it("uses the featured tariff when no tariff is selected", () => {
+    const input = leadFormSchema.parse({
+      phone: "+79181234567",
+      consent: true
+    });
+
+    const lead = buildLeadSubmission({
+      input,
+      tariffs: [tariff],
+      coverageAreas: [coverage]
+    });
+
+    expect(lead.tariff.slug).toBe("home-300");
   });
 
   it("rejects options unavailable for the selected tariff", () => {

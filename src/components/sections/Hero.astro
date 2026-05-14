@@ -5,21 +5,22 @@ import { getSitePath, SITE } from "@config/site";
 <section class="hero section-pad">
   <div class="hero-copy">
     <p class="eyebrow">Краснодар, квартиры, ЖК и частный сектор</p>
-    <h1>Интернет Kubtel для дома, работы и спокойных вечеров</h1>
+    <h1>Домашний интернет, где на звонок отвечает человек</h1>
     <p class="hero-lead">
-      Проверяем адрес, показываем понятные условия и передаем заявку локальной команде без лишней
-      бюрократии.
+      Kubtel выбирают после усталости от роботов, скрытых условий и обещаний «сначала продадим,
+      потом разберемся». Оставьте телефон - локальная команда перезвонит и предложит честный
+      вариант подключения.
     </p>
     <div class="audience-switch" aria-label="Выберите направление">
-      <a class="audience-card is-active" href={getSitePath("/connect/#address-check")}>
+      <a class="audience-card is-active" href={getSitePath("/connect/#callback-request")}>
         <span>Для физиков</span>
-        <strong>Домашний интернет</strong>
-        <small>Адрес, тарифы, ТВ и заявка на подключение.</small>
+        <strong>Надежный интернет домой</strong>
+        <small>Телефон, живой звонок, понятные условия без скрытых платежей.</small>
       </a>
       <a class="audience-card" href={getSitePath("/business/")}>
         <span>Для бизнеса</span>
-        <strong>Юрлица и ИП</strong>
-        <small>Интернет в офис, телефония, камеры, VPS и размещение.</small>
+        <strong>Связь без простоя</strong>
+        <small>Интернет, Hot-spot, телефония, камеры, VPS и размещение.</small>
       </a>
       <a class="audience-login" href={SITE.accountUrl} target="_blank" rel="noopener noreferrer">
         Личный кабинет абонента
@@ -27,34 +28,35 @@ import { getSitePath, SITE } from "@config/site";
     </div>
     <form
       class="address-inline"
-      action={getSitePath("/connect/#address-check")}
+      action={getSitePath("/connect/#callback-request")}
       method="get"
-      aria-label="Быстрая проверка адреса"
+      aria-label="Быстрая заявка на обратный звонок"
     >
       <label>
-        <span>Адрес подключения</span>
+        <span>Телефон для звонка</span>
         <input
-          name="address"
-          type="text"
-          placeholder="Улица, дом, квартира"
-          autocomplete="street-address"
+          name="phone"
+          type="tel"
+          inputmode="tel"
+          placeholder="+7"
+          autocomplete="tel"
         />
       </label>
-      <button type="submit">Проверить</button>
+      <button type="submit">Жду звонка</button>
     </form>
   </div>
   <div class="hero-panel" aria-label="Ключевые преимущества">
     <div>
-      <span class="metric">3-5</span>
-      <p>действий до заявки в целевой воронке</p>
+      <span class="metric">1</span>
+      <p>номер телефона нужен, чтобы начать разговор о подключении</p>
     </div>
     <div>
       <span class="metric">0</span>
-      <p>скрытых условий в интерфейсе тарифа</p>
+      <p>скрытых платежей и игр со скоростью в обещании Kubtel</p>
     </div>
     <div>
-      <span class="metric">local</span>
-      <p>фокус на районах, ЖК и частном секторе Краснодара</p>
+      <span class="metric">люди</span>
+      <p>местная команда вместо бесконечных роботов и переключений</p>
     </div>
   </div>
 </section>

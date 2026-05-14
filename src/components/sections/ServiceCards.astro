@@ -13,8 +13,8 @@ type Props = {
 const {
   services,
   tariffs = [],
-  title = "Услуги собраны вокруг реальных домашних сценариев",
-  lead = "Интернет, ТВ и опции показываются как понятные задачи пользователя, а не как сухой список технических позиций."
+  title = "Домашние сценарии без технического тумана",
+  lead = "Работа, кино, игры, ТВ, статический IP или роутер - все это повод для разговора, а не обязательная анкета до звонка."
 } = Astro.props;
 
 const categoryLabels: Record<string, string> = {
@@ -75,9 +75,9 @@ const tariffTitleBySlug = new Map(tariffs.map((tariff) => [tariff.slug, tariff.t
             )}
             <a
               class="card-action"
-              href={getSitePath(`/connect/?service=${service.slug}#address-check`)}
+              href={getSitePath(`/connect/?service=${service.slug}#callback-request`)}
             >
-              Проверить адрес
+              Оставить телефон
             </a>
           </article>
         );

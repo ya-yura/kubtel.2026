@@ -8,8 +8,8 @@ import {
 import type { FaqItem, Tariff } from "@models/domain";
 
 const sampleFaq: FaqItem = {
-  question: "Можно ли проверить адрес онлайн?",
-  answer: "Да, форма передает адрес на серверную проверку.",
+  question: "Можно ли оставить телефон для звонка?",
+  answer: "Да, форма передает телефон специалисту Kubtel.",
   category: "connect",
   priority: 1,
   relatedServices: ["internet"],

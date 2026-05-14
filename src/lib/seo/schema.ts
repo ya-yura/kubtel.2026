@@ -58,7 +58,7 @@ export function buildOrganizationSchema(): JsonLdObject {
     url: getAbsoluteUrl("/"),
     description: SITE.shortDescription,
     areaServed: buildAreaServed(),
-    knowsAbout: ["домашний интернет", "цифровое ТВ", "подключение по адресу", "связь в Краснодаре"]
+    knowsAbout: ["домашний интернет", "цифровое ТВ", "обратный звонок", "связь в Краснодаре"]
   });
 }
 
@@ -158,7 +158,7 @@ export function buildOfferCatalogSchema(tariffs: Tariff[], pagePath = "/tariffs/
         position: index + 1,
         name: tariff.title,
         description: tariff.benefitDescription,
-        url: getAbsoluteUrl(`/connect/?tariff=${tariff.slug}#address-check`),
+        url: getAbsoluteUrl(`/connect/?tariff=${tariff.slug}#callback-request`),
         price: price.total,
         priceCurrency: SITE.currency,
         availability,

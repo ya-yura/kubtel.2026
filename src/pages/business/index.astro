@@ -34,22 +34,22 @@ const pageSchema: JsonLdObject = {
 
 <BaseLayout
   title="Kubtel для бизнеса"
-  description="Интернет, телефония, видеонаблюдение, Wi-Fi авторизация, VPS, VDI и colocation для бизнеса Краснодара."
+  description="Kubtel для бизнеса Краснодара: стабильная связь, поддержка 24/7, аварийная бригада в течение часа, персональный менеджер и Hot-spot."
   canonicalPath="/business/"
   schema={pageSchema}
 >
   <section class="business-hero section-pad">
     <div class="business-hero-copy">
       <p class="eyebrow">Бизнесу</p>
-      <h1>Kubtel для бизнеса: связь, сервисы и инфраструктура в Краснодаре</h1>
+      <h1>Связь для бизнеса, где простой дороже тарифа</h1>
       <p>
-        Отдельная B2B-ветка для офисов, точек продаж, операторов, IT-команд и учреждений:
-        корпоративный интернет, телефония, видеонаблюдение, Wi-Fi авторизация, VPS, VDI и размещение
-        оборудования.
+        Федерал может быть на 20% дешевле, пока все работает. Но когда канал падает, кассы, CRM,
+        телефония и оплата встают вместе с ним. Kubtel выбирают за стабильность, живую поддержку и
+        быстрый выезд.
       </p>
       <div class="business-actions">
-        <a class="card-action" href={getSitePath("/business/request/")}>Рассчитать решение</a>
-        <a class="business-link" href={getSitePath("/business/internet/")}>Начать с интернета</a>
+        <a class="card-action" href={getSitePath("/business/request/")}>Получить расчет</a>
+        <a class="business-link" href={getSitePath("/business/internet/")}>Защитить канал</a>
       </div>
     </div>
     <div class="business-hero-panel" aria-label="Ключевые факты Kubtel для бизнеса">
@@ -65,11 +65,28 @@ const pageSchema: JsonLdObject = {
     </div>
   </section>
 
+  <section class="section-pad narrative-section">
+    <h2>История, которую понимает любой офис</h2>
+    <p>
+      Компания работала на дешевом канале известного провайдера, пока авария не оставила ее без
+      интернета на двое суток. В поддержке через час ответили только одно: авария на линии, сроки
+      неизвестны.
+    </p>
+    <p>
+      После обращения в Kubtel монтажник приехал на следующий день и провел оптику. Цена оказалась
+      немного выше, но скорость решения вопроса стала важнее скидки. Компания работает с Kubtel уже
+      больше пяти лет.
+    </p>
+  </section>
+
   <section class="section-pad">
     <div class="section-heading">
       <p class="eyebrow">Услуги</p>
-      <h2>Выберите бизнес-задачу</h2>
-      <p>Цены и SLA помечены как требующие коммерческого подтверждения до production-публикации.</p>
+      <h2>Не набор услуг, а защита рабочих процессов</h2>
+      <p>
+        Интернет, телефония, видеонаблюдение, гостевой Wi-Fi Hot-spot и инфраструктура собираются
+        вокруг задачи: чтобы бизнес не останавливался.
+      </p>
     </div>
     <div class="business-card-grid">
       {
@@ -97,7 +114,7 @@ const pageSchema: JsonLdObject = {
   <section class="section-pad business-band">
     <div class="section-heading">
       <p class="eyebrow">Сегменты</p>
-      <h2>От точки продаж до операторской инфраструктуры</h2>
+      <h2>От кафе с гостевым Wi-Fi до операторской инфраструктуры</h2>
     </div>
     <div class="business-segment-grid">
       {

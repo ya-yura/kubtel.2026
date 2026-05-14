@@ -40,7 +40,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "Главная",
     title: "Домашний интернет в Краснодаре",
     description:
-      "Kubtel помогает проверить адрес, выбрать домашний интернет или ТВ и отправить заявку локальной команде в Краснодаре.",
+      "Kubtel помогает оставить телефон, получить живой звонок и подключить домашний интернет без скрытых условий.",
     changeFrequency: "weekly",
     priority: 1,
     lastModified
@@ -50,7 +50,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "Тарифы",
     title: "Тарифы домашнего интернета",
     description:
-      "Сравнение тарифов Kubtel для квартиры, семьи, удаленной работы и ТВ с понятным переходом к проверке адреса.",
+      "Сравнение тарифов Kubtel для квартиры, семьи, удаленной работы и ТВ с переходом к обратному звонку.",
     changeFrequency: "weekly",
     priority: 0.9,
     lastModified
@@ -58,9 +58,9 @@ export const sitemapRoutes: SitemapRoute[] = [
   {
     path: "/connect/",
     label: "Подключение",
-    title: "Проверка адреса подключения",
+    title: "Заявка на подключение",
     description:
-      "Форма заявки Kubtel: адрес, тариф, опции, контакт и серверная проверка возможности подключения в Краснодаре.",
+      "Форма заявки Kubtel: оставьте телефон, а специалист уточнит задачу и предложит подключение.",
     changeFrequency: "weekly",
     priority: 0.9,
     lastModified
@@ -70,7 +70,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "Бизнесу",
     title: "Kubtel для бизнеса",
     description:
-      "Интернет, телефония, видеонаблюдение, Wi-Fi авторизация, VPS, VDI и colocation для бизнеса Краснодара.",
+      "Связь Kubtel для бизнеса Краснодара: поддержка 24/7, аварийная бригада в течение часа, персональный менеджер и Hot-spot.",
     changeFrequency: "weekly",
     priority: 0.95,
     lastModified
@@ -110,7 +110,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "Интернет в офис",
     title: "Интернет в офис",
     description:
-      "Корпоративный интернет Kubtel для офиса и бизнеса в Краснодаре: скорость, резервирование, статический IP и заявка на расчет.",
+      "Корпоративный интернет Kubtel для офиса и бизнеса в Краснодаре: стабильность, поддержка 24/7, выезд аварийной бригады и заявка на расчет.",
     changeFrequency: "weekly",
     priority: 0.88,
     lastModified
@@ -137,10 +137,10 @@ export const sitemapRoutes: SitemapRoute[] = [
   },
   {
     path: "/business/wifi-auth/",
-    label: "Wi-Fi авторизация",
-    title: "Wi-Fi авторизация",
+    label: "Hot-spot",
+    title: "Гостевой Wi-Fi Hot-spot",
     description:
-      "Wi-Fi авторизация Kubtel для публичных точек: SMS, звонок, ваучеры, брендированная страница и выбор тарифа.",
+      "Гостевой Wi-Fi Hot-spot Kubtel для публичных точек: авторизация посетителей, стабильный доступ и заявка на запуск.",
     changeFrequency: "monthly",
     priority: 0.78,
     lastModified
@@ -190,7 +190,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "B2B-заявка",
     title: "Заявка для бизнеса",
     description:
-      "B2B-заявка Kubtel: компания, контакт, услуга, сегмент, срочность и конфигурация для расчета.",
+      "B2B-заявка Kubtel: компания, контакт, услуга, срочность и расчет связи без простоя.",
     changeFrequency: "weekly",
     priority: 0.86,
     lastModified
@@ -200,7 +200,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "Поддержка",
     title: "Поддержка и FAQ",
     description:
-      "Ответы Kubtel по подключению, тарифам, частному сектору и сценариям обращения в поддержку.",
+      "Ответы Kubtel по подключению, тарифам, бесплатному доверительному платежу и добровольной блокировке.",
     changeFrequency: "monthly",
     priority: 0.7,
     lastModified
@@ -210,7 +210,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "О компании",
     title: "О локальном провайдере",
     description:
-      "Смысловой каркас страницы Kubtel как локального интернет-провайдера для жителей Краснодара.",
+      "Kubtel как локальный интернет-провайдер Краснодара: живое отношение, честные условия и рекомендации клиентов.",
     changeFrequency: "monthly",
     priority: 0.6,
     lastModified
@@ -220,7 +220,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "Контакты",
     title: "Контакты для подключения",
     description:
-      "Основные сценарии обращения в Kubtel: проверка адреса, поддержка и уточнение офисных контактов.",
+      "Основные сценарии обращения в Kubtel: оставить телефон для подключения, поддержка и офисные контакты.",
     changeFrequency: "monthly",
     priority: 0.6,
     lastModified

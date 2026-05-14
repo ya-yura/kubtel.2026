@@ -22,17 +22,18 @@ export const SITE = {
   origin: normalizeOrigin(import.meta.env.PUBLIC_SITE_URL ?? defaultOrigin),
   basePath,
   defaultTitle: "Интернет Kubtel в Краснодаре",
-  defaultDescription: "Домашний интернет, ТВ и заявка на подключение Kubtel в Краснодаре.",
+  defaultDescription:
+    "Домашний интернет Kubtel в Краснодаре: оставьте телефон, получите живой звонок и понятное предложение.",
   accountUrl: "https://my.kubtel.ru/",
   titleTemplate: "%s | Kubtel",
   themeColor: "#f47b20",
-  shortDescription: "Локальная цифровая платформа для подключения жителей Краснодара.",
+  shortDescription: "Локальная команда связи для жителей и бизнеса Краснодара.",
   areaServed: "Краснодар",
   countryCode: "RU",
   currency: "RUB",
   dateModified: "2026-05-07",
   audience:
-    "Жители Краснодара, которым нужен домашний интернет, ТВ и проверка подключения по адресу."
+    "Жители Краснодара, которым нужен надежный домашний интернет, живой сервис и понятные условия."
 } as const;
 
 export function getAbsoluteUrl(path = "/"): string {

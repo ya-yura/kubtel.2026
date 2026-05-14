@@ -25,6 +25,15 @@ export function checkAddressCoverage(
 ): AddressCheckResult {
   const address = normalizeAddress(rawAddress);
 
+  if (address.length === 0) {
+    return createFallbackResult(
+      "manual_check",
+      "low",
+      "Адрес и возможность подключения оператор уточнит на звонке.",
+      "Адрес уточнит оператор"
+    );
+  }
+
   if (!hasStreetLikeInput(address)) {
     return createFallbackResult(
       "uncertain",
@@ -89,11 +98,12 @@ function createAreaResult(area: CoverageArea, confidence: AddressCheckResult["co
 function createFallbackResult(
   status: AddressCheckStatus,
   confidence: AddressCheckResult["confidence"],
-  message: string
+  message: string,
+  statusLabel = statusLabels[status]
 ): AddressCheckResult {
   return {
     status,
-    statusLabel: statusLabels[status],
+    statusLabel,
     confidence,
     areaSlug: null,
     areaTitle: null,

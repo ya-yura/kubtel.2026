@@ -42,15 +42,15 @@ export const businessServices: BusinessService[] = [
     title: "Интернет в офис",
     category: "Связь",
     summary:
-      "Корпоративный интернет для офиса, магазина, склада или точки обслуживания с симметричным каналом и ручной проверкой адреса.",
+      "Корпоративный интернет для офиса, магазина, склада или точки обслуживания, где каждая минута простоя превращается в потерянные деньги.",
     businessBenefit:
-      "Рабочие сервисы, кассы, телефония и видеонаблюдение остаются на связи, а условия подключения фиксируются для юридического лица.",
+      "Рабочие сервисы, кассы, телефония и видеонаблюдение остаются на связи, а вопросы решаются через поддержку 24/7 и персонального менеджера.",
     proofPoints: [
-      { label: "Симметричный канал", value: "публично заявлен", status: "confirmed" },
-      { label: "Мониторинг", value: "24/7", status: "confirmed" },
-      { label: "SLA", value: "нужно подтвердить", status: "needs_verification" }
+      { label: "Поддержка", value: "24/7", status: "confirmed" },
+      { label: "Аварийная бригада", value: "выезд в течение часа", status: "confirmed" },
+      { label: "Платежи", value: "кредитный лимит для бизнеса", status: "confirmed" }
     ],
-    ctaLabel: "Рассчитать интернет",
+    ctaLabel: "Защитить офис от простоя",
     priority: "P0",
     audience: ["офисы", "магазины", "клиники", "склады"],
     options: ["скорость", "резервный канал", "статический IP", "настройка роутера"],
@@ -58,7 +58,7 @@ export const businessServices: BusinessService[] = [
     relatedServices: ["telephony", "wifi-auth", "cctv"],
     seoTitle: "Интернет в офис в Краснодаре",
     seoDescription:
-      "Корпоративный интернет Kubtel для офиса и бизнеса в Краснодаре: скорость, резервирование, статический IP и заявка на расчет."
+      "Корпоративный интернет Kubtel для офиса и бизнеса в Краснодаре: стабильный канал, поддержка 24/7, выезд аварийной бригады и заявка на расчет."
   },
   {
     slug: "telephony",
@@ -108,26 +108,26 @@ export const businessServices: BusinessService[] = [
   },
   {
     slug: "wifi-auth",
-    title: "Wi-Fi авторизация",
+    title: "Гостевой Wi-Fi Hot-spot",
     category: "Публичный Wi-Fi",
     summary:
-      "Авторизация гостей публичной Wi-Fi-точки через SMS, звонок или ваучер с брендированной страницей и управлением трафиком.",
+      "Гостевой Wi-Fi с авторизацией для кафе, магазинов, клиник и других публичных точек, где посетителям нужен стабильный доступ в сеть.",
     businessBenefit:
-      "Кафе, отель или клиника запускает гостевой Wi-Fi с идентификацией пользователей и маркетинговыми возможностями.",
+      "Посетители могут оплатить заказ, сделать перевод или просто выйти в интернет, а бизнес раздает публичный Wi-Fi с корректной авторизацией.",
     proofPoints: [
-      { label: "Тарифы", value: "Базовый / Стандарт / Премиум", status: "confirmed" },
-      { label: "Личный кабинет", value: "публично заявлен", status: "confirmed" },
-      { label: "Юридическая база", value: "нужна сверка", status: "needs_verification" }
+      { label: "Спрос", value: "самая быстрорастущая B2B-услуга", status: "confirmed" },
+      { label: "Сценарий", value: "общепит, магазины, сервисы", status: "confirmed" },
+      { label: "Авторизация", value: "публичный Wi-Fi с идентификацией", status: "confirmed" }
     ],
-    ctaLabel: "Выбрать тариф",
+    ctaLabel: "Запустить Hot-spot",
     priority: "P1",
     audience: ["кафе", "отели", "салоны", "клиники"],
     options: ["способ авторизации", "брендированная страница", "SMS-пакет", "редирект"],
     calculatorFields: ["тип точки", "тариф", "SMS", "брендинг"],
     relatedServices: ["internet"],
-    seoTitle: "Wi-Fi авторизация для кафе и отелей",
+    seoTitle: "Гостевой Wi-Fi Hot-spot для кафе и магазинов",
     seoDescription:
-      "Wi-Fi авторизация Kubtel для публичных точек: SMS, звонок, ваучеры, брендированная страница и выбор тарифа."
+      "Гостевой Wi-Fi Hot-spot Kubtel для публичных точек: авторизация посетителей, доступ в интернет и заявка на запуск услуги."
   },
   {
     slug: "vps",
@@ -228,9 +228,9 @@ export const businessSegments: BusinessSegment[] = [
     slug: "smb",
     title: "Малому и среднему бизнесу",
     summary: "Связь для офисов, магазинов, кафе, клиник, салонов и складов.",
-    pain: "Нужны интернет, телефония, камеры и гостевой Wi-Fi без разрозненных подрядчиков.",
+    pain: "Нужны интернет, телефония, камеры и гостевой Wi-Fi без разрозненных подрядчиков и двух суток простоя.",
     trigger:
-      "Открытие точки, переезд, рост нагрузки, плохой текущий канал или запуск видеонаблюдения.",
+      "Открытие точки, переезд, плохой текущий канал, ограничения мобильного интернета или запуск гостевого Wi-Fi.",
     ctaLabel: "Подобрать связь для точки",
     fields: ["тип объекта", "адрес", "услуги", "срок запуска"],
     serviceSlugs: ["internet", "telephony", "cctv", "wifi-auth"],
@@ -268,10 +268,10 @@ export const businessSegments: BusinessSegment[] = [
 ];
 
 export const businessProofStrip: BusinessProof[] = [
-  { label: "Мониторинг", value: "24/7", status: "confirmed" },
-  { label: "ЦОД", value: "две площадки", status: "confirmed" },
-  { label: "Связность", value: "SEA-IX", status: "confirmed" },
-  { label: "Коммерция", value: "цены требуют сверки", status: "needs_verification" }
+  { label: "Поддержка", value: "24/7", status: "confirmed" },
+  { label: "Выезд", value: "в течение часа", status: "confirmed" },
+  { label: "Менеджер", value: "вне очереди", status: "confirmed" },
+  { label: "Платежи", value: "кредитный лимит", status: "confirmed" }
 ];
 
 export function getBusinessService(slug: string): BusinessService | undefined {

@@ -11,14 +11,17 @@ const pageSchema = buildFaqSchema(faqItems, "/support/");
 
 <BaseLayout
   title="Поддержка и FAQ"
-  description="Ответы Kubtel по подключению, тарифам, частному сектору и сценариям обращения в поддержку."
+  description="Поддержка Kubtel: живое обращение, понятные условия, бесплатный доверительный платеж и добровольная блокировка до полугода."
   canonicalPath="/support/"
   schema={pageSchema}
 >
   <section class="page-intro section-pad">
     <p class="eyebrow">Поддержка</p>
     <h1>Поддержка должна объяснять, а не прятаться за регламентом</h1>
-    <p>Финальные SLA и каналы связи будут добавлены после сверки с операционной командой Kubtel.</p>
+    <p>
+      Самая сильная ценность Kubtel проявляется не в красивой скорости на баннере, а когда человеку
+      нужно решить вопрос без волокиты, скриптов и бесконечных переводов между отделами.
+    </p>
   </section>
   <SupportPathways />
   <FaqList items={faqItems} />
