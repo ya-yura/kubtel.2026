@@ -32,7 +32,10 @@ try {
   }
 
   console.log("Static GitHub Pages preview mode enabled.");
-  await run(process.platform === "win32" ? "npm.cmd" : "npm", ["run", "build"]);
+  await run(
+    process.platform === "win32" ? (process.env.ComSpec ?? "cmd.exe") : "npm",
+    process.platform === "win32" ? ["/d", "/s", "/c", "npm run build"] : ["run", "build"]
+  );
 } finally {
   await Promise.all([...originals.entries()].map(([file, source]) => writeFile(file, source)));
 }

@@ -8,8 +8,8 @@ import { getSitePath, SITE } from "@config/site";
     <h1>Домашний интернет, где на звонок отвечает человек</h1>
     <p class="hero-lead">
       Kubtel выбирают после усталости от роботов, скрытых условий и обещаний «сначала продадим,
-      потом разберемся». Оставьте телефон - локальная команда перезвонит и предложит честный
-      вариант подключения.
+      потом разберемся». Оставьте телефон - локальная команда перезвонит и предложит честный вариант
+      подключения.
     </p>
     <div class="audience-switch" aria-label="Выберите направление">
       <a class="audience-card is-active" href={getSitePath("/connect/#callback-request")}>
@@ -34,13 +34,7 @@ import { getSitePath, SITE } from "@config/site";
     >
       <label>
         <span>Телефон для звонка</span>
-        <input
-          name="phone"
-          type="tel"
-          inputmode="tel"
-          placeholder="+7"
-          autocomplete="tel"
-        />
+        <input name="phone" type="tel" inputmode="tel" placeholder="+7" autocomplete="tel" />
       </label>
       <button type="submit">Жду звонка</button>
     </form>
