@@ -1,5 +1,5 @@
 ---
-import { getSitePath } from "@config/site";
+import { getSitePath, SITE } from "@config/site";
 ---
 
 <section class="hero section-pad">
@@ -10,6 +10,21 @@ import { getSitePath } from "@config/site";
       Проверяем адрес, показываем понятные условия и передаем заявку локальной команде без лишней
       бюрократии.
     </p>
+    <div class="audience-switch" aria-label="Выберите направление">
+      <a class="audience-card is-active" href={getSitePath("/connect/#address-check")}>
+        <span>Для физиков</span>
+        <strong>Домашний интернет</strong>
+        <small>Адрес, тарифы, ТВ и заявка на подключение.</small>
+      </a>
+      <a class="audience-card" href={getSitePath("/business/")}>
+        <span>Для бизнеса</span>
+        <strong>Юрлица и ИП</strong>
+        <small>Интернет в офис, телефония, камеры, VPS и размещение.</small>
+      </a>
+      <a class="audience-login" href={SITE.accountUrl} target="_blank" rel="noopener noreferrer">
+        Личный кабинет абонента
+      </a>
+    </div>
     <form
       class="address-inline"
       action={getSitePath("/connect/#address-check")}

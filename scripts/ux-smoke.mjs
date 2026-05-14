@@ -148,6 +148,7 @@ try {
 
   await assertHealthEndpoint();
   await assertLegacyRedirect();
+  await checkHomeAudienceSwitch(client, sessionId);
   await checkTariffCtaPath(client, sessionId);
   await checkMobilePath(client, sessionId);
   await checkBusinessCalculator(client, sessionId);
@@ -215,6 +216,30 @@ async function assertLegacyRedirect() {
   assert(location.includes("/business/internet/"), "legacy B2B redirect target is wrong");
   assert(location.includes("utm=ux-smoke"), "legacy B2B redirect did not preserve query string");
   results.push("legacy B2B redirect ok");
+}
+
+async function checkHomeAudienceSwitch(client, sessionId) {
+  await setViewport(client, sessionId, desktopViewport());
+  await navigate(client, sessionId, "/");
+  await assertExpression(
+    client,
+    sessionId,
+    `document.querySelector(".audience-switch")?.textContent.includes("Для бизнеса") === true`,
+    "home first screen exposes business choice"
+  );
+  await assertExpression(
+    client,
+    sessionId,
+    `document.querySelector(".audience-switch")?.textContent.includes("Для физиков") === true`,
+    "home first screen exposes residential choice"
+  );
+  await assertExpression(
+    client,
+    sessionId,
+    `document.querySelector('a[href="https://my.kubtel.ru/"]') !== null`,
+    "subscriber cabinet link is present"
+  );
+  results.push("home audience switch and cabinet link ok");
 }
 
 async function checkTariffCtaPath(client, sessionId) {

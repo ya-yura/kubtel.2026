@@ -23,6 +23,7 @@ export const SITE = {
   basePath,
   defaultTitle: "Интернет Kubtel в Краснодаре",
   defaultDescription: "Домашний интернет, ТВ и заявка на подключение Kubtel в Краснодаре.",
+  accountUrl: "https://my.kubtel.ru/",
   titleTemplate: "%s | Kubtel",
   themeColor: "#f47b20",
   shortDescription: "Локальная цифровая платформа для подключения жителей Краснодара.",
