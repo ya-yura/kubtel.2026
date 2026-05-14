@@ -139,12 +139,18 @@ try {
   await checkRoute(client, sessionId, "/about/", "Kubtel");
   await checkRoute(client, sessionId, "/business/", "Kubtel для бизнеса");
   await checkRoute(client, sessionId, "/business/internet/", "Интернет в офис");
+  await checkRoute(client, sessionId, "/business/telephony/", "Калькулятор телефонии");
+  await checkRoute(client, sessionId, "/business/cctv/", "Калькулятор видеонаблюдения");
+  await checkRoute(client, sessionId, "/business/vps/", "Калькулятор VPS");
+  await checkRoute(client, sessionId, "/business/colocation/", "Калькулятор размещения");
+  await checkRoute(client, sessionId, "/business/wifi-auth/", "Калькулятор Hot-spot");
   await checkRoute(client, sessionId, "/business/request/", "B2B-заявка");
 
   await assertHealthEndpoint();
   await assertLegacyRedirect();
   await checkTariffCtaPath(client, sessionId);
   await checkMobilePath(client, sessionId);
+  await checkBusinessCalculator(client, sessionId);
   await submitLeadForm(client, sessionId);
   await submitBusinessLeadForm(client, sessionId);
 
@@ -280,6 +286,41 @@ async function checkMobilePath(client, sessionId) {
     "mobile menu can be opened"
   );
   results.push("mobile navigation path ok");
+}
+
+async function checkBusinessCalculator(client, sessionId) {
+  await setViewport(client, sessionId, desktopViewport());
+  await navigate(client, sessionId, "/business/vps/");
+  await assertExpression(
+    client,
+    sessionId,
+    `document.querySelector("[data-business-calculator]") !== null`,
+    "VPS page contains business calculator"
+  );
+  await evaluate(
+    client,
+    sessionId,
+    `(() => {
+      const cpu = document.querySelector('[data-business-calculator] input[name="vCpu"]');
+      if (!cpu) return false;
+      cpu.value = "8";
+      cpu.dispatchEvent(new Event("input", { bubbles: true }));
+      return true;
+    })()`
+  );
+  await assertExpression(
+    client,
+    sessionId,
+    `document.querySelector("[data-calculator-monthly]")?.innerText.includes("₽") === true`,
+    "business calculator shows monthly result"
+  );
+  await assertExpression(
+    client,
+    sessionId,
+    `document.querySelector("[data-calculator-cta]")?.href.includes("configurationSummary=") === true`,
+    "business calculator passes configuration into request link"
+  );
+  results.push("business calculator path ok");
 }
 
 async function submitLeadForm(client, sessionId) {

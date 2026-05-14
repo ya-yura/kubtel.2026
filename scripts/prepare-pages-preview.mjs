@@ -32,7 +32,7 @@ try {
   }
 
   console.log("Static GitHub Pages preview mode enabled.");
-  await run("npm", ["run", "build"]);
+  await run(process.platform === "win32" ? "npm.cmd" : "npm", ["run", "build"]);
 } finally {
   await Promise.all([...originals.entries()].map(([file, source]) => writeFile(file, source)));
 }
@@ -40,7 +40,6 @@ try {
 function run(command, args) {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, {
-      shell: process.platform === "win32",
       stdio: "inherit"
     });
 

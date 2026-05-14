@@ -1393,6 +1393,126 @@ input[type="radio"] {
   font-weight: 760;
 }
 
+.business-calculator-section {
+  padding-top: 1.5rem;
+}
+
+.business-calculator {
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 1rem;
+  padding: 1.15rem;
+}
+
+.business-calculator-form {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.business-calculator-form label {
+  background: var(--kb-color-surface-raised);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  padding: 0.9rem;
+}
+
+.business-calculator-form label small {
+  color: var(--color-muted);
+  font-weight: 760;
+}
+
+.business-calculator-form select {
+  background: var(--kb-component-input-background);
+  border: 1px solid var(--kb-component-input-border);
+  border-radius: var(--kb-component-input-radius);
+  color: var(--color-ink);
+  min-height: var(--kb-component-input-min-height);
+  padding: 0.8rem 0.9rem;
+  width: 100%;
+}
+
+.calculator-toggle {
+  align-items: center;
+  cursor: pointer;
+  grid-template-columns: auto 1fr;
+  min-height: 76px;
+}
+
+.business-calculator-result {
+  background: var(--color-graphite);
+  border-radius: var(--radius);
+  color: var(--kb-color-text-inverse);
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.business-calculator-result h3 {
+  color: var(--kb-color-text-inverse);
+  font-size: 1.35rem;
+  margin-bottom: 0;
+}
+
+.business-calculator-result .service-category {
+  justify-self: start;
+}
+
+.calculator-total-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.calculator-total-grid div {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-sm);
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.85rem;
+}
+
+.calculator-total-grid span,
+.calculator-note {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.calculator-total-grid strong {
+  color: var(--kb-color-text-inverse);
+  font-size: 1.35rem;
+}
+
+.calculator-lines {
+  display: grid;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.calculator-lines li {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+  padding-bottom: 0.5rem;
+}
+
+.calculator-lines span {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.calculator-lines strong {
+  color: var(--kb-color-text-inverse);
+  text-align: right;
+}
+
+.calculator-note {
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
 .business-request-layout {
   display: grid;
   gap: 1rem;
@@ -1589,6 +1709,7 @@ input[type="radio"] {
   .business-card,
   .business-segment-card,
   .business-detail-card,
+  .business-calculator,
   .business-request-summary {
     animation: content-rise 420ms ease both;
   }
@@ -1719,6 +1840,18 @@ input[type="radio"] {
   .business-segment-grid,
   .business-detail-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .business-calculator {
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 0.75fr);
+  }
+
+  .business-calculator-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .calculator-total-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .business-request-layout {

@@ -13,6 +13,9 @@ export const prerender = false;
 
 const selectedService = Astro.url.searchParams.get("service") ?? "";
 const selectedSegment = Astro.url.searchParams.get("segment") ?? "";
+const selectedConfiguration = Astro.url.searchParams.get("configurationSummary") ?? "";
+const selectedMonthlyEstimate = Astro.url.searchParams.get("monthlyEstimate") ?? "";
+const selectedOneTimeEstimate = Astro.url.searchParams.get("oneTimeEstimate") ?? "";
 const service = selectedService ? getBusinessService(selectedService) : undefined;
 const segment = selectedSegment ? getBusinessSegment(selectedSegment) : undefined;
 const contextTitle = service?.title ?? segment?.title ?? "B2B-заявка";
@@ -67,6 +70,8 @@ const actionError = actionResult?.error;
       }
       <input name="sourcePath" type="hidden" value={Astro.url.pathname} />
       <input name="formStartedAt" type="hidden" value={formStartedAt} />
+      <input name="monthlyEstimate" type="hidden" value={selectedMonthlyEstimate} />
+      <input name="oneTimeEstimate" type="hidden" value={selectedOneTimeEstimate} />
       <label class="visually-hidden">
         <span>Оставьте это поле пустым</span>
         <input name="website" type="text" tabindex="-1" autocomplete="off" />
@@ -170,7 +175,8 @@ const actionError = actionResult?.error;
           rows="5"
           maxlength="1200"
           placeholder="Например: офис на 20 сотрудников, нужен интернет 300 Мбит/с, 2 статических IP и телефония"
-        ></textarea>
+          >{selectedConfiguration}</textarea
+        >
       </label>
 
       <label class="message-field">

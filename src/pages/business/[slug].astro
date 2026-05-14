@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import BusinessCalculator from "@components/sections/BusinessCalculator.astro";
 import { getAbsoluteUrl, getSitePath } from "@config/site";
+import { getBusinessCalculatorConfig } from "@lib/business/calculator-ui";
 import {
   businessSegments,
   businessServices,
@@ -35,6 +37,7 @@ const canonicalPath = `/business/${entry.slug}/`;
 const relatedServices = isService
   ? getRelatedBusinessServices(entry.relatedServices)
   : getRelatedBusinessServices(entry.serviceSlugs);
+const calculatorConfig = isService ? getBusinessCalculatorConfig(entry.slug) : undefined;
 const pageSchema: JsonLdObject = isService
   ? {
       "@context": "https://schema.org",
@@ -146,6 +149,8 @@ const pageSchema: JsonLdObject = isService
       </section>
     )
   }
+
+  {calculatorConfig && <BusinessCalculator config={calculatorConfig} />}
 
   <section class="section-pad">
     <div class="section-heading">

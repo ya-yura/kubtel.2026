@@ -1,0 +1,355 @@
+---
+import { getSitePath } from "@config/site";
+import {
+  businessCalculatorPricing,
+  type BusinessCalculatorConfig
+} from "@lib/business/calculator-ui";
+
+type Props = {
+  config: BusinessCalculatorConfig;
+};
+
+const { config } = Astro.props;
+const calculatorId = `business-calculator-${config.type}`;
+const requestPath = getSitePath("/business/request/");
+const payload = JSON.stringify({
+  config,
+  pricing: businessCalculatorPricing,
+  requestPath
+}).replace(/</g, "\\u003c");
+---
+
+<section class="section-pad business-calculator-section" id={calculatorId}>
+  <div class="section-heading">
+    <p class="eyebrow">Калькулятор</p>
+    <h2>{config.title}</h2>
+    <p>{config.lead}</p>
+  </div>
+
+  <div class="business-calculator" data-business-calculator>
+    <script is:inline type="application/json" data-calculator-config set:html={payload} />
+
+    <form class="business-calculator-form" data-calculator-form>
+      {
+        config.fields.map((field) => {
+          if (field.kind === "select") {
+            return (
+              <label>
+                <span>{field.label}</span>
+                <select name={field.name} data-calculator-field>
+                  {field.options.map((option) => (
+                    <option value={option.value} selected={option.value === field.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            );
+          }
+
+          if (field.kind === "checkbox") {
+            return (
+              <label class="calculator-toggle">
+                <input
+                  name={field.name}
+                  type="checkbox"
+                  checked={field.checked}
+                  data-calculator-field
+                />
+                <span>{field.label}</span>
+              </label>
+            );
+          }
+
+          return (
+            <label>
+              <span>{field.label}</span>
+              <input
+                name={field.name}
+                type="number"
+                min={field.min}
+                max={field.max}
+                step={field.step}
+                value={field.value}
+                inputmode="numeric"
+                data-calculator-field
+              />
+              {field.suffix && <small>{field.suffix}</small>}
+            </label>
+          );
+        })
+      }
+    </form>
+
+    <aside class="business-calculator-result" aria-live="polite">
+      <span class="service-category">Расчет</span>
+      <h3 data-calculator-summary>Конфигурация</h3>
+      <div class="calculator-total-grid">
+        <div>
+          <span>В месяц</span>
+          <strong data-calculator-monthly>По запросу</strong>
+        </div>
+        <div>
+          <span>Разово</span>
+          <strong data-calculator-onetime>По запросу</strong>
+        </div>
+      </div>
+      <ul class="calculator-lines" data-calculator-lines></ul>
+      <p class="calculator-note" data-calculator-note>
+        Финальная цена фиксируется после проверки площадки и коммерческих условий.
+      </p>
+      <a class="card-action" href={requestPath} data-calculator-cta>{config.submitLabel}</a>
+    </aside>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-business-calculator]").forEach((calculator) => {
+    const configNode = calculator.querySelector<HTMLScriptElement>("[data-calculator-config]");
+    const form = calculator.querySelector<HTMLFormElement>("[data-calculator-form]");
+    const monthlyNode = calculator.querySelector<HTMLElement>("[data-calculator-monthly]");
+    const oneTimeNode = calculator.querySelector<HTMLElement>("[data-calculator-onetime]");
+    const summaryNode = calculator.querySelector<HTMLElement>("[data-calculator-summary]");
+    const linesNode = calculator.querySelector<HTMLElement>("[data-calculator-lines]");
+    const noteNode = calculator.querySelector<HTMLElement>("[data-calculator-note]");
+    const cta = calculator.querySelector<HTMLAnchorElement>("[data-calculator-cta]");
+
+    if (
+      !configNode ||
+      !form ||
+      !monthlyNode ||
+      !oneTimeNode ||
+      !summaryNode ||
+      !linesNode ||
+      !cta
+    ) {
+      return;
+    }
+
+    const calculatorForm = form;
+    const monthlyValue = monthlyNode;
+    const oneTimeValue = oneTimeNode;
+    const summaryValue = summaryNode;
+    const lineItems = linesNode;
+    const submitLink = cta;
+    const payload = JSON.parse(configNode.textContent ?? "{}");
+    const config = payload.config;
+    const pricing = payload.pricing ?? {};
+    const requestPath = payload.requestPath ?? "/business/request/";
+
+    form.addEventListener("input", () => syncCalculator());
+    form.addEventListener("change", () => syncCalculator());
+    syncCalculator();
+
+    function syncCalculator() {
+      const values = readValues(calculatorForm);
+      const result = calculate(config, pricing, values);
+      const summary = buildSummary(config.type, values);
+
+      summaryValue.textContent = summary;
+      monthlyValue.textContent = result.hasMonthly
+        ? `${formatRubles(result.monthly)} / мес.`
+        : "По запросу";
+      oneTimeValue.textContent = result.hasOneTime ? formatRubles(result.oneTime) : "По запросу";
+      lineItems.replaceChildren(
+        ...result.lines.map((line) => {
+          const item = document.createElement("li");
+          const label = document.createElement("span");
+          const value = document.createElement("strong");
+          label.textContent = line.label;
+          value.textContent = line.value;
+          item.append(label, value);
+          return item;
+        })
+      );
+
+      if (noteNode) {
+        noteNode.textContent =
+          result.unknownItems.length > 0 || result.requiredConsultation
+            ? `Нужно уточнить: ${result.unknownItems.join(", ")}.`
+            : "Расчет можно передать в заявку вместе с выбранной конфигурацией.";
+      }
+
+      const params = new URLSearchParams({
+        service: config.serviceSlug,
+        configurationSummary: buildConfigurationText(summary, result)
+      });
+
+      if (result.hasMonthly) {
+        params.set("monthlyEstimate", String(result.monthly));
+      }
+
+      if (result.hasOneTime) {
+        params.set("oneTimeEstimate", String(result.oneTime));
+      }
+
+      submitLink.href = `${requestPath}?${params.toString()}`;
+    }
+  });
+
+  function readValues(form: HTMLFormElement) {
+    const values: Record<string, string | number | boolean> = {};
+
+    form
+      .querySelectorAll<HTMLInputElement | HTMLSelectElement>("[data-calculator-field]")
+      .forEach((field) => {
+        if (field instanceof HTMLInputElement && field.type === "checkbox") {
+          values[field.name] = field.checked;
+          return;
+        }
+
+        if (field instanceof HTMLInputElement && field.type === "number") {
+          values[field.name] = Number(field.value || 0);
+          return;
+        }
+
+        values[field.name] = field.value;
+      });
+
+    return values;
+  }
+
+  function calculate(config: any, pricing: Record<string, any>, values: Record<string, any>) {
+    const result = {
+      monthly: 0,
+      oneTime: 0,
+      hasMonthly: false,
+      hasOneTime: false,
+      unknownItems: [] as string[],
+      requiredConsultation: false,
+      lines: [] as Array<{ label: string; value: string }>
+    };
+
+    for (const line of config.lines) {
+      if (line.kind === "repeated") {
+        const rawQuantity = Number(values[line.quantityField] || 0);
+        const quantity = line.quantityStep
+          ? Math.ceil(rawQuantity / line.quantityStep)
+          : rawQuantity;
+        addLine(result, pricing[line.key], line.label, quantity, rawQuantity);
+      }
+
+      if (line.kind === "optional" && values[line.enabledField]) {
+        addLine(result, pricing[line.key], line.label, 1, 1);
+      }
+
+      if (line.kind === "select") {
+        const value = String(values[line.selectField] ?? "");
+        addLine(
+          result,
+          pricing[`${line.keyPrefix}${value}`],
+          `${line.labelPrefix}: ${value}`,
+          1,
+          1
+        );
+      }
+
+      if (line.kind === "repeatedSelect") {
+        const value = String(values[line.selectField] ?? "");
+        const quantity = Number(values[line.quantityField] || 0);
+        addLine(
+          result,
+          pricing[`${line.keyPrefix}${value}`],
+          `${line.labelPrefix}: ${value}`,
+          quantity,
+          quantity
+        );
+      }
+    }
+
+    if (
+      config.type === "colocation" &&
+      (Number(values.powerWatts || 0) > 1000 || values.internetPort === "10g")
+    ) {
+      result.requiredConsultation = true;
+      pushUnknown(result, "инженерная проверка питания или 10G-порта");
+    }
+
+    return result;
+  }
+
+  function addLine(result: any, price: any, label: string, quantity: number, rawQuantity: number) {
+    if (quantity <= 0) {
+      return;
+    }
+
+    if (!price || price.status === "unknown") {
+      result.requiredConsultation = true;
+      pushUnknown(result, label);
+      result.lines.push({ label: `${label} x ${rawQuantity}`, value: "по запросу" });
+      return;
+    }
+
+    if (price.status === "needs_verification") {
+      result.requiredConsultation = true;
+      pushUnknown(result, label);
+    }
+
+    const monthly = typeof price.monthly === "number" ? price.monthly * quantity : null;
+    const oneTime = typeof price.oneTime === "number" ? price.oneTime * quantity : null;
+
+    if (monthly !== null) {
+      result.monthly += monthly;
+      result.hasMonthly = true;
+    }
+
+    if (oneTime !== null) {
+      result.oneTime += oneTime;
+      result.hasOneTime = true;
+    }
+
+    result.lines.push({
+      label: `${label} x ${rawQuantity}`,
+      value: [
+        monthly !== null ? `${formatRubles(monthly)} / мес.` : "",
+        oneTime !== null ? formatRubles(oneTime) : ""
+      ]
+        .filter(Boolean)
+        .join(" + ")
+    });
+  }
+
+  function pushUnknown(result: { unknownItems: string[] }, value: string) {
+    if (!result.unknownItems.includes(value)) {
+      result.unknownItems.push(value);
+    }
+  }
+
+  function buildSummary(type: string, values: Record<string, any>) {
+    if (type === "telephony") {
+      return `Телефония: ${values.ports} портов, ${values.phoneNumbers} номеров`;
+    }
+
+    if (type === "cctv") {
+      return `Видеонаблюдение: ${values.camerasCount} камер, архив ${values.archiveDays} дней`;
+    }
+
+    if (type === "vps") {
+      return `VPS: ${values.vCpu} CPU, ${values.ramGb} ГБ RAM`;
+    }
+
+    if (type === "colocation") {
+      return `Размещение: ${values.rackUnits}U, ${values.powerWatts} Вт, порт ${values.internetPort}`;
+    }
+
+    return `Hot-spot: ${values.plan}, площадок ${values.sitesCount}`;
+  }
+
+  function buildConfigurationText(summary: string, result: any) {
+    const totals = [
+      result.hasMonthly ? `ежемесячно ${formatRubles(result.monthly)}` : "",
+      result.hasOneTime ? `разово ${formatRubles(result.oneTime)}` : "",
+      result.unknownItems.length > 0 ? `уточнить: ${result.unknownItems.join(", ")}` : ""
+    ].filter(Boolean);
+
+    return `${summary}. ${totals.join("; ")}.`;
+  }
+
+  function formatRubles(value: number) {
+    return new Intl.NumberFormat("ru-RU", {
+      style: "currency",
+      currency: "RUB",
+      maximumFractionDigits: 0
+    }).format(value);
+  }
+</script>
