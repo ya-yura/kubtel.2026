@@ -5,8 +5,7 @@
     "overrides": {
       "color.surface.page": { "value": "{color.neutral.0}", "type": "color" },
       "color.surface.raised": { "value": "{color.neutral.0}", "type": "color" },
-      "color.text.primary": { "value": "{color.neutral.950}", "type": "color" },
-      "color.action.primary": { "value": "{color.orange.500}", "type": "color" }
+      "color.text.primary": { "value": "{color.neutral.950}", "type": "color" }
     }
   }
 }

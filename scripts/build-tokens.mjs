@@ -49,6 +49,7 @@ const legacyAliases = {
 const primitiveReferencePrefixes = [
   "color.neutral.",
   "color.orange.",
+  "color.pink.",
   "color.blue.",
   "color.green.",
   "color.red."
@@ -62,6 +63,7 @@ for (const file of tokenFiles) {
 
 applyThemeOverrides(rawTokenTree);
 validateComponentReferences(rawTokenTree);
+validateLayerBoundaries(rawTokenTree);
 await validateNoRawHexStyles();
 
 const flatTokens = flattenTokens(rawTokenTree);
@@ -136,6 +138,26 @@ function validateComponentReferences(tree) {
     if (primitiveReference) {
       fail(
         `${tokenPath} references primitive token ${primitiveReference}. Use semantic tokens in component/business tokens.`
+      );
+    }
+  }
+}
+
+function validateLayerBoundaries(tree) {
+  const tokens = flattenTokens(tree);
+  const rawColorPattern =
+    /#[0-9a-fA-F]{3,8}\b|rgba?\([^)]+\)|hsla?\([^)]+\)|\b(?:orange|amber|yellow)\b/i;
+
+  for (const [tokenPath, token] of Object.entries(tokens)) {
+    if (!tokenPath.startsWith("component.") && !tokenPath.startsWith("business.")) {
+      continue;
+    }
+
+    const value = String(token.value);
+
+    if (rawColorPattern.test(value)) {
+      fail(
+        `${tokenPath} uses a raw color value. Component and business tokens must reference semantic tokens.`
       );
     }
   }

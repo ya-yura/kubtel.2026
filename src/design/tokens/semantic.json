@@ -22,7 +22,8 @@
       "default": { "value": "{color.neutral.100}", "type": "color" },
       "strong": { "value": "{color.neutral.200}", "type": "color" },
       "hover": { "value": "{color.neutral.300}", "type": "color" },
-      "action": { "value": "{color.action.primary}", "type": "color" }
+      "action": { "value": "{color.action.primary}", "type": "color" },
+      "header": { "value": "rgba(217, 224, 232, 0.86)", "type": "color" }
     },
     "action": {
       "primary": { "value": "{color.pink.500}", "type": "color" },
@@ -53,8 +54,13 @@
       "focus": { "value": "rgba(69, 153, 216, 0.48)", "type": "color" },
       "focusSoft": { "value": "rgba(69, 153, 216, 0.12)", "type": "color" },
       "dangerSoftRing": { "value": "rgba(186, 53, 31, 0.1)", "type": "color" },
+      "success18": { "value": "rgba(19, 122, 75, 0.18)", "type": "color" },
+      "accent18": { "value": "rgba(215, 86, 156, 0.18)", "type": "color" },
+      "accent20": { "value": "rgba(215, 86, 156, 0.2)", "type": "color" },
+      "accent22": { "value": "rgba(215, 86, 156, 0.22)", "type": "color" },
       "accent24": { "value": "rgba(215, 86, 156, 0.24)", "type": "color" },
       "accent28": { "value": "rgba(215, 86, 156, 0.28)", "type": "color" },
+      "accent30": { "value": "rgba(215, 86, 156, 0.3)", "type": "color" },
       "accent54": { "value": "rgba(215, 86, 156, 0.54)", "type": "color" }
     }
   },

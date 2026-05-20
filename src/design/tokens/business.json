@@ -2,7 +2,7 @@
   "business": {
     "hero": {
       "panelBackground": {
-        "value": "linear-gradient(135deg, rgba(215, 86, 156, 0.2), transparent 42%), linear-gradient(160deg, {color.surface.darkDeep}, {color.surface.darkRaisedAlt})",
+        "value": "linear-gradient(135deg, {color.alpha.accent20}, transparent 42%), linear-gradient(160deg, {color.surface.darkDeep}, {color.surface.darkRaisedAlt})",
         "type": "gradient"
       },
       "panelItemBackground": { "value": "{color.alpha.white08}", "type": "color" },
@@ -11,7 +11,7 @@
     "proof": {
       "confirmed": {
         "background": { "value": "{color.status.successSoft}", "type": "color" },
-        "border": { "value": "rgba(19, 122, 75, 0.18)", "type": "color" },
+        "border": { "value": "{color.alpha.success18}", "type": "color" },
         "text": { "value": "{color.status.success}", "type": "color" }
       },
       "needsVerification": {

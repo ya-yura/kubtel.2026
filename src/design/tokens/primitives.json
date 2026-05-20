@@ -16,13 +16,6 @@
       "900": { "value": "#111317", "type": "color" },
       "950": { "value": "#15171a", "type": "color" }
     },
-    "orange": {
-      "50": { "value": "#fff5ec", "type": "color" },
-      "500": { "value": "#E18C44", "type": "color" },
-      "600": { "value": "#cc7432", "type": "color" },
-      "700": { "value": "#a95622", "type": "color" },
-      "950": { "value": "#1a120b", "type": "color" }
-    },
     "pink": {
       "50": { "value": "#fff0f8", "type": "color" },
       "75": { "value": "#ffe3f2", "type": "color" },

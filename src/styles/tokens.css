@@ -20,17 +20,22 @@
     --kb-business-proof-needs-verification-background: #fff0f8;
     --kb-business-proof-needs-verification-border: rgba(215, 86, 156, 0.24);
     --kb-business-proof-needs-verification-text: #a92770;
-    --kb-color-action-primary: #e18c44;
+    --kb-color-action-primary: #d7569c;
     --kb-color-action-primary-active: #a92770;
     --kb-color-action-primary-hover: #c43d87;
     --kb-color-action-primary-text: #ffffff;
+    --kb-color-alpha-accent18: rgba(215, 86, 156, 0.18);
+    --kb-color-alpha-accent20: rgba(215, 86, 156, 0.2);
+    --kb-color-alpha-accent22: rgba(215, 86, 156, 0.22);
     --kb-color-alpha-accent24: rgba(215, 86, 156, 0.24);
     --kb-color-alpha-accent28: rgba(215, 86, 156, 0.28);
+    --kb-color-alpha-accent30: rgba(215, 86, 156, 0.3);
     --kb-color-alpha-accent54: rgba(215, 86, 156, 0.54);
     --kb-color-alpha-danger-soft-ring: rgba(186, 53, 31, 0.1);
     --kb-color-alpha-dark-border: rgba(255, 255, 255, 0.12);
     --kb-color-alpha-focus: rgba(69, 153, 216, 0.48);
     --kb-color-alpha-focus-soft: rgba(69, 153, 216, 0.12);
+    --kb-color-alpha-success18: rgba(19, 122, 75, 0.18);
     --kb-color-alpha-white08: rgba(255, 255, 255, 0.08);
     --kb-color-alpha-white72: rgba(255, 255, 255, 0.72);
     --kb-color-alpha-white78: rgba(255, 255, 255, 0.78);
@@ -41,8 +46,9 @@
     --kb-color-blue-50: #eaf4ff;
     --kb-color-blue-600: #4599d8;
     --kb-color-blue-700: #2879b6;
-    --kb-color-border-action: #e18c44;
+    --kb-color-border-action: #d7569c;
     --kb-color-border-default: #d9e0e8;
+    --kb-color-border-header: rgba(217, 224, 232, 0.86);
     --kb-color-border-hover: #aab5c2;
     --kb-color-border-strong: #c3ccd7;
     --kb-color-green-300: #8bc59c;
@@ -63,11 +69,6 @@
     --kb-color-neutral-75: #f5f7fa;
     --kb-color-neutral-900: #111317;
     --kb-color-neutral-950: #15171a;
-    --kb-color-orange-50: #fff5ec;
-    --kb-color-orange-500: #e18c44;
-    --kb-color-orange-600: #cc7432;
-    --kb-color-orange-700: #a95622;
-    --kb-color-orange-950: #1a120b;
     --kb-color-pink-100: #fac9e3;
     --kb-color-pink-50: #fff0f8;
     --kb-color-pink-500: #d7569c;
@@ -103,7 +104,7 @@
     --kb-color-text-primary: #15171a;
     --kb-color-text-secondary: #5f6875;
     --kb-color-text-subtle: #7a8492;
-    --kb-component-button-primary-background: #e18c44;
+    --kb-component-button-primary-background: #d7569c;
     --kb-component-button-primary-background-active: #a92770;
     --kb-component-button-primary-background-hover: #c43d87;
     --kb-component-button-primary-min-height: 44px;
@@ -164,7 +165,7 @@
     --kb-state-invalid-border: #ba351f;
     --kb-state-invalid-ring: 0 0 0 4px rgba(186, 53, 31, 0.1);
     --kb-state-selected-background: #fff0f8;
-    --kb-state-selected-border: #e18c44;
+    --kb-state-selected-border: #d7569c;
     --kb-state-selected-ring: inset 0 0 0 1px rgba(215, 86, 156, 0.28);
     --kb-typography-family-display: Unbounded, Manrope, ui-sans-serif, system-ui, sans-serif;
     --kb-typography-family-sans:

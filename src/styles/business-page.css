@@ -2,7 +2,7 @@
   --business-neon: var(--color-accent);
   --business-blue: var(--color-info);
   --business-neon-soft: rgba(215, 86, 156, 0.18);
-  --business-orange-soft: rgba(225, 140, 68, 0.2);
+  --business-accent-soft: var(--kb-color-alpha-accent20);
   --business-panel: rgba(13, 20, 29, 0.78);
   --business-panel-strong: rgba(20, 30, 42, 0.92);
   --business-line: rgba(215, 86, 156, 0.24);

@@ -8,9 +8,9 @@
         "text": { "value": "{color.action.primaryText}", "type": "color" },
         "radius": { "value": "{radius.md}", "type": "borderRadius" },
         "minHeight": { "value": "{layout.touchTarget.min}", "type": "dimension" },
-        "shadow": { "value": "0 10px 24px rgba(215, 86, 156, 0.22)", "type": "shadow" },
-        "shadowHover": { "value": "0 14px 30px rgba(215, 86, 156, 0.3)", "type": "shadow" },
-        "shadowActive": { "value": "0 8px 18px rgba(215, 86, 156, 0.22)", "type": "shadow" }
+        "shadow": { "value": "0 10px 24px {color.alpha.accent22}", "type": "shadow" },
+        "shadowHover": { "value": "0 14px 30px {color.alpha.accent30}", "type": "shadow" },
+        "shadowActive": { "value": "0 8px 18px {color.alpha.accent22}", "type": "shadow" }
       }
     },
     "card": {
@@ -32,7 +32,7 @@
     },
     "header": {
       "background": { "value": "{color.alpha.white94}", "type": "color" },
-      "border": { "value": "rgba(217, 224, 232, 0.86)", "type": "color" },
+      "border": { "value": "{color.border.header}", "type": "color" },
       "backdropBlur": { "value": "blur(18px)", "type": "blur" }
     },
     "status": {
