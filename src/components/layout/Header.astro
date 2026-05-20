@@ -11,8 +11,10 @@ function isCurrentPath(href: string) {
 
 <header class="site-header">
   <a class="brand" href={getSitePath("/")} aria-label={`${SITE.name}, на главную`}>
-    <span class="brand-mark">K</span>
-    <span>{SITE.name}</span>
+    <span class="brand-mark" aria-hidden="true">
+      <img src={getSitePath("/logo-flat.svg")} alt="" width="34" height="34" />
+    </span>
+    <span class="brand-name">{SITE.name}</span>
   </a>
   <nav class="site-nav" aria-label="Основная навигация">
     {

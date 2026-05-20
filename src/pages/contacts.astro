@@ -1,46 +1,67 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import PromoImage from "@components/ui/PromoImage.astro";
 import { getSitePath } from "@config/site";
+import { promoVisuals } from "@lib/visuals";
 ---
 
 <BaseLayout
   title="Контакты для подключения"
-  description="Основные сценарии обращения в Kubtel: оставить телефон для подключения, обратиться в поддержку или уточнить контакты компании."
+  description={"Основные сценарии обращения в\u00a0Kubtel: оставить телефон для подключения, обратиться в\u00a0поддержку или уточнить контакты компании."}
   canonicalPath="/contacts/"
   pageType="ContactPage"
 >
-  <section class="page-intro section-pad">
-    <p class="eyebrow">Контакты</p>
-    <h1>Связь с Kubtel</h1>
-    <p>
-      Главное действие для нового клиента - оставить телефон. Дальше специалист перезвонит, уточнит
-      задачу и предложит понятный вариант подключения.
-    </p>
+  <section class="page-intro section-pad visual-intro">
+    <div>
+      <p class="eyebrow">Контакты</p>
+      <h1>Связь с&nbsp;Kubtel</h1>
+      <p>
+        Главное действие для нового клиента&nbsp;— оставить телефон. Дальше специалист перезвонит,
+        уточнит задачу и&nbsp;предложит понятный вариант подключения.
+      </p>
+    </div>
+    <PromoImage visual={promoVisuals.localTeam} class="is-page-intro" loading="eager" />
   </section>
   <section class="section-pad contact-cards" aria-label="Основные сценарии обращения">
     <article class="contact-card">
       <span>Подключение</span>
+      <PromoImage
+        visual={promoVisuals.connection}
+        class="is-card contact-card-media"
+        showMeta={false}
+      />
       <h2>Обратный звонок</h2>
       <p>
-        Не нужно проходить псевдо-проверку адреса. Номер телефона уже запускает разговор с отделом
-        продаж.
+        Не&nbsp;нужно проходить псевдопроверку адреса. Номер телефона уже запускает разговор
+        с&nbsp;отделом продаж.
       </p>
       <a class="card-action" href={getSitePath("/connect/#callback-request")}>Оставить телефон</a>
     </article>
     <article class="contact-card">
       <span>Поддержка</span>
+      <PromoImage
+        visual={promoVisuals.support}
+        class="is-card contact-card-media"
+        showMeta={false}
+      />
       <h2>Вопрос по услуге</h2>
       <p>
-        В сервисе ценность Kubtel раскрывается особенно быстро: без скриптов, лишних кругов и
-        ощущения, что клиент - это номер договора.
+        В&nbsp;сервисе ценность Kubtel раскрывается особенно быстро: без скриптов, лишних кругов
+        и&nbsp;ощущения, что клиент&nbsp;— это номер договора.
       </p>
-      <a class="card-action" href={getSitePath("/support/")}>Перейти в поддержку</a>
+      <a class="card-action" href={getSitePath("/support/")}>Перейти в&nbsp;поддержку</a>
     </article>
     <article class="contact-card">
       <span>Офис</span>
+      <PromoImage
+        visual={promoVisuals.localTeam}
+        class="is-card contact-card-media"
+        showMeta={false}
+      />
       <h2>Данные уточняются</h2>
       <p>
-        Финальные адреса, режим работы и номера телефонов попадут сюда после подтверждения Kubtel.
+        Финальные адреса, режим работы и&nbsp;номера телефонов появятся здесь после подтверждения
+        Kubtel.
       </p>
       <a class="card-action" href={getSitePath("/about/")}>О компании</a>
     </article>

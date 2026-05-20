@@ -1,33 +1,46 @@
 ---
+import PromoImage from "@components/ui/PromoImage.astro";
 import { getSitePath } from "@config/site";
+import { promoVisuals } from "@lib/visuals";
 ---
 
 <section class="section-pad support-pathways" id="support-pathways">
-  <div class="section-heading">
-    <p class="eyebrow">Поддержка</p>
-    <h2>Поддержка должна решать, а не прятаться за регламентом</h2>
-    <p>
-      Клиент понимает ценность Kubtel именно в момент обращения: когда нужна помощь, отсрочка
-      платежа или пауза в услуге.
-    </p>
+  <div class="visual-section-head">
+    <div class="section-heading">
+      <p class="eyebrow">Поддержка</p>
+      <h2>Поддержка должна решать, а&nbsp;не&nbsp;прятаться за&nbsp;регламентом</h2>
+      <p>
+        Клиент особенно хорошо понимает ценность Kubtel в&nbsp;момент обращения: когда нужна помощь,
+        отсрочка платежа или пауза в&nbsp;услуге.
+      </p>
+    </div>
+    <PromoImage visual={promoVisuals.support} class="is-inline" />
   </div>
   <div class="pathway-grid">
     <article>
       <span>Нет интернета</span>
       <h3>Живой контакт</h3>
-      <p>Обращение не должно тонуть в роботах и переключениях: проблема попадает к команде.</p>
+      <p>
+        Обращение не&nbsp;тонет в&nbsp;роботах и&nbsp;переключениях: проблема попадает
+        к&nbsp;команде.
+      </p>
       <a href={getSitePath("/contacts/")}>Связаться</a>
     </article>
     <article>
       <span>Тариф и оплата</span>
-      <h3>Доверительный платеж</h3>
-      <p>Доверительный платеж бесплатный: связь не должна обрываться из-за одного неловкого дня.</p>
+      <h3>Доверительный платёж</h3>
+      <p>
+        Доверительный платёж бесплатный: связь не&nbsp;должна обрываться из-за одного неловкого дня.
+      </p>
       <a href="#faq">Открыть FAQ</a>
     </article>
     <article>
-      <span>Пауза в услуге</span>
+      <span>Пауза в&nbsp;услуге</span>
       <h3>Добровольная блокировка</h3>
-      <p>Можно бесплатно сохранить баланс на срок до полугода, когда интернет временно не нужен.</p>
+      <p>
+        Можно бесплатно сохранить баланс на&nbsp;срок до&nbsp;полугода, когда интернет временно
+        не&nbsp;нужен.
+      </p>
       <a href={getSitePath("/connect/#callback-request")}>Оставить телефон</a>
     </article>
   </div>

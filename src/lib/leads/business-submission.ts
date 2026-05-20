@@ -72,7 +72,7 @@ export function buildBusinessLeadSubmission({
   userAgent?: string | null;
 }): BusinessLeadSubmission {
   const configurationSummary =
-    input.configurationSummary || input.message || "Индивидуальный расчет по B2B-заявке";
+    input.configurationSummary || input.message || "Индивидуальный расчёт по B2B-заявке";
   const unknownItems = getUnknownItems(input);
   const score = scoreBusinessLead({
     leadType: "b2b",

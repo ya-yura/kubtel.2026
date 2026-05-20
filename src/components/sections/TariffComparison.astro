@@ -20,8 +20,8 @@ const optionLabels: Record<TariffOption, string> = {
 <section class="section-pad comparison-section" id="tariff-compare">
   <div class="section-heading">
     <p class="eyebrow">Сравнение</p>
-    <h2>Тарифы можно сравнить без звонка менеджеру</h2>
-    <p>Сетка держит рядом цену, скорость и сценарий, чтобы звонок был предметным и быстрым.</p>
+    <h2>Тарифы можно сравнить ещё до&nbsp;звонка менеджеру</h2>
+    <p>Цена, скорость и&nbsp;сценарий стоят рядом. Так разговор получается короче и&nbsp;точнее.</p>
   </div>
   <div class="comparison-scroll" tabindex="0" aria-label="Таблица сравнения тарифов">
     <table class="comparison-table">
@@ -45,7 +45,7 @@ const optionLabels: Record<TariffOption, string> = {
               .join(", ");
             const connectionPrice =
               tariff.connectionPrice === null
-                ? "уточним на звонке"
+                ? "уточним на\u00a0звонке"
                 : formatRubles(tariff.connectionPrice);
 
             return (
@@ -55,7 +55,7 @@ const optionLabels: Record<TariffOption, string> = {
                   {tariff.isFeatured && <span>Рекомендуем</span>}
                 </th>
                 <td>{tariff.speedDownload} Мбит/с</td>
-                <td>{formatRubles(price.total)} / мес.</td>
+                <td>{formatRubles(price.total)}/мес.</td>
                 <td>{tariff.bestFor.slice(0, 3).join(", ")}</td>
                 <td>{options}</td>
                 <td>{connectionPrice}</td>

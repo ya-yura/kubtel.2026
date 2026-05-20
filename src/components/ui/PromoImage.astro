@@ -1,0 +1,39 @@
+---
+import type { PromoVisual } from "@lib/visuals";
+
+type Props = {
+  visual: PromoVisual;
+  class?: string;
+  loading?: "eager" | "lazy";
+  showMeta?: boolean;
+  fetchpriority?: "high" | "low" | "auto";
+};
+
+const {
+  visual,
+  class: className = "",
+  loading = "lazy",
+  showMeta = true,
+  fetchpriority = undefined
+} = Astro.props;
+---
+
+<figure class:list={["promo-visual", className]}>
+  <img
+    src={visual.src}
+    alt={visual.alt}
+    width="1586"
+    height="992"
+    loading={loading}
+    decoding="async"
+    fetchpriority={fetchpriority}
+  />
+  {
+    showMeta && (
+      <figcaption>
+        <span>{visual.label}</span>
+        <strong>{visual.caption}</strong>
+      </figcaption>
+    )
+  }
+</figure>

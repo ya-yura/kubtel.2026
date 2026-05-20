@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import BusinessCalculator from "@components/sections/BusinessCalculator.astro";
+import PromoImage from "@components/ui/PromoImage.astro";
 import { getAbsoluteUrl, getSitePath } from "@config/site";
 import { getBusinessCalculatorConfig } from "@lib/business/calculator-ui";
 import {
@@ -11,6 +12,8 @@ import {
   type BusinessService
 } from "@lib/business/content";
 import type { JsonLdObject } from "@lib/seo/schema";
+import { getBusinessVisual } from "@lib/visuals";
+import "@styles/business-page.css";
 
 type PageEntry =
   | { kind: "service"; entry: BusinessService }
@@ -38,6 +41,7 @@ const relatedServices = isService
   ? getRelatedBusinessServices(entry.relatedServices)
   : getRelatedBusinessServices(entry.serviceSlugs);
 const calculatorConfig = isService ? getBusinessCalculatorConfig(entry.slug) : undefined;
+const visual = getBusinessVisual(entry.slug);
 const pageSchema: JsonLdObject = isService
   ? {
       "@context": "https://schema.org",
@@ -71,30 +75,33 @@ const pageSchema: JsonLdObject = isService
   canonicalPath={canonicalPath}
   schema={pageSchema}
 >
-  <section class="page-intro section-pad business-page-intro">
-    <p class="eyebrow">{isService ? "B2B-услуга" : "B2B-сегмент"}</p>
-    <h1>{entry.title}</h1>
-    <p>{isService ? entry.businessBenefit : entry.summary}</p>
-    <div class="business-actions">
-      <a
-        class="card-action"
-        href={getSitePath(
-          `/business/request/?${isService ? `service=${entry.slug}` : `segment=${entry.slug}`}`
-        )}
-      >
-        {isService ? entry.ctaLabel : entry.ctaLabel}
-      </a>
-      <a class="business-link" href={getSitePath("/business/")}>Все бизнес-услуги</a>
-    </div>
-  </section>
+  <div class="business-page">
+    <section class="page-intro section-pad business-page-intro visual-intro">
+      <div>
+        <p class="eyebrow">{isService ? "B2B-услуга" : "B2B-сегмент"}</p>
+        <h1>{entry.title}</h1>
+        <p>{isService ? entry.businessBenefit : entry.summary}</p>
+        <div class="business-actions">
+          <a
+            class="card-action"
+            href={getSitePath(
+              `/business/request/?${isService ? `service=${entry.slug}` : `segment=${entry.slug}`}`
+            )}
+          >
+            {isService ? entry.ctaLabel : entry.ctaLabel}
+          </a>
+          <a class="business-link" href={getSitePath("/business/")}>Все бизнес-услуги</a>
+        </div>
+      </div>
+      <PromoImage visual={visual} class="is-page-intro" loading="eager" />
+    </section>
 
-  {
-    isService ? (
-      <>
+    {
+      isService ? (
         <section class="section-pad business-detail-grid">
           <article class="business-detail-card">
             <p class="eyebrow">Что входит</p>
-            <h2>Параметры для расчета</h2>
+            <h2>Параметры для расчёта</h2>
             <ul class="business-mini-list">
               {entry.options.map((option) => (
                 <li>{option}</li>
@@ -103,7 +110,7 @@ const pageSchema: JsonLdObject = isService
           </article>
           <article class="business-detail-card">
             <p class="eyebrow">Конфигуратор</p>
-            <h2>Что спросим в заявке</h2>
+            <h2>Что спросим в&nbsp;заявке</h2>
             <ul class="business-mini-list">
               {entry.calculatorFields.map((field) => (
                 <li>{field}</li>
@@ -124,52 +131,52 @@ const pageSchema: JsonLdObject = isService
             </div>
           </article>
         </section>
-      </>
-    ) : (
-      <section class="section-pad business-detail-grid">
-        <article class="business-detail-card">
-          <p class="eyebrow">Боль</p>
-          <h2>Что закрываем</h2>
-          <p>{entry.pain}</p>
-        </article>
-        <article class="business-detail-card">
-          <p class="eyebrow">Триггер</p>
-          <h2>Когда обращаться</h2>
-          <p>{entry.trigger}</p>
-        </article>
-        <article class="business-detail-card">
-          <p class="eyebrow">Поля заявки</p>
-          <h2>Что уточним</h2>
-          <ul class="business-mini-list">
-            {entry.fields.map((field) => (
-              <li>{field}</li>
-            ))}
-          </ul>
-        </article>
-      </section>
-    )
-  }
-
-  {calculatorConfig && <BusinessCalculator config={calculatorConfig} />}
-
-  <section class="section-pad">
-    <div class="section-heading">
-      <p class="eyebrow">Связанные услуги</p>
-      <h2>Собрать решение без разрозненных заявок</h2>
-    </div>
-    <div class="business-card-grid">
-      {
-        relatedServices.map((service) => (
-          <article class="business-card">
-            <span class="service-category">{service.category}</span>
-            <h3>{service.title}</h3>
-            <p>{service.summary}</p>
-            <a class="card-action" href={getSitePath(`/business/${service.slug}/`)}>
-              {service.ctaLabel}
-            </a>
+      ) : (
+        <section class="section-pad business-detail-grid">
+          <article class="business-detail-card">
+            <p class="eyebrow">Боль</p>
+            <h2>Что закрываем</h2>
+            <p>{entry.pain}</p>
           </article>
-        ))
-      }
-    </div>
-  </section>
+          <article class="business-detail-card">
+            <p class="eyebrow">Триггер</p>
+            <h2>Когда обращаться</h2>
+            <p>{entry.trigger}</p>
+          </article>
+          <article class="business-detail-card">
+            <p class="eyebrow">Поля заявки</p>
+            <h2>Что уточним</h2>
+            <ul class="business-mini-list">
+              {entry.fields.map((field) => (
+                <li>{field}</li>
+              ))}
+            </ul>
+          </article>
+        </section>
+      )
+    }
+
+    {calculatorConfig && <BusinessCalculator config={calculatorConfig} />}
+
+    <section class="section-pad">
+      <div class="section-heading">
+        <p class="eyebrow">Связанные услуги</p>
+        <h2>Собрать решение без разрозненных заявок</h2>
+      </div>
+      <div class="business-card-grid">
+        {
+          relatedServices.map((service) => (
+            <article class="business-card">
+              <span class="service-category">{service.category}</span>
+              <h3>{service.title}</h3>
+              <p>{service.summary}</p>
+              <a class="card-action" href={getSitePath(`/business/${service.slug}/`)}>
+                {service.ctaLabel}
+              </a>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+  </div>
 </BaseLayout>

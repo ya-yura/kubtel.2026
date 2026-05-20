@@ -109,7 +109,7 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
     serviceSlug: "telephony",
     title: "Калькулятор телефонии",
     lead: "Соберите конфигурацию по портам, номерам, внешним линиям и функциям ВАТС.",
-    submitLabel: "Передать расчет телефонии",
+    submitLabel: "Передать расчёт телефонии",
     fields: [
       { kind: "number", name: "ports", label: "SIP-порты", min: 1, max: 200, step: 1, value: 8 },
       {
@@ -166,7 +166,7 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
     serviceSlug: "cctv",
     title: "Калькулятор видеонаблюдения",
     lead: "Посчитайте камеры, глубину архива, оборудование и монтаж для объекта.",
-    submitLabel: "Передать расчет камер",
+    submitLabel: "Передать расчёт камер",
     fields: [
       { kind: "number", name: "camerasCount", label: "Камер", min: 1, max: 128, step: 1, value: 8 },
       {
@@ -175,16 +175,16 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         label: "Архив",
         value: "7",
         options: [
-          { value: "3", label: "3 дня" },
-          { value: "7", label: "7 дней" },
-          { value: "14", label: "14 дней" },
-          { value: "30", label: "30 дней" }
+          { value: "3", label: "3\u00a0дня" },
+          { value: "7", label: "7\u00a0дней" },
+          { value: "14", label: "14\u00a0дней" },
+          { value: "30", label: "30\u00a0дней" }
         ]
       },
       {
         kind: "number",
         name: "hardwareCount",
-        label: "Камер к поставке",
+        label: "Камер к\u00a0поставке",
         min: 0,
         max: 128,
         step: 1,
@@ -204,7 +204,7 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         kind: "repeated",
         key: "cctv.camera",
         quantityField: "hardwareCount",
-        label: "Камеры к поставке"
+        label: "Камеры к\u00a0поставке"
       },
       { kind: "optional", key: "cctv.install", enabledField: "installNeed", label: "Монтаж" }
     ]
@@ -214,7 +214,7 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
     serviceSlug: "vps",
     title: "Калькулятор VPS",
     lead: "Подберите CPU, RAM, диск, IP и опции для виртуального сервера.",
-    submitLabel: "Передать расчет VPS",
+    submitLabel: "Передать расчёт VPS",
     fields: [
       { kind: "number", name: "vCpu", label: "vCPU", min: 1, max: 64, step: 1, value: 4 },
       {
@@ -265,8 +265,8 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
     type: "colocation",
     serviceSlug: "colocation",
     title: "Калькулятор размещения",
-    lead: "Посчитайте юниты, питание, порт, IPMI, IPv4 и удаленные руки.",
-    submitLabel: "Передать расчет размещения",
+    lead: "Посчитайте юниты, питание, порт, IPMI, IPv4 и удалённые руки.",
+    submitLabel: "Передать расчёт размещения",
     fields: [
       {
         kind: "number",
@@ -295,13 +295,13 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         label: "Порт",
         value: "1g",
         options: [
-          { value: "100m", label: "100 Мбит/с" },
-          { value: "1g", label: "1 Гбит/с" },
-          { value: "10g", label: "10 Гбит/с" }
+          { value: "100m", label: "100\u00a0Мбит/с" },
+          { value: "1g", label: "1\u00a0Гбит/с" },
+          { value: "10g", label: "10\u00a0Гбит/с" }
         ]
       },
       { kind: "checkbox", name: "ipmi", label: "IPMI", checked: true },
-      { kind: "checkbox", name: "remoteHands", label: "Удаленные руки", checked: false }
+      { kind: "checkbox", name: "remoteHands", label: "Удалённые руки", checked: false }
     ],
     lines: [
       { kind: "repeated", key: "colocation.unit", quantityField: "rackUnits", label: "Юниты" },
@@ -324,7 +324,7 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         kind: "optional",
         key: "colocation.remote_hands",
         enabledField: "remoteHands",
-        label: "Удаленные руки"
+        label: "Удалённые руки"
       }
     ]
   },
@@ -333,7 +333,7 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
     serviceSlug: "wifi-auth",
     title: "Калькулятор Hot-spot",
     lead: "Выберите тариф авторизации Wi‑Fi, количество площадок, SMS и брендированную страницу.",
-    submitLabel: "Передать расчет Hot-spot",
+    submitLabel: "Передать расчёт Hot-spot",
     fields: [
       {
         kind: "select",

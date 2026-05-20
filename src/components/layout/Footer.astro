@@ -5,7 +5,12 @@ import { getSitePath, SITE } from "@config/site";
 
 <footer class="site-footer">
   <div>
-    <strong>{SITE.name}</strong>
+    <a class="footer-brand" href={getSitePath("/")} aria-label={`${SITE.name}, на главную`}>
+      <span class="brand-mark" aria-hidden="true">
+        <img src={getSitePath("/logo-flat.svg")} alt="" width="34" height="34" />
+      </span>
+      <strong>{SITE.name}</strong>
+    </a>
     <p>{SITE.shortDescription}</p>
   </div>
   <nav aria-label="Нижняя навигация">

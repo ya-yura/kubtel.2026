@@ -56,7 +56,7 @@ export async function handleLeadFormPost(
     });
 
     return createFormError(
-      "Заявку не удалось отправить. Обновите страницу и попробуйте еще раз.",
+      "Заявку не удалось отправить. Обновите страницу и попробуйте ещё раз.",
       400
     );
   }
@@ -66,9 +66,9 @@ export async function handleLeadFormPost(
 
   if (!rateLimit.allowed) {
     return createFormError(
-      `Слишком много отправок подряд. Попробуйте еще раз примерно через ${Math.ceil(
+      `Слишком много отправок подряд. Попробуйте ещё раз примерно через ${Math.ceil(
         rateLimit.retryAfterSeconds / 60
-      )} мин.`,
+      )}\u00a0мин.`,
       429
     );
   }
@@ -103,7 +103,7 @@ export async function handleLeadFormPost(
       });
 
       return createFormError(
-        "Заявку не удалось надежно сохранить или отправить. Пожалуйста, попробуйте еще раз.",
+        "Заявку не удалось надёжно сохранить или отправить. Пожалуйста, попробуйте ещё раз.",
         500
       );
     }
@@ -164,7 +164,7 @@ export async function handleBusinessLeadFormPost(
     });
 
     return createFormError(
-      "Заявку не удалось отправить. Обновите страницу и попробуйте еще раз.",
+      "Заявку не удалось отправить. Обновите страницу и попробуйте ещё раз.",
       400
     );
   }
@@ -174,9 +174,9 @@ export async function handleBusinessLeadFormPost(
 
   if (!rateLimit.allowed) {
     return createFormError(
-      `Слишком много отправок подряд. Попробуйте еще раз примерно через ${Math.ceil(
+      `Слишком много отправок подряд. Попробуйте ещё раз примерно через ${Math.ceil(
         rateLimit.retryAfterSeconds / 60
-      )} мин.`,
+      )}\u00a0мин.`,
       429
     );
   }
@@ -207,7 +207,7 @@ export async function handleBusinessLeadFormPost(
     });
 
     return createFormError(
-      "Заявку не удалось надежно сохранить или отправить. Пожалуйста, попробуйте еще раз.",
+      "Заявку не удалось надёжно сохранить или отправить. Пожалуйста, попробуйте ещё раз.",
       500
     );
   }

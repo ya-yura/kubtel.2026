@@ -2,8 +2,10 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import FaqList from "@components/sections/FaqList.astro";
 import SupportPathways from "@components/sections/SupportPathways.astro";
+import PromoImage from "@components/ui/PromoImage.astro";
 import { getFaqItems } from "@lib/content";
 import { buildFaqSchema } from "@lib/seo/schema";
+import { promoVisuals } from "@lib/visuals";
 
 const faqItems = await getFaqItems();
 const pageSchema = buildFaqSchema(faqItems, "/support/");
@@ -11,17 +13,21 @@ const pageSchema = buildFaqSchema(faqItems, "/support/");
 
 <BaseLayout
   title="Поддержка и FAQ"
-  description="Поддержка Kubtel: живое обращение, понятные условия, бесплатный доверительный платеж и добровольная блокировка до полугода."
+  description="Поддержка Kubtel: живое обращение, понятные условия, бесплатный доверительный платёж и добровольная блокировка до полугода."
   canonicalPath="/support/"
   schema={pageSchema}
 >
-  <section class="page-intro section-pad">
-    <p class="eyebrow">Поддержка</p>
-    <h1>Поддержка должна объяснять, а не прятаться за регламентом</h1>
-    <p>
-      Самая сильная ценность Kubtel проявляется не в красивой скорости на баннере, а когда человеку
-      нужно решить вопрос без волокиты, скриптов и бесконечных переводов между отделами.
-    </p>
+  <section class="page-intro section-pad visual-intro">
+    <div>
+      <p class="eyebrow">Поддержка</p>
+      <h1>Поддержка должна объяснять, а&nbsp;не&nbsp;прятаться за&nbsp;регламентом</h1>
+      <p>
+        Самая сильная ценность Kubtel проявляется не&nbsp;в красивой скорости на&nbsp;баннере,
+        а&nbsp;в момент, когда человеку нужно решить вопрос без волокиты, скриптов
+        и&nbsp;бесконечных переводов между отделами.
+      </p>
+    </div>
+    <PromoImage visual={promoVisuals.support} class="is-page-intro" loading="eager" />
   </section>
   <SupportPathways />
   <FaqList items={faqItems} />

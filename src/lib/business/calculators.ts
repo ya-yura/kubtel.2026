@@ -265,7 +265,7 @@ export function calculateWifiAuth(
   return finalizeCalculation(
     accumulator,
     input,
-    `Wi-Fi авторизация: ${input.plan}, ${input.sitesCount} площадок`
+    `Wi‑Fi-авторизация: ${input.plan}, ${input.sitesCount} площадок`
   );
 }
 

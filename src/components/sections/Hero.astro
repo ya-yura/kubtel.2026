@@ -1,26 +1,28 @@
 ---
+import PromoImage from "@components/ui/PromoImage.astro";
 import { getSitePath, SITE } from "@config/site";
+import { promoVisuals } from "@lib/visuals";
 ---
 
 <section class="hero section-pad">
   <div class="hero-copy">
-    <p class="eyebrow">Краснодар, квартиры, ЖК и частный сектор</p>
-    <h1>Домашний интернет, где на звонок отвечает человек</h1>
+    <p class="eyebrow">Краснодар, квартиры, ЖК и&nbsp;частный сектор</p>
+    <h1>Домашний интернет, где трубку берёт человек</h1>
     <p class="hero-lead">
-      Kubtel выбирают после усталости от роботов, скрытых условий и обещаний «сначала продадим,
-      потом разберемся». Оставьте телефон - локальная команда перезвонит и предложит честный вариант
-      подключения.
+      Kubtel выбирают, когда уже устали от&nbsp;роботов, скрытых условий и&nbsp;обещаний «сначала
+      продадим, потом разберёмся». Оставьте телефон&nbsp;— местная команда перезвонит, спокойно
+      задаст пару вопросов и&nbsp;предложит честный вариант подключения.
     </p>
     <div class="audience-switch" aria-label="Выберите направление">
       <a class="audience-card is-active" href={getSitePath("/connect/#callback-request")}>
-        <span>Для физиков</span>
-        <strong>Надежный интернет домой</strong>
-        <small>Телефон, живой звонок, понятные условия без скрытых платежей.</small>
+        <span>Для дома</span>
+        <strong>Надёжный интернет домой</strong>
+        <small>Телефон, живой звонок и&nbsp;понятные условия без скрытых платежей.</small>
       </a>
       <a class="audience-card" href={getSitePath("/business/")}>
         <span>Для бизнеса</span>
         <strong>Связь без простоя</strong>
-        <small>Интернет, Hot-spot, телефония, камеры, VPS и размещение.</small>
+        <small>Интернет, Hot-spot, телефония, камеры, VPS и&nbsp;размещение.</small>
       </a>
       <a class="audience-login" href={SITE.accountUrl} target="_blank" rel="noopener noreferrer">
         Личный кабинет абонента
@@ -39,18 +41,21 @@ import { getSitePath, SITE } from "@config/site";
       <button type="submit">Жду звонка</button>
     </form>
   </div>
-  <div class="hero-panel" aria-label="Ключевые преимущества">
-    <div>
-      <span class="metric">1</span>
-      <p>номер телефона нужен, чтобы начать разговор о подключении</p>
-    </div>
-    <div>
-      <span class="metric">0</span>
-      <p>скрытых платежей и игр со скоростью в обещании Kubtel</p>
-    </div>
-    <div>
-      <span class="metric">люди</span>
-      <p>местная команда вместо бесконечных роботов и переключений</p>
+  <div class="hero-visual-stack">
+    <PromoImage visual={promoVisuals.home} class="is-hero" loading="eager" fetchpriority="high" />
+    <div class="hero-panel" aria-label="Ключевые преимущества">
+      <div>
+        <span class="metric">1</span>
+        <p>номер телефона нужен, чтобы начать разговор о&nbsp;подключении</p>
+      </div>
+      <div>
+        <span class="metric">0</span>
+        <p>скрытых платежей и&nbsp;игр со&nbsp;скоростью в&nbsp;обещании Kubtel</p>
+      </div>
+      <div>
+        <span class="metric">люди</span>
+        <p>местная команда вместо бесконечных роботов и&nbsp;переключений</p>
+      </div>
     </div>
   </div>
 </section>

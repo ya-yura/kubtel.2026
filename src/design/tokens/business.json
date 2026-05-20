@@ -2,7 +2,7 @@
   "business": {
     "hero": {
       "panelBackground": {
-        "value": "linear-gradient(135deg, rgba(31, 103, 178, 0.14), transparent 42%), linear-gradient(160deg, {color.surface.dark}, {color.surface.darkRaisedAlt})",
+        "value": "linear-gradient(135deg, rgba(215, 86, 156, 0.2), transparent 42%), linear-gradient(160deg, {color.surface.darkDeep}, {color.surface.darkRaisedAlt})",
         "type": "gradient"
       },
       "panelItemBackground": { "value": "{color.alpha.white08}", "type": "color" },

@@ -19,7 +19,7 @@ const price = calculateMonthlyPrice(tariff);
       <p class="eyebrow">{tariff.isFeatured ? "Рекомендуем" : "Тариф"}</p>
       <h3>{tariff.title}</h3>
     </div>
-    <span class="speed">{tariff.speedDownload} Мбит/с</span>
+    <span class="speed">{tariff.speedDownload}&nbsp;Мбит/с</span>
   </div>
   <p>{tariff.benefitDescription}</p>
   <ul class="tag-list" aria-label="Кому подходит">
@@ -27,16 +27,16 @@ const price = calculateMonthlyPrice(tariff);
   </ul>
   <div class="tariff-price">
     <strong>{formatRubles(price.total)}</strong>
-    <span>в месяц</span>
+    <span>в&nbsp;месяц</span>
   </div>
   <p class:list={["proof", tariff.proof.status]}>
     <strong>{tariff.proof.label}:</strong>
     {tariff.proof.value}
   </p>
   <p class:list={["data-status", tariff.commercialReview.status]}>
-    Коммерческие данные: {getVerificationLabel(tariff.commercialReview.status)}
+    Коммерческие сведения: {getVerificationLabel(tariff.commercialReview.status)}
   </p>
   <a class="card-action" href={getSitePath(`/connect/?tariff=${tariff.slug}#callback-request`)}>
-    Хочу звонок по тарифу
+    Хочу звонок по&nbsp;тарифу
   </a>
 </article>

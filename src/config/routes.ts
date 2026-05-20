@@ -38,7 +38,7 @@ export const sitemapRoutes: SitemapRoute[] = [
   {
     path: "/",
     label: "Главная",
-    title: "Домашний интернет в Краснодаре",
+    title: "Домашний интернет в\u00a0Краснодаре",
     description:
       "Kubtel помогает оставить телефон, получить живой звонок и подключить домашний интернет без скрытых условий.",
     changeFrequency: "weekly",
@@ -50,7 +50,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "Тарифы",
     title: "Тарифы домашнего интернета",
     description:
-      "Сравнение тарифов Kubtel для квартиры, семьи, удаленной работы и ТВ с переходом к обратному звонку.",
+      "Сравнение тарифов Kubtel для квартиры, семьи, удалённой работы и ТВ с переходом к обратному звонку.",
     changeFrequency: "weekly",
     priority: 0.9,
     lastModified
@@ -70,7 +70,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "Бизнесу",
     title: "Kubtel для бизнеса",
     description:
-      "Связь Kubtel для бизнеса Краснодара: поддержка 24/7, аварийная бригада в течение часа, персональный менеджер и Hot-spot.",
+      "Связь Kubtel для бизнеса Краснодара: поддержка 24/7, аварийная бригада в\u00a0течение часа, персональный менеджер и Hot-spot.",
     changeFrequency: "weekly",
     priority: 0.95,
     lastModified
@@ -80,7 +80,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "Малому бизнесу",
     title: "Связь для малого бизнеса",
     description:
-      "Kubtel для малого и среднего бизнеса: интернет в офис, телефония, видеонаблюдение и Wi-Fi авторизация.",
+      "Kubtel для малого и среднего бизнеса: интернет в\u00a0офис, телефония, видеонаблюдение и Wi‑Fi-авторизация.",
     changeFrequency: "weekly",
     priority: 0.82,
     lastModified
@@ -90,7 +90,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "Операторам связи",
     title: "Операторам связи",
     description:
-      "Kubtel для операторов связи: инфраструктура, colocation, SEA-IX, партнерская заявка и региональная связность.",
+      "Kubtel для операторов связи: инфраструктура, colocation, SEA-IX, партнёрская заявка и региональная связность.",
     changeFrequency: "monthly",
     priority: 0.8,
     lastModified
@@ -100,17 +100,17 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "Госсектору",
     title: "Связь для государственного сектора",
     description:
-      "Kubtel для государственных учреждений: телеком-услуги, инфраструктура, хранение данных и заявка на консультацию.",
+      "Kubtel для государственных учреждений: телеком-услуги, инфраструктура, хранение информации и заявка на консультацию.",
     changeFrequency: "monthly",
     priority: 0.74,
     lastModified
   },
   {
     path: "/business/internet/",
-    label: "Интернет в офис",
-    title: "Интернет в офис",
+    label: "Интернет в\u00a0офис",
+    title: "Интернет в\u00a0офис",
     description:
-      "Корпоративный интернет Kubtel для офиса и бизнеса в Краснодаре: стабильность, поддержка 24/7, выезд аварийной бригады и заявка на расчет.",
+      "Корпоративный интернет Kubtel для офиса и бизнеса в\u00a0Краснодаре: стабильность, поддержка 24/7, выезд аварийной бригады и заявка на расчёт.",
     changeFrequency: "weekly",
     priority: 0.88,
     lastModified
@@ -130,7 +130,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "Видеонаблюдение",
     title: "Видеонаблюдение для бизнеса",
     description:
-      "Видеонаблюдение Kubtel для бизнеса: онлайн-просмотр, архив 3-30 дней, камеры Dome/Bullet и заявка на расчет.",
+      "Видеонаблюдение Kubtel для бизнеса: онлайн-просмотр, архив 3–30\u00a0дней, камеры Dome/Bullet и заявка на расчёт.",
     changeFrequency: "weekly",
     priority: 0.84,
     lastModified
@@ -138,9 +138,9 @@ export const sitemapRoutes: SitemapRoute[] = [
   {
     path: "/business/wifi-auth/",
     label: "Hot-spot",
-    title: "Гостевой Wi-Fi Hot-spot",
+    title: "Гостевой Wi‑Fi Hot-spot",
     description:
-      "Гостевой Wi-Fi Hot-spot Kubtel для публичных точек: авторизация посетителей, стабильный доступ и заявка на запуск.",
+      "Гостевой Wi‑Fi Hot-spot Kubtel для публичных точек: авторизация посетителей, стабильный доступ и заявка на запуск.",
     changeFrequency: "monthly",
     priority: 0.78,
     lastModified
@@ -150,7 +150,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "VPS",
     title: "Аренда VPS",
     description:
-      "VPS/VDS Kubtel для бизнеса: сервер под 1С, CRM, телефонию и удаленный доступ с заявкой на подбор ресурсов.",
+      "VPS/VDS Kubtel для бизнеса: сервер под 1С, CRM, телефонию и удалённый доступ с заявкой на подбор ресурсов.",
     changeFrequency: "monthly",
     priority: 0.78,
     lastModified
@@ -160,7 +160,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "VDI",
     title: "Виртуальное рабочее место",
     description:
-      "VDI Kubtel: аренда виртуального рабочего места для сотрудников, удаленного доступа и масштабирования рабочих мест.",
+      "VDI Kubtel: аренда виртуального рабочего места для сотрудников, удалённого доступа и масштабирования рабочих мест.",
     changeFrequency: "monthly",
     priority: 0.72,
     lastModified
@@ -170,17 +170,17 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "Colocation",
     title: "Colocation",
     description:
-      "Colocation Kubtel: размещение оборудования в ЦОД, питание, охрана, связность, SEA-IX и заявка на расчет.",
+      "Colocation Kubtel: размещение оборудования в\u00a0ЦОД, питание, охрана, связность, SEA-IX и заявка на расчёт.",
     changeFrequency: "monthly",
     priority: 0.84,
     lastModified
   },
   {
     path: "/business/datacenter-access/",
-    label: "Доступ в ЦОД",
-    title: "Заявка на доступ в ЦОД",
+    label: "Доступ в\u00a0ЦОД",
+    title: "Заявка на доступ в\u00a0ЦОД",
     description:
-      "Заявка на доступ в ЦОД Kubtel: плановые работы, выбор площадки, дата, время, длительность и описание работ.",
+      "Заявка на доступ в\u00a0ЦОД Kubtel: плановые работы, выбор площадки, дата, время, длительность и описание работ.",
     changeFrequency: "monthly",
     priority: 0.66,
     lastModified
@@ -190,7 +190,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "B2B-заявка",
     title: "Заявка для бизнеса",
     description:
-      "B2B-заявка Kubtel: компания, контакт, услуга, срочность и расчет связи без простоя.",
+      "B2B-заявка Kubtel: компания, контакт, услуга, срочность и расчёт связи без простоя.",
     changeFrequency: "weekly",
     priority: 0.86,
     lastModified
@@ -200,7 +200,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "Поддержка",
     title: "Поддержка и FAQ",
     description:
-      "Ответы Kubtel по подключению, тарифам, бесплатному доверительному платежу и добровольной блокировке.",
+      "Ответы Kubtel по подключению, тарифам, бесплатному доверительному платёжу и добровольной блокировке.",
     changeFrequency: "monthly",
     priority: 0.7,
     lastModified
@@ -210,7 +210,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "О компании",
     title: "О локальном провайдере",
     description:
-      "Kubtel как локальный интернет-провайдер Краснодара: живое отношение, честные условия и рекомендации клиентов.",
+      "Kubtel как местный интернет-провайдер Краснодара: живое отношение, честные условия и рекомендации клиентов.",
     changeFrequency: "monthly",
     priority: 0.6,
     lastModified

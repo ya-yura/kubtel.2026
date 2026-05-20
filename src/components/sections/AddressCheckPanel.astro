@@ -1,6 +1,8 @@
 ---
+import PromoImage from "@components/ui/PromoImage.astro";
 import { formatRubles } from "@lib/format";
 import { calculateMonthlyPrice } from "@lib/pricing";
+import { promoVisuals } from "@lib/visuals";
 import type { LeadActionResult } from "@lib/leads/submission";
 import type { Tariff, TariffOption } from "@models/domain";
 
@@ -24,8 +26,8 @@ type Props = {
 };
 
 const {
-  title = "Оставьте телефон - специалист Kubtel перезвонит",
-  lead = "Никакой имитации технической базы: нам важен ваш номер. Менеджер уточнит район, задачу и предложит честный вариант подключения.",
+  title = "Оставьте телефон\u00a0— специалист Kubtel перезвонит",
+  lead = "Не будем делать вид, будто сайт уже знает всё о вашем доме. Нам важен номер: менеджер уточнит район, задачу и предложит честный вариант подключения.",
   tariffs = [],
   selectedTariff = null,
   initialAddress = null,
@@ -50,7 +52,7 @@ const defaultTariffSlug =
 const selectedTariffData = tariffs.find((tariff) => tariff.slug === defaultTariffSlug);
 const selectedPrice = selectedTariffData ? calculateMonthlyPrice(selectedTariffData).total : null;
 const selectedPriceLabel =
-  selectedPrice !== null ? `${formatRubles(selectedPrice)} / мес. до дополнительных опций` : "";
+  selectedPrice !== null ? `${formatRubles(selectedPrice)}/мес. до\u00a0дополнительных опций` : "";
 const availableOptions = Array.from(new Set(tariffs.flatMap((tariff) => tariff.availableOptions)));
 const formStartedAt = Date.now().toString();
 const actionData = actionResult?.data;
@@ -66,7 +68,7 @@ function getOptionHint(option: TariffOption): string {
     )
     .find((amount): amount is number => typeof amount === "number");
 
-  return optionPrice ? `+${formatRubles(optionPrice)} / мес.` : "по выбранному тарифу";
+  return optionPrice ? `+${formatRubles(optionPrice)}/мес.` : "по\u00a0выбранному тарифу";
 }
 ---
 
@@ -96,6 +98,11 @@ function getOptionHint(option: TariffOption): string {
         </div>
       )
     }
+    <PromoImage
+      visual={promoVisuals.connection}
+      class="is-inline address-visual"
+      showMeta={false}
+    />
   </div>
   <form
     class="lead-form"
@@ -110,8 +117,8 @@ function getOptionHint(option: TariffOption): string {
           <strong>{actionData.message}</strong>
           <span>Номер заявки: {actionData.leadId}</span>
           <span>
-            Специалист перезвонит, уточнит детали и предложит вариант. Ориентир:{" "}
-            {actionData.tariffTitle}, {formatRubles(actionData.monthlyTotal)} / мес.
+            Специалист перезвонит, уточнит детали и&nbsp;предложит вариант. Ориентир:{" "}
+            {actionData.tariffTitle}, {formatRubles(actionData.monthlyTotal)}/мес.
           </span>
         </div>
       )
@@ -122,7 +129,7 @@ function getOptionHint(option: TariffOption): string {
           <strong>Заявка не отправлена</strong>
           <span>
             {actionError.message ??
-              "Проверьте телефон, адрес, тариф и согласие на обработку данных."}
+              "Проверьте телефон, адрес, тариф и согласие на\u00a0обработку данных."}
           </span>
         </div>
       )
@@ -169,7 +176,7 @@ function getOptionHint(option: TariffOption): string {
                 <label
                   class:list={["choice-card", { "is-selected": tariff.slug === defaultTariffSlug }]}
                   data-tariff-title={tariff.title}
-                  data-tariff-price={`${formatRubles(price.total)} / мес. до дополнительных опций`}
+                  data-tariff-price={`${formatRubles(price.total)}/мес. до\u00a0дополнительных опций`}
                   data-available-options={tariff.availableOptions.join(" ")}
                 >
                   <input
@@ -181,7 +188,7 @@ function getOptionHint(option: TariffOption): string {
                   <span>
                     <strong>{tariff.title}</strong>
                     <small>{tariff.speedDownload} Мбит/с</small>
-                    <em>{formatRubles(price.total)} / мес.</em>
+                    <em>{formatRubles(price.total)}/мес.</em>
                   </span>
                 </label>
               );
@@ -194,7 +201,7 @@ function getOptionHint(option: TariffOption): string {
     {
       availableOptions.length > 0 && (
         <fieldset class="form-group">
-          <legend>Пожелания к подключению</legend>
+          <legend>Пожелания к&nbsp;подключению</legend>
           <div class="option-grid">
             {availableOptions.map((option) => {
               const optionHint = getOptionHint(option);
@@ -233,14 +240,15 @@ function getOptionHint(option: TariffOption): string {
     <label class="consent-check">
       <input name="consent" type="checkbox" value="true" required />
       <span>
-        Согласен на обработку персональных данных для обратного звонка и подготовки предложения.
+        Согласен на обработку персональных данных для обратного звонка и&nbsp;подготовки
+        предложения.
       </span>
     </label>
 
     <button type="submit">Жду звонка</button>
     <p class="form-note" id="lead-form-note">
-      Достаточно телефона. Адрес, тариф и дополнительные пожелания можно уточнить уже в разговоре со
-      специалистом Kubtel.
+      Достаточно телефона. Адрес, тариф и&nbsp;дополнительные пожелания можно уточнить уже
+      в&nbsp;разговоре со&nbsp;специалистом Kubtel.
     </p>
   </form>
 </section>
@@ -339,7 +347,7 @@ function getOptionHint(option: TariffOption): string {
       if (hint) {
         hint.textContent = isSupported
           ? (hint.dataset.defaultHint ?? "")
-          : "Недоступно для выбранного тарифа";
+          : "Недоступно для\u00a0выбранного тарифа";
       }
     });
   }
@@ -350,15 +358,15 @@ function getOptionHint(option: TariffOption): string {
     const tariff = form.querySelector<HTMLInputElement>('input[name="tariff"]:checked');
     const choice = tariff?.closest(".choice-card") as HTMLElement | null;
     const title = choice?.dataset.tariffTitle ?? "выбранный тариф";
-    const price = choice?.dataset.tariffPrice ?? "стоимость уточним на звонке";
+    const price = choice?.dataset.tariffPrice ?? "стоимость уточним на\u00a0звонке";
 
     status.className = "form-status is-success";
     status.id = "lead-form-status";
     status.setAttribute("role", "status");
     status.setAttribute("tabindex", "-1");
     status.replaceChildren(
-      createStatusLine("strong", "Демо-заявка принята в онлайн-превью."),
-      createStatusLine("span", "В боевом режиме менеджер получает телефон и перезванивает."),
+      createStatusLine("strong", "Демо-заявка принята в\u00a0онлайн-превью."),
+      createStatusLine("span", "В боевом режиме менеджер получает телефон и\u00a0перезванивает."),
       createStatusLine("span", `Ориентир: ${title}, ${price}.`)
     );
 

@@ -64,16 +64,34 @@ const payload = JSON.stringify({
           return (
             <label>
               <span>{field.label}</span>
-              <input
-                name={field.name}
-                type="number"
-                min={field.min}
-                max={field.max}
-                step={field.step}
-                value={field.value}
-                inputmode="numeric"
-                data-calculator-field
-              />
+              <div class="calculator-number-control">
+                <button
+                  type="button"
+                  class="calculator-step-button"
+                  data-step-button="-1"
+                  aria-label={`Уменьшить ${field.label}`}
+                >
+                  -
+                </button>
+                <input
+                  name={field.name}
+                  type="number"
+                  min={field.min}
+                  max={field.max}
+                  step={field.step}
+                  value={field.value}
+                  inputmode="numeric"
+                  data-calculator-field
+                />
+                <button
+                  type="button"
+                  class="calculator-step-button"
+                  data-step-button="1"
+                  aria-label={`Увеличить ${field.label}`}
+                >
+                  +
+                </button>
+              </div>
               {field.suffix && <small>{field.suffix}</small>}
             </label>
           );
@@ -82,7 +100,7 @@ const payload = JSON.stringify({
     </form>
 
     <aside class="business-calculator-result" aria-live="polite">
-      <span class="service-category">Расчет</span>
+      <span class="service-category">Расчёт</span>
       <h3 data-calculator-summary>Конфигурация</h3>
       <div class="calculator-total-grid">
         <div>
@@ -96,7 +114,7 @@ const payload = JSON.stringify({
       </div>
       <ul class="calculator-lines" data-calculator-lines></ul>
       <p class="calculator-note" data-calculator-note>
-        Финальная цена фиксируется после проверки площадки и коммерческих условий.
+        Финальная цена фиксируется после проверки площадки и&nbsp;коммерческих условий.
       </p>
       <a class="card-action" href={requestPath} data-calculator-cta>{config.submitLabel}</a>
     </aside>
@@ -139,6 +157,26 @@ const payload = JSON.stringify({
 
     form.addEventListener("input", () => syncCalculator());
     form.addEventListener("change", () => syncCalculator());
+    form.querySelectorAll<HTMLButtonElement>("[data-step-button]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const input = button
+          .closest(".calculator-number-control")
+          ?.querySelector<HTMLInputElement>('input[type="number"]');
+
+        if (!input) {
+          return;
+        }
+
+        const direction = Number(button.dataset.stepButton || 0);
+        const step = Number(input.step || 1);
+        const min = Number(input.min || 0);
+        const max = Number(input.max || Number.MAX_SAFE_INTEGER);
+        const nextValue = Math.min(max, Math.max(min, Number(input.value || 0) + direction * step));
+
+        input.value = String(nextValue);
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+    });
     syncCalculator();
 
     function syncCalculator() {
@@ -148,7 +186,7 @@ const payload = JSON.stringify({
 
       summaryValue.textContent = summary;
       monthlyValue.textContent = result.hasMonthly
-        ? `${formatRubles(result.monthly)} / мес.`
+        ? `${formatRubles(result.monthly)}/мес.`
         : "По запросу";
       oneTimeValue.textContent = result.hasOneTime ? formatRubles(result.oneTime) : "По запросу";
       lineItems.replaceChildren(
@@ -167,7 +205,7 @@ const payload = JSON.stringify({
         noteNode.textContent =
           result.unknownItems.length > 0 || result.requiredConsultation
             ? `Нужно уточнить: ${result.unknownItems.join(", ")}.`
-            : "Расчет можно передать в заявку вместе с выбранной конфигурацией.";
+            : "Расчёт можно передать в\u00a0заявку вместе с выбранной конфигурацией.";
       }
 
       const params = new URLSearchParams({
@@ -276,7 +314,7 @@ const payload = JSON.stringify({
     if (!price || price.status === "unknown") {
       result.requiredConsultation = true;
       pushUnknown(result, label);
-      result.lines.push({ label: `${label} x ${rawQuantity}`, value: "по запросу" });
+      result.lines.push({ label: `${label} × ${rawQuantity}`, value: "по запросу" });
       return;
     }
 
@@ -299,9 +337,9 @@ const payload = JSON.stringify({
     }
 
     result.lines.push({
-      label: `${label} x ${rawQuantity}`,
+      label: `${label} × ${rawQuantity}`,
       value: [
-        monthly !== null ? `${formatRubles(monthly)} / мес.` : "",
+        monthly !== null ? `${formatRubles(monthly)}/мес.` : "",
         oneTime !== null ? formatRubles(oneTime) : ""
       ]
         .filter(Boolean)
@@ -321,15 +359,15 @@ const payload = JSON.stringify({
     }
 
     if (type === "cctv") {
-      return `Видеонаблюдение: ${values.camerasCount} камер, архив ${values.archiveDays} дней`;
+      return `Видеонаблюдение: ${values.camerasCount} камер, архив ${values.archiveDays}\u00a0дней`;
     }
 
     if (type === "vps") {
-      return `VPS: ${values.vCpu} CPU, ${values.ramGb} ГБ RAM`;
+      return `VPS: ${values.vCpu} CPU, ${values.ramGb}\u00a0ГБ RAM`;
     }
 
     if (type === "colocation") {
-      return `Размещение: ${values.rackUnits}U, ${values.powerWatts} Вт, порт ${values.internetPort}`;
+      return `Размещение: ${values.rackUnits}U, ${values.powerWatts}\u00a0Вт, порт ${values.internetPort}`;
     }
 
     return `Hot-spot: ${values.plan}, площадок ${values.sitesCount}`;

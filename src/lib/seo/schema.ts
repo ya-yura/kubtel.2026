@@ -58,7 +58,7 @@ export function buildOrganizationSchema(): JsonLdObject {
     url: getAbsoluteUrl("/"),
     description: SITE.shortDescription,
     areaServed: buildAreaServed(),
-    knowsAbout: ["домашний интернет", "цифровое ТВ", "обратный звонок", "связь в Краснодаре"]
+    knowsAbout: ["домашний интернет", "цифровое ТВ", "обратный звонок", "связь в\u00a0Краснодаре"]
   });
 }
 
@@ -174,11 +174,11 @@ export function buildOfferCatalogSchema(tariffs: Tariff[], pagePath = "/tariffs/
             {
               "@type": "PropertyValue",
               name: "Скорость загрузки",
-              value: `${tariff.speedDownload} Мбит/с`
+              value: `${tariff.speedDownload}\u00a0Мбит/с`
             },
             {
               "@type": "PropertyValue",
-              name: "Статус коммерческих данных",
+              name: "Статус коммерческих сведений",
               value: tariff.commercialReview.status
             }
           ]
@@ -194,7 +194,7 @@ export function buildInternetServiceSchema(tariffs: Tariff[], pagePath = "/"): J
   return withContext({
     "@type": "Service",
     "@id": `${getAbsoluteUrl(pagePath)}#internet-service`,
-    name: "Домашний интернет и ТВ Kubtel",
+    name: "Домашний интернет и\u00a0ТВ Kubtel",
     serviceType: "Домашний интернет",
     description: SITE.defaultDescription,
     provider: {

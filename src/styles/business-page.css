@@ -1,17 +1,18 @@
 .business-page {
-  --business-neon: #38d7ff;
-  --business-neon-soft: rgba(56, 215, 255, 0.18);
-  --business-orange-soft: rgba(244, 123, 32, 0.2);
+  --business-neon: var(--color-accent);
+  --business-blue: var(--color-info);
+  --business-neon-soft: rgba(215, 86, 156, 0.18);
+  --business-orange-soft: rgba(225, 140, 68, 0.2);
   --business-panel: rgba(13, 20, 29, 0.78);
   --business-panel-strong: rgba(20, 30, 42, 0.92);
-  --business-line: rgba(139, 211, 255, 0.2);
+  --business-line: rgba(215, 86, 156, 0.24);
   --business-muted: rgba(234, 246, 255, 0.7);
-  --business-text: #f3fbff;
+  --business-text: var(--kb-color-text-inverse);
   background:
-    radial-gradient(circle at 78% 8%, rgba(56, 215, 255, 0.22), transparent 28rem),
-    radial-gradient(circle at 15% 18%, rgba(244, 123, 32, 0.16), transparent 24rem),
-    linear-gradient(120deg, rgba(56, 215, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(180deg, #070a0f 0%, #0b1118 46%, #080c12 100%);
+    radial-gradient(circle at 76% 8%, rgba(215, 86, 156, 0.26), transparent 28rem),
+    radial-gradient(circle at 18% 20%, rgba(69, 153, 216, 0.18), transparent 24rem),
+    linear-gradient(120deg, rgba(215, 86, 156, 0.08) 1px, transparent 1px),
+    linear-gradient(180deg, rgb(7, 10, 15) 0%, rgb(11, 17, 24) 46%, rgb(8, 12, 18) 100%);
   background-size:
     auto,
     auto,
@@ -24,8 +25,8 @@
 
 .business-page::before {
   background:
-    linear-gradient(90deg, transparent, rgba(56, 215, 255, 0.26), transparent),
-    linear-gradient(180deg, transparent, rgba(244, 123, 32, 0.16), transparent);
+    linear-gradient(90deg, transparent, rgba(215, 86, 156, 0.28), transparent),
+    linear-gradient(180deg, transparent, rgba(69, 153, 216, 0.14), transparent);
   content: "";
   height: 52rem;
   left: 50%;
@@ -67,7 +68,7 @@
 }
 
 .business-page .business-hero-copy h1 {
-  font-size: clamp(2.55rem, 7vw, 5.65rem);
+  font-size: clamp(2.18rem, 5.8vw, 4.85rem);
   max-width: 980px;
 }
 
@@ -88,13 +89,13 @@
 }
 
 .business-page .business-link:hover {
-  background: rgba(56, 215, 255, 0.1);
-  border-color: rgba(56, 215, 255, 0.38);
+  background: rgba(215, 86, 156, 0.12);
+  border-color: rgba(215, 86, 156, 0.42);
 }
 
 .business-page .business-hero-panel {
   background:
-    linear-gradient(135deg, rgba(56, 215, 255, 0.18), transparent 38%),
+    linear-gradient(135deg, rgba(215, 86, 156, 0.2), transparent 38%),
     linear-gradient(160deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03)),
     rgba(8, 13, 20, 0.82);
   border: 1px solid var(--business-line);
@@ -106,8 +107,37 @@
   position: relative;
 }
 
+.business-hero-media {
+  grid-column: 1 / -1;
+  min-height: 300px;
+  overflow: hidden;
+  position: relative;
+}
+
+.business-page .business-panel-image {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  height: 100%;
+  min-height: 300px;
+}
+
+.business-page .business-panel-image::after {
+  background:
+    linear-gradient(180deg, rgba(5, 9, 14, 0.08), rgba(5, 9, 14, 0.62)),
+    radial-gradient(circle at 78% 20%, rgba(215, 86, 156, 0.34), transparent 15rem),
+    radial-gradient(circle at 16% 18%, rgba(69, 153, 216, 0.18), transparent 18rem);
+}
+
+.business-page .promo-visual::after {
+  background:
+    linear-gradient(180deg, rgba(5, 9, 14, 0.04) 35%, rgba(5, 9, 14, 0.72) 100%),
+    radial-gradient(circle at 80% 12%, rgba(215, 86, 156, 0.26), transparent 20rem),
+    radial-gradient(circle at 10% 18%, rgba(69, 153, 216, 0.16), transparent 18rem);
+}
+
 .business-page .business-hero-panel::after {
-  background: linear-gradient(180deg, transparent, rgba(244, 123, 32, 0.18), transparent);
+  background: linear-gradient(180deg, transparent, rgba(215, 86, 156, 0.18), transparent);
   content: "";
   height: 100%;
   position: absolute;
@@ -119,17 +149,19 @@
 .business-hero-radar {
   align-items: center;
   display: grid;
-  grid-column: 1 / -1;
-  min-height: 220px;
+  inset: 0;
+  min-height: 100%;
   overflow: hidden;
   place-items: center;
-  position: relative;
+  pointer-events: none;
+  position: absolute;
+  z-index: 2;
 }
 
 .business-hero-radar::before {
   background:
-    linear-gradient(90deg, transparent 49%, rgba(56, 215, 255, 0.42) 50%, transparent 51%),
-    linear-gradient(0deg, transparent 49%, rgba(56, 215, 255, 0.32) 50%, transparent 51%);
+    linear-gradient(90deg, transparent 49%, rgba(215, 86, 156, 0.44) 50%, transparent 51%),
+    linear-gradient(0deg, transparent 49%, rgba(215, 86, 156, 0.34) 50%, transparent 51%);
   content: "";
   height: 14rem;
   position: absolute;
@@ -137,7 +169,7 @@
 }
 
 .business-hero-radar span {
-  border: 1px solid rgba(56, 215, 255, 0.24);
+  border: 1px solid rgba(215, 86, 156, 0.28);
   border-radius: 999px;
   position: absolute;
 }
@@ -153,7 +185,7 @@
 }
 
 .business-hero-radar span:nth-child(3) {
-  border-color: rgba(244, 123, 32, 0.34);
+  border-color: rgba(69, 153, 216, 0.34);
   height: 14rem;
   width: 14rem;
 }
@@ -175,6 +207,7 @@
 
 .business-page .business-hero-panel strong {
   color: var(--business-text);
+  font-family: var(--kb-typography-family-display);
   font-size: 1.28rem;
   line-height: 1.14;
 }
@@ -193,7 +226,7 @@
 .business-service-row {
   align-items: center;
   background:
-    linear-gradient(90deg, rgba(56, 215, 255, 0.08), transparent 48%), var(--business-panel);
+    linear-gradient(90deg, rgba(215, 86, 156, 0.1), transparent 48%), var(--business-panel);
   border: 1px solid var(--business-line);
   border-radius: var(--radius);
   display: grid;
@@ -209,7 +242,7 @@
 }
 
 .business-service-row:hover {
-  border-color: rgba(56, 215, 255, 0.42);
+  border-color: rgba(215, 86, 156, 0.46);
   box-shadow: 0 18px 46px rgba(0, 0, 0, 0.24);
   transform: translateY(-1px);
 }
@@ -223,10 +256,13 @@
 
 .business-service-row strong {
   color: var(--business-text);
+  font-family: var(--kb-typography-family-display);
+  font-size: 0.98rem;
+  line-height: 1.22;
 }
 
 .business-service-row small {
-  border: 1px solid rgba(56, 215, 255, 0.28);
+  border: 1px solid rgba(215, 86, 156, 0.32);
   border-radius: 999px;
   color: var(--business-neon);
   font-size: 0.72rem;
@@ -254,6 +290,9 @@
 .business-case-study,
 .business-proof-column article,
 .business-faq-grid article,
+.business-page .business-card,
+.business-page .business-detail-card,
+.business-page .business-request-summary,
 .business-page .business-segment-card {
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)),
@@ -277,8 +316,8 @@
 
 .business-page .business-mini-list li::before {
   background: var(--business-neon);
-  border-color: rgba(56, 215, 255, 0.36);
-  box-shadow: 0 0 18px rgba(56, 215, 255, 0.4);
+  border-color: rgba(215, 86, 156, 0.38);
+  box-shadow: 0 0 18px rgba(215, 86, 156, 0.42);
 }
 
 .business-portrait-list {
@@ -292,6 +331,7 @@
 
 .business-vip-console > strong {
   color: var(--business-neon);
+  font-family: var(--kb-typography-family-display);
   font-size: 0.82rem;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -307,7 +347,7 @@
 .business-vip-console div span {
   background: var(--color-accent);
   border-radius: 999px;
-  box-shadow: 0 0 20px rgba(244, 123, 32, 0.42);
+  box-shadow: 0 0 20px rgba(215, 86, 156, 0.46);
   height: 0.72rem;
   margin-top: 0.45rem;
   width: 0.72rem;
@@ -340,14 +380,14 @@
 
 .business-page .business-calculator {
   background:
-    linear-gradient(135deg, rgba(56, 215, 255, 0.1), transparent 38%), var(--business-panel-strong);
+    linear-gradient(135deg, rgba(215, 86, 156, 0.12), transparent 38%), var(--business-panel-strong);
   border-color: var(--business-line);
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.26);
 }
 
 .business-page .business-calculator-form label {
   background: rgba(255, 255, 255, 0.045);
-  border-color: rgba(139, 211, 255, 0.17);
+  border-color: rgba(215, 86, 156, 0.18);
 }
 
 .business-page .business-calculator-form label span {
@@ -357,29 +397,52 @@
 .business-page .business-calculator-form input,
 .business-page .business-calculator-form select {
   background: rgba(5, 9, 14, 0.72);
-  border-color: rgba(139, 211, 255, 0.24);
+  border-color: rgba(215, 86, 156, 0.28);
   color: var(--business-text);
+}
+
+.business-page .calculator-number-control {
+  background: rgba(5, 9, 14, 0.72);
+  border-color: rgba(215, 86, 156, 0.28);
+}
+
+.business-page .calculator-number-control input {
+  background: transparent;
+  border-color: rgba(215, 86, 156, 0.22);
+}
+
+.business-page .calculator-step-button {
+  color: var(--business-neon);
+}
+
+.business-page .calculator-step-button:hover {
+  background: rgba(215, 86, 156, 0.16);
 }
 
 .business-page .business-calculator-form input:hover,
 .business-page .business-calculator-form select:hover {
-  border-color: rgba(56, 215, 255, 0.44);
+  border-color: rgba(215, 86, 156, 0.46);
 }
 
 .business-page .business-calculator-result {
   background:
-    radial-gradient(circle at 100% 0, rgba(244, 123, 32, 0.28), transparent 16rem), #05090e;
-  border: 1px solid rgba(244, 123, 32, 0.2);
+    radial-gradient(circle at 100% 0, rgba(215, 86, 156, 0.3), transparent 16rem), rgb(5, 9, 14);
+  border: 1px solid rgba(215, 86, 156, 0.24);
 }
 
 .business-page .business-calculator-result .service-category {
-  background: rgba(56, 215, 255, 0.12);
+  background: rgba(215, 86, 156, 0.14);
   color: var(--business-neon);
 }
 
 .business-page .calculator-total-grid div {
   background: rgba(255, 255, 255, 0.055);
   border-color: rgba(255, 255, 255, 0.11);
+}
+
+.business-page .calculator-total-grid strong,
+.business-page .calculator-lines strong {
+  font-family: var(--kb-typography-family-display);
 }
 
 .business-page .calculator-lines li {
@@ -390,8 +453,63 @@
   align-content: start;
 }
 
+.business-page .business-card,
+.business-page .business-detail-card,
+.business-page .business-request-summary {
+  color: var(--business-text);
+}
+
+.business-page .business-card:hover,
+.business-page .business-detail-card:hover,
+.business-page .business-request-summary:hover {
+  border-color: rgba(215, 86, 156, 0.46);
+  box-shadow: 0 20px 54px rgba(0, 0, 0, 0.28);
+}
+
+.business-page .business-card .service-category,
+.business-page .business-request-summary .service-category,
+.business-page .business-calculator-result .service-category {
+  background: rgba(215, 86, 156, 0.14);
+  color: var(--business-neon);
+}
+
 .business-page .business-segment-card strong {
   color: var(--business-text);
+}
+
+.business-page .business-proof-list span,
+.business-page .form-group,
+.business-page .message-field,
+.business-page .consent-line {
+  background: rgba(255, 255, 255, 0.045);
+  border-color: rgba(215, 86, 156, 0.18);
+}
+
+.business-page .business-proof-list strong,
+.business-page .form-group legend,
+.business-page .business-request-form label,
+.business-page .business-request-form label span,
+.business-page .message-field,
+.business-page .consent-line span {
+  color: rgba(244, 250, 255, 0.9);
+}
+
+.business-page .business-proof-list small {
+  color: rgba(244, 250, 255, 0.62);
+}
+
+.business-page .business-request-form input,
+.business-page .business-request-form select,
+.business-page .business-request-form textarea {
+  background: rgba(5, 9, 14, 0.72);
+  border-color: rgba(215, 86, 156, 0.28);
+  color: var(--business-text);
+}
+
+.business-page .business-request-form input:hover,
+.business-page .business-request-form select:hover,
+.business-page .business-request-form textarea:hover {
+  border-color: rgba(215, 86, 156, 0.46);
 }
 
 .business-proof-column {

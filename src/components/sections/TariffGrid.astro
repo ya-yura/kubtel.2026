@@ -1,5 +1,7 @@
 ---
+import PromoImage from "@components/ui/PromoImage.astro";
 import TariffCard from "@components/ui/TariffCard.astro";
+import { promoVisuals } from "@lib/visuals";
 import type { Tariff } from "@models/domain";
 
 type Props = {
@@ -10,16 +12,19 @@ type Props = {
 
 const {
   tariffs,
-  title = "Тарифы без тумана в условиях",
-  lead = "Скорость и цена нужны как ориентир. Финальное предложение специалист озвучит после звонка - без скрытых платежей и навязанных услуг."
+  title = "Тарифы без тумана в\u00a0условиях",
+  lead = "Скорость и цена нужны как ориентир. Финальное предложение специалист озвучит после звонка\u00a0— без скрытых платежей и навязанных услуг."
 } = Astro.props;
 ---
 
 <section class="section-pad tariffs-section">
-  <div class="section-heading">
-    <p class="eyebrow">Тарифная сетка</p>
-    <h2>{title}</h2>
-    <p>{lead}</p>
+  <div class="visual-section-head">
+    <div class="section-heading">
+      <p class="eyebrow">Тарифная сетка</p>
+      <h2>{title}</h2>
+      <p>{lead}</p>
+    </div>
+    <PromoImage visual={promoVisuals.entertainment} class="is-inline" />
   </div>
   <div class="tariff-grid">
     {tariffs.map((tariff) => <TariffCard tariff={tariff} />)}
