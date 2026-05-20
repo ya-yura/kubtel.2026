@@ -127,10 +127,29 @@ const promoCollection = defineCollection({
   })
 });
 
+const careersCollection = defineCollection({
+  loader: glob({ pattern: "**/*.json", base: "./src/content/careers" }),
+  schema: z.object({
+    title: z.string(),
+    slug: z.string(),
+    department: z.string(),
+    location: z.string(),
+    employmentType: z.enum(["full_time", "part_time", "shift", "contract", "internship"]),
+    status: z.enum(["open", "paused", "closed"]),
+    shortDescription: z.string(),
+    requirements: z.array(z.string()),
+    conditions: z.array(z.string()),
+    isActive: z.boolean(),
+    sortOrder: z.number(),
+    contentSource: contentSourceSchema
+  })
+});
+
 export const collections = {
   tariffs: tariffCollection,
   services: serviceCollection,
   faq: faqCollection,
   coverage: coverageCollection,
-  promos: promoCollection
+  promos: promoCollection,
+  careers: careersCollection
 };

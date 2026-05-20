@@ -5,6 +5,7 @@ import {
   calculatorOptionSchema,
   coverageAreaSchema,
   faqItemSchema,
+  jobVacancySchema,
   leadFormVariantSchema,
   promoSchema,
   serviceSchema,
@@ -22,7 +23,7 @@ import type {
   LeadFormVariant
 } from "@lib/cms/types";
 import { CmsAdapterError } from "@lib/cms/types";
-import type { CoverageArea, FaqItem, Promo, Service, Tariff } from "@models/domain";
+import type { CoverageArea, FaqItem, JobVacancy, Promo, Service, Tariff } from "@models/domain";
 import type { ZodType } from "zod";
 
 type StrapiCacheEntry<T> = {
@@ -36,6 +37,7 @@ const collectionApiIds = {
   faqItems: "faq-items",
   coverageAreas: "coverage-areas",
   promos: "promos",
+  jobVacancies: "job-vacancies",
   businessServices: "business-services",
   businessSegments: "business-segments",
   businessCalculators: "business-calculators",
@@ -114,6 +116,15 @@ export function createStrapiAdapter(config: CmsAdapterConfig): CmsAdapter {
 
     async getPromos(): Promise<Promo[]> {
       return fetchCollection<Promo>(collectionApiIds.promos, promoSchema as ZodType<Promo>);
+    },
+
+    async getJobVacancies(): Promise<JobVacancy[]> {
+      const vacancies = await fetchCollection<JobVacancy>(
+        collectionApiIds.jobVacancies,
+        jobVacancySchema as ZodType<JobVacancy>
+      );
+
+      return vacancies.sort((a, b) => a.sortOrder - b.sortOrder);
     },
 
     async getBusinessServices(): Promise<BusinessService[]> {

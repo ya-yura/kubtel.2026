@@ -92,4 +92,46 @@ describe("Strapi adapter", () => {
 
     expect(fetchImpl).toHaveBeenCalledTimes(1);
   });
+
+  it("fetches job vacancies for the careers page", async () => {
+    const fetchImpl = vi.fn(async () =>
+      Response.json({
+        data: [
+          {
+            id: 2,
+            attributes: {
+              title: "Инженер подключения",
+              slug: "connection-engineer",
+              department: "Техническая служба",
+              location: "Краснодар",
+              employmentType: "full_time",
+              status: "open",
+              shortDescription: "Подключение абонентов",
+              requirements: ["Аккуратный монтаж"],
+              conditions: ["Локальная команда"],
+              isActive: true,
+              sortOrder: 10,
+              contentSource: {
+                status: "needs_verification",
+                type: "editorial_assumption",
+                label: "HR черновик",
+                checkedAt: null,
+                responsible: "content",
+                note: ""
+              }
+            }
+          }
+        ]
+      })
+    ) as unknown as typeof fetch;
+
+    const adapter = createStrapiAdapter(createConfig(fetchImpl));
+    const vacancies = await adapter.getJobVacancies();
+
+    expect(vacancies[0].slug).toBe("connection-engineer");
+    expect(fetchImpl).toHaveBeenCalledWith(
+      expect.objectContaining({ pathname: "/api/job-vacancies" }),
+      expect.any(Object)
+    );
+  });
 });

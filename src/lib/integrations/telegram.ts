@@ -1,13 +1,16 @@
+import type { CareerApplicationSubmission } from "@lib/careers/submission";
 import type { DeliveryResult } from "@lib/integrations/types";
 import type { BusinessLeadSubmission } from "@lib/leads/business-submission";
 import type { LeadSubmission } from "@lib/leads/submission";
 
 export async function sendLeadToTelegram(
-  lead: LeadSubmission | BusinessLeadSubmission,
+  lead: LeadSubmission | BusinessLeadSubmission | CareerApplicationSubmission,
   env = process.env
 ): Promise<DeliveryResult> {
   const token = env.TELEGRAM_BOT_TOKEN;
-  const chatId = env.TELEGRAM_SALES_CHAT_ID;
+  const chatId = isCareerApplication(lead)
+    ? env.TELEGRAM_HR_CHAT_ID || env.TELEGRAM_SALES_CHAT_ID
+    : env.TELEGRAM_SALES_CHAT_ID;
 
   if (!token || !chatId) {
     return {
@@ -49,7 +52,13 @@ export async function sendLeadToTelegram(
   }
 }
 
-function formatTelegramLead(lead: LeadSubmission | BusinessLeadSubmission): string {
+function formatTelegramLead(
+  lead: LeadSubmission | BusinessLeadSubmission | CareerApplicationSubmission
+): string {
+  if (isCareerApplication(lead)) {
+    return formatTelegramCareerApplication(lead);
+  }
+
   if (isBusinessLead(lead)) {
     return formatTelegramBusinessLead(lead);
   }
@@ -70,9 +79,15 @@ function formatTelegramLead(lead: LeadSubmission | BusinessLeadSubmission): stri
 }
 
 function isBusinessLead(
-  lead: LeadSubmission | BusinessLeadSubmission
+  lead: LeadSubmission | BusinessLeadSubmission | CareerApplicationSubmission
 ): lead is BusinessLeadSubmission {
   return "leadType" in lead && lead.leadType === "b2b";
+}
+
+function isCareerApplication(
+  lead: LeadSubmission | BusinessLeadSubmission | CareerApplicationSubmission
+): lead is CareerApplicationSubmission {
+  return "applicationType" in lead && lead.applicationType === "career";
 }
 
 function formatTelegramBusinessLead(lead: BusinessLeadSubmission): string {
@@ -95,6 +110,22 @@ function formatTelegramBusinessLead(lead: BusinessLeadSubmission): string {
     `Pipeline: ${escapeHtml(lead.routing.pipeline)}`,
     `Конфигурация: ${escapeHtml(lead.configuration.summary)}`,
     `Неизвестные позиции: ${escapeHtml(lead.configuration.unknownItems.join(", "))}`
+  ]
+    .filter((line): line is string => Boolean(line))
+    .join("\n");
+}
+
+function formatTelegramCareerApplication(lead: CareerApplicationSubmission): string {
+  return [
+    `<b>Новый отклик Kubtel</b>`,
+    `ID: <code>${escapeHtml(lead.id)}</code>`,
+    `Вакансия: ${escapeHtml(lead.vacancy.title)}`,
+    `Отдел: ${escapeHtml(lead.vacancy.department)}`,
+    `Имя: ${escapeHtml(lead.applicant.name)}`,
+    `Телефон: ${escapeHtml(lead.applicant.phone)}`,
+    `Email: ${escapeHtml(lead.applicant.email)}`,
+    lead.message ? `Комментарий: ${escapeHtml(lead.message)}` : null,
+    `Источник: ${escapeHtml(lead.sourcePath)}`
   ]
     .filter((line): line is string => Boolean(line))
     .join("\n");

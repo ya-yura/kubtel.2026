@@ -1,11 +1,12 @@
 import { randomUUID } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import type { CareerApplicationSubmission } from "@lib/careers/submission";
 import type { DeliveryResult } from "@lib/integrations/types";
 import type { LeadSubmission } from "@lib/leads/submission";
 import type { BusinessLeadSubmission } from "@lib/leads/business-submission";
 
-type OutboxLead = LeadSubmission | BusinessLeadSubmission;
+type OutboxLead = LeadSubmission | BusinessLeadSubmission | CareerApplicationSubmission;
 
 type LeadOutboxRecord = {
   lead: OutboxLead;

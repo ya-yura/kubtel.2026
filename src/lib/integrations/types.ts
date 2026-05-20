@@ -1,4 +1,4 @@
-export type DeliveryChannel = "crm" | "telegram" | "analytics" | "outbox";
+export type DeliveryChannel = "crm" | "telegram" | "analytics" | "cms" | "outbox";
 
 export type DeliveryStatus = "sent" | "skipped" | "failed";
 

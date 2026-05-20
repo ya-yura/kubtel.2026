@@ -1,5 +1,16 @@
 import { trackServerEvent } from "@lib/analytics/server";
-import { getCoverageAreas, getTariffs } from "@lib/content";
+import { saveCareerApplicationToCms } from "@lib/careers/cms-delivery";
+import {
+  careerApplicationFormSchema,
+  hasHoneypotValue as hasCareerHoneypotValue,
+  isSuspiciousSubmitSpeed as isSuspiciousCareerSubmitSpeed
+} from "@lib/careers/schema";
+import {
+  buildCareerApplicationSubmission,
+  CareerApplicationError,
+  type CareerApplicationActionResult
+} from "@lib/careers/submission";
+import { getCoverageAreas, getJobVacancies, getTariffs } from "@lib/content";
 import { sendLeadToCrm } from "@lib/integrations/crm";
 import { sendLeadToTelegram } from "@lib/integrations/telegram";
 import type { DeliveryResult } from "@lib/integrations/types";
@@ -248,6 +259,110 @@ export async function handleBusinessLeadFormPost(
       deliveryMode: delivery.some((result) => result.status === "sent") ? "sent" : "reserved"
     }
   };
+}
+
+export async function handleCareerApplicationFormPost(
+  formData: FormData,
+  request: Request
+): Promise<LeadFormState<CareerApplicationActionResult>> {
+  const parsed = careerApplicationFormSchema.safeParse(formDataToRecord(formData));
+
+  if (!parsed.success) {
+    return createFormError(parsed.error.issues[0]?.message ?? "Проверьте поля формы.", 400);
+  }
+
+  const input = parsed.data;
+
+  if (hasCareerHoneypotValue(input) || isSuspiciousCareerSubmitSpeed(input)) {
+    await trackServerEvent({
+      name: "career_application_spam_blocked",
+      sourcePath: input.sourcePath
+    });
+
+    return createFormError(
+      "Отклик не удалось отправить. Обновите страницу и попробуйте ещё раз.",
+      400
+    );
+  }
+
+  const clientKey = hashRateLimitKey(`${getClientIp(request.headers)}:${input.phone}:careers`);
+  const rateLimit = checkRateLimit(clientKey);
+
+  if (!rateLimit.allowed) {
+    return createFormError(
+      `Слишком много отправок подряд. Попробуйте ещё раз примерно через ${Math.ceil(
+        rateLimit.retryAfterSeconds / 60
+      )}\u00a0мин.`,
+      429
+    );
+  }
+
+  const vacancies = await getJobVacancies();
+
+  try {
+    const application = buildCareerApplicationSubmission({
+      input,
+      vacancies,
+      userAgent: request.headers.get("user-agent")
+    });
+    const delivery = await Promise.all([
+      saveCareerApplicationToCms(application),
+      sendLeadToCrm(application),
+      sendLeadToTelegram(application)
+    ]);
+    const shouldSaveToOutbox =
+      delivery.some((result) => result.status === "failed") ||
+      delivery.every((result) => result.status === "skipped");
+    const outboxResult = shouldSaveToOutbox
+      ? await saveLeadToOutbox(application, delivery)
+      : createSkippedOutboxResult();
+    const allDelivery = [...delivery, outboxResult];
+
+    if (!allDelivery.some((result) => result.status === "sent")) {
+      await trackServerEvent({
+        name: "career_application_delivery_failed",
+        applicationId: application.id,
+        vacancy: application.vacancy.slug,
+        sourcePath: application.sourcePath,
+        delivery: summarizeDelivery(allDelivery)
+      });
+
+      return createFormError(
+        "Отклик не удалось надёжно сохранить или отправить. Пожалуйста, попробуйте ещё раз.",
+        500
+      );
+    }
+
+    await trackServerEvent({
+      name: "career_application_submitted",
+      applicationId: application.id,
+      vacancy: application.vacancy.slug,
+      sourcePath: application.sourcePath,
+      delivery: summarizeDelivery(allDelivery)
+    });
+
+    const deliveryMode = delivery.some((result) => result.status === "sent") ? "sent" : "reserved";
+
+    return {
+      status: 200,
+      data: {
+        success: true,
+        applicationId: application.id,
+        message:
+          deliveryMode === "sent"
+            ? "Отклик принят и передан команде Kubtel."
+            : "Отклик принят и сохранён в серверный резерв до настройки HR-доставки.",
+        vacancyTitle: application.vacancy.title,
+        deliveryMode
+      }
+    };
+  } catch (error) {
+    if (error instanceof CareerApplicationError) {
+      return createFormError(error.message, 400);
+    }
+
+    throw error;
+  }
 }
 
 function formDataToLeadInput(formData: FormData): Record<string, unknown> {

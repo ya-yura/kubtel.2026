@@ -1,0 +1,307 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import PromoImage from "@components/ui/PromoImage.astro";
+import { getJobVacancies } from "@lib/content";
+import { handleCareerApplicationFormPost } from "@lib/leads/form-handlers";
+import { promoVisuals } from "@lib/visuals";
+import type { JobEmploymentType } from "@models/domain";
+
+const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
+export const prerender = false;
+
+const vacancies = await getJobVacancies();
+const selectedVacancy = Astro.url.searchParams.get("vacancy") ?? "";
+const formStartedAt = Date.now().toString();
+const actionResult = isStaticPreview
+  ? undefined
+  : Astro.request.method === "POST"
+    ? await handleCareerApplicationFormPost(await Astro.request.formData(), Astro.request)
+    : undefined;
+const actionData = actionResult?.data;
+const actionError = actionResult?.error;
+
+const employmentLabels: Record<JobEmploymentType, string> = {
+  full_time: "Полный день",
+  part_time: "Частичная занятость",
+  shift: "Сменный график",
+  contract: "Проектная работа",
+  internship: "Стажировка"
+};
+---
+
+<BaseLayout
+  title="Работа в Kubtel"
+  description="Открытые вакансии Kubtel в Краснодаре: технические, клиентские и сервисные роли с простой формой отклика."
+  canonicalPath="/careers/"
+  pageType="CollectionPage"
+>
+  <section class="page-intro section-pad visual-intro">
+    <div>
+      <p class="eyebrow">Вакансии</p>
+      <h1>Делать связь лучше проще вместе с людьми, которым не всё равно</h1>
+      <p>
+        Kubtel&nbsp;— локальная команда провайдера в&nbsp;Краснодаре. Мы подключаем дома,
+        поддерживаем клиентов, развиваем сеть и&nbsp;любим, когда человек в&nbsp;команде хочет
+        разобраться в задаче, а&nbsp;не просто закрыть строку в&nbsp;очереди.
+      </p>
+    </div>
+    <PromoImage visual={promoVisuals.localTeam} class="is-page-intro" loading="eager" />
+  </section>
+
+  <section class="section-pad career-invite narrative-section visual-story-split">
+    <PromoImage visual={promoVisuals.support} class="is-inline" showMeta={false} />
+    <div>
+      <h2>Приглашаем в команду</h2>
+      <p>
+        Нам нужны инженеры, специалисты поддержки, менеджеры и&nbsp;люди, которые умеют держать
+        нормальный человеческий контакт. Если вам близка работа, где результат виден не только
+        в&nbsp;системе, но и&nbsp;в&nbsp;реальных клиентах, оставьте отклик.
+      </p>
+      <ul class="career-invite-list">
+        <li>Локальная сеть, реальные адреса и задачи по городу</li>
+        <li>Живое общение с клиентами и коллегами без обезличенного сервиса</li>
+        <li>Открытые роли можно уточнить прямо в форме отклика</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section-pad" aria-labelledby="career-vacancies-title">
+    <div class="visual-section-head">
+      <div class="section-heading">
+        <p class="eyebrow">Открытые роли</p>
+        <h2 id="career-vacancies-title">Вакансии</h2>
+        <p>
+          Для каждой роли собрали короткое описание, базовые требования и&nbsp;условия. Финальные
+          детали по графику и&nbsp;доходу лучше обсудить на первом разговоре.
+        </p>
+      </div>
+    </div>
+
+    <div class="career-vacancy-grid">
+      {
+        vacancies.map((vacancy) => (
+          <article class="career-vacancy-card" id={`vacancy-${vacancy.slug}`}>
+            <div>
+              <span class="service-category">{vacancy.department}</span>
+              <h3>{vacancy.title}</h3>
+              <p>{vacancy.shortDescription}</p>
+            </div>
+            <div class="career-vacancy-meta">
+              <span>{vacancy.location}</span>
+              <span>{employmentLabels[vacancy.employmentType]}</span>
+            </div>
+            <div class="career-vacancy-columns">
+              <div>
+                <strong>Требования</strong>
+                <ul class="business-mini-list">
+                  {vacancy.requirements.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <strong>Условия</strong>
+                <ul class="business-mini-list">
+                  {vacancy.conditions.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <a class="card-action" href="#career-application" data-vacancy-choice={vacancy.slug}>
+              Откликнуться
+            </a>
+          </article>
+        ))
+      }
+      {
+        vacancies.length === 0 && (
+          <article class="career-vacancy-card">
+            <span class="service-category">HR</span>
+            <h3>Открытые вакансии уточняются</h3>
+            <p>
+              Раздел уже готов к публикации вакансий из CMS. Как только команда добавит активную
+              роль, она появится здесь автоматически.
+            </p>
+          </article>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="section-pad business-request-layout" id="career-application">
+    <form
+      class="business-request-form career-application-form"
+      method="post"
+      action={isStaticPreview ? "#career-application" : Astro.url.pathname}
+      data-career-application-form
+      data-static-preview={isStaticPreview ? "true" : undefined}
+    >
+      {
+        actionData && (
+          <div class="form-status is-success" id="career-form-status" role="status" tabindex="-1">
+            <strong>{actionData.message}</strong>
+            <span>Номер отклика: {actionData.applicationId}</span>
+            <span>Вакансия: {actionData.vacancyTitle}</span>
+          </div>
+        )
+      }
+      {
+        actionError && (
+          <div class="form-status is-error" id="career-form-status" role="alert" tabindex="-1">
+            <strong>Отклик не отправлен</strong>
+            <span>{actionError.message ?? "Проверьте поля и попробуйте ещё раз."}</span>
+          </div>
+        )
+      }
+      <input name="sourcePath" type="hidden" value={Astro.url.pathname} />
+      <input name="formStartedAt" type="hidden" value={formStartedAt} />
+      <label class="visually-hidden">
+        <span>Оставьте это поле пустым</span>
+        <input name="website" type="text" tabindex="-1" autocomplete="off" />
+      </label>
+
+      <fieldset class="form-group">
+        <legend>Контакты кандидата</legend>
+        <div class="contact-grid">
+          <label>
+            Имя
+            <input name="name" type="text" autocomplete="name" maxlength="100" required />
+          </label>
+          <label>
+            Телефон
+            <input
+              name="phone"
+              type="tel"
+              autocomplete="tel"
+              inputmode="tel"
+              maxlength="32"
+              required
+            />
+          </label>
+          <label>
+            E-mail
+            <input name="email" type="email" autocomplete="email" maxlength="120" required />
+          </label>
+          <label>
+            Интересующая вакансия
+            <select name="vacancySlug" required disabled={vacancies.length === 0}>
+              <option value="">Выберите вакансию</option>
+              {
+                vacancies.map((vacancy) => (
+                  <option value={vacancy.slug} selected={vacancy.slug === selectedVacancy}>
+                    {vacancy.title}
+                  </option>
+                ))
+              }
+            </select>
+          </label>
+        </div>
+      </fieldset>
+
+      <label class="message-field">
+        Дополнительная информация
+        <textarea
+          name="message"
+          rows="5"
+          maxlength="1200"
+          placeholder="Например: опыт в телеком-сфере, удобное время для звонка, ссылка на резюме или важные детали"
+        ></textarea>
+      </label>
+
+      <label class="consent-line">
+        <input type="checkbox" name="consent" required />
+        <span>Согласен на&nbsp;обработку персональных данных для связи по&nbsp;отклику.</span>
+      </label>
+
+      <button type="submit" disabled={vacancies.length === 0}>Отправить отклик</button>
+      <p class="form-note">
+        Отклик попадёт команде Kubtel. Если сейчас нет идеального совпадения, можно выбрать самую
+        близкую роль и&nbsp;рассказать о себе в&nbsp;комментарии.
+      </p>
+    </form>
+
+    <aside
+      class="business-request-summary career-form-summary"
+      aria-label="Что будет после отклика"
+    >
+      <PromoImage
+        visual={promoVisuals.localTeam}
+        class="is-card request-summary-media"
+        showMeta={false}
+      />
+      <span class="service-category">HR</span>
+      <h2>Дальше&nbsp;— живой разговор</h2>
+      <p>
+        Мы смотрим, какая роль интересна, какой опыт уже есть и&nbsp;где человеку будет полезно
+        развиваться внутри команды.
+      </p>
+      <ul class="business-mini-list">
+        <li>HR или руководитель направления связывается по телефону или e-mail</li>
+        <li>Можно уточнить график, задачи и ожидания по доходу</li>
+        <li>Даже если роль не совпала идеально, контакт останется у команды</li>
+      </ul>
+    </aside>
+  </section>
+</BaseLayout>
+
+<script>
+  const careerForm = document.querySelector<HTMLFormElement>("[data-career-application-form]");
+  const vacancySelect = careerForm?.querySelector<HTMLSelectElement>('select[name="vacancySlug"]');
+
+  document.querySelectorAll<HTMLElement>("[data-vacancy-choice]").forEach((link) => {
+    link.addEventListener("click", () => {
+      const vacancy = link.dataset.vacancyChoice;
+
+      if (vacancySelect && vacancy) {
+        vacancySelect.value = vacancy;
+      }
+    });
+  });
+
+  if (careerForm?.dataset.staticPreview === "true") {
+    careerForm.addEventListener("submit", (event) => {
+      if (!careerForm.checkValidity()) {
+        return;
+      }
+
+      event.preventDefault();
+      showCareerPreviewStatus(careerForm);
+    });
+  }
+
+  function showCareerPreviewStatus(form: HTMLFormElement) {
+    const existingStatus = form.querySelector<HTMLElement>("#career-form-status");
+    const status = existingStatus ?? document.createElement("div");
+    const name =
+      form.querySelector<HTMLInputElement>('input[name="name"]')?.value.trim() || "Кандидат";
+    const vacancy = form.querySelector<HTMLSelectElement>('select[name="vacancySlug"]');
+    const vacancyTitle = vacancy?.selectedOptions[0]?.textContent?.trim() || "выбранная вакансия";
+
+    status.className = "form-status is-success";
+    status.id = "career-form-status";
+    status.setAttribute("role", "status");
+    status.setAttribute("tabindex", "-1");
+    status.replaceChildren(
+      createCareerStatusLine("strong", "Демо-отклик принят в\u00a0онлайн-превью."),
+      createCareerStatusLine("span", `${name}: ${vacancyTitle}.`),
+      createCareerStatusLine(
+        "span",
+        "Для боевой отправки подключите Node-хостинг, Strapi write token, CRM или Telegram."
+      )
+    );
+
+    if (!existingStatus) {
+      form.prepend(status);
+    }
+
+    status.focus({ preventScroll: true });
+  }
+
+  function createCareerStatusLine(tagName: "strong" | "span", text: string) {
+    const element = document.createElement(tagName);
+    element.textContent = text;
+
+    return element;
+  }
+</script>

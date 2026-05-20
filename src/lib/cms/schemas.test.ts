@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { businessServiceSchema, leadFormVariantSchema } from "@lib/cms/schemas";
+import { businessServiceSchema, jobVacancySchema, leadFormVariantSchema } from "@lib/cms/schemas";
 
 const source = {
   status: "confirmed",
@@ -78,5 +78,32 @@ describe("CMS normalized schemas", () => {
     });
 
     expect(parsed.fields[0].options).toEqual([]);
+  });
+
+  it("validates job vacancies used by the careers page", () => {
+    const parsed = jobVacancySchema.parse({
+      title: "Инженер подключения",
+      slug: "connection-engineer",
+      department: "Техническая служба",
+      location: "Краснодар",
+      employmentType: "full_time",
+      status: "open",
+      shortDescription: "Подключение абонентов",
+      requirements: ["Аккуратный монтаж"],
+      conditions: ["Локальная команда"],
+      isActive: true,
+      sortOrder: 10,
+      contentSource: {
+        status: "needs_verification",
+        type: "editorial_assumption",
+        label: "HR черновик",
+        checkedAt: null,
+        responsible: "content",
+        note: ""
+      }
+    });
+
+    expect(parsed.slug).toBe("connection-engineer");
+    expect(parsed.status).toBe("open");
   });
 });

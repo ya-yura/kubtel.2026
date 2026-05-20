@@ -1,10 +1,11 @@
 import { createHmac } from "node:crypto";
+import type { CareerApplicationSubmission } from "@lib/careers/submission";
 import type { DeliveryResult } from "@lib/integrations/types";
 import type { BusinessLeadSubmission } from "@lib/leads/business-submission";
 import type { LeadSubmission } from "@lib/leads/submission";
 
 export async function sendLeadToCrm(
-  lead: LeadSubmission | BusinessLeadSubmission,
+  lead: LeadSubmission | BusinessLeadSubmission | CareerApplicationSubmission,
   env = process.env
 ): Promise<DeliveryResult> {
   const webhookUrl = env.CRM_WEBHOOK_URL;
@@ -17,10 +18,7 @@ export async function sendLeadToCrm(
     };
   }
 
-  const body = JSON.stringify({
-    type: "lead.created",
-    lead
-  });
+  const body = JSON.stringify(buildCrmPayload(lead));
 
   const headers: Record<string, string> = {
     "content-type": "application/json"
@@ -61,6 +59,28 @@ export async function sendLeadToCrm(
       message: error instanceof Error ? error.message : "CRM webhook недоступен"
     };
   }
+}
+
+function buildCrmPayload(
+  lead: LeadSubmission | BusinessLeadSubmission | CareerApplicationSubmission
+) {
+  if (isCareerApplication(lead)) {
+    return {
+      type: "career_application.created",
+      application: lead
+    };
+  }
+
+  return {
+    type: "lead.created",
+    lead
+  };
+}
+
+function isCareerApplication(
+  lead: LeadSubmission | BusinessLeadSubmission | CareerApplicationSubmission
+): lead is CareerApplicationSubmission {
+  return "applicationType" in lead && lead.applicationType === "career";
 }
 
 async function postWithTimeout(url: string, init: RequestInit): Promise<Response> {

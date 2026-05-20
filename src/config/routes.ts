@@ -23,6 +23,7 @@ export const mainNavItems: NavItem[] = [
   { href: "/business/", label: "Бизнесу" },
   { href: "/support/", label: "Поддержка" },
   { href: "/about/", label: "О компании" },
+  { href: "/careers/", label: "Вакансии" },
   { href: "/contacts/", label: "Контакты" }
 ];
 
@@ -31,6 +32,7 @@ export const footerNavItems: NavItem[] = [
   { href: "/business/", label: "Бизнесу" },
   { href: "/business/request/", label: "B2B-заявка" },
   { href: "/support/", label: "Поддержка" },
+  { href: "/careers/", label: "Вакансии" },
   { href: "/contacts/", label: "Контакты" }
 ];
 
@@ -213,6 +215,16 @@ export const sitemapRoutes: SitemapRoute[] = [
       "Kubtel как местный интернет-провайдер Краснодара: живое отношение, честные условия и рекомендации клиентов.",
     changeFrequency: "monthly",
     priority: 0.6,
+    lastModified
+  },
+  {
+    path: "/careers/",
+    label: "Вакансии",
+    title: "Работа в Kubtel",
+    description:
+      "Открытые вакансии Kubtel в Краснодаре: технические, клиентские и сервисные роли с простой формой отклика.",
+    changeFrequency: "weekly",
+    priority: 0.58,
     lastModified
   },
   {

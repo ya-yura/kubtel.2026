@@ -1,8 +1,9 @@
 import { getCollection } from "astro:content";
-import type { CoverageArea, FaqItem, Promo, Service, Tariff } from "@models/domain";
+import type { CoverageArea, FaqItem, JobVacancy, Promo, Service, Tariff } from "@models/domain";
 import {
   coverageAreaSchema,
   faqItemSchema,
+  jobVacancySchema,
   promoSchema,
   serviceSchema,
   tariffSchema
@@ -23,6 +24,10 @@ function bySortOrder(a: Tariff, b: Tariff): number {
 
 function byPriority(a: FaqItem, b: FaqItem): number {
   return a.priority - b.priority;
+}
+
+function byJobSortOrder(a: JobVacancy, b: JobVacancy): number {
+  return a.sortOrder - b.sortOrder;
 }
 
 export function createLocalContentAdapter(): CmsAdapter {
@@ -61,6 +66,14 @@ export function createLocalContentAdapter(): CmsAdapter {
       const entries = await getCollection("promos");
 
       return entries.map((entry) => promoSchema.parse(entry.data) as Promo);
+    },
+
+    async getJobVacancies(): Promise<JobVacancy[]> {
+      const entries = await getCollection("careers");
+
+      return entries
+        .map((entry) => jobVacancySchema.parse(entry.data) as JobVacancy)
+        .sort(byJobSortOrder);
     },
 
     async getBusinessServices(): Promise<BusinessService[]> {

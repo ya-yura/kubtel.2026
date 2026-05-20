@@ -1,5 +1,5 @@
 import { createCmsAdapter } from "@lib/cms";
-import type { CoverageArea, FaqItem, Promo, Service, Tariff } from "@models/domain";
+import type { CoverageArea, FaqItem, JobVacancy, Promo, Service, Tariff } from "@models/domain";
 
 function bySortOrder(a: Tariff, b: Tariff): number {
   return a.sortOrder - b.sortOrder;
@@ -29,4 +29,10 @@ export async function getCoverageAreas(): Promise<CoverageArea[]> {
 
 export async function getPromos(): Promise<Promo[]> {
   return createCmsAdapter().getPromos();
+}
+
+export async function getJobVacancies(): Promise<JobVacancy[]> {
+  return (await createCmsAdapter().getJobVacancies())
+    .filter((vacancy) => vacancy.isActive && vacancy.status === "open")
+    .sort((a, b) => a.sortOrder - b.sortOrder);
 }

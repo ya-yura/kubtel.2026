@@ -9,9 +9,14 @@ export type ServerAnalyticsEvent = {
     | "b2b_lead_submitted"
     | "b2b_lead_success"
     | "b2b_lead_delivery_failed"
-    | "b2b_lead_spam_blocked";
+    | "b2b_lead_spam_blocked"
+    | "career_application_submitted"
+    | "career_application_delivery_failed"
+    | "career_application_spam_blocked";
   leadId?: string;
+  applicationId?: string;
   tariff?: string;
+  vacancy?: string;
   serviceInterest?: string;
   leadScore?: number;
   qualification?: string;

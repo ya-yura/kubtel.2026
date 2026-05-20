@@ -164,6 +164,21 @@ export const promoSchema = z.object({
   contentSource: domainContentSourceSchema
 });
 
+export const jobVacancySchema = z.object({
+  title: z.string(),
+  slug: z.string(),
+  department: z.string(),
+  location: z.string(),
+  employmentType: z.enum(["full_time", "part_time", "shift", "contract", "internship"]),
+  status: z.enum(["open", "paused", "closed"]),
+  shortDescription: z.string(),
+  requirements: z.array(z.string()).default([]),
+  conditions: z.array(z.string()).default([]),
+  isActive: z.boolean(),
+  sortOrder: z.number().int(),
+  contentSource: domainContentSourceSchema
+});
+
 export const businessServiceSchema = z.object({
   title: z.string(),
   slug: z.string(),

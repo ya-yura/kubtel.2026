@@ -1,6 +1,7 @@
 import type {
   CoverageArea,
   FaqItem,
+  JobVacancy,
   Promo,
   Service,
   Tariff,
@@ -150,6 +151,7 @@ export type CmsContent = {
   faqItems: FaqItem[];
   coverageAreas: CoverageArea[];
   promos: Promo[];
+  jobVacancies: JobVacancy[];
   businessServices: BusinessService[];
   businessSegments: BusinessSegment[];
   businessCalculators: BusinessCalculator[];
@@ -169,6 +171,7 @@ export type CmsAdapter = {
   getFaqItems(options?: CmsListOptions): Promise<FaqItem[]>;
   getCoverageAreas(): Promise<CoverageArea[]>;
   getPromos(): Promise<Promo[]>;
+  getJobVacancies(): Promise<JobVacancy[]>;
   getBusinessServices(): Promise<BusinessService[]>;
   getBusinessSegments(): Promise<BusinessSegment[]>;
   getBusinessCalculators(): Promise<BusinessCalculator[]>;

@@ -120,3 +120,22 @@ export type Promo = {
   proof: ProofPoint;
   contentSource: ContentSource;
 };
+
+export type JobVacancyStatus = "open" | "paused" | "closed";
+
+export type JobEmploymentType = "full_time" | "part_time" | "shift" | "contract" | "internship";
+
+export type JobVacancy = {
+  title: string;
+  slug: string;
+  department: string;
+  location: string;
+  employmentType: JobEmploymentType;
+  status: JobVacancyStatus;
+  shortDescription: string;
+  requirements: string[];
+  conditions: string[];
+  isActive: boolean;
+  sortOrder: number;
+  contentSource: ContentSource;
+};

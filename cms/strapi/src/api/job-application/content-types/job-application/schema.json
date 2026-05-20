@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "job_applications",
+  "info": {
+    "singularName": "job-application",
+    "pluralName": "job-applications",
+    "displayName": "Job Application",
+    "description": "Candidate replies from the Kubtel careers page"
+  },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "submissionId": { "type": "string", "required": true, "unique": true },
+    "applicantName": { "type": "string", "required": true },
+    "phone": { "type": "string", "required": true },
+    "email": { "type": "email", "required": true },
+    "vacancySlug": { "type": "string", "required": true },
+    "vacancyTitle": { "type": "string", "required": true },
+    "message": { "type": "text" },
+    "sourcePath": { "type": "string" },
+    "consentAccepted": { "type": "boolean", "required": true, "default": true },
+    "submittedAt": { "type": "datetime", "required": true },
+    "applicationStatus": {
+      "type": "enumeration",
+      "enum": ["new", "in_review", "contacted", "interview", "reserve", "rejected", "hired", "archived"],
+      "required": true,
+      "default": "new"
+    },
+    "reaction": {
+      "type": "enumeration",
+      "enum": [
+        "not_contacted",
+        "call_scheduled",
+        "called",
+        "email_sent",
+        "interview_invited",
+        "no_response"
+      ],
+      "required": true,
+      "default": "not_contacted"
+    },
+    "reactionNotes": { "type": "text" },
+    "assignedTo": { "type": "string" },
+    "statusChangedAt": { "type": "datetime" },
+    "payload": { "type": "json" }
+  }
+}

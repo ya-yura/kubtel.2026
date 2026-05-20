@@ -3,6 +3,7 @@ import { readFile, writeFile } from "node:fs/promises";
 
 const prerenderFiles = [
   "src/pages/index.astro",
+  "src/pages/careers.astro",
   "src/pages/connect.astro",
   "src/pages/tariffs/index.astro",
   "src/pages/business/request.astro",
