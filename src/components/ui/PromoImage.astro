@@ -1,4 +1,5 @@
 ---
+import { getSitePath } from "@config/site";
 import type { PromoVisual } from "@lib/visuals";
 
 type Props = {
@@ -20,7 +21,7 @@ const {
 
 <figure class:list={["promo-visual", className]}>
   <img
-    src={visual.src}
+    src={getSitePath(visual.src)}
     alt={visual.alt}
     width="1586"
     height="992"
