@@ -20,10 +20,9 @@ body {
   background:
     linear-gradient(
       180deg,
-      var(--kb-color-surface-page) 0,
-      var(--kb-color-surface-page) 38rem,
-      var(--color-soft) 38rem,
-      var(--kb-color-surface-page) 78rem
+      var(--color-soft) 0,
+      var(--color-soft) 24rem,
+      var(--kb-color-surface-page) 68rem
     ),
     var(--color-surface);
   color: var(--kb-color-text-primary);
