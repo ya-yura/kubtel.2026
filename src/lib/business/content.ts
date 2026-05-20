@@ -61,6 +61,29 @@ export const businessServices: BusinessService[] = [
       "Корпоративный интернет Kubtel для офиса и бизнеса в Краснодаре: стабильный канал, поддержка 24/7, выезд аварийной бригады и заявка на расчет."
   },
   {
+    slug: "static-ip",
+    title: "Статические IP-адреса",
+    category: "Связь",
+    summary:
+      "Выделенные IP-адреса для касс, VPN, удаленного доступа, видеонаблюдения, серверов и сервисов, которым нужен стабильный внешний адрес.",
+    businessBenefit:
+      "Администраторы и подрядчики получают предсказуемый доступ к инфраструктуре, а бизнес не теряет управление сервисами из-за смены адреса.",
+    proofPoints: [
+      { label: "Сценарии", value: "кассы, VPN, камеры, серверы", status: "confirmed" },
+      { label: "Поддержка", value: "через персонального менеджера", status: "confirmed" },
+      { label: "Подключение", value: "в составе корпоративной связи", status: "confirmed" }
+    ],
+    ctaLabel: "Подключить статический IP",
+    priority: "P0",
+    audience: ["офисы", "магазины", "склады", "IT-команды"],
+    options: ["количество IPv4", "назначение", "маршрутизация", "привязка к услуге"],
+    calculatorFields: ["лицевой счет", "количество IP", "адрес объекта", "назначение"],
+    relatedServices: ["internet", "vps", "colocation"],
+    seoTitle: "Статические IP-адреса для бизнеса в Краснодаре",
+    seoDescription:
+      "Статические IP-адреса Kubtel для бизнеса: VPN, кассы, видеонаблюдение, серверы и заявка на подключение."
+  },
+  {
     slug: "telephony",
     title: "Телефония и IP-телефония",
     category: "Связь",
@@ -268,10 +291,10 @@ export const businessSegments: BusinessSegment[] = [
 ];
 
 export const businessProofStrip: BusinessProof[] = [
-  { label: "Поддержка", value: "24/7", status: "confirmed" },
-  { label: "Выезд", value: "в течение часа", status: "confirmed" },
-  { label: "Менеджер", value: "вне очереди", status: "confirmed" },
-  { label: "Платежи", value: "кредитный лимит", status: "confirmed" }
+  { label: "Локальная авария", value: "устраняем в течение 1 часа", status: "confirmed" },
+  { label: "Менеджер", value: "свяжется тогда, когда нужно вам", status: "confirmed" },
+  { label: "Связность", value: "несколько аплинков вместо одного", status: "confirmed" },
+  { label: "Команда", value: "All In One для IT-потребностей", status: "confirmed" }
 ];
 
 export function getBusinessService(slug: string): BusinessService | undefined {

@@ -1,0 +1,440 @@
+.business-page {
+  --business-neon: #38d7ff;
+  --business-neon-soft: rgba(56, 215, 255, 0.18);
+  --business-orange-soft: rgba(244, 123, 32, 0.2);
+  --business-panel: rgba(13, 20, 29, 0.78);
+  --business-panel-strong: rgba(20, 30, 42, 0.92);
+  --business-line: rgba(139, 211, 255, 0.2);
+  --business-muted: rgba(234, 246, 255, 0.7);
+  --business-text: #f3fbff;
+  background:
+    radial-gradient(circle at 78% 8%, rgba(56, 215, 255, 0.22), transparent 28rem),
+    radial-gradient(circle at 15% 18%, rgba(244, 123, 32, 0.16), transparent 24rem),
+    linear-gradient(120deg, rgba(56, 215, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(180deg, #070a0f 0%, #0b1118 46%, #080c12 100%);
+  background-size:
+    auto,
+    auto,
+    42px 42px,
+    auto;
+  color: var(--business-text);
+  overflow: hidden;
+  position: relative;
+}
+
+.business-page::before {
+  background:
+    linear-gradient(90deg, transparent, rgba(56, 215, 255, 0.26), transparent),
+    linear-gradient(180deg, transparent, rgba(244, 123, 32, 0.16), transparent);
+  content: "";
+  height: 52rem;
+  left: 50%;
+  pointer-events: none;
+  position: absolute;
+  top: 4rem;
+  transform: translateX(-50%) rotate(-8deg);
+  width: min(46rem, 82vw);
+}
+
+.business-page .section-pad {
+  position: relative;
+  z-index: 1;
+}
+
+.business-page h1,
+.business-page h2,
+.business-page h3 {
+  color: var(--business-text);
+}
+
+.business-page p,
+.business-page small {
+  color: var(--business-muted);
+}
+
+.business-page .eyebrow {
+  color: var(--business-neon);
+}
+
+.business-page .business-hero {
+  min-height: 650px;
+  padding-bottom: 5.5rem;
+  padding-top: 5rem;
+}
+
+.business-page .business-hero-copy {
+  gap: 1.15rem;
+}
+
+.business-page .business-hero-copy h1 {
+  font-size: clamp(2.55rem, 7vw, 5.65rem);
+  max-width: 980px;
+}
+
+.business-page .business-hero-copy p {
+  color: rgba(244, 250, 255, 0.82);
+  font-size: 1.08rem;
+  max-width: 760px;
+}
+
+.business-page .business-actions .card-action {
+  width: auto;
+}
+
+.business-page .business-link {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--business-line);
+  color: var(--business-text);
+}
+
+.business-page .business-link:hover {
+  background: rgba(56, 215, 255, 0.1);
+  border-color: rgba(56, 215, 255, 0.38);
+}
+
+.business-page .business-hero-panel {
+  background:
+    linear-gradient(135deg, rgba(56, 215, 255, 0.18), transparent 38%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03)),
+    rgba(8, 13, 20, 0.82);
+  border: 1px solid var(--business-line);
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  gap: 0;
+  min-height: 560px;
+  position: relative;
+}
+
+.business-page .business-hero-panel::after {
+  background: linear-gradient(180deg, transparent, rgba(244, 123, 32, 0.18), transparent);
+  content: "";
+  height: 100%;
+  position: absolute;
+  right: 18%;
+  top: 0;
+  width: 1px;
+}
+
+.business-hero-radar {
+  align-items: center;
+  display: grid;
+  grid-column: 1 / -1;
+  min-height: 220px;
+  overflow: hidden;
+  place-items: center;
+  position: relative;
+}
+
+.business-hero-radar::before {
+  background:
+    linear-gradient(90deg, transparent 49%, rgba(56, 215, 255, 0.42) 50%, transparent 51%),
+    linear-gradient(0deg, transparent 49%, rgba(56, 215, 255, 0.32) 50%, transparent 51%);
+  content: "";
+  height: 14rem;
+  position: absolute;
+  width: 14rem;
+}
+
+.business-hero-radar span {
+  border: 1px solid rgba(56, 215, 255, 0.24);
+  border-radius: 999px;
+  position: absolute;
+}
+
+.business-hero-radar span:nth-child(1) {
+  height: 6rem;
+  width: 6rem;
+}
+
+.business-hero-radar span:nth-child(2) {
+  height: 10rem;
+  width: 10rem;
+}
+
+.business-hero-radar span:nth-child(3) {
+  border-color: rgba(244, 123, 32, 0.34);
+  height: 14rem;
+  width: 14rem;
+}
+
+.business-page .business-hero-panel article {
+  background: rgba(255, 255, 255, 0.045);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  min-height: 138px;
+  padding: 1.1rem;
+}
+
+.business-page .business-hero-panel article:nth-of-type(odd) {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.business-page .business-hero-panel span {
+  color: var(--business-neon);
+}
+
+.business-page .business-hero-panel strong {
+  color: var(--business-text);
+  font-size: 1.28rem;
+  line-height: 1.14;
+}
+
+.business-service-inventory,
+.business-calculators-showcase,
+.business-faq-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.business-service-rail {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.business-service-row {
+  align-items: center;
+  background:
+    linear-gradient(90deg, rgba(56, 215, 255, 0.08), transparent 48%), var(--business-panel);
+  border: 1px solid var(--business-line);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: auto minmax(0, 1fr);
+  min-height: 84px;
+  padding: 0.95rem;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.business-service-row:hover {
+  border-color: rgba(56, 215, 255, 0.42);
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.24);
+  transform: translateY(-1px);
+}
+
+.business-service-row span {
+  color: var(--business-neon);
+  font-size: 0.82rem;
+  font-weight: 900;
+  width: 2.3rem;
+}
+
+.business-service-row strong {
+  color: var(--business-text);
+}
+
+.business-service-row small {
+  border: 1px solid rgba(56, 215, 255, 0.28);
+  border-radius: 999px;
+  color: var(--business-neon);
+  font-size: 0.72rem;
+  font-weight: 850;
+  justify-self: start;
+  padding: 0.32rem 0.55rem;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.business-service-row p {
+  grid-column: 1 / -1;
+  font-size: 0.92rem;
+  margin-bottom: 0;
+}
+
+.business-comfort-section,
+.business-proof-workflow {
+  display: grid;
+  gap: 1rem;
+}
+
+.business-comfort-copy,
+.business-vip-console,
+.business-case-study,
+.business-proof-column article,
+.business-faq-grid article,
+.business-page .business-segment-card {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)),
+    var(--business-panel);
+  border: 1px solid var(--business-line);
+  border-radius: var(--radius);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.business-comfort-copy,
+.business-vip-console,
+.business-case-study,
+.business-proof-column article,
+.business-faq-grid article {
+  padding: 1.2rem;
+}
+
+.business-page .business-mini-list li {
+  color: rgba(244, 250, 255, 0.88);
+}
+
+.business-page .business-mini-list li::before {
+  background: var(--business-neon);
+  border-color: rgba(56, 215, 255, 0.36);
+  box-shadow: 0 0 18px rgba(56, 215, 255, 0.4);
+}
+
+.business-portrait-list {
+  margin-top: 1rem;
+}
+
+.business-vip-console {
+  align-content: start;
+  gap: 0.85rem;
+}
+
+.business-vip-console > strong {
+  color: var(--business-neon);
+  font-size: 0.82rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.business-vip-console div {
+  align-items: start;
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: auto 1fr;
+}
+
+.business-vip-console div span {
+  background: var(--color-accent);
+  border-radius: 999px;
+  box-shadow: 0 0 20px rgba(244, 123, 32, 0.42);
+  height: 0.72rem;
+  margin-top: 0.45rem;
+  width: 0.72rem;
+}
+
+.business-vip-console div p {
+  margin-bottom: 0;
+}
+
+.business-calculator-stack {
+  display: grid;
+  gap: 1rem;
+}
+
+.business-page .business-calculator-stack .business-calculator-section {
+  contain-intrinsic-size: auto;
+  content-visibility: visible;
+  margin: 0;
+  max-width: none;
+  padding: 0;
+}
+
+.business-page .business-calculator-section .section-heading {
+  margin-bottom: 0.8rem;
+}
+
+.business-page .business-calculator-section h2 {
+  font-size: 1.72rem;
+}
+
+.business-page .business-calculator {
+  background:
+    linear-gradient(135deg, rgba(56, 215, 255, 0.1), transparent 38%), var(--business-panel-strong);
+  border-color: var(--business-line);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.26);
+}
+
+.business-page .business-calculator-form label {
+  background: rgba(255, 255, 255, 0.045);
+  border-color: rgba(139, 211, 255, 0.17);
+}
+
+.business-page .business-calculator-form label span {
+  color: rgba(244, 250, 255, 0.86);
+}
+
+.business-page .business-calculator-form input,
+.business-page .business-calculator-form select {
+  background: rgba(5, 9, 14, 0.72);
+  border-color: rgba(139, 211, 255, 0.24);
+  color: var(--business-text);
+}
+
+.business-page .business-calculator-form input:hover,
+.business-page .business-calculator-form select:hover {
+  border-color: rgba(56, 215, 255, 0.44);
+}
+
+.business-page .business-calculator-result {
+  background:
+    radial-gradient(circle at 100% 0, rgba(244, 123, 32, 0.28), transparent 16rem), #05090e;
+  border: 1px solid rgba(244, 123, 32, 0.2);
+}
+
+.business-page .business-calculator-result .service-category {
+  background: rgba(56, 215, 255, 0.12);
+  color: var(--business-neon);
+}
+
+.business-page .calculator-total-grid div {
+  background: rgba(255, 255, 255, 0.055);
+  border-color: rgba(255, 255, 255, 0.11);
+}
+
+.business-page .calculator-lines li {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+.business-page .business-segment-card {
+  align-content: start;
+}
+
+.business-page .business-segment-card strong {
+  color: var(--business-text);
+}
+
+.business-proof-column {
+  display: grid;
+  gap: 1rem;
+}
+
+.business-case-study {
+  align-content: center;
+}
+
+.business-case-study h2 {
+  max-width: 680px;
+}
+
+.business-faq-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.business-faq-grid h3 {
+  font-size: 1.12rem;
+}
+
+.business-faq-grid p {
+  margin-bottom: 0;
+}
+
+@media (min-width: 720px) {
+  .business-service-row {
+    grid-template-columns: auto minmax(0, 0.62fr) auto minmax(0, 1fr);
+  }
+
+  .business-service-row p {
+    grid-column: auto;
+  }
+
+  .business-comfort-section,
+  .business-proof-workflow {
+    grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+  }
+
+  .business-faq-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

@@ -1,8 +1,78 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import BusinessCalculator from "@components/sections/BusinessCalculator.astro";
 import { getAbsoluteUrl, getSitePath } from "@config/site";
-import { businessProofStrip, businessSegments, businessServices } from "@lib/business/content";
+import { businessCalculatorConfigs } from "@lib/business/calculator-ui";
+import { businessProofStrip, businessServices } from "@lib/business/content";
 import type { JsonLdObject } from "@lib/seo/schema";
+import "@styles/business-page.css";
+
+const calculatorConfigs = [
+  businessCalculatorConfigs.telephony,
+  businessCalculatorConfigs.cctv,
+  businessCalculatorConfigs.vps,
+  businessCalculatorConfigs.colocation,
+  businessCalculatorConfigs.wifi_auth
+];
+
+const comfortSignals = [
+  "Персональный менеджер решает вопрос в один контакт.",
+  "Аварийная бригада выезжает на локальные аварии в течение 1 часа.",
+  "Несколько аплинков снижают риск, что бизнес вообще заметит магистральную аварию.",
+  "Одна команда закрывает связь, Wi-Fi, IP-адреса, ЦОД и инфраструктуру."
+];
+
+const clientPortrait = [
+  "Собственник бизнеса дорожит временем и нервами.",
+  "Он понимает, что простой касс, CRM и телефонии стоит дороже экономии на тарифе.",
+  "Ему нужен провайдер, телефон техподдержки которого не приходится помнить.",
+  "Любой вопрос по связи должен решаться в один клик через персонального менеджера."
+];
+
+const highValueSegments = [
+  {
+    title: "Застройщики",
+    summary:
+      "Инфраструктура под ключ для объектов, где связь нужна как часть инженерного контура, а не как разовая заявка.",
+    trigger: "Нужно завести оптику, подготовить объект к запуску и не собирать подрядчиков вручную."
+  },
+  {
+    title: "Склады и промзоны",
+    summary:
+      "Оптика в сложные места, резервирование, камеры, Wi-Fi и статические IP для территорий, где федеральные операторы часто отказывают.",
+    trigger: "Все уже сказали «нет технической возможности» или предлагают ждать неделями."
+  },
+  {
+    title: "Розничные сети",
+    summary:
+      "Подключение филиалов, касс, гостевого Wi-Fi и камер в едином сервисном контуре с понятным менеджером.",
+    trigger: "Открытие новой точки, переезд, смена провайдера или запуск нескольких адресов."
+  }
+];
+
+const antiPainPoints = [
+  "Плохая связь: кассы, телефония, CRM и оплата работают нестабильно.",
+  "Долгое ожидание: заявку приняли, а дальше вторую неделю тишина.",
+  "Отказы по техвозможности: объект сложный, а бизнесу нужно открываться."
+];
+
+const businessFaq = [
+  {
+    question: "Интернет будет работать при отключении мобильной связи в городе?",
+    answer:
+      "Да. Наш интернет не привязан к вышкам сотовых операторов и строится на собственной фиксированной инфраструктуре."
+  },
+  {
+    question: "Почему у вас дороже?",
+    answer:
+      "Мы не продаем дешевую связь. Цена покупает стабильность без компромиссов: инженеров, оборудование, резервирование, современные технологии и сервис, который не бросает бизнес в аварии."
+  },
+  {
+    question: "Как скоро сможете подключить?",
+    answer:
+      "Обычно от 1 до 3 рабочих дней с момента оплаты. Если срок критичный, менеджер проверит адрес и предложит самый быстрый сценарий."
+  }
+];
 
 const pageSchema: JsonLdObject = {
   "@context": "https://schema.org",
@@ -38,96 +108,164 @@ const pageSchema: JsonLdObject = {
   canonicalPath="/business/"
   schema={pageSchema}
 >
-  <section class="business-hero section-pad">
-    <div class="business-hero-copy">
-      <p class="eyebrow">Бизнесу</p>
-      <h1>Связь для бизнеса, где простой дороже тарифа</h1>
-      <p>
-        Федерал может быть на 20% дешевле, пока все работает. Но когда канал падает, кассы, CRM,
-        телефония и оплата встают вместе с ним. Kubtel выбирают за стабильность, живую поддержку и
-        быстрый выезд.
-      </p>
-      <div class="business-actions">
-        <a class="card-action" href={getSitePath("/business/request/")}>Получить расчет</a>
-        <a class="business-link" href={getSitePath("/business/internet/")}>Защитить канал</a>
+  <div class="business-page">
+    <section class="business-hero section-pad">
+      <div class="business-hero-copy">
+        <h1>Дорогой сервис связи для бизнеса, который ценит время</h1>
+        <p>
+          Мы дороже массовых провайдеров Краснодара и не скрываем это. Kubtel покупают не ради
+          дешевых мегабитов, а ради уровня комфорта: персонального менеджера, быстрой реакции,
+          резервной связности и команды, которая закрывает IT-потребности бизнеса в одном контуре.
+        </p>
+        <div class="business-actions">
+          <a class="card-action" href={getSitePath("/business/request/")}>Получить VIP-расчет</a>
+          <a class="business-link" href="#business-calculators">Открыть калькуляторы</a>
+        </div>
       </div>
-    </div>
-    <div class="business-hero-panel" aria-label="Ключевые факты Kubtel для бизнеса">
-      {
-        businessProofStrip.map((proof) => (
-          <article>
-            <span>{proof.label}</span>
-            <strong>{proof.value}</strong>
-            <small>{proof.status}</small>
-          </article>
-        ))
-      }
-    </div>
-  </section>
+      <div class="business-hero-panel" aria-label="Ключевые факты Kubtel для бизнеса">
+        <div class="business-hero-radar" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        {
+          businessProofStrip.map((proof) => (
+            <article>
+              <span>{proof.label}</span>
+              <strong>{proof.value}</strong>
+            </article>
+          ))
+        }
+      </div>
+    </section>
 
-  <section class="section-pad narrative-section">
-    <h2>Как дешевый канал стал самым дорогим решением</h2>
-    <p>
-      Одна краснодарская компания долго выбирала связь по простому принципу: если тариф дешевле,
-      значит выгоднее. Провайдер был известный, договор привычный, интернет работал. Ровно до того
-      утра, когда канал пропал, а вместе с ним встали кассы, CRM, телефония, оплаты и рабочий день.
-    </p>
-    <p>
-      Час ожидания на линии закончился фразой «авария, сроки неизвестны». Потом были двое суток
-      тишины и подсчет потерь. Kubtel подключился без долгих кругов: на следующий день инженер был
-      на объекте и завел оптику. С тех пор клиент платит не просто за мегабиты, а за уверенность,
-      что бизнес не оставят один на один с аварией. Уже больше пяти лет.
-    </p>
-  </section>
-
-  <section class="section-pad">
-    <div class="section-heading">
-      <p class="eyebrow">Услуги</p>
-      <h2>Не набор услуг, а защита рабочих процессов</h2>
-      <p>
-        Интернет, телефония, видеонаблюдение, гостевой Wi-Fi Hot-spot и инфраструктура собираются
-        вокруг задачи: чтобы бизнес не останавливался.
-      </p>
-    </div>
-    <div class="business-card-grid">
-      {
-        businessServices.map((service) => (
-          <article class="business-card">
-            <span class="service-category">{service.category}</span>
-            <h3>{service.title}</h3>
-            <p>{service.summary}</p>
-            <ul class="business-mini-list">
-              {service.proofPoints.slice(0, 2).map((proof) => (
-                <li>
-                  {proof.label}: {proof.value}
-                </li>
-              ))}
-            </ul>
-            <a class="card-action" href={getSitePath(`/business/${service.slug}/`)}>
-              {service.ctaLabel}
+    <section class="section-pad business-service-inventory" id="business-services">
+      <div class="section-heading">
+        <p class="eyebrow">Что продаем</p>
+        <h2>Услуги Kubtel для бизнеса</h2>
+        <p>
+          Собираем связь и инфраструктуру вокруг задачи клиента: открыть точку, защитить выручку,
+          подключить сложный объект или перенести критичные сервисы в надежный контур.
+        </p>
+      </div>
+      <div class="business-service-rail">
+        {
+          businessServices.map((service, index) => (
+            <a class="business-service-row" href={getSitePath(`/business/${service.slug}/`)}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <strong>{service.title}</strong>
+              <small>{service.category}</small>
+              <p>{service.summary}</p>
             </a>
-          </article>
-        ))
-      }
-    </div>
-  </section>
+          ))
+        }
+      </div>
+    </section>
 
-  <section class="section-pad business-band">
-    <div class="section-heading">
-      <p class="eyebrow">Сегменты</p>
-      <h2>От кафе с гостевым Wi-Fi до операторской инфраструктуры</h2>
-    </div>
-    <div class="business-segment-grid">
-      {
-        businessSegments.map((segment) => (
-          <article class="business-segment-card">
-            <h3>{segment.title}</h3>
-            <p>{segment.summary}</p>
-            <strong>{segment.trigger}</strong>
-            <a href={getSitePath(`/business/${segment.slug}/`)}>{segment.ctaLabel}</a>
-          </article>
-        ))
-      }
-    </div>
-  </section>
+    <section class="section-pad business-comfort-section">
+      <div class="business-comfort-copy">
+        <p class="eyebrow">Для кого</p>
+        <h2>Для собственника, который не хочет помнить номер техподдержки</h2>
+        <p>
+          Наш абонент дорожит своим временем, знает цену хорошему сервису, не экономит на себе и
+          своих нервах. Он понимает, что скупой платит дважды, а идеальный провайдер - это тот,
+          телефон техподдержки которого ты даже не знаешь.
+        </p>
+        <ul class="business-mini-list business-portrait-list">
+          {clientPortrait.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+      <div class="business-vip-console" aria-label="Уровень комфорта клиента Kubtel">
+        <strong>VIP service layer</strong>
+        {
+          comfortSignals.map((signal) => (
+            <div>
+              <span />
+              <p>{signal}</p>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="section-pad business-calculators-showcase" id="business-calculators">
+      <div class="section-heading">
+        <p class="eyebrow">Калькуляторы услуг</p>
+        <h2>Посчитайте конфигурацию до разговора с менеджером</h2>
+        <p>
+          Как на текущем сайте: телефония, видеонаблюдение, VPS, colocation и гостевой Wi-Fi
+          Hot-spot. Расчет можно сразу передать в заявку.
+        </p>
+      </div>
+      <div class="business-calculator-stack">
+        {calculatorConfigs.map((config) => <BusinessCalculator config={config} />)}
+      </div>
+    </section>
+
+    <section class="section-pad business-segments-vip">
+      <div class="section-heading">
+        <p class="eyebrow">Кому особенно полезно</p>
+        <h2>Три сегмента, где комфорт связи быстро окупается</h2>
+      </div>
+      <div class="business-segment-grid">
+        {
+          highValueSegments.map((segment) => (
+            <article class="business-segment-card">
+              <h3>{segment.title}</h3>
+              <p>{segment.summary}</p>
+              <strong>{segment.trigger}</strong>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="section-pad business-proof-workflow">
+      <article class="business-case-study">
+        <p class="eyebrow">История спасения</p>
+        <h2>Интернет за день до открытия</h2>
+        <p>
+          Предприниматель открыл кофейню, сделал ремонт и вспомнил про связь за день до старта,
+          когда понадобилось подключить кассу. Дешевый федеральный оператор предложил ждать неделю.
+          Kubtel подключил интернет вечером того же дня, кассы заработали, а открытие прошло по
+          плану.
+        </p>
+      </article>
+      <div class="business-proof-column">
+        <article>
+          <p class="eyebrow">От чего спасаем</p>
+          <h3>Анти-боль клиентов</h3>
+          <ul class="business-mini-list">
+            {antiPainPoints.map((item) => <li>{item}</li>)}
+          </ul>
+        </article>
+        <article>
+          <p class="eyebrow">Финальный аргумент</p>
+          <h3>Для собственников действуют специальные привилегии</h3>
+          <p>
+            Если объект важен для бизнеса, менеджер соберет индивидуальный сценарий подключения,
+            сроков, резервирования и сопровождения.
+          </p>
+          <a class="card-action" href={getSitePath("/business/request/")}>Обсудить привилегии</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-pad business-faq-section">
+      <div class="section-heading">
+        <p class="eyebrow">FAQ</p>
+        <h2>Вопросы, которые задают на первой встрече</h2>
+      </div>
+      <div class="business-faq-grid">
+        {
+          businessFaq.map((item) => (
+            <article>
+              <h3>{item.question}</h3>
+              <p>{item.answer}</p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+  </div>
 </BaseLayout>
