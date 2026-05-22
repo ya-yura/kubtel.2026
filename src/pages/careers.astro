@@ -1,9 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
-import PromoImage from "@components/ui/PromoImage.astro";
 import { getJobVacancies } from "@lib/content";
 import { handleCareerApplicationFormPost } from "@lib/leads/form-handlers";
-import { promoVisuals } from "@lib/visuals";
 import type { JobEmploymentType } from "@models/domain";
 
 const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
@@ -35,21 +33,16 @@ const employmentLabels: Record<JobEmploymentType, string> = {
   canonicalPath="/careers/"
   pageType="CollectionPage"
 >
-  <section class="page-intro section-pad visual-intro">
-    <div>
-      <p class="eyebrow">Вакансии</p>
-      <h1>Делать связь лучше проще вместе с людьми, которым не всё равно</h1>
-      <p>
-        Kubtel&nbsp;— локальная команда провайдера в&nbsp;Краснодаре. Мы подключаем дома,
-        поддерживаем клиентов, развиваем сеть и&nbsp;любим, когда человек в&nbsp;команде хочет
-        разобраться в задаче, а&nbsp;не просто закрыть строку в&nbsp;очереди.
-      </p>
-    </div>
-    <PromoImage visual={promoVisuals.localTeam} class="is-page-intro" loading="eager" />
+  <section class="page-intro section-pad compact-intro">
+    <p class="eyebrow">Вакансии</p>
+    <h1>Работа в Kubtel</h1>
+    <p>
+      Открытые роли, условия и форма отклика с возможностью приложить ссылку или файл резюме.
+      Команда сможет связаться по телефону или e-mail.
+    </p>
   </section>
 
-  <section class="section-pad career-invite narrative-section visual-story-split">
-    <PromoImage visual={promoVisuals.support} class="is-inline" showMeta={false} />
+  <section class="section-pad career-invite narrative-section">
     <div>
       <h2>Приглашаем в команду</h2>
       <p>
@@ -133,6 +126,7 @@ const employmentLabels: Record<JobEmploymentType, string> = {
     <form
       class="business-request-form career-application-form"
       method="post"
+      enctype="multipart/form-data"
       action={isStaticPreview ? "#career-application" : Astro.url.pathname}
       data-career-application-form
       data-static-preview={isStaticPreview ? "true" : undefined}
@@ -196,6 +190,20 @@ const employmentLabels: Record<JobEmploymentType, string> = {
               }
             </select>
           </label>
+          <label>
+            Ссылка на резюме
+            <input
+              name="resumeUrl"
+              type="url"
+              inputmode="url"
+              maxlength="300"
+              placeholder="https://..."
+            />
+          </label>
+          <label>
+            Файл резюме
+            <input name="resumeFile" type="file" accept=".pdf,.doc,.docx,.rtf,.txt" />
+          </label>
         </div>
       </fieldset>
 
@@ -225,11 +233,6 @@ const employmentLabels: Record<JobEmploymentType, string> = {
       class="business-request-summary career-form-summary"
       aria-label="Что будет после отклика"
     >
-      <PromoImage
-        visual={promoVisuals.localTeam}
-        class="is-card request-summary-media"
-        showMeta={false}
-      />
       <span class="service-category">HR</span>
       <h2>Дальше&nbsp;— живой разговор</h2>
       <p>

@@ -2,10 +2,8 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import FaqList from "@components/sections/FaqList.astro";
 import SupportPathways from "@components/sections/SupportPathways.astro";
-import PromoImage from "@components/ui/PromoImage.astro";
 import { getFaqItems } from "@lib/content";
 import { buildFaqSchema } from "@lib/seo/schema";
-import { promoVisuals } from "@lib/visuals";
 
 const faqItems = await getFaqItems();
 const pageSchema = buildFaqSchema(faqItems, "/support/");
@@ -17,17 +15,13 @@ const pageSchema = buildFaqSchema(faqItems, "/support/");
   canonicalPath="/support/"
   schema={pageSchema}
 >
-  <section class="page-intro section-pad visual-intro">
-    <div>
-      <p class="eyebrow">Поддержка</p>
-      <h1>Поддержка должна объяснять, а&nbsp;не&nbsp;прятаться за&nbsp;регламентом</h1>
-      <p>
-        Самая сильная ценность Kubtel проявляется не&nbsp;в красивой скорости на&nbsp;баннере,
-        а&nbsp;в момент, когда человеку нужно решить вопрос без волокиты, скриптов
-        и&nbsp;бесконечных переводов между отделами.
-      </p>
-    </div>
-    <PromoImage visual={promoVisuals.support} class="is-page-intro" loading="eager" />
+  <section class="page-intro section-pad compact-intro">
+    <p class="eyebrow">Поддержка</p>
+    <h1>Контакты поддержки и ответы по услугам</h1>
+    <p>
+      Здесь должны быть не баннеры, а прямые способы обратиться в техподдержку: телефон, почта,
+      мессенджеры и короткие ответы по частым вопросам.
+    </p>
   </section>
   <SupportPathways />
   <FaqList items={faqItems} />

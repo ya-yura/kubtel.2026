@@ -1,0 +1,75 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+---
+
+<BaseLayout
+  title="Документы, реквизиты и условия"
+  description="Реквизиты ООО «КУБАНЬ-ТЕЛЕКОМ», документы, лицензии, условия оказания услуг связи и политика обработки персональных данных."
+  canonicalPath="/documents/"
+>
+  <section class="page-intro section-pad compact-intro">
+    <p class="eyebrow">Документы</p>
+    <h1>Реквизиты, лицензии и условия связи</h1>
+    <p>
+      На этой странице собраны данные компании и места для обязательных документов: лицензий,
+      условий оказания услуг связи и политики обработки персональных данных.
+    </p>
+  </section>
+
+  <section class="section-pad document-grid" id="requisites">
+    <article class="document-card">
+      <span class="service-category">Реквизиты</span>
+      <h2>{SITE.legalName}</h2>
+      <dl class="details-list">
+        <div>
+          <dt>ИНН / КПП</dt>
+          <dd>{SITE.inn} / {SITE.kpp}</dd>
+        </div>
+        <div>
+          <dt>ОГРН</dt>
+          <dd>{SITE.ogrn}</dd>
+        </div>
+        <div>
+          <dt>Юридический адрес</dt>
+          <dd>{SITE.legalAddress}</dd>
+        </div>
+        <div>
+          <dt>Офис</dt>
+          <dd>{SITE.officeAddress}</dd>
+        </div>
+        <div>
+          <dt>E-mail</dt>
+          <dd><a href={`mailto:${SITE.email}`}>{SITE.email}</a></dd>
+        </div>
+      </dl>
+    </article>
+
+    <article class="document-card">
+      <span class="service-category">Лицензии</span>
+      <h2>Лицензии оператора связи</h2>
+      <p>
+        Для production нужно загрузить актуальные сканы или ссылки на реестр лицензий. Номера
+        лицензий нельзя переносить из памяти: их должен подтвердить ответственный сотрудник.
+      </p>
+    </article>
+
+    <article class="document-card">
+      <span class="service-category">Персональные данные</span>
+      <h2>Политика обработки персональных данных</h2>
+      <p>
+        Формы сайта собирают телефон, имя, адрес, e-mail и данные отклика. Финальный PDF или HTML
+        политики должен быть опубликован здесь до приёма боевых заявок.
+      </p>
+    </article>
+
+    <article class="document-card">
+      <span class="service-category">Договор</span>
+      <h2>Условия оказания услуг связи</h2>
+      <p>
+        Раздел предназначен для публичных условий связи для физических и юридических лиц: порядок
+        подключения, оплаты, блокировки, изменения тарифов и расторжения договора.
+      </p>
+    </article>
+  </section>
+</BaseLayout>

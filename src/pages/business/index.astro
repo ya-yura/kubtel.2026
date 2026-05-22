@@ -122,7 +122,9 @@ const pageSchema: JsonLdObject = {
           в&nbsp;одном контуре.
         </p>
         <div class="business-actions">
-          <a class="card-action" href={getSitePath("/business/request/")}>Получить VIP-расчёт</a>
+          <a class="card-action" href={getSitePath("/business/request/")}
+            >Получить индивидуальный расчёт</a
+          >
           <a class="business-link" href="#business-calculators">Открыть калькуляторы</a>
         </div>
       </div>
@@ -188,7 +190,7 @@ const pageSchema: JsonLdObject = {
         </ul>
       </div>
       <div class="business-vip-console" aria-label="Уровень комфорта клиента Kubtel">
-        <strong>VIP service layer</strong>
+        <strong>Индивидуальный сервисный контур</strong>
         {
           comfortSignals.map((signal) => (
             <div>
@@ -253,12 +255,12 @@ const pageSchema: JsonLdObject = {
         </article>
         <article>
           <p class="eyebrow">Финальный аргумент</p>
-          <h3>Для собственников действуют специальные привилегии</h3>
+          <h3>Для собственников действует индивидуальный сценарий</h3>
           <p>
             Если объект важен для бизнеса, менеджер соберёт индивидуальный сценарий подключения:
             сроки, резервирование и&nbsp;сопровождение. И&nbsp;да, без беготни между подрядчиками.
           </p>
-          <a class="card-action" href={getSitePath("/business/request/")}>Обсудить привилегии</a>
+          <a class="card-action" href={getSitePath("/business/request/")}>Обсудить расчёт</a>
         </article>
       </div>
     </section>

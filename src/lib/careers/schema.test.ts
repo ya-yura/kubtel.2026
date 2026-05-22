@@ -8,6 +8,8 @@ describe("careerApplicationFormSchema", () => {
       phone: "8 (900) 123-45-67",
       email: "IRINA@EXAMPLE.RU",
       vacancySlug: "support-specialist",
+      resumeUrl: null,
+      resumeFile: null,
       message: null,
       consent: "on",
       website: null,
@@ -17,6 +19,8 @@ describe("careerApplicationFormSchema", () => {
 
     expect(input.phone).toBe("+79001234567");
     expect(input.email).toBe("irina@example.ru");
+    expect(input.resumeUrl).toBe("");
+    expect(input.resumeFile).toBe("");
     expect(input.message).toBe("");
     expect(input.consent).toBe(true);
   });

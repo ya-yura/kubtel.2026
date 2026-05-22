@@ -124,6 +124,8 @@ function formatTelegramCareerApplication(lead: CareerApplicationSubmission): str
     `Имя: ${escapeHtml(lead.applicant.name)}`,
     `Телефон: ${escapeHtml(lead.applicant.phone)}`,
     `Email: ${escapeHtml(lead.applicant.email)}`,
+    lead.resume.url ? `Резюме: ${escapeHtml(lead.resume.url)}` : null,
+    lead.resume.fileName ? `Файл резюме: ${escapeHtml(lead.resume.fileName)}` : null,
     lead.message ? `Комментарий: ${escapeHtml(lead.message)}` : null,
     `Источник: ${escapeHtml(lead.sourcePath)}`
   ]

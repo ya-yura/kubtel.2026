@@ -10,14 +10,14 @@ import { promoVisuals } from "@lib/visuals";
     <h1>Домашний интернет, где трубку берёт человек</h1>
     <p class="hero-lead">
       Kubtel выбирают, когда уже устали от&nbsp;роботов, скрытых условий и&nbsp;обещаний «сначала
-      продадим, потом разберёмся». Оставьте телефон&nbsp;— местная команда перезвонит, спокойно
-      задаст пару вопросов и&nbsp;предложит честный вариант подключения.
+      продадим, потом разберёмся». Можно самому посмотреть тарифы, оплатить услуги или обратиться в
+      поддержку, а заявку на подключение оставить тогда, когда нужен разговор со специалистом.
     </p>
     <div class="audience-switch" aria-label="Выберите направление">
       <a class="audience-card is-active" href={getSitePath("/connect/#callback-request")}>
         <span>Для дома</span>
         <strong>Надёжный интернет домой</strong>
-        <small>Телефон, живой звонок и&nbsp;понятные условия без скрытых платежей.</small>
+        <small>Тарифы, проверка адреса и&nbsp;понятные условия без скрытых платежей.</small>
       </a>
       <a class="audience-card" href={getSitePath("/business/")}>
         <span>Для бизнеса</span>
@@ -38,7 +38,7 @@ import { promoVisuals } from "@lib/visuals";
         <span>Телефон для звонка</span>
         <input name="phone" type="tel" inputmode="tel" placeholder="+7" autocomplete="tel" />
       </label>
-      <button type="submit">Жду звонка</button>
+      <button type="submit">Отправить заявку</button>
     </form>
   </div>
   <div class="hero-visual-stack">

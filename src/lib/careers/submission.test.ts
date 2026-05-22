@@ -34,6 +34,8 @@ describe("buildCareerApplicationSubmission", () => {
         phone: "+79001234567",
         email: "irina@example.ru",
         vacancySlug: "support-specialist",
+        resumeUrl: "https://example.ru/resume.pdf",
+        resumeFile: "resume.pdf",
         message: "Есть опыт в поддержке",
         consent: true,
         website: "",
@@ -45,6 +47,8 @@ describe("buildCareerApplicationSubmission", () => {
     expect(application.id).toMatch(/^KBT-HR-20260520-/);
     expect(application.applicationType).toBe("career");
     expect(application.vacancy.title).toBe("Специалист технической поддержки");
+    expect(application.resume.url).toBe("https://example.ru/resume.pdf");
+    expect(application.resume.fileName).toBe("resume.pdf");
     expect(application.routing.pipeline).toBe("hr");
   });
 
@@ -57,6 +61,8 @@ describe("buildCareerApplicationSubmission", () => {
           phone: "+79001234567",
           email: "irina@example.ru",
           vacancySlug: "support-specialist",
+          resumeUrl: "",
+          resumeFile: "",
           message: "",
           consent: true,
           website: "",

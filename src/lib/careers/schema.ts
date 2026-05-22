@@ -47,6 +47,11 @@ export const careerApplicationFormSchema = z.object({
     .refine((value) => emailPattern.test(value), "Укажите корректный e-mail")
     .transform((value) => value.toLowerCase()),
   vacancySlug: z.string("Выберите вакансию").trim().min(1, "Выберите вакансию").max(120),
+  resumeUrl: optionalText(300).refine(
+    (value) => value.length === 0 || /^https?:\/\/\S+$/i.test(value),
+    "Укажите ссылку на резюме, начинающуюся с http:// или https://"
+  ),
+  resumeFile: optionalText(180),
   message: optionalText(1200),
   consent: consentSchema,
   website: honeypotSchema.default(""),

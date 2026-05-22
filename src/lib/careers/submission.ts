@@ -24,6 +24,10 @@ export type CareerApplicationSubmission = {
     department: string;
   };
   message: string | null;
+  resume: {
+    url: string | null;
+    fileName: string | null;
+  };
   routing: {
     pipeline: "hr";
     department: "hr";
@@ -76,6 +80,10 @@ export function buildCareerApplicationSubmission({
       department: vacancy.department
     },
     message: input.message || null,
+    resume: {
+      url: input.resumeUrl || null,
+      fileName: input.resumeFile || null
+    },
     routing: {
       pipeline: "hr",
       department: "hr",

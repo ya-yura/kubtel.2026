@@ -20,6 +20,7 @@ const lastModified = "2026-05-08";
 export const mainNavItems: NavItem[] = [
   { href: "/tariffs/", label: "Тарифы" },
   { href: "/connect/", label: "Подключение" },
+  { href: "/payment/", label: "Оплата" },
   { href: "/business/", label: "Бизнесу" },
   { href: "/support/", label: "Поддержка" },
   { href: "/about/", label: "О компании" },
@@ -29,11 +30,14 @@ export const mainNavItems: NavItem[] = [
 
 export const footerNavItems: NavItem[] = [
   { href: "/tariffs/", label: "Тарифы" },
+  { href: "/payment/", label: "Оплата" },
+  { href: "/news/", label: "Новости" },
   { href: "/business/", label: "Бизнесу" },
   { href: "/business/request/", label: "B2B-заявка" },
   { href: "/support/", label: "Поддержка" },
   { href: "/careers/", label: "Вакансии" },
-  { href: "/contacts/", label: "Контакты" }
+  { href: "/contacts/", label: "Контакты" },
+  { href: "/documents/", label: "Документы" }
 ];
 
 export const sitemapRoutes: SitemapRoute[] = [
@@ -62,7 +66,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "Подключение",
     title: "Заявка на подключение",
     description:
-      "Форма заявки Kubtel: оставьте телефон, а специалист уточнит задачу и предложит подключение.",
+      "Форма заявки Kubtel: населённый пункт, адрес, тариф и телефон для связи со специалистом.",
     changeFrequency: "weekly",
     priority: 0.9,
     lastModified
@@ -205,6 +209,36 @@ export const sitemapRoutes: SitemapRoute[] = [
       "Ответы Kubtel по подключению, тарифам, бесплатному доверительному платёжу и добровольной блокировке.",
     changeFrequency: "monthly",
     priority: 0.7,
+    lastModified
+  },
+  {
+    path: "/payment/",
+    label: "Оплата",
+    title: "Оплата услуг Kubtel",
+    description:
+      "Способы оплаты услуг Kubtel: личный кабинет, банковский платёж и контакты для вопросов по начислениям.",
+    changeFrequency: "monthly",
+    priority: 0.72,
+    lastModified
+  },
+  {
+    path: "/news/",
+    label: "Новости",
+    title: "Новости и изменения тарифов",
+    description:
+      "Официальные новости Kubtel: изменения тарифов, сервисные уведомления и важные сообщения для абонентов.",
+    changeFrequency: "weekly",
+    priority: 0.68,
+    lastModified
+  },
+  {
+    path: "/documents/",
+    label: "Документы",
+    title: "Документы, реквизиты и условия",
+    description:
+      "Реквизиты ООО «КУБАНЬ-ТЕЛЕКОМ», документы, лицензии, условия оказания услуг связи и политика обработки персональных данных.",
+    changeFrequency: "monthly",
+    priority: 0.64,
     lastModified
   },
   {

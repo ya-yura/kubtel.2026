@@ -1,0 +1,53 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getSitePath, SITE } from "@config/site";
+---
+
+<BaseLayout
+  title="Оплата услуг Kubtel"
+  description="Способы оплаты услуг Kubtel: личный кабинет, банковский платёж и контакты для вопросов по начислениям."
+  canonicalPath="/payment/"
+>
+  <section class="page-intro section-pad compact-intro">
+    <p class="eyebrow">Оплата</p>
+    <h1>Оплатить услуги Kubtel</h1>
+    <p>
+      Быстрый путь для абонента&nbsp;— личный кабинет. Если нужен счёт, сверка начислений или
+      уточнение по договору, используйте контакты ниже.
+    </p>
+  </section>
+
+  <section class="section-pad service-hub" aria-label="Способы оплаты">
+    <article class="service-hub-primary payment-widget">
+      <span class="service-category">Онлайн</span>
+      <h2>Личный кабинет</h2>
+      <p>
+        В личном кабинете можно проверить баланс, пополнить лицевой счёт и посмотреть состояние
+        услуг. Это основной безопасный вход для оплаты.
+      </p>
+      <div class="button-row">
+        <a class="card-action" href={SITE.paymentUrl} target="_blank" rel="noopener noreferrer">
+          Открыть оплату
+        </a>
+        <a class="business-link" href={SITE.accountUrl} target="_blank" rel="noopener noreferrer">
+          Личный кабинет
+        </a>
+      </div>
+    </article>
+    <article class="service-hub-card">
+      <span class="service-category">Банк</span>
+      <h2>По реквизитам</h2>
+      <p>
+        Юридические лица и абоненты, которым нужен платёж по реквизитам, могут использовать данные
+        компании из раздела документов.
+      </p>
+      <a class="business-link" href={getSitePath("/documents/#requisites")}>Реквизиты</a>
+    </article>
+    <article class="service-hub-card">
+      <span class="service-category">Вопрос по оплате</span>
+      <h2>{SITE.supportPhone}</h2>
+      <p>Если платёж не отразился или нужно сверить лицевой счёт, обратитесь в поддержку.</p>
+      <a class="business-link" href={`mailto:${SITE.supportEmail}`}>{SITE.supportEmail}</a>
+    </article>
+  </section>
+</BaseLayout>

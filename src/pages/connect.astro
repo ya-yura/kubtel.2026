@@ -1,11 +1,9 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import AddressCheckPanel from "@components/sections/AddressCheckPanel.astro";
-import PromoImage from "@components/ui/PromoImage.astro";
 import { getTariffs } from "@lib/content";
 import { handleLeadFormPost } from "@lib/leads/form-handlers";
 import { buildInternetServiceSchema } from "@lib/seo/schema";
-import { promoVisuals } from "@lib/visuals";
 
 const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
 export const prerender = false;
@@ -24,21 +22,17 @@ const pageSchema = buildInternetServiceSchema(tariffs, "/connect/");
 
 <BaseLayout
   title="Заявка на подключение"
-  description="Оставьте телефон для обратного звонка Kubtel: специалист уточнит задачу и предложит подключение без скрытых условий."
+  description="Заявка на подключение Kubtel: населённый пункт, адрес, тариф и телефон для связи со специалистом."
   canonicalPath="/connect/"
   schema={pageSchema}
 >
-  <section class="page-intro section-pad visual-intro">
-    <div>
-      <p class="eyebrow">Подключение</p>
-      <h1>Оставьте телефон&nbsp;— мы перезвоним и&nbsp;разберёмся по-человечески</h1>
-      <p>
-        Адрес можно назвать уже в&nbsp;разговоре. Главное&nbsp;— получить контакт, быстро понять
-        вашу ситуацию и&nbsp;предложить надёжный домашний интернет без скрытых платежей
-        и&nbsp;лишней бюрократии.
-      </p>
-    </div>
-    <PromoImage visual={promoVisuals.connection} class="is-page-intro" loading="eager" />
+  <section class="page-intro section-pad compact-intro">
+    <p class="eyebrow">Подключение</p>
+    <h1>Заявка на подключение</h1>
+    <p>
+      Выберите населённый пункт, укажите адрес или район и телефон для связи. Если адреса под рукой
+      нет, специалист уточнит его в разговоре.
+    </p>
   </section>
   <AddressCheckPanel
     tariffs={tariffs}

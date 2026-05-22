@@ -156,6 +156,35 @@ const pageSchema: JsonLdObject = isService
       )
     }
 
+    {
+      isService && entry.slug === "telephony" && (
+        <section class="section-pad telephony-service-options">
+          <div class="section-heading">
+            <p class="eyebrow">Телефония</p>
+            <h2>Четыре услуги, которые считаются в калькуляторе</h2>
+            <p>
+              Телефония не сводится к одному ползунку: отдельно считаются SIP-порты, городские
+              номера, внешние линии и функции виртуальной АТС.
+            </p>
+          </div>
+          <div class="business-card-grid">
+            {[
+              "SIP-порты для сотрудников и устройств",
+              "Городские номера",
+              "Внешние линии",
+              "Виртуальная АТС и автооператор"
+            ].map((item) => (
+              <article class="business-card">
+                <span class="service-category">Калькулятор</span>
+                <h3>{item}</h3>
+                <p>Позиция попадает в итоговую конфигурацию и передаётся менеджеру в заявке.</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
     {calculatorConfig && <BusinessCalculator config={calculatorConfig} />}
 
     <section class="section-pad">

@@ -26,7 +26,7 @@ type Props = {
 };
 
 const {
-  title = "Оставьте телефон\u00a0— специалист Kubtel перезвонит",
+  title = "Заявка на подключение",
   lead = "Не будем делать вид, будто сайт уже знает всё о вашем доме. Нам важен номер: менеджер уточнит район, задачу и предложит честный вариант подключения.",
   tariffs = [],
   selectedTariff = null,
@@ -224,17 +224,27 @@ function getOptionHint(option: TariffOption): string {
     }
 
     <fieldset class="form-group">
-      <legend>Район или адрес, если уже знаете</legend>
-      <label>
-        <span>Адрес не обязателен</span>
-        <input
-          name="address"
-          type="text"
-          autocomplete="street-address"
-          placeholder="Например: ФМР, ул. Красная, частный дом"
-          value={initialAddress ?? ""}
-        />
-      </label>
+      <legend>Населённый пункт и адрес, если уже знаете</legend>
+      <div class="contact-grid">
+        <label>
+          <span>Населённый пункт</span>
+          <select name="addressCity" autocomplete="address-level2">
+            <option value="Краснодар">Краснодар</option>
+            <option value="Краснодарский край">Другой населённый пункт Краснодарского края</option>
+            <option value="manual">Уточнить по телефону</option>
+          </select>
+        </label>
+        <label>
+          <span>Район, улица или адрес</span>
+          <input
+            name="address"
+            type="text"
+            autocomplete="street-address"
+            placeholder="Например: ФМР, ул. Красная, частный дом"
+            value={initialAddress ?? ""}
+          />
+        </label>
+      </div>
     </fieldset>
 
     <label class="consent-check">
@@ -245,7 +255,7 @@ function getOptionHint(option: TariffOption): string {
       </span>
     </label>
 
-    <button type="submit">Жду звонка</button>
+    <button type="submit">Отправить заявку</button>
     <p class="form-note" id="lead-form-note">
       Достаточно телефона. Адрес, тариф и&nbsp;дополнительные пожелания можно уточнить уже
       в&nbsp;разговоре со&nbsp;специалистом Kubtel.

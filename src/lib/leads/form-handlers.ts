@@ -366,8 +366,13 @@ export async function handleCareerApplicationFormPost(
 }
 
 function formDataToLeadInput(formData: FormData): Record<string, unknown> {
+  const values = formDataToRecord(formData);
+  const city = typeof values.addressCity === "string" ? values.addressCity.trim() : "";
+  const address = typeof values.address === "string" ? values.address.trim() : "";
+
   return {
-    ...formDataToRecord(formData),
+    ...values,
+    address: [city && city !== "manual" ? city : "", address].filter(Boolean).join(", "),
     options: formData.getAll("options").map(formValueToString).filter(Boolean)
   };
 }

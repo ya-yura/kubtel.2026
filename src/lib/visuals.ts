@@ -15,7 +15,7 @@ export const promoVisuals = {
   business: {
     src: "/visuals/business-vip-network.png",
     alt: "Собственник бизнеса и инженер смотрят на сетевой мониторинг в современном офисе",
-    label: "VIP B2B",
+    label: "B2B-сервис",
     caption: "Персональный менеджер, инженеры и инфраструктура вокруг задач бизнеса."
   },
   connection: {

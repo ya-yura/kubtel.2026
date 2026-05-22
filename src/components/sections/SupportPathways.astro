@@ -1,47 +1,56 @@
 ---
-import PromoImage from "@components/ui/PromoImage.astro";
-import { getSitePath } from "@config/site";
-import { promoVisuals } from "@lib/visuals";
+import { getSitePath, SITE } from "@config/site";
 ---
 
 <section class="section-pad support-pathways" id="support-pathways">
-  <div class="visual-section-head">
-    <div class="section-heading">
-      <p class="eyebrow">Поддержка</p>
-      <h2>Поддержка должна решать, а&nbsp;не&nbsp;прятаться за&nbsp;регламентом</h2>
-      <p>
-        Клиент особенно хорошо понимает ценность Kubtel в&nbsp;момент обращения: когда нужна помощь,
-        отсрочка платежа или пауза в&nbsp;услуге.
-      </p>
-    </div>
-    <PromoImage visual={promoVisuals.support} class="is-inline" />
+  <div class="section-heading">
+    <p class="eyebrow">Каналы связи</p>
+    <h2>Выберите удобный способ обращения</h2>
+    <p>
+      Абоненту не нужно оставлять контакты заново, если он хочет сам позвонить или написать.
+      Основные каналы вынесены первыми.
+    </p>
   </div>
-  <div class="pathway-grid">
+  <div class="pathway-grid support-channel-grid">
     <article>
-      <span>Нет интернета</span>
-      <h3>Живой контакт</h3>
-      <p>
-        Обращение не&nbsp;тонет в&nbsp;роботах и&nbsp;переключениях: проблема попадает
-        к&nbsp;команде.
-      </p>
-      <a href={getSitePath("/contacts/")}>Связаться</a>
+      <span>Телефон</span>
+      <h3>{SITE.supportPhone}</h3>
+      <p>Для аварий, вопросов по услуге, оплате и состоянию подключения.</p>
+      <a href={`tel:${SITE.supportPhone.replace(/\D/g, "")}`}>Позвонить</a>
     </article>
     <article>
-      <span>Тариф и оплата</span>
-      <h3>Доверительный платёж</h3>
-      <p>
-        Доверительный платёж бесплатный: связь не&nbsp;должна обрываться из-за одного неловкого дня.
-      </p>
+      <span>Почта</span>
+      <h3>{SITE.supportEmail}</h3>
+      <p>Для заявок, которые удобно описать письмом: адрес, договор, скриншот, история вопроса.</p>
+      <a href={`mailto:${SITE.supportEmail}`}>Написать</a>
+    </article>
+    <article>
+      <span>Мессенджеры</span>
+      <h3>MAX и VK</h3>
+      <p>Кнопки готовы под официальные ссылки Kubtel. До публикации URL должны подтвердить.</p>
+      <div class="button-row">
+        <a href={getSitePath("/contacts/#messengers")}>Открыть контакты</a>
+      </div>
+    </article>
+  </div>
+  <div class="pathway-grid support-faq-grid">
+    <article>
+      <span>Оплата</span>
+      <h3>Баланс и платежи</h3>
+      <p>Переход к оплате и реквизитам вынесен в отдельный раздел.</p>
+      <a href={getSitePath("/payment/")}>Оплатить</a>
+    </article>
+    <article>
+      <span>Пауза</span>
+      <h3>Добровольная блокировка</h3>
+      <p>Можно сохранить баланс, когда интернет временно не нужен.</p>
       <a href="#faq">Открыть FAQ</a>
     </article>
     <article>
-      <span>Пауза в&nbsp;услуге</span>
-      <h3>Добровольная блокировка</h3>
-      <p>
-        Можно бесплатно сохранить баланс на&nbsp;срок до&nbsp;полугода, когда интернет временно
-        не&nbsp;нужен.
-      </p>
-      <a href={getSitePath("/connect/#callback-request")}>Оставить телефон</a>
+      <span>Документы</span>
+      <h3>Условия и реквизиты</h3>
+      <p>Юридические данные, условия связи и политика персональных данных.</p>
+      <a href={getSitePath("/documents/")}>Документы</a>
     </article>
   </div>
 </section>

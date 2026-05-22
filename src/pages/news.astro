@@ -1,0 +1,60 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getSitePath } from "@config/site";
+
+const newsItems = [
+  {
+    date: "2026-05-22",
+    title: "Раздел новостей подготовлен для официальных уведомлений",
+    summary:
+      "Здесь будут публиковаться юридически значимые сообщения: изменения тарифов, условия услуг и сервисные уведомления.",
+    category: "Сервис"
+  },
+  {
+    date: "2026-05-22",
+    title: "Изменения тарифов публикуются отдельными сообщениями",
+    summary:
+      "Перед публикацией тарифного изменения нужны подтверждение коммерческого отдела и корректный срок уведомления абонентов.",
+    category: "Тарифы"
+  }
+];
+---
+
+<BaseLayout
+  title="Новости и изменения тарифов"
+  description="Официальные новости Kubtel: изменения тарифов, сервисные уведомления и важные сообщения для абонентов."
+  canonicalPath="/news/"
+>
+  <section class="page-intro section-pad compact-intro">
+    <p class="eyebrow">Новости</p>
+    <h1>Официальные сообщения Kubtel</h1>
+    <p>
+      Раздел нужен для изменений тарифов, условий обслуживания, технических уведомлений и других
+      сообщений, которые должны быть доступны абонентам публично.
+    </p>
+  </section>
+
+  <section class="section-pad news-list" aria-label="Новости">
+    {
+      newsItems.map((item) => (
+        <article class="news-item">
+          <time datetime={item.date}>{new Date(item.date).toLocaleDateString("ru-RU")}</time>
+          <span class="service-category">{item.category}</span>
+          <h2>{item.title}</h2>
+          <p>{item.summary}</p>
+        </article>
+      ))
+    }
+  </section>
+
+  <section class="section-pad narrative-section">
+    <p class="eyebrow">Регламент</p>
+    <h2>Как публиковать изменение тарифа</h2>
+    <p>
+      Текст новости должен содержать дату вступления изменений в силу, список затронутых тарифов,
+      основание изменения и канал связи для вопросов. Черновики тарифных новостей нельзя публиковать
+      без коммерческого и юридического подтверждения.
+    </p>
+    <a class="business-link" href={getSitePath("/documents/")}>Документы и условия</a>
+  </section>
+</BaseLayout>
