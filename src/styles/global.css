@@ -2426,39 +2426,81 @@ input[type="radio"] {
 }
 
 body.is-readable {
+  --color-accent: var(--kb-color-neutral-900);
+  --color-accent-active: var(--kb-color-neutral-900);
+  --color-accent-hover: var(--kb-color-neutral-600);
+  --color-accent-ink: var(--kb-color-neutral-0);
+  --color-danger: var(--kb-color-neutral-900);
+  --color-danger-soft: var(--kb-color-neutral-75);
+  --color-info: var(--kb-color-neutral-900);
+  --color-info-soft: var(--kb-color-neutral-75);
+  --color-line: var(--kb-color-neutral-300);
+  --color-line-strong: var(--kb-color-neutral-900);
+  --color-muted: var(--kb-color-neutral-600);
+  --color-soft: var(--kb-color-neutral-75);
+  --color-soft-warm: var(--kb-color-neutral-50);
+  --color-success: var(--kb-color-neutral-900);
+  --color-success-soft: var(--kb-color-neutral-75);
+  --kb-component-button-primary-background: var(--kb-color-neutral-900);
+  --kb-component-button-primary-background-active: var(--kb-color-neutral-900);
+  --kb-component-button-primary-background-hover: var(--kb-color-neutral-600);
+  --kb-component-button-primary-text: var(--kb-color-neutral-0);
+  --kb-component-input-border-focus: var(--kb-color-neutral-900);
   background: var(--kb-color-alpha-white98);
-  color: #111;
-  font-size: 18px;
+  color: var(--kb-color-neutral-900);
+  filter: grayscale(1);
+  font-size: 19px;
 }
 
 body.is-readable,
+body.is-readable * {
+  font-family: "Golos Text", Arial, Helvetica, sans-serif !important;
+}
+
 body.is-readable button,
 body.is-readable input,
 body.is-readable select,
 body.is-readable textarea {
-  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  line-height: 1.45;
 }
 
 body.is-readable h1 {
-  font-size: 2.35rem;
-  line-height: 1.16;
+  font-size: 2.15rem;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 body.is-readable h2 {
-  font-size: 1.95rem;
-  line-height: 1.18;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.24;
 }
 
 body.is-readable h3 {
-  font-size: 1.45rem;
+  font-size: 1.32rem;
+  font-weight: 700;
+  line-height: 1.28;
 }
 
 body.is-readable p,
 body.is-readable small,
 body.is-readable label span {
-  color: #1f2933;
+  color: var(--kb-color-neutral-600);
+  font-size: 1.06rem;
+  line-height: 1.7;
+}
+
+body.is-readable small,
+body.is-readable .eyebrow,
+body.is-readable .service-category,
+body.is-readable .data-status,
+body.is-readable .tag-list li,
+body.is-readable .calculator-lines small,
+body.is-readable .mobile-nav nav a,
+body.is-readable .site-nav a {
   font-size: 1rem;
-  line-height: 1.65;
+  line-height: 1.45;
 }
 
 body.is-readable a:not(.card-action):not(.header-action):not(.sticky-cta a),
@@ -2475,6 +2517,27 @@ body.is-readable .search-result-card span,
 body.is-readable .business-service-row small {
   letter-spacing: 0;
   text-transform: none;
+}
+
+body.is-readable .card-action,
+body.is-readable .header-action,
+body.is-readable .mobile-nav-action,
+body.is-readable .sticky-cta a,
+body.is-readable button[type="submit"] {
+  background: var(--kb-color-neutral-900);
+  border: 1px solid var(--kb-color-neutral-900);
+  color: var(--kb-color-neutral-0);
+}
+
+body.is-readable .header-readability-toggle,
+body.is-readable .mobile-readability-toggle,
+body.is-readable .header-account,
+body.is-readable .mobile-nav-account,
+body.is-readable .header-phone,
+body.is-readable .mobile-nav-phone {
+  background: var(--kb-color-neutral-0);
+  border-color: var(--kb-color-neutral-900);
+  color: var(--kb-color-neutral-900);
 }
 
 body.is-readable .site-header,
@@ -2501,10 +2564,10 @@ body.is-readable .service-card,
 body.is-readable .form-group,
 body.is-readable .message-field,
 body.is-readable .consent-line {
-  background: #fff;
-  border-color: #111;
+  background: var(--kb-color-neutral-0);
+  border-color: var(--kb-color-neutral-900);
   box-shadow: none;
-  color: #111;
+  color: var(--kb-color-neutral-900);
 }
 
 body.is-readable .business-page h1,
@@ -2525,7 +2588,7 @@ body.is-readable .calculator-note,
 body.is-readable .calculator-glossary summary,
 body.is-readable .calculator-glossary dt,
 body.is-readable .calculator-glossary dd {
-  color: #111;
+  color: var(--kb-color-neutral-900);
 }
 
 body.is-readable .business-page::before,
@@ -2541,14 +2604,41 @@ body.is-readable .business-request-form select,
 body.is-readable .business-request-form textarea,
 body.is-readable input,
 body.is-readable select {
-  background: #fff;
-  border-color: #111;
-  color: #111;
+  background: var(--kb-color-neutral-0);
+  border-color: var(--kb-color-neutral-900);
+  color: var(--kb-color-neutral-900);
 }
 
 body.is-readable .calculator-total-grid div {
-  background: #fff;
-  border-color: #111;
+  background: var(--kb-color-neutral-0);
+  border-color: var(--kb-color-neutral-900);
+}
+
+body.is-readable .business-page .business-link,
+body.is-readable .business-page .business-phone-card,
+body.is-readable .business-page .business-service-row small,
+body.is-readable .business-page .service-category,
+body.is-readable .business-page .data-status,
+body.is-readable .business-page .calculator-total-grid div,
+body.is-readable .business-page .calculator-lines li,
+body.is-readable .business-page .calculator-glossary {
+  background: var(--kb-color-neutral-0) !important;
+  border-color: var(--kb-color-neutral-900) !important;
+  color: var(--kb-color-neutral-900) !important;
+}
+
+body.is-readable .business-page .business-link:hover,
+body.is-readable .business-page .business-phone-card:hover {
+  background: var(--kb-color-neutral-75) !important;
+  color: var(--kb-color-neutral-900) !important;
+}
+
+body.is-readable .business-page .card-action,
+body.is-readable .business-page button[type="submit"],
+body.is-readable .business-page .business-calculator-result .card-action {
+  background: var(--kb-color-neutral-900) !important;
+  border-color: var(--kb-color-neutral-900) !important;
+  color: var(--kb-color-neutral-0) !important;
 }
 
 @keyframes content-rise {

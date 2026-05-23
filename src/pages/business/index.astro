@@ -14,36 +14,40 @@ type CalculatorTab = {
   slug: string;
   title: string;
   summary: string;
+  options: string[];
   configs?: BusinessCalculatorConfig[];
-  mode: "calculator" | "hotspot";
 };
 
 const requestPath = "/business/request/";
 const phoneHref = `tel:${SITE.salesPhone.replace(/\D/g, "")}`;
 
-const serviceLinks = [
+const calculatorTabs: CalculatorTab[] = [
   {
-    number: "01",
+    slug: "internet",
     title: "Интернет",
-    category: "Заявка",
-    summary: "Корпоративный интернет для офиса, магазина, склада или точки обслуживания.",
-    href: `${requestPath}?service=internet`
+    summary: "Корпоративный доступ в интернет для офиса, магазина, склада или точки обслуживания.",
+    options: ["скорость канала", "статические IP", "резервный канал", "настройка маршрутизатора"],
+    configs: [businessCalculatorConfigs.internet]
   },
   {
-    number: "02",
-    title: "Статические IP-адреса",
-    category: "Заявка",
-    summary: "Выделенные IP-адреса для касс, VPN, камер, серверов и удалённого доступа.",
-    href: `${requestPath}?service=static-ip`
-  }
-];
-
-const calculatorTabs: CalculatorTab[] = [
+    slug: "colocation",
+    title: "Размещение",
+    summary: "Размещение серверного оборудования в ЦОД Kubtel с питанием и связностью.",
+    options: ["юниты", "питание", "порт", "IPv4", "IPMI", "удалённые работы"],
+    configs: [businessCalculatorConfigs.colocation]
+  },
+  {
+    slug: "wifi-auth",
+    title: "Hot-spot",
+    summary: "Гостевой Wi-Fi с авторизацией посетителей для публичных точек.",
+    options: ["тариф", "количество площадок", "SMS-авторизация", "брендированная страница"],
+    configs: [businessCalculatorConfigs.wifi_auth]
+  },
   {
     slug: "telephony",
     title: "Телефония",
     summary: "IP-телефония, внутризоновая, междугородная и международная связь.",
-    mode: "calculator",
+    options: ["SIP-порты", "городские номера", "внешние линии", "ВАТС", "направления связи"],
     configs: [
       businessCalculatorConfigs.telephony,
       businessCalculatorConfigs.telephony_intrazone,
@@ -53,56 +57,11 @@ const calculatorTabs: CalculatorTab[] = [
     ]
   },
   {
-    slug: "cctv",
-    title: "Видеонаблюдение",
-    summary: "Камеры, глубина архива, оборудование и монтаж.",
-    mode: "calculator",
-    configs: [businessCalculatorConfigs.cctv]
-  },
-  {
-    slug: "wifi-auth",
-    title: "Hot-spot",
-    summary: "Тарифы гостевого Wi‑Fi с авторизацией посетителей.",
-    mode: "hotspot"
-  },
-  {
     slug: "vps",
     title: "Виртуальный сервер",
     summary: "CPU, RAM, диски, IP-адреса и резервное копирование.",
-    mode: "calculator",
+    options: ["CPU", "RAM", "SSD/HDD", "IPv4", "резервное копирование", "DDoS-защита"],
     configs: [businessCalculatorConfigs.vps]
-  },
-  {
-    slug: "vdi",
-    title: "Виртуальные рабочие места",
-    summary: "Рабочие места сотрудников, профиль ресурсов и резервное копирование.",
-    mode: "calculator",
-    configs: [businessCalculatorConfigs.vdi]
-  },
-  {
-    slug: "colocation",
-    title: "Размещение",
-    summary: "Юниты, питание, порт, IPv4, IPMI и удалённые работы.",
-    mode: "calculator",
-    configs: [businessCalculatorConfigs.colocation]
-  }
-];
-
-const hotspotPlans = [
-  {
-    title: "Basic",
-    summary: "Базовая авторизация для одной публичной точки.",
-    href: `${requestPath}?service=wifi-auth&configurationSummary=Hot-spot%20Basic`
-  },
-  {
-    title: "Standard",
-    summary: "Авторизация, SMS-пакет и параметры для регулярного клиентского потока.",
-    href: `${requestPath}?service=wifi-auth&configurationSummary=Hot-spot%20Standard`
-  },
-  {
-    title: "Premium",
-    summary: "Расширенный сценарий для нескольких площадок и брендированной страницы.",
-    href: `${requestPath}?service=wifi-auth&configurationSummary=Hot-spot%20Premium`
   }
 ];
 
@@ -146,14 +105,14 @@ const pageSchema: JsonLdObject = {
         <p class="eyebrow">Бизнесу</p>
         <h1>Услуги связи для бизнеса</h1>
         <p>
-          Выберите услугу, рассчитайте параметры или сразу отправьте заявку. Менеджер коммерческого
-          отдела свяжется для уточнения условий.
+          Интернет, размещение оборудования, Hot-spot, телефония и виртуальные серверы. Выберите
+          услугу, выполните предварительный расчёт и отправьте заявку на подключение.
         </p>
       </div>
       <div class="business-quick-actions" aria-label="Быстрые действия">
         <a class="card-action" href={getSitePath(`${requestPath}?service=internet`)}>Подключить</a>
         <a class="business-link" href={getSitePath(`${requestPath}?service=datacenter-access`)}>
-          Заявка на доступ в ЦОД
+          Заявка на посещение ЦОД
         </a>
         <a class="business-link" href={SITE.paymentUrl} target="_blank" rel="noopener noreferrer">
           Оплатить услуги
@@ -165,24 +124,15 @@ const pageSchema: JsonLdObject = {
     <section class="section-pad business-service-workspace" id="business-calculators">
       <div class="section-heading">
         <p class="eyebrow">Услуги и калькуляторы</p>
-        <h2>Выберите услугу</h2>
+        <h2>Информация, расчёт и заявка</h2>
         <p>
-          Калькуляторы, тарифные направления и заявки по услугам бизнеса собраны в одном разделе.
+          По каждой основной услуге доступен калькулятор и кнопка «Подключить» с передачей выбранной
+          конфигурации в заявку.
         </p>
       </div>
 
       <div class="business-service-tabs" data-business-service-tabs>
         <nav class="business-service-list" aria-label="Услуги для бизнеса">
-          {
-            serviceLinks.map((item) => (
-              <a class="business-service-row is-request-link" href={getSitePath(item.href)}>
-                <span>{item.number}</span>
-                <strong>{item.title}</strong>
-                <small>{item.category}</small>
-                <p>{item.summary}</p>
-              </a>
-            ))
-          }
           {
             calculatorTabs.map((item, index) => (
               <button
@@ -191,9 +141,9 @@ const pageSchema: JsonLdObject = {
                 data-service-tab={item.slug}
                 aria-pressed={index === 0 ? "true" : "false"}
               >
-                <span>{String(index + serviceLinks.length + 1).padStart(2, "0")}</span>
+                <span>{String(index + 1).padStart(2, "0")}</span>
                 <strong>{item.title}</strong>
-                <small>{item.mode === "hotspot" ? "Тарифы" : "Калькулятор"}</small>
+                <small>Калькулятор</small>
                 <p>{item.summary}</p>
               </button>
             ))
@@ -207,39 +157,49 @@ const pageSchema: JsonLdObject = {
                 class:list={["business-service-panel-item", { "is-active": index === 0 }]}
                 data-service-panel={item.slug}
               >
-                {item.mode === "hotspot" ? (
-                  <div class="hotspot-plan-panel">
-                    <div class="section-heading">
-                      <p class="eyebrow">Hot-spot</p>
-                      <h2>Тарифы гостевого Wi‑Fi</h2>
-                      <p>
-                        Выберите тариф. Подробные условия и актуальная стоимость уточняются при
-                        заявке.
-                      </p>
-                    </div>
-                    <div class="hotspot-plan-grid">
-                      {hotspotPlans.map((plan) => (
-                        <article>
-                          <h3>{plan.title}</h3>
-                          <p>{plan.summary}</p>
-                          <a class="card-action" href={getSitePath(plan.href)}>
-                            Подключить
-                          </a>
-                        </article>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <div class="business-calculator-stack">
-                    {item.configs?.map((config) => (
-                      <BusinessCalculator config={config} />
+                <div class="business-service-info">
+                  <span class="service-category">Информация</span>
+                  <h3>{item.title}</h3>
+                  <p>{item.summary}</p>
+                  <ul class="business-mini-list">
+                    {item.options.map((option) => (
+                      <li>{option}</li>
                     ))}
-                  </div>
-                )}
+                  </ul>
+                </div>
+                <div class="business-calculator-stack">
+                  {item.configs?.map((config) => (
+                    <BusinessCalculator config={config} />
+                  ))}
+                </div>
               </article>
             ))
           }
         </div>
+      </div>
+    </section>
+
+    <section class="section-pad business-ops-section">
+      <div class="section-heading">
+        <p class="eyebrow">Заявки и оплата</p>
+        <h2>Операционные действия</h2>
+      </div>
+      <div class="business-ops-grid">
+        <a class="business-ops-card" href={getSitePath(`${requestPath}?service=datacenter-access`)}>
+          <span>ЦОД</span>
+          <strong>Заявка на посещение ЦОД</strong>
+          <p>Для планового доступа к оборудованию укажите площадку, дату, время и состав работ.</p>
+        </a>
+        <a
+          class="business-ops-card"
+          href={SITE.paymentUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span>Оплата</span>
+          <strong>Оплатить услуги на сайте</strong>
+          <p>Переход в личный кабинет для оплаты услуг юридических лиц и ИП.</p>
+        </a>
       </div>
     </section>
   </div>
@@ -252,7 +212,7 @@ const pageSchema: JsonLdObject = {
 
     const requestedTab = new URLSearchParams(window.location.search).get("calculator");
     activate(
-      tabs.some((tab) => tab.dataset.serviceTab === requestedTab) ? requestedTab : "telephony"
+      tabs.some((tab) => tab.dataset.serviceTab === requestedTab) ? requestedTab : "internet"
     );
 
     tabs.forEach((tab) => {

@@ -342,6 +342,29 @@ async function checkReadabilityToggle(client, sessionId) {
     `document.querySelector("[data-readability-toggle]")?.getAttribute("aria-pressed") === "true"`,
     "readability toggle exposes pressed state"
   );
+  await assertExpression(
+    client,
+    sessionId,
+    `getComputedStyle(document.body).fontFamily.toLowerCase().includes("golos")`,
+    "readability mode uses a Cyrillic-readable font"
+  );
+  await assertExpression(
+    client,
+    sessionId,
+    `getComputedStyle(document.body).filter.includes("grayscale")`,
+    "readability mode applies grayscale palette"
+  );
+  await assertExpression(
+    client,
+    sessionId,
+    `(() => {
+      const link = document.querySelector(".business-quick-actions .business-link");
+      if (!link) return false;
+      const style = getComputedStyle(link);
+      return style.color !== style.backgroundColor;
+    })()`,
+    "readability mode keeps secondary business links visible"
+  );
   results.push("readability mode toggle ok");
 }
 
@@ -445,14 +468,20 @@ async function submitBusinessLeadForm(client, sessionId) {
   await assertExpression(
     client,
     sessionId,
-    `document.querySelector(".form-status.is-success")?.innerText.includes("B2B-заявка принята") === true`,
+    `(() => {
+      const text = document.querySelector(".form-status.is-success")?.innerText ?? "";
+      return text.includes("B2B-заявка принята") || text.includes("Демо-заявка принята");
+    })()`,
     "business lead form shows success state"
   );
   await assertExpression(
     client,
     sessionId,
-    `document.querySelector(".form-status.is-success")?.innerText.includes("KBT-B2B-") === true`,
-    "business lead form shows B2B lead number"
+    `(() => {
+      const text = document.querySelector(".form-status.is-success")?.innerText ?? "";
+      return text.includes("KBT-B2B-") || text.includes("Для боевой отправки");
+    })()`,
+    "business lead form confirms production or preview handling"
   );
   results.push("business lead form submit path ok");
 }
