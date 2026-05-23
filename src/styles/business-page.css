@@ -38,7 +38,17 @@
 
 .business-page .section-pad {
   position: relative;
+  width: min(100%, var(--max-page));
   z-index: 1;
+}
+
+.business-page
+  :where(section, div, article, aside, nav, form, label, ul, li, p, h1, h2, h3, a, button) {
+  min-width: 0;
+}
+
+.business-page :where(p, h1, h2, h3, strong, a, span, small, li) {
+  overflow-wrap: break-word;
 }
 
 .business-page h1,
@@ -121,6 +131,12 @@
   gap: 0.65rem;
 }
 
+.business-quick-actions > *,
+.business-actions > * {
+  max-width: 100%;
+  min-width: 0;
+}
+
 .business-page .business-quick-actions .card-action,
 .business-page .business-quick-actions .business-link,
 .business-phone-card {
@@ -153,7 +169,7 @@
 
 .business-service-tabs {
   display: grid;
-  gap: 1rem;
+  gap: 1.2rem;
 }
 
 .business-service-list {
@@ -182,6 +198,21 @@
   justify-content: initial;
   text-align: left;
   width: 100%;
+}
+
+.business-service-list .business-service-row {
+  align-content: start;
+  grid-template-columns: auto minmax(0, 1fr);
+  min-height: 118px;
+}
+
+.business-service-list .business-service-row small {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.business-service-list .business-service-row p {
+  display: none;
 }
 
 .business-page button.business-service-row:hover,
@@ -569,6 +600,10 @@
   padding: 1rem;
 }
 
+.business-service-info .business-mini-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .business-service-info h3 {
   font-size: 1.35rem;
   margin-bottom: 0;
@@ -802,6 +837,28 @@
   margin-bottom: 0;
 }
 
+@media (max-width: 719px) {
+  .business-page .section-pad {
+    padding-left: 0;
+    padding-right: 0;
+    width: min(calc(100% - 2rem), var(--max-page));
+  }
+
+  .business-quick-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .business-page .business-quick-actions .card-action,
+  .business-page .business-quick-actions .business-link,
+  .business-page .business-quick-actions .business-phone-card {
+    justify-self: stretch;
+    text-align: center;
+    white-space: normal;
+    width: 100%;
+  }
+}
+
 @media (min-width: 720px) {
   .business-page .business-compact-hero,
   .business-page .business-request-hero {
@@ -827,15 +884,19 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .business-service-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .business-page .business-hero-copy h1 {
     font-size: 3.35rem;
   }
 
-  .business-service-row {
+  .business-service-rail .business-service-row {
     grid-template-columns: auto minmax(0, 0.62fr) auto minmax(0, 1fr);
   }
 
-  .business-service-row p {
+  .business-service-rail .business-service-row p {
     grid-column: auto;
   }
 
@@ -850,13 +911,16 @@
 }
 
 @media (min-width: 980px) {
-  .business-service-tabs {
-    align-items: start;
-    grid-template-columns: minmax(300px, 0.44fr) minmax(0, 1fr);
+  .business-service-list {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    position: static;
   }
 
-  .business-service-list {
-    position: sticky;
-    top: calc(var(--header-height) + 1rem);
+  .business-page .business-service-panel .business-calculator {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 0.44fr);
+  }
+
+  .business-page .business-service-panel .business-calculator-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

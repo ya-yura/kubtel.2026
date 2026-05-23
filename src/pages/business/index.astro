@@ -6,7 +6,7 @@ import {
   businessCalculatorConfigs,
   type BusinessCalculatorConfig
 } from "@lib/business/calculator-ui";
-import { businessServices } from "@lib/business/content";
+import { businessSegments, businessServices } from "@lib/business/content";
 import type { JsonLdObject } from "@lib/seo/schema";
 import "@styles/business-page.css";
 
@@ -65,6 +65,10 @@ const calculatorTabs: CalculatorTab[] = [
   }
 ];
 
+function getBusinessEntryHref(slug: string) {
+  return `/business/${slug}/`;
+}
+
 const pageSchema: JsonLdObject = {
   "@context": "https://schema.org",
   "@type": "Service",
@@ -87,7 +91,7 @@ const pageSchema: JsonLdObject = {
       "@type": "Offer",
       position: index + 1,
       name: service.title,
-      url: getAbsoluteUrl(`/business/request/?service=${service.slug}`)
+      url: getAbsoluteUrl(getBusinessEntryHref(service.slug))
     }))
   }
 };
@@ -202,6 +206,52 @@ const pageSchema: JsonLdObject = {
         </a>
       </div>
     </section>
+
+    <section class="section-pad business-service-inventory" id="business-services">
+      <div class="section-heading">
+        <p class="eyebrow">Все направления</p>
+        <h2>Сохранённый реестр бизнес-услуг</h2>
+        <p>
+          Помимо основных пяти услуг, в разделе остаются действующие B2B-направления, которые уже
+          были описаны в структуре сайта: статические IP-адреса, видеонаблюдение, виртуальные
+          рабочие места и заявки по ЦОД.
+        </p>
+      </div>
+      <div class="business-service-rail">
+        {
+          businessServices.map((service, index) => (
+            <a class="business-service-row" href={getSitePath(getBusinessEntryHref(service.slug))}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <strong>{service.title}</strong>
+              <small>{service.category}</small>
+              <p>{service.summary}</p>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="section-pad business-segments-vip">
+      <div class="section-heading">
+        <p class="eyebrow">Сегменты</p>
+        <h2>Решения для разных типов клиентов</h2>
+        <p>
+          Сегментные страницы остаются доступными: малому и среднему бизнесу, операторам связи и
+          государственному сектору.
+        </p>
+      </div>
+      <div class="business-segment-grid">
+        {
+          businessSegments.map((segment) => (
+            <a class="business-segment-card" href={getSitePath(`/business/${segment.slug}/`)}>
+              <h3>{segment.title}</h3>
+              <p>{segment.summary}</p>
+              <strong>{segment.trigger}</strong>
+            </a>
+          ))
+        }
+      </div>
+    </section>
   </div>
 </BaseLayout>
 
@@ -217,7 +267,7 @@ const pageSchema: JsonLdObject = {
 
     tabs.forEach((tab) => {
       tab.addEventListener("click", () => {
-        activate(tab.dataset.serviceTab ?? "telephony");
+        activate(tab.dataset.serviceTab ?? "internet");
       });
     });
 

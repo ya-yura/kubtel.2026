@@ -6,6 +6,7 @@ import { getAbsoluteUrl, getSitePath } from "@config/site";
 import { getBusinessCalculatorConfig } from "@lib/business/calculator-ui";
 import {
   businessSegments,
+  businessServices,
   getRelatedBusinessServices,
   type BusinessSegment,
   type BusinessService
@@ -19,10 +20,16 @@ type PageEntry =
   | { kind: "segment"; entry: BusinessSegment };
 
 export function getStaticPaths() {
-  return businessSegments.map((entry) => ({
-    params: { slug: entry.slug },
-    props: { kind: "segment", entry } satisfies PageEntry
-  }));
+  return [
+    ...businessServices.map((entry) => ({
+      params: { slug: entry.slug },
+      props: { kind: "service", entry } satisfies PageEntry
+    })),
+    ...businessSegments.map((entry) => ({
+      params: { slug: entry.slug },
+      props: { kind: "segment", entry } satisfies PageEntry
+    }))
+  ];
 }
 
 const { kind, entry } = Astro.props as PageEntry;
