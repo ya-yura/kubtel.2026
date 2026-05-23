@@ -545,27 +545,45 @@ summary:focus-visible {
 .header-account,
 .mobile-nav-account,
 .header-phone,
-.mobile-nav-phone {
+.mobile-nav-phone,
+.header-readability-toggle,
+.mobile-readability-toggle {
+  align-items: center;
+  background: var(--color-surface-raised);
   border: 1px solid var(--color-line);
   border-radius: var(--radius);
+  box-shadow: none;
   color: var(--color-graphite);
+  display: inline-flex;
   font-weight: 820;
+  justify-content: center;
   min-height: 44px;
   padding: 0.68rem 0.85rem;
   white-space: nowrap;
 }
 
 .header-account,
-.header-phone {
+.header-phone,
+.header-readability-toggle {
   display: none;
 }
 
 .header-account:hover,
 .mobile-nav-account:hover,
 .header-phone:hover,
-.mobile-nav-phone:hover {
+.mobile-nav-phone:hover,
+.header-readability-toggle:hover,
+.mobile-readability-toggle:hover {
   background: var(--color-soft);
   border-color: var(--color-line-strong);
+  box-shadow: none;
+  color: var(--color-graphite);
+  transform: none;
+}
+
+.header-readability-toggle {
+  min-width: 46px;
+  padding-inline: 0.72rem;
 }
 
 .hero {
@@ -2407,6 +2425,132 @@ input[type="radio"] {
   justify-self: start;
 }
 
+body.is-readable {
+  background: var(--kb-color-alpha-white98);
+  color: #111;
+  font-size: 18px;
+}
+
+body.is-readable,
+body.is-readable button,
+body.is-readable input,
+body.is-readable select,
+body.is-readable textarea {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body.is-readable h1 {
+  font-size: 2.35rem;
+  line-height: 1.16;
+}
+
+body.is-readable h2 {
+  font-size: 1.95rem;
+  line-height: 1.18;
+}
+
+body.is-readable h3 {
+  font-size: 1.45rem;
+}
+
+body.is-readable p,
+body.is-readable small,
+body.is-readable label span {
+  color: #1f2933;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+body.is-readable a:not(.card-action):not(.header-action):not(.sticky-cta a),
+body.is-readable .business-link,
+body.is-readable .business-phone-card {
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+body.is-readable .eyebrow,
+body.is-readable .service-category,
+body.is-readable .data-status,
+body.is-readable .search-result-card span,
+body.is-readable .business-service-row small {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+body.is-readable .site-header,
+body.is-readable .mobile-nav nav,
+body.is-readable .sticky-cta,
+body.is-readable .business-page,
+body.is-readable .business-card,
+body.is-readable .business-detail-card,
+body.is-readable .business-request-summary,
+body.is-readable .business-service-row,
+body.is-readable .business-calculator,
+body.is-readable .business-calculator-result,
+body.is-readable .hotspot-plan-panel,
+body.is-readable .hotspot-plan-grid article,
+body.is-readable .business-callout,
+body.is-readable .business-request-form,
+body.is-readable .search-box,
+body.is-readable .assistant-panel,
+body.is-readable .search-result-card,
+body.is-readable .device-card,
+body.is-readable .device-note,
+body.is-readable .tariff-card,
+body.is-readable .service-card,
+body.is-readable .form-group,
+body.is-readable .message-field,
+body.is-readable .consent-line {
+  background: #fff;
+  border-color: #111;
+  box-shadow: none;
+  color: #111;
+}
+
+body.is-readable .business-page h1,
+body.is-readable .business-page h2,
+body.is-readable .business-page h3,
+body.is-readable .business-page p,
+body.is-readable .business-page small,
+body.is-readable .business-page .business-mini-list li,
+body.is-readable .business-service-row strong,
+body.is-readable .business-service-row span,
+body.is-readable .business-service-row small,
+body.is-readable .business-calculator-result h3,
+body.is-readable .calculator-total-grid strong,
+body.is-readable .calculator-lines strong,
+body.is-readable .calculator-lines span,
+body.is-readable .calculator-lines small,
+body.is-readable .calculator-note,
+body.is-readable .calculator-glossary summary,
+body.is-readable .calculator-glossary dt,
+body.is-readable .calculator-glossary dd {
+  color: #111;
+}
+
+body.is-readable .business-page::before,
+body.is-readable .promo-visual::after,
+body.is-readable .business-page .business-panel-image::after {
+  display: none;
+}
+
+body.is-readable .business-calculator-form input,
+body.is-readable .business-calculator-form select,
+body.is-readable .business-request-form input,
+body.is-readable .business-request-form select,
+body.is-readable .business-request-form textarea,
+body.is-readable input,
+body.is-readable select {
+  background: #fff;
+  border-color: #111;
+  color: #111;
+}
+
+body.is-readable .calculator-total-grid div {
+  background: #fff;
+  border-color: #111;
+}
+
 @keyframes content-rise {
   from {
     opacity: 0;
@@ -2513,6 +2657,10 @@ input[type="radio"] {
   }
 
   .header-phone {
+    display: inline-flex;
+  }
+
+  .header-readability-toggle {
     display: inline-flex;
   }
 
@@ -2640,6 +2788,14 @@ input[type="radio"] {
 
   .business-request-layout {
     grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+  }
+
+  body.is-readable h1 {
+    font-size: 2.7rem;
+  }
+
+  body.is-readable h2 {
+    font-size: 2.15rem;
   }
 
   .sticky-cta {

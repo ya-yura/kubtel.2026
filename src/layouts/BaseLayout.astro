@@ -106,5 +106,37 @@ const hasStickyCta = !quietStickySections.some((path) => Astro.url.pathname.star
     </main>
     <StickyCta />
     <Footer />
+    <script is:inline>
+      (() => {
+        const storageKey = "kubtel-readable-mode";
+        const readableClass = "is-readable";
+        const toggles = [...document.querySelectorAll("[data-readability-toggle]")];
+
+        function applyReadableMode(enabled) {
+          document.body.classList.toggle(readableClass, enabled);
+          toggles.forEach((toggle) => {
+            toggle.setAttribute("aria-pressed", String(enabled));
+            if (toggle.classList.contains("header-readability-toggle")) {
+              toggle.textContent = enabled ? "A-" : "A+";
+              toggle.setAttribute(
+                "aria-label",
+                enabled ? "Отключить версию для слабовидящих" : "Включить версию для слабовидящих"
+              );
+            }
+          });
+        }
+
+        const initialState = localStorage.getItem(storageKey) === "true";
+        applyReadableMode(initialState);
+
+        toggles.forEach((toggle) => {
+          toggle.addEventListener("click", () => {
+            const nextState = !document.body.classList.contains(readableClass);
+            localStorage.setItem(storageKey, String(nextState));
+            applyReadableMode(nextState);
+          });
+        });
+      })();
+    </script>
   </body>
 </html>

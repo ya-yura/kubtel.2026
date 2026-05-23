@@ -55,11 +55,27 @@ function isCurrentPath(href: string) {
       <a class="mobile-nav-phone" href={`tel:${SITE.salesPhone.replace(/\D/g, "")}`}>
         {SITE.salesPhone}
       </a>
+      <button
+        class="mobile-readability-toggle"
+        type="button"
+        data-readability-toggle
+        aria-pressed="false"
+      >
+        Версия для слабовидящих
+      </button>
       <a class="mobile-nav-action" href={getSitePath("/connect/#callback-request")}>
         Проверить адрес
       </a>
     </nav>
   </details>
+  <button
+    class="header-readability-toggle"
+    type="button"
+    data-readability-toggle
+    aria-pressed="false"
+  >
+    A+
+  </button>
   <a class="header-phone" href={`tel:${SITE.salesPhone.replace(/\D/g, "")}`}>
     {SITE.salesPhone}
   </a>

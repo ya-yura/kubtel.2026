@@ -152,6 +152,7 @@ try {
   await assertLegacyRedirect();
   await checkHomeAudienceSwitch(client, sessionId);
   await checkTariffCtaPath(client, sessionId);
+  await checkReadabilityToggle(client, sessionId);
   await checkMobilePath(client, sessionId);
   await checkBusinessCalculator(client, sessionId);
   await submitLeadForm(client, sessionId);
@@ -314,6 +315,34 @@ async function checkMobilePath(client, sessionId) {
     "mobile menu can be opened"
   );
   results.push("mobile navigation path ok");
+}
+
+async function checkReadabilityToggle(client, sessionId) {
+  await setViewport(client, sessionId, desktopViewport());
+  await navigate(client, sessionId, "/business/");
+  await evaluate(
+    client,
+    sessionId,
+    `(() => {
+      const button = document.querySelector("[data-readability-toggle]");
+      if (!button) return false;
+      button.click();
+      return document.body.classList.contains("is-readable");
+    })()`
+  );
+  await assertExpression(
+    client,
+    sessionId,
+    `document.body.classList.contains("is-readable") === true`,
+    "readability mode can be enabled"
+  );
+  await assertExpression(
+    client,
+    sessionId,
+    `document.querySelector("[data-readability-toggle]")?.getAttribute("aria-pressed") === "true"`,
+    "readability toggle exposes pressed state"
+  );
+  results.push("readability mode toggle ok");
 }
 
 async function checkBusinessCalculator(client, sessionId) {
