@@ -1,17 +1,38 @@
 ---
 import { getSitePath } from "@config/site";
 
-const isBusinessPath = Astro.url.pathname.startsWith("/business/");
-const label = isBusinessPath ? "B2B-заявка" : "Оставить телефон";
-const hint = isBusinessPath ? "Для расчёта услуги" : "Перезвоним с\u00a0предложением";
+const currentPath = Astro.url.pathname;
+const isBusinessPath = currentPath.startsWith("/business/");
+const quietSections = [
+  "/payment/",
+  "/support/",
+  "/documents/",
+  "/contacts/",
+  "/about/",
+  "/news/",
+  "/search/",
+  "/devices/",
+  "/careers/"
+];
+const shouldRender = !quietSections.some((path) => currentPath.startsWith(path));
+const label = isBusinessPath ? "Расчёт для бизнеса" : "Проверить подключение";
+const hint = isBusinessPath
+  ? "Передадим выбранную конфигурацию"
+  : "Адрес и условия уточним по заявке";
 const href = isBusinessPath ? "/business/request/" : "/connect/#callback-request";
-const actionLabel = isBusinessPath ? "Оставить" : "Начать";
+const actionLabel = isBusinessPath ? "Перейти" : "Проверить";
 ---
 
-<aside class="sticky-cta" aria-label={label}>
-  <div>
-    <strong>{label}</strong>
-    <span>{hint}</span>
-  </div>
-  <a href={getSitePath(href)} aria-label={label}>{actionLabel}</a>
-</aside>
+{
+  shouldRender && (
+    <aside class="sticky-cta" aria-label={label}>
+      <div>
+        <strong>{label}</strong>
+        <span>{hint}</span>
+      </div>
+      <a href={getSitePath(href)} aria-label={label}>
+        {actionLabel}
+      </a>
+    </aside>
+  )
+}

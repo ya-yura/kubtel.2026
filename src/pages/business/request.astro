@@ -1,14 +1,8 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
-import PromoImage from "@components/ui/PromoImage.astro";
-import {
-  businessSegments,
-  businessServices,
-  getBusinessSegment,
-  getBusinessService
-} from "@lib/business/content";
+import { getSitePath, SITE } from "@config/site";
+import { businessServices, getBusinessService } from "@lib/business/content";
 import { handleBusinessLeadFormPost } from "@lib/leads/form-handlers";
-import { promoVisuals } from "@lib/visuals";
 import "@styles/business-page.css";
 
 const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
@@ -20,9 +14,9 @@ const selectedConfiguration = Astro.url.searchParams.get("configurationSummary")
 const selectedMonthlyEstimate = Astro.url.searchParams.get("monthlyEstimate") ?? "";
 const selectedOneTimeEstimate = Astro.url.searchParams.get("oneTimeEstimate") ?? "";
 const service = selectedService ? getBusinessService(selectedService) : undefined;
-const segment = selectedSegment ? getBusinessSegment(selectedSegment) : undefined;
-const contextTitle = service?.title ?? segment?.title ?? "B2B-заявка";
+const contextTitle = service?.title ?? "Заявка для бизнеса";
 const formStartedAt = Date.now().toString();
+const phoneHref = `tel:${SITE.salesPhone.replace(/\D/g, "")}`;
 const actionResult = isStaticPreview
   ? undefined
   : Astro.request.method === "POST"
@@ -34,24 +28,27 @@ const actionError = actionResult?.error;
 
 <BaseLayout
   title="Заявка для бизнеса"
-  description="B2B-заявка Kubtel: компания, контакт, услуга, срочность и расчёт связи без простоя."
+  description="Короткая B2B-заявка Kubtel: телефон, услуга, адрес объекта и комментарий."
   canonicalPath="/business/request/"
   pageType="ContactPage"
 >
   <div class="business-page">
-    <section class="page-intro section-pad business-page-intro visual-intro">
+    <section class="business-request-hero section-pad">
       <div>
-        <p class="eyebrow">B2B-заявка</p>
-        <h1>Расскажите, где связь не&nbsp;должна останавливаться</h1>
+        <p class="eyebrow">Заявка</p>
+        <h1>Заявка для бизнеса</h1>
         <p>
-          Передайте компанию, контакт, услугу и&nbsp;срочность. Менеджер уточнит детали, предложит
-          решение и&nbsp;ускорит разбор, если простой уже стоит денег.
+          Оставьте телефон, выберите услугу и укажите адрес объекта. Менеджер коммерческого отдела
+          свяжется для уточнения условий.
         </p>
       </div>
-      <PromoImage visual={promoVisuals.business} class="is-page-intro" loading="eager" />
+      <aside class="business-callout">
+        <span>Можно позвонить без формы</span>
+        <a href={phoneHref}>{SITE.salesPhone}</a>
+      </aside>
     </section>
 
-    <section class="section-pad business-request-layout" id="business-request">
+    <section class="section-pad business-request-layout is-compact" id="business-request">
       <form
         class="business-request-form"
         method="post"
@@ -75,7 +72,7 @@ const actionError = actionResult?.error;
         {
           actionError && (
             <div class="form-status is-error" id="business-form-status" role="alert" tabindex="-1">
-              <strong>B2B-заявка не отправлена</strong>
+              <strong>Заявка не отправлена</strong>
               <span>{actionError.message ?? "Проверьте поля и попробуйте ещё раз."}</span>
             </div>
           )
@@ -84,35 +81,19 @@ const actionError = actionResult?.error;
         <input name="formStartedAt" type="hidden" value={formStartedAt} />
         <input name="monthlyEstimate" type="hidden" value={selectedMonthlyEstimate} />
         <input name="oneTimeEstimate" type="hidden" value={selectedOneTimeEstimate} />
+        <input name="city" type="hidden" value="" />
+        <input name="segment" type="hidden" value={selectedSegment} />
+        <input name="urgency" type="hidden" value="planning" />
         <label class="visually-hidden">
           <span>Оставьте это поле пустым</span>
           <input name="website" type="text" tabindex="-1" autocomplete="off" />
         </label>
+
         <fieldset class="form-group">
-          <legend>Компания и контакт</legend>
-          <div class="contact-grid">
+          <legend>Контакт</legend>
+          <div class="contact-grid compact-business-grid">
             <label>
-              Компания
-              <input
-                name="companyName"
-                type="text"
-                autocomplete="organization"
-                maxlength="160"
-                required
-              />
-            </label>
-            <label>
-              Контактное лицо
-              <input
-                name="contactPerson"
-                type="text"
-                autocomplete="name"
-                maxlength="120"
-                required
-              />
-            </label>
-            <label>
-              Телефон
+              Телефон *
               <input
                 name="phone"
                 type="tel"
@@ -123,34 +104,21 @@ const actionError = actionResult?.error;
               />
             </label>
             <label>
-              Email
-              <input name="email" type="email" autocomplete="email" maxlength="120" />
+              Компания
+              <input name="companyName" type="text" autocomplete="organization" maxlength="160" />
             </label>
             <label>
-              ИНН
-              <input name="inn" type="text" inputmode="numeric" maxlength="12" />
+              Контактное лицо
+              <input name="contactPerson" type="text" autocomplete="name" maxlength="120" />
             </label>
           </div>
         </fieldset>
 
         <fieldset class="form-group">
-          <legend>Задача</legend>
-          <div class="contact-grid">
+          <legend>Заявка</legend>
+          <div class="contact-grid compact-business-grid">
             <label>
-              Сегмент
-              <select name="segment">
-                <option value="">Выберите сегмент</option>
-                {
-                  businessSegments.map((item) => (
-                    <option value={item.slug} selected={item.slug === selectedSegment}>
-                      {item.title}
-                    </option>
-                  ))
-                }
-              </select>
-            </label>
-            <label>
-              Услуга
+              Услуга *
               <select name="service" required>
                 <option value="">Выберите услугу</option>
                 {
@@ -163,79 +131,49 @@ const actionError = actionResult?.error;
               </select>
             </label>
             <label>
-              Город или адрес
-              <input name="city" type="text" autocomplete="street-address" maxlength="200" />
-            </label>
-            <label>
-              Адрес объекта
-              <input name="address" type="text" autocomplete="street-address" maxlength="240" />
-            </label>
-            <label>
-              Сотрудников или площадок
-              <input name="employeesOrSites" type="number" min="0" step="1" inputmode="numeric" />
-            </label>
-            <label>
-              Срочность
-              <select name="urgency">
-                <option value="planning">Планируем</option>
-                <option value="30_days">До 30&nbsp;дней</option>
-                <option value="7_days">До 7&nbsp;дней</option>
-                <option value="asap">Срочно</option>
-              </select>
+              Город или адрес объекта *
+              <input
+                name="address"
+                type="text"
+                autocomplete="street-address"
+                maxlength="240"
+                required
+              />
             </label>
           </div>
         </fieldset>
 
         <label class="message-field">
-          Конфигурация или комментарий
+          Комментарий
           <textarea
             name="configurationSummary"
-            rows="5"
+            rows="4"
             maxlength="1200"
-            placeholder="Например: офис на 20 сотрудников, нужен интернет 300 Мбит/с, 2 статических IP и телефония"
+            placeholder="Например: нужен интернет в офис, телефония, доступ в ЦОД или удобное время звонка"
             >{selectedConfiguration}</textarea
           >
         </label>
-
-        <label class="message-field">
-          Дополнительный комментарий
-          <textarea
-            name="message"
-            rows="3"
-            maxlength="800"
-            placeholder="Например: удобное время звонка, текущий подрядчик, ограничения по срокам"
-          ></textarea>
-        </label>
+        <input name="message" type="hidden" value="" />
+        <input name="inn" type="hidden" value="" />
+        <input name="employeesOrSites" type="hidden" value="" />
 
         <label class="consent-line">
           <input type="checkbox" name="consent" required />
-          <span>Согласен на&nbsp;обработку персональных данных для связи по&nbsp;заявке.</span>
+          <span>Согласен на обработку персональных данных для связи по заявке.</span>
         </label>
 
-        <button type="submit">Отправить B2B-заявку</button>
-        <p class="form-note">
-          Для бизнес-клиентов важны стабильность, 24/7-поддержка, персональный менеджер, быстрый
-          выезд аварийной бригады и&nbsp;кредитный лимит, чтобы работа не&nbsp;останавливалась.
-        </p>
+        <button type="submit">Отправить заявку</button>
       </form>
 
-      <aside class="business-request-summary" aria-label="Контекст заявки">
-        <PromoImage
-          visual={promoVisuals.datacenter}
-          class="is-card request-summary-media"
-          showMeta={false}
-        />
+      <aside class="business-request-summary compact-request-summary" aria-label="Контекст заявки">
         <span class="service-category">Контекст</span>
         <h2>{contextTitle}</h2>
         <p>
-          Поля B2B-заявки помогают быстро понять, что защищаем от&nbsp;простоя: офисный интернет,
-          Hot-spot, телефонию, камеры или инфраструктуру.
+          Обязательные поля сведены к минимуму. Остальные детали можно указать в комментарии или
+          обсудить по телефону.
         </p>
-        <ul class="business-mini-list">
-          <li>Аварийная бригада выезжает по&nbsp;заявке в&nbsp;течение часа</li>
-          <li>Техподдержка на связи круглосуточно</li>
-          <li>Персональный менеджер помогает решить вопрос без лишней очереди</li>
-        </ul>
+        <a class="business-phone-card" href={phoneHref}>{SITE.salesPhone}</a>
+        <a class="business-link" href={getSitePath("/business/")}>Вернуться к услугам</a>
       </aside>
     </section>
   </div>
@@ -258,8 +196,6 @@ const actionError = actionResult?.error;
   function showBusinessPreviewStatus(form: HTMLFormElement) {
     const existingStatus = form.querySelector<HTMLElement>("#business-form-status");
     const status = existingStatus ?? document.createElement("div");
-    const company =
-      form.querySelector<HTMLInputElement>('input[name="companyName"]')?.value.trim() || "Компания";
     const service = form.querySelector<HTMLSelectElement>('select[name="service"]');
     const serviceTitle = service?.selectedOptions[0]?.textContent?.trim() || "выбранная услуга";
 
@@ -268,12 +204,9 @@ const actionError = actionResult?.error;
     status.setAttribute("role", "status");
     status.setAttribute("tabindex", "-1");
     status.replaceChildren(
-      createBusinessStatusLine("strong", "Демо B2B-заявка принята в\u00a0онлайн-превью."),
-      createBusinessStatusLine("span", `${company}: ${serviceTitle}.`),
-      createBusinessStatusLine(
-        "span",
-        "Для боевой отправки подключите Node-хостинг, CRM, Telegram и\u00a0analytics env."
-      )
+      createBusinessStatusLine("strong", "Демо-заявка принята в онлайн-превью."),
+      createBusinessStatusLine("span", serviceTitle),
+      createBusinessStatusLine("span", "Для боевой отправки подключите production-интеграции.")
     );
 
     if (!existingStatus) {

@@ -4,6 +4,7 @@ export type PriceValue = {
   monthly?: number | null;
   oneTime?: number | null;
   status?: PriceStatus;
+  unitLabel?: string;
 };
 
 export type BusinessPricingCatalog = Record<string, PriceValue | undefined>;

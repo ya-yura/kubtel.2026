@@ -1,79 +1,108 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import BusinessCalculator from "@components/sections/BusinessCalculator.astro";
-import PromoImage from "@components/ui/PromoImage.astro";
-import { getAbsoluteUrl, getSitePath } from "@config/site";
-import { businessCalculatorConfigs } from "@lib/business/calculator-ui";
-import { businessProofStrip, businessServices } from "@lib/business/content";
+import { getAbsoluteUrl, getSitePath, SITE } from "@config/site";
+import {
+  businessCalculatorConfigs,
+  type BusinessCalculatorConfig
+} from "@lib/business/calculator-ui";
+import { businessServices } from "@lib/business/content";
 import type { JsonLdObject } from "@lib/seo/schema";
-import { promoVisuals } from "@lib/visuals";
 import "@styles/business-page.css";
 
-const calculatorConfigs = [
-  businessCalculatorConfigs.telephony,
-  businessCalculatorConfigs.cctv,
-  businessCalculatorConfigs.vps,
-  businessCalculatorConfigs.colocation,
-  businessCalculatorConfigs.wifi_auth
-];
+type CalculatorTab = {
+  slug: string;
+  title: string;
+  summary: string;
+  configs?: BusinessCalculatorConfig[];
+  mode: "calculator" | "hotspot";
+};
 
-const comfortSignals = [
-  "Персональный менеджер решает вопрос в\u00a0один контакт.",
-  "Аварийная бригада выезжает на локальные аварии в\u00a0течение 1\u00a0часа.",
-  "Несколько аплинков снижают риск, что бизнес вообще заметит магистральную аварию.",
-  "Одна команда закрывает связь, Wi‑Fi, IP-адреса, ЦОД и\u00a0инфраструктуру."
-];
+const requestPath = "/business/request/";
+const phoneHref = `tel:${SITE.salesPhone.replace(/\D/g, "")}`;
 
-const clientPortrait = [
-  "Собственник бизнеса дорожит временем и\u00a0нервами.",
-  "Он понимает, что простой касс, CRM и\u00a0телефонии стоит дороже экономии на\u00a0тарифе.",
-  "Ему нужен провайдер, чей телефон техподдержки не\u00a0приходится держать в\u00a0голове.",
-  "Любой вопрос по\u00a0связи должен решаться через персонального менеджера, без длинной цепочки."
-];
-
-const highValueSegments = [
+const serviceLinks = [
   {
-    title: "Застройщики",
-    summary:
-      "Инфраструктура под ключ для объектов, где связь нужна как часть инженерного контура, а\u00a0не как разовая заявка.",
-    trigger:
-      "Нужно завести оптику, подготовить объект к запуску и не\u00a0собирать подрядчиков вручную."
+    number: "01",
+    title: "Интернет",
+    category: "Заявка",
+    summary: "Корпоративный интернет для офиса, магазина, склада или точки обслуживания.",
+    href: `${requestPath}?service=internet`
   },
   {
-    title: "Склады и промзоны",
-    summary:
-      "Оптика в\u00a0сложные места, резервирование, камеры, Wi‑Fi и статические IP для территорий, где федеральные операторы часто отказывают.",
-    trigger: "Все уже сказали «нет технической возможности» или предлагают ждать неделями."
-  },
-  {
-    title: "Розничные сети",
-    summary:
-      "Подключение филиалов, касс, гостевого Wi‑Fi и камер в\u00a0едином сервисном контуре с\u00a0понятным менеджером.",
-    trigger: "Открытие новой точки, переезд, смена провайдера или запуск нескольких адресов."
+    number: "02",
+    title: "Статические IP-адреса",
+    category: "Заявка",
+    summary: "Выделенные IP-адреса для касс, VPN, камер, серверов и удалённого доступа.",
+    href: `${requestPath}?service=static-ip`
   }
 ];
 
-const antiPainPoints = [
-  "Плохая связь: кассы, телефония, CRM и оплата работают нестабильно.",
-  "Долгое ожидание: заявку приняли, а\u00a0дальше вторую неделю тишина.",
-  "Отказы по\u00a0техвозможности: объект сложный, а\u00a0бизнесу нужно открываться."
+const calculatorTabs: CalculatorTab[] = [
+  {
+    slug: "telephony",
+    title: "Телефония",
+    summary: "IP-телефония, внутризоновая, междугородная и международная связь.",
+    mode: "calculator",
+    configs: [
+      businessCalculatorConfigs.telephony,
+      businessCalculatorConfigs.telephony_intrazone,
+      businessCalculatorConfigs.telephony_long_distance,
+      businessCalculatorConfigs.telephony_international,
+      businessCalculatorConfigs.telephony_services
+    ]
+  },
+  {
+    slug: "cctv",
+    title: "Видеонаблюдение",
+    summary: "Камеры, глубина архива, оборудование и монтаж.",
+    mode: "calculator",
+    configs: [businessCalculatorConfigs.cctv]
+  },
+  {
+    slug: "wifi-auth",
+    title: "Hot-spot",
+    summary: "Тарифы гостевого Wi‑Fi с авторизацией посетителей.",
+    mode: "hotspot"
+  },
+  {
+    slug: "vps",
+    title: "Виртуальный сервер",
+    summary: "CPU, RAM, диски, IP-адреса и резервное копирование.",
+    mode: "calculator",
+    configs: [businessCalculatorConfigs.vps]
+  },
+  {
+    slug: "vdi",
+    title: "Виртуальные рабочие места",
+    summary: "Рабочие места сотрудников, профиль ресурсов и резервное копирование.",
+    mode: "calculator",
+    configs: [businessCalculatorConfigs.vdi]
+  },
+  {
+    slug: "colocation",
+    title: "Размещение",
+    summary: "Юниты, питание, порт, IPv4, IPMI и удалённые работы.",
+    mode: "calculator",
+    configs: [businessCalculatorConfigs.colocation]
+  }
 ];
 
-const businessFaq = [
+const hotspotPlans = [
   {
-    question: "Интернет будет работать при отключении мобильной связи в городе?",
-    answer:
-      "Да. Наш интернет не\u00a0привязан к\u00a0вышкам сотовых операторов и\u00a0строится на\u00a0собственной фиксированной инфраструктуре."
+    title: "Basic",
+    summary: "Базовая авторизация для одной публичной точки.",
+    href: `${requestPath}?service=wifi-auth&configurationSummary=Hot-spot%20Basic`
   },
   {
-    question: "Почему у вас дороже?",
-    answer:
-      "Мы не\u00a0продаём дешёвую связь. Цена покупает стабильность без компромиссов: инженеров, оборудование, резервирование, современные технологии и\u00a0сервис, который не\u00a0бросает бизнес в\u00a0аварии."
+    title: "Standard",
+    summary: "Авторизация, SMS-пакет и параметры для регулярного клиентского потока.",
+    href: `${requestPath}?service=wifi-auth&configurationSummary=Hot-spot%20Standard`
   },
   {
-    question: "Как скоро сможете подключить?",
-    answer:
-      "Обычно от\u00a01 до\u00a03 рабочих дней с\u00a0момента оплаты. Если срок критичный, менеджер проверит адрес и\u00a0предложит самый быстрый сценарий."
+    title: "Premium",
+    summary: "Расширенный сценарий для нескольких площадок и брендированной страницы.",
+    href: `${requestPath}?service=wifi-auth&configurationSummary=Hot-spot%20Premium`
   }
 ];
 
@@ -99,7 +128,7 @@ const pageSchema: JsonLdObject = {
       "@type": "Offer",
       position: index + 1,
       name: service.title,
-      url: getAbsoluteUrl(`/business/${service.slug}/`)
+      url: getAbsoluteUrl(`/business/request/?service=${service.slug}`)
     }))
   }
 };
@@ -107,179 +136,139 @@ const pageSchema: JsonLdObject = {
 
 <BaseLayout
   title="Kubtel для бизнеса"
-  description={"Kubtel для бизнеса Краснодара: стабильная связь, поддержка 24/7, аварийная бригада в\u00a0течение часа, персональный менеджер и Hot-spot."}
+  description="Услуги связи Kubtel для бизнеса: заявка, калькуляторы, доступ в ЦОД и оплата услуг."
   canonicalPath="/business/"
   schema={pageSchema}
 >
   <div class="business-page">
-    <section class="business-hero section-pad">
-      <div class="business-hero-copy">
-        <h1>Сервис связи для бизнеса, который ценит время</h1>
+    <section class="business-compact-hero section-pad">
+      <div>
+        <p class="eyebrow">Бизнесу</p>
+        <h1>Услуги связи для бизнеса</h1>
         <p>
-          Мы дороже массовых провайдеров Краснодара и&nbsp;не&nbsp;скрываем это. Kubtel покупают
-          не&nbsp;ради дешёвых мегабитов, а&nbsp;ради спокойствия: персонального менеджера, быстрой
-          реакции, резервной связности и&nbsp;команды, которая закрывает IT-потребности бизнеса
-          в&nbsp;одном контуре.
+          Выберите услугу, рассчитайте параметры или сразу отправьте заявку. Менеджер коммерческого
+          отдела свяжется для уточнения условий.
         </p>
-        <div class="business-actions">
-          <a class="card-action" href={getSitePath("/business/request/")}
-            >Получить индивидуальный расчёт</a
-          >
-          <a class="business-link" href="#business-calculators">Открыть калькуляторы</a>
+      </div>
+      <div class="business-quick-actions" aria-label="Быстрые действия">
+        <a class="card-action" href={getSitePath(`${requestPath}?service=internet`)}>Подключить</a>
+        <a class="business-link" href={getSitePath(`${requestPath}?service=datacenter-access`)}>
+          Заявка на доступ в ЦОД
+        </a>
+        <a class="business-link" href={SITE.paymentUrl} target="_blank" rel="noopener noreferrer">
+          Оплатить услуги
+        </a>
+        <a class="business-phone-card" href={phoneHref}>{SITE.salesPhone}</a>
+      </div>
+    </section>
+
+    <section class="section-pad business-service-workspace" id="business-calculators">
+      <div class="section-heading">
+        <p class="eyebrow">Услуги и калькуляторы</p>
+        <h2>Выберите услугу</h2>
+        <p>
+          Калькуляторы, тарифные направления и заявки по услугам бизнеса собраны в одном разделе.
+        </p>
+      </div>
+
+      <div class="business-service-tabs" data-business-service-tabs>
+        <nav class="business-service-list" aria-label="Услуги для бизнеса">
+          {
+            serviceLinks.map((item) => (
+              <a class="business-service-row is-request-link" href={getSitePath(item.href)}>
+                <span>{item.number}</span>
+                <strong>{item.title}</strong>
+                <small>{item.category}</small>
+                <p>{item.summary}</p>
+              </a>
+            ))
+          }
+          {
+            calculatorTabs.map((item, index) => (
+              <button
+                class="business-service-row"
+                type="button"
+                data-service-tab={item.slug}
+                aria-pressed={index === 0 ? "true" : "false"}
+              >
+                <span>{String(index + serviceLinks.length + 1).padStart(2, "0")}</span>
+                <strong>{item.title}</strong>
+                <small>{item.mode === "hotspot" ? "Тарифы" : "Калькулятор"}</small>
+                <p>{item.summary}</p>
+              </button>
+            ))
+          }
+        </nav>
+
+        <div class="business-service-panel" aria-live="polite">
+          {
+            calculatorTabs.map((item, index) => (
+              <article
+                class:list={["business-service-panel-item", { "is-active": index === 0 }]}
+                data-service-panel={item.slug}
+              >
+                {item.mode === "hotspot" ? (
+                  <div class="hotspot-plan-panel">
+                    <div class="section-heading">
+                      <p class="eyebrow">Hot-spot</p>
+                      <h2>Тарифы гостевого Wi‑Fi</h2>
+                      <p>
+                        Выберите тариф. Подробные условия и актуальная стоимость уточняются при
+                        заявке.
+                      </p>
+                    </div>
+                    <div class="hotspot-plan-grid">
+                      {hotspotPlans.map((plan) => (
+                        <article>
+                          <h3>{plan.title}</h3>
+                          <p>{plan.summary}</p>
+                          <a class="card-action" href={getSitePath(plan.href)}>
+                            Подключить
+                          </a>
+                        </article>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div class="business-calculator-stack">
+                    {item.configs?.map((config) => (
+                      <BusinessCalculator config={config} />
+                    ))}
+                  </div>
+                )}
+              </article>
+            ))
+          }
         </div>
-      </div>
-      <div class="business-hero-panel" aria-label="Ключевые факты Kubtel для бизнеса">
-        <div class="business-hero-media">
-          <PromoImage
-            visual={promoVisuals.business}
-            class="is-dark business-panel-image"
-            loading="eager"
-            showMeta={false}
-          />
-          <div class="business-hero-radar" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-        {
-          businessProofStrip.map((proof) => (
-            <article>
-              <span>{proof.label}</span>
-              <strong>{proof.value}</strong>
-            </article>
-          ))
-        }
-      </div>
-    </section>
-
-    <section class="section-pad business-service-inventory" id="business-services">
-      <div class="section-heading">
-        <p class="eyebrow">Что продаём</p>
-        <h2>Услуги Kubtel для бизнеса</h2>
-        <p>
-          Собираем связь и&nbsp;инфраструктуру вокруг задачи клиента: открыть точку, защитить
-          выручку, подключить сложный объект или перенести критичные сервисы в&nbsp;надёжный контур.
-        </p>
-      </div>
-      <div class="business-service-rail">
-        {
-          businessServices.map((service, index) => (
-            <a class="business-service-row" href={getSitePath(`/business/${service.slug}/`)}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <strong>{service.title}</strong>
-              <small>{service.category}</small>
-              <p>{service.summary}</p>
-            </a>
-          ))
-        }
-      </div>
-    </section>
-
-    <section class="section-pad business-comfort-section">
-      <div class="business-comfort-copy">
-        <p class="eyebrow">Для кого</p>
-        <h2>Для собственника, который не&nbsp;хочет помнить номер техподдержки</h2>
-        <p>
-          Наш абонент дорожит своим временем, знает цену хорошему сервису, не&nbsp;экономит
-          на&nbsp;себе и&nbsp;своих нервах. Он понимает: скупой платит дважды. А&nbsp;идеальный
-          провайдер&nbsp;— тот, чей телефон техподдержки ты даже не&nbsp;знаешь.
-        </p>
-        <ul class="business-mini-list business-portrait-list">
-          {clientPortrait.map((item) => <li>{item}</li>)}
-        </ul>
-      </div>
-      <div class="business-vip-console" aria-label="Уровень комфорта клиента Kubtel">
-        <strong>Индивидуальный сервисный контур</strong>
-        {
-          comfortSignals.map((signal) => (
-            <div>
-              <span />
-              <p>{signal}</p>
-            </div>
-          ))
-        }
-      </div>
-    </section>
-
-    <section class="section-pad business-calculators-showcase" id="business-calculators">
-      <div class="section-heading">
-        <p class="eyebrow">Калькуляторы услуг</p>
-        <h2>Посчитайте конфигурацию до&nbsp;разговора с&nbsp;менеджером</h2>
-        <p>
-          Как на&nbsp;текущем сайте: телефония, видеонаблюдение, VPS, colocation и&nbsp;гостевой
-          Wi‑Fi Hot-spot. Расчёт можно сразу передать в&nbsp;заявку.
-        </p>
-      </div>
-      <div class="business-calculator-stack">
-        {calculatorConfigs.map((config) => <BusinessCalculator config={config} />)}
-      </div>
-    </section>
-
-    <section class="section-pad business-segments-vip">
-      <div class="section-heading">
-        <p class="eyebrow">Кому особенно полезно</p>
-        <h2>Три сегмента, где комфорт связи быстро окупается</h2>
-      </div>
-      <div class="business-segment-grid">
-        {
-          highValueSegments.map((segment) => (
-            <article class="business-segment-card">
-              <h3>{segment.title}</h3>
-              <p>{segment.summary}</p>
-              <strong>{segment.trigger}</strong>
-            </article>
-          ))
-        }
-      </div>
-    </section>
-
-    <section class="section-pad business-proof-workflow">
-      <article class="business-case-study">
-        <p class="eyebrow">История спасения</p>
-        <h2>Интернет за день до открытия</h2>
-        <p>
-          Предприниматель открыл кофейню, сделал ремонт и&nbsp;вспомнил про связь за&nbsp;день
-          до&nbsp;старта, когда понадобилось подключить кассу. Дешёвый федеральный оператор
-          предложил ждать неделю. Kubtel подключил интернет вечером того&nbsp;же дня, кассы
-          заработали, а&nbsp;открытие прошло по&nbsp;плану.
-        </p>
-      </article>
-      <div class="business-proof-column">
-        <article>
-          <p class="eyebrow">От чего спасаем</p>
-          <h3>Анти-боль клиентов</h3>
-          <ul class="business-mini-list">
-            {antiPainPoints.map((item) => <li>{item}</li>)}
-          </ul>
-        </article>
-        <article>
-          <p class="eyebrow">Финальный аргумент</p>
-          <h3>Для собственников действует индивидуальный сценарий</h3>
-          <p>
-            Если объект важен для бизнеса, менеджер соберёт индивидуальный сценарий подключения:
-            сроки, резервирование и&nbsp;сопровождение. И&nbsp;да, без беготни между подрядчиками.
-          </p>
-          <a class="card-action" href={getSitePath("/business/request/")}>Обсудить расчёт</a>
-        </article>
-      </div>
-    </section>
-
-    <section class="section-pad business-faq-section">
-      <div class="section-heading">
-        <p class="eyebrow">FAQ</p>
-        <h2>Вопросы, которые задают на первой встрече</h2>
-      </div>
-      <div class="business-faq-grid">
-        {
-          businessFaq.map((item) => (
-            <article>
-              <h3>{item.question}</h3>
-              <p>{item.answer}</p>
-            </article>
-          ))
-        }
       </div>
     </section>
   </div>
 </BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-business-service-tabs]").forEach((root) => {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>("[data-service-tab]")];
+    const panels = [...root.querySelectorAll<HTMLElement>("[data-service-panel]")];
+
+    const requestedTab = new URLSearchParams(window.location.search).get("calculator");
+    activate(
+      tabs.some((tab) => tab.dataset.serviceTab === requestedTab) ? requestedTab : "telephony"
+    );
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        activate(tab.dataset.serviceTab ?? "telephony");
+      });
+    });
+
+    function activate(slug: string | null) {
+      tabs.forEach((tab) => {
+        tab.setAttribute("aria-pressed", String(tab.dataset.serviceTab === slug));
+      });
+
+      panels.forEach((panel) => {
+        panel.classList.toggle("is-active", panel.dataset.servicePanel === slug);
+      });
+    }
+  });
+</script>

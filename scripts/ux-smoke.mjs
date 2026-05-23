@@ -133,18 +133,20 @@ try {
 
   await checkRoute(client, sessionId, "/", "Домашний интернет");
   await checkRoute(client, sessionId, "/tariffs/", "Тарифы");
-  await checkRoute(client, sessionId, "/connect/", "Проверим адрес");
+  await checkRoute(client, sessionId, "/connect/", "Заявка на подключение");
   await checkRoute(client, sessionId, "/support/", "Поддержка");
   await checkRoute(client, sessionId, "/contacts/", "Контакты");
   await checkRoute(client, sessionId, "/about/", "Kubtel");
-  await checkRoute(client, sessionId, "/business/", "Kubtel для бизнеса");
-  await checkRoute(client, sessionId, "/business/internet/", "Интернет в офис");
-  await checkRoute(client, sessionId, "/business/telephony/", "Калькулятор телефонии");
-  await checkRoute(client, sessionId, "/business/cctv/", "Калькулятор видеонаблюдения");
-  await checkRoute(client, sessionId, "/business/vps/", "Калькулятор VPS");
-  await checkRoute(client, sessionId, "/business/colocation/", "Калькулятор размещения");
-  await checkRoute(client, sessionId, "/business/wifi-auth/", "Калькулятор Hot-spot");
-  await checkRoute(client, sessionId, "/business/request/", "B2B-заявка");
+  await checkRoute(client, sessionId, "/devices/", "Оборудование");
+  await checkRoute(client, sessionId, "/search/", "Найти раздел");
+  await checkRoute(client, sessionId, "/business/", "Услуги связи для бизнеса");
+  await checkRoute(client, sessionId, "/business/request/", "Заявка для бизнеса");
+  await checkRoute(
+    client,
+    sessionId,
+    "/business/?calculator=telephony#business-calculators",
+    "Внутризоновая связь"
+  );
 
   await assertHealthEndpoint();
   await assertLegacyRedirect();
@@ -213,7 +215,8 @@ async function assertLegacyRedirect() {
   const location = response.headers.get("location") ?? "";
 
   assert(response.status === 301, "legacy B2B URL did not return 301");
-  assert(location.includes("/business/internet/"), "legacy B2B redirect target is wrong");
+  assert(location.includes("/business/request/"), "legacy B2B redirect target is wrong");
+  assert(location.includes("service=internet"), "legacy B2B redirect lost service target");
   assert(location.includes("utm=ux-smoke"), "legacy B2B redirect did not preserve query string");
   results.push("legacy B2B redirect ok");
 }
@@ -230,7 +233,7 @@ async function checkHomeAudienceSwitch(client, sessionId) {
   await assertExpression(
     client,
     sessionId,
-    `document.querySelector(".audience-switch")?.textContent.includes("Для физиков") === true`,
+    `document.querySelector(".audience-switch")?.textContent.includes("Для дома") === true`,
     "home first screen exposes residential choice"
   );
   await assertExpression(
@@ -315,18 +318,18 @@ async function checkMobilePath(client, sessionId) {
 
 async function checkBusinessCalculator(client, sessionId) {
   await setViewport(client, sessionId, desktopViewport());
-  await navigate(client, sessionId, "/business/vps/");
+  await navigate(client, sessionId, "/business/?calculator=vps#business-calculators");
   await assertExpression(
     client,
     sessionId,
-    `document.querySelector("[data-business-calculator]") !== null`,
+    `document.querySelector('[data-service-panel="vps"].is-active [data-business-calculator]') !== null`,
     "VPS page contains business calculator"
   );
   await evaluate(
     client,
     sessionId,
     `(() => {
-      const cpu = document.querySelector('[data-business-calculator] input[name="vCpu"]');
+      const cpu = document.querySelector('[data-service-panel="vps"] input[name="vCpu"]');
       if (!cpu) return false;
       cpu.value = "8";
       cpu.dispatchEvent(new Event("input", { bubbles: true }));
@@ -336,13 +339,13 @@ async function checkBusinessCalculator(client, sessionId) {
   await assertExpression(
     client,
     sessionId,
-    `document.querySelector("[data-calculator-monthly]")?.innerText.includes("₽") === true`,
+    `document.querySelector('[data-service-panel="vps"] [data-calculator-monthly]')?.innerText.includes("₽") === true`,
     "business calculator shows monthly result"
   );
   await assertExpression(
     client,
     sessionId,
-    `document.querySelector("[data-calculator-cta]")?.href.includes("configurationSummary=") === true`,
+    `document.querySelector('[data-service-panel="vps"] [data-calculator-cta]')?.href.includes("configurationSummary=") === true`,
     "business calculator passes configuration into request link"
   );
   results.push("business calculator path ok");
@@ -397,17 +400,11 @@ async function submitBusinessLeadForm(client, sessionId) {
       const form = document.querySelector(".business-request-form");
       if (!form) return "missing-form";
       form.querySelector('input[name="formStartedAt"]').value = String(Date.now() - 5000);
+      form.querySelector('input[name="phone"]').value = "+7 900 765 43 21";
       form.querySelector('input[name="companyName"]').value = "Тест Бизнес";
       form.querySelector('input[name="contactPerson"]').value = "Иван Тестов";
-      form.querySelector('input[name="phone"]').value = "+7 900 765 43 21";
-      form.querySelector('input[name="email"]').value = "sales-test@example.com";
-      form.querySelector('input[name="inn"]').value = "2300000000";
-      form.querySelector('select[name="segment"]').value = "smb";
       form.querySelector('select[name="service"]').value = "internet";
-      form.querySelector('input[name="city"]').value = "Краснодар";
       form.querySelector('input[name="address"]').value = "Красная, 1";
-      form.querySelector('input[name="employeesOrSites"]').value = "12";
-      form.querySelector('select[name="urgency"]').value = "30_days";
       form.querySelector('textarea[name="configurationSummary"]').value = "Офис на 12 сотрудников, интернет 300 Мбит/с и статический IP";
       form.querySelector('input[name="consent"]').checked = true;
       form.requestSubmit();
@@ -455,7 +452,36 @@ async function setViewport(client, sessionId, viewport) {
 
 async function assertExpression(client, sessionId, expression, message) {
   const value = await evaluate(client, sessionId, expression);
-  assert(value === true, message);
+  if (value === true) {
+    return;
+  }
+
+  if (message.includes("horizontal overflow")) {
+    const offenders = await evaluate(
+      client,
+      sessionId,
+      `(() => {
+        return [...document.body.querySelectorAll("*")]
+          .map((node) => {
+            const rect = node.getBoundingClientRect();
+            return {
+              tag: node.tagName.toLowerCase(),
+              className: typeof node.className === "string" ? node.className : "",
+              id: node.id,
+              text: (node.innerText || node.textContent || "").trim().slice(0, 80),
+              left: Math.round(rect.left),
+              right: Math.round(rect.right),
+              width: Math.round(rect.width)
+            };
+          })
+          .filter((item) => item.width > 0 && (item.right > window.innerWidth || item.left < 0))
+          .slice(0, 8);
+      })()`
+    );
+    throw new Error(`${message}: ${JSON.stringify(offenders)}`);
+  }
+
+  throw new Error(message);
 }
 
 async function evaluate(client, sessionId, expression, awaitPromise = true) {

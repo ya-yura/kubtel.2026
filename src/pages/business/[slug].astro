@@ -6,7 +6,6 @@ import { getAbsoluteUrl, getSitePath } from "@config/site";
 import { getBusinessCalculatorConfig } from "@lib/business/calculator-ui";
 import {
   businessSegments,
-  businessServices,
   getRelatedBusinessServices,
   type BusinessSegment,
   type BusinessService
@@ -20,16 +19,10 @@ type PageEntry =
   | { kind: "segment"; entry: BusinessSegment };
 
 export function getStaticPaths() {
-  return [
-    ...businessServices.map((entry) => ({
-      params: { slug: entry.slug },
-      props: { kind: "service", entry } satisfies PageEntry
-    })),
-    ...businessSegments.map((entry) => ({
-      params: { slug: entry.slug },
-      props: { kind: "segment", entry } satisfies PageEntry
-    }))
-  ];
+  return businessSegments.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { kind: "segment", entry } satisfies PageEntry
+  }));
 }
 
 const { kind, entry } = Astro.props as PageEntry;
@@ -42,6 +35,24 @@ const relatedServices = isService
   : getRelatedBusinessServices(entry.serviceSlugs);
 const calculatorConfig = isService ? getBusinessCalculatorConfig(entry.slug) : undefined;
 const visual = getBusinessVisual(entry.slug);
+const entryRequestPath = getBusinessEntryHref(entry.slug);
+
+function getBusinessEntryHref(slug: string) {
+  if (slug === "smb" || slug === "operators" || slug === "government") {
+    return `/business/request/?segment=${slug}`;
+  }
+
+  if (slug === "internet" || slug === "static-ip" || slug === "datacenter-access") {
+    return `/business/request/?service=${slug}`;
+  }
+
+  if (slug === "telephony") {
+    return "/business/?calculator=telephony#business-calculators";
+  }
+
+  return `/business/?calculator=${slug}#business-calculators`;
+}
+
 const pageSchema: JsonLdObject = isService
   ? {
       "@context": "https://schema.org",
@@ -82,12 +93,7 @@ const pageSchema: JsonLdObject = isService
         <h1>{entry.title}</h1>
         <p>{isService ? entry.businessBenefit : entry.summary}</p>
         <div class="business-actions">
-          <a
-            class="card-action"
-            href={getSitePath(
-              `/business/request/?${isService ? `service=${entry.slug}` : `segment=${entry.slug}`}`
-            )}
-          >
+          <a class="card-action" href={getSitePath(entryRequestPath)}>
             {isService ? entry.ctaLabel : entry.ctaLabel}
           </a>
           <a class="business-link" href={getSitePath("/business/")}>Все бизнес-услуги</a>
@@ -164,14 +170,14 @@ const pageSchema: JsonLdObject = isService
             <h2>Четыре услуги, которые считаются в калькуляторе</h2>
             <p>
               Телефония не сводится к одному ползунку: отдельно считаются SIP-порты, городские
-              номера, внешние линии и функции виртуальной АТС.
+              номера, одновременные внешние разговоры и функции виртуальной АТС.
             </p>
           </div>
           <div class="business-card-grid">
             {[
               "SIP-порты для сотрудников и устройств",
               "Городские номера",
-              "Внешние линии",
+              "Одновременные внешние разговоры",
               "Виртуальная АТС и автооператор"
             ].map((item) => (
               <article class="business-card">
@@ -199,7 +205,7 @@ const pageSchema: JsonLdObject = isService
               <span class="service-category">{service.category}</span>
               <h3>{service.title}</h3>
               <p>{service.summary}</p>
-              <a class="card-action" href={getSitePath(`/business/${service.slug}/`)}>
+              <a class="card-action" href={getSitePath(getBusinessEntryHref(service.slug))}>
                 {service.ctaLabel}
               </a>
             </article>

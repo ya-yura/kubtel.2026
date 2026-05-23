@@ -9,12 +9,10 @@
   --business-muted: rgba(234, 246, 255, 0.7);
   --business-text: var(--kb-color-text-inverse);
   background:
-    radial-gradient(circle at 76% 8%, rgba(215, 86, 156, 0.26), transparent 28rem),
-    radial-gradient(circle at 18% 20%, rgba(69, 153, 216, 0.18), transparent 24rem),
-    linear-gradient(120deg, rgba(215, 86, 156, 0.08) 1px, transparent 1px),
+    linear-gradient(135deg, rgba(215, 86, 156, 0.08), transparent 34rem),
+    linear-gradient(120deg, rgba(215, 86, 156, 0.04) 1px, transparent 1px),
     linear-gradient(180deg, rgb(7, 10, 15) 0%, rgb(11, 17, 24) 46%, rgb(8, 12, 18) 100%);
   background-size:
-    auto,
     auto,
     42px 42px,
     auto;
@@ -35,6 +33,7 @@
   top: 4rem;
   transform: translateX(-50%) rotate(-8deg);
   width: min(46rem, 82vw);
+  display: none;
 }
 
 .business-page .section-pad {
@@ -58,9 +57,9 @@
 }
 
 .business-page .business-hero {
-  min-height: 650px;
-  padding-bottom: 5.5rem;
-  padding-top: 5rem;
+  min-height: 560px;
+  padding-bottom: 4rem;
+  padding-top: 4rem;
 }
 
 .business-page .business-hero-copy {
@@ -68,8 +67,8 @@
 }
 
 .business-page .business-hero-copy h1 {
-  font-size: clamp(2.18rem, 5.8vw, 4.85rem);
-  max-width: 980px;
+  font-size: 2.35rem;
+  max-width: 880px;
 }
 
 .business-page .business-hero-copy p {
@@ -91,6 +90,194 @@
 .business-page .business-link:hover {
   background: rgba(215, 86, 156, 0.12);
   border-color: rgba(215, 86, 156, 0.42);
+}
+
+.business-page .business-compact-hero,
+.business-page .business-request-hero {
+  align-items: start;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  gap: 1.2rem;
+  padding-bottom: 2rem;
+  padding-top: 2.25rem;
+}
+
+.business-page .business-compact-hero h1,
+.business-page .business-request-hero h1 {
+  font-size: 2.15rem;
+  max-width: 720px;
+}
+
+.business-page .business-compact-hero p,
+.business-page .business-request-hero p {
+  font-size: 1rem;
+  max-width: 720px;
+}
+
+.business-quick-actions,
+.business-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.business-page .business-quick-actions .card-action,
+.business-page .business-quick-actions .business-link,
+.business-phone-card {
+  min-height: 46px;
+  width: auto;
+}
+
+.business-phone-card {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(215, 86, 156, 0.3);
+  border-radius: var(--radius);
+  color: var(--business-text);
+  display: inline-flex;
+  font-weight: 850;
+  justify-content: center;
+  padding: 0.72rem 0.9rem;
+  white-space: nowrap;
+}
+
+.business-phone-card:hover {
+  background: rgba(215, 86, 156, 0.12);
+  border-color: rgba(215, 86, 156, 0.48);
+}
+
+.business-service-workspace {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.business-service-tabs {
+  display: grid;
+  gap: 1rem;
+}
+
+.business-service-list {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.business-service-panel {
+  min-width: 0;
+}
+
+.business-service-panel-item {
+  display: none;
+}
+
+.business-service-panel-item.is-active {
+  display: grid;
+  gap: 1rem;
+}
+
+.business-page button.business-service-row {
+  box-shadow: none;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  justify-content: initial;
+  text-align: left;
+  width: 100%;
+}
+
+.business-page button.business-service-row:hover,
+.business-page button.business-service-row:active {
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.24);
+  transform: translateY(-1px);
+}
+
+.business-service-row[aria-pressed="true"] {
+  background:
+    linear-gradient(90deg, rgba(215, 86, 156, 0.18), rgba(69, 153, 216, 0.08)),
+    var(--business-panel-strong);
+  border-color: rgba(215, 86, 156, 0.56);
+}
+
+.hotspot-plan-panel,
+.compact-request-summary {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)),
+    var(--business-panel);
+  border: 1px solid var(--business-line);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.hotspot-plan-grid {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.hotspot-plan-grid article {
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(215, 86, 156, 0.2);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+.hotspot-plan-grid h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0;
+}
+
+.hotspot-plan-grid p {
+  margin-bottom: 0;
+}
+
+.business-callout {
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid var(--business-line);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem;
+}
+
+.business-callout span {
+  color: var(--business-muted);
+  font-size: 0.9rem;
+}
+
+.business-callout a {
+  color: var(--business-text);
+  font-family: var(--kb-typography-family-display);
+  font-size: 1.35rem;
+  font-weight: 850;
+}
+
+.business-page .business-request-layout.is-compact {
+  align-items: start;
+  padding-top: 1.5rem;
+}
+
+.business-page .business-request-layout.is-compact .business-request-form {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)),
+    var(--business-panel);
+  border: 1px solid var(--business-line);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+
+.business-page .business-request-layout.is-compact .form-group,
+.business-page .business-request-layout.is-compact .message-field,
+.business-page .business-request-layout.is-compact .consent-line {
+  padding: 0.85rem;
+}
+
+.business-page .compact-business-grid {
+  grid-template-columns: 1fr;
+}
+
+.compact-request-summary h2 {
+  font-size: 1.65rem;
 }
 
 .business-page .business-hero-panel {
@@ -539,6 +726,30 @@
 }
 
 @media (min-width: 720px) {
+  .business-page .business-compact-hero,
+  .business-page .business-request-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.42fr);
+    padding-bottom: 2.75rem;
+    padding-top: 3rem;
+  }
+
+  .business-page .business-compact-hero h1,
+  .business-page .business-request-hero h1 {
+    font-size: 3rem;
+  }
+
+  .hotspot-plan-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .business-page .compact-business-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .business-page .business-hero-copy h1 {
+    font-size: 3.35rem;
+  }
+
   .business-service-row {
     grid-template-columns: auto minmax(0, 0.62fr) auto minmax(0, 1fr);
   }
@@ -554,5 +765,17 @@
 
   .business-faq-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 980px) {
+  .business-service-tabs {
+    align-items: start;
+    grid-template-columns: minmax(300px, 0.44fr) minmax(0, 1fr);
+  }
+
+  .business-service-list {
+    position: sticky;
+    top: calc(var(--header-height) + 1rem);
   }
 }

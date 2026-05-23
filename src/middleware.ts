@@ -9,7 +9,13 @@ export const onRequest = defineMiddleware((context, next) => {
   }
 
   const redirectUrl = new URL(target, context.url);
-  redirectUrl.search = context.url.search;
+  const originalSearchParams = new URLSearchParams(context.url.search);
 
-  return context.redirect(redirectUrl.pathname + redirectUrl.search, 301);
+  originalSearchParams.forEach((value, key) => {
+    if (!redirectUrl.searchParams.has(key)) {
+      redirectUrl.searchParams.append(key, value);
+    }
+  });
+
+  return context.redirect(`${redirectUrl.pathname}${redirectUrl.search}${redirectUrl.hash}`, 301);
 });

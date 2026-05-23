@@ -50,6 +50,18 @@ const pageSchema = buildBaseStructuredData({
 const pageStructuredData = [...pageSchema, ...(Array.isArray(schema) ? schema : [schema])].filter(
   Boolean
 );
+const quietStickySections = [
+  "/payment/",
+  "/support/",
+  "/documents/",
+  "/contacts/",
+  "/about/",
+  "/news/",
+  "/search/",
+  "/devices/",
+  "/careers/"
+];
+const hasStickyCta = !quietStickySections.some((path) => Astro.url.pathname.startsWith(path));
 ---
 
 <!doctype html>
@@ -86,7 +98,7 @@ const pageStructuredData = [...pageSchema, ...(Array.isArray(schema) ? schema : 
     }
     <title>{pageTitle}</title>
   </head>
-  <body>
+  <body class:list={{ "has-sticky-cta": hasStickyCta }}>
     <a class="skip-link" href="#main-content">К основному содержимому</a>
     <Header />
     <main id="main-content" tabindex="-1">

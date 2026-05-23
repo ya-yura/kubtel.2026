@@ -12,7 +12,7 @@ describe("businessLeadFormSchema", () => {
       segment: null,
       service: "internet",
       city: null,
-      address: null,
+      address: "Краснодар",
       urgency: "30_days",
       employeesOrSites: null,
       configurationSummary: null,
@@ -29,5 +29,41 @@ describe("businessLeadFormSchema", () => {
     expect(input.segment).toBe("");
     expect(input.message).toBe("");
     expect(input.consent).toBe(true);
+  });
+
+  it("accepts the shortened business request form", () => {
+    const input = businessLeadFormSchema.parse({
+      companyName: "",
+      contactPerson: "",
+      phone: "+7 900 765 43 21",
+      service: "internet",
+      address: "Краснодар, Красная, 1",
+      configurationSummary: "Нужен интернет в офис",
+      consent: "on",
+      website: "",
+      formStartedAt: Date.now(),
+      sourcePath: "/business/request/"
+    });
+
+    expect(input.companyName).toBe("Компания не указана");
+    expect(input.contactPerson).toBe("Контакт не указан");
+    expect(input.service).toBe("internet");
+    expect(input.address).toBe("Краснодар, Красная, 1");
+  });
+
+  it("requires service and object address", () => {
+    const result = businessLeadFormSchema.safeParse({
+      companyName: "",
+      contactPerson: "",
+      phone: "+7 900 765 43 21",
+      service: "",
+      address: "",
+      consent: "on",
+      website: "",
+      formStartedAt: Date.now(),
+      sourcePath: "/business/request/"
+    });
+
+    expect(result.success).toBe(false);
   });
 });

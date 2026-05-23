@@ -41,8 +41,7 @@ export const businessServices: BusinessService[] = [
     slug: "internet",
     title: "Интернет в\u00a0офис",
     category: "Связь",
-    summary:
-      "Корпоративный интернет для офиса, магазина, склада или точки обслуживания, где каждая минута простоя превращается в\u00a0потерянные деньги.",
+    summary: "Корпоративный интернет для офиса, магазина, склада или точки обслуживания.",
     businessBenefit:
       "Рабочие сервисы, кассы, телефония и видеонаблюдение остаются на связи, а вопросы решаются через поддержку 24/7 и персонального менеджера.",
     proofPoints: [
@@ -50,7 +49,7 @@ export const businessServices: BusinessService[] = [
       { label: "Аварийная бригада", value: "выезд в\u00a0течение часа", status: "confirmed" },
       { label: "Платежи", value: "кредитный лимит для бизнеса", status: "confirmed" }
     ],
-    ctaLabel: "Защитить офис от простоя",
+    ctaLabel: "Подключить",
     priority: "P0",
     audience: ["офисы", "магазины", "клиники", "склады"],
     options: ["скорость", "резервный канал", "статический IP", "настройка роутера"],
@@ -73,7 +72,7 @@ export const businessServices: BusinessService[] = [
       { label: "Поддержка", value: "через персонального менеджера", status: "confirmed" },
       { label: "Подключение", value: "в\u00a0составе корпоративной связи", status: "confirmed" }
     ],
-    ctaLabel: "Подключить статический IP",
+    ctaLabel: "Подключить",
     priority: "P0",
     audience: ["офисы", "магазины", "склады", "IT-команды"],
     options: ["количество IPv4", "назначение", "маршрутизация", "привязка к\u00a0услуге"],
@@ -96,11 +95,23 @@ export const businessServices: BusinessService[] = [
       { label: "Номера и линии", value: "есть в\u00a0конфигураторе", status: "confirmed" },
       { label: "CRM-интеграция", value: "требует сверки", status: "needs_verification" }
     ],
-    ctaLabel: "Подобрать телефонию",
+    ctaLabel: "Подключить",
     priority: "P0",
     audience: ["офисы продаж", "службы поддержки", "клиники", "сервисы"],
-    options: ["тип подключения", "порты", "номера", "внешние линии", "автооператор"],
-    calculatorFields: ["тип подключения", "тариф", "номера", "линии", "автооператор"],
+    options: [
+      "тип подключения",
+      "SIP-порты",
+      "городские номера",
+      "одновременные внешние разговоры",
+      "автооператор"
+    ],
+    calculatorFields: [
+      "SIP-порты",
+      "городские номера",
+      "одновременные внешние разговоры",
+      "виртуальная АТС",
+      "автооператор"
+    ],
     relatedServices: ["internet", "vps"],
     seoTitle: "IP-телефония для бизнеса в\u00a0Краснодаре",
     seoDescription:
@@ -119,7 +130,7 @@ export const businessServices: BusinessService[] = [
       { label: "Камеры", value: "Dome v2 и Bullet v2", status: "confirmed" },
       { label: "Монтаж", value: "нужно подтвердить", status: "needs_verification" }
     ],
-    ctaLabel: "Рассчитать камеры",
+    ctaLabel: "Подключить",
     priority: "P0",
     audience: ["магазины", "склады", "офисы", "клиники"],
     options: ["количество камер", "срок архива", "модель камеры", "годовая оплата"],
@@ -142,7 +153,7 @@ export const businessServices: BusinessService[] = [
       { label: "Сценарий", value: "общепит, магазины, сервисы", status: "confirmed" },
       { label: "Авторизация", value: "публичный Wi‑Fi с идентификацией", status: "confirmed" }
     ],
-    ctaLabel: "Запустить Hot-spot",
+    ctaLabel: "Подключить",
     priority: "P1",
     audience: ["кафе", "отели", "салоны", "клиники"],
     options: ["способ авторизации", "брендированная страница", "SMS-пакет", "редирект"],
@@ -165,7 +176,7 @@ export const businessServices: BusinessService[] = [
       { label: "Данные", value: "в\u00a0РФ", status: "confirmed" },
       { label: "Backup/SLA", value: "нужно подтвердить", status: "needs_verification" }
     ],
-    ctaLabel: "Собрать VPS",
+    ctaLabel: "Подключить",
     priority: "P1",
     audience: ["IT", "1С", "CRM", "терминальный доступ"],
     options: ["OS", "CPU", "RAM", "HDD/SSD", "IP", "backup"],
@@ -180,7 +191,7 @@ export const businessServices: BusinessService[] = [
     title: "Виртуальные рабочие места",
     category: "Инфраструктура",
     summary:
-      "VDI для сотрудников: удалённое рабочее место с выбранной ОС, ресурсами и доступом с разных устройств.",
+      "VDI для компаний: виртуальное рабочее место сотрудника с выбранной ОС, ресурсами и доступом с разных устройств.",
     businessBenefit:
       "Новые рабочие места запускаются быстрее, а обслуживание железа и резервирование переезжают в инфраструктурный контур.",
     proofPoints: [
@@ -188,15 +199,15 @@ export const businessServices: BusinessService[] = [
       { label: "Удалённый доступ", value: "публично заявлен", status: "confirmed" },
       { label: "Лицензии ПО", value: "нужно подтвердить", status: "needs_verification" }
     ],
-    ctaLabel: "Рассчитать рабочие места",
+    ctaLabel: "Подключить",
     priority: "P1",
-    audience: ["удалённые команды", "быстро растущий штат", "распределённые офисы"],
+    audience: ["распределённые команды", "быстро растущий штат", "несколько офисов"],
     options: ["количество мест", "ресурсный preset", "ОС", "backup"],
     calculatorFields: ["рабочие места", "preset", "ОС", "backup"],
     relatedServices: ["vps", "internet"],
     seoTitle: "Виртуальное рабочее место для бизнеса",
     seoDescription:
-      "VDI Kubtel: аренда виртуального рабочего места для сотрудников, удалённого доступа и масштабирования рабочих мест."
+      "VDI Kubtel для бизнеса: аренда виртуального рабочего места для сотрудников и масштабирования рабочих мест."
   },
   {
     slug: "colocation",
@@ -211,7 +222,7 @@ export const businessServices: BusinessService[] = [
       { label: "ДГУ", value: "19\u00a0часов", status: "confirmed" },
       { label: "SEA-IX", value: "51 оператор", status: "confirmed" }
     ],
-    ctaLabel: "Рассчитать размещение",
+    ctaLabel: "Подключить",
     priority: "P0",
     audience: ["IT-команды", "владельцы серверов", "операторы"],
     options: ["юниты", "питание", "порты", "IPv4/IPv6", "IPMI"],
@@ -251,7 +262,7 @@ export const businessSegments: BusinessSegment[] = [
     slug: "smb",
     title: "Малому и среднему бизнесу",
     summary: "Связь для офисов, магазинов, кафе, клиник, салонов и складов.",
-    pain: "Нужны интернет, телефония, камеры и гостевой Wi‑Fi без разрозненных подрядчиков и двух суток простоя.",
+    pain: "Нужны интернет, телефония, камеры и гостевой Wi‑Fi с единым сопровождением.",
     trigger:
       "Открытие точки, переезд, плохой текущий канал, ограничения мобильного интернета или запуск гостевого Wi‑Fi.",
     ctaLabel: "Подобрать связь для точки",
@@ -292,9 +303,9 @@ export const businessSegments: BusinessSegment[] = [
 
 export const businessProofStrip: BusinessProof[] = [
   { label: "Локальная авария", value: "устраняем в\u00a0течение 1\u00a0часа", status: "confirmed" },
-  { label: "Менеджер", value: "свяжется тогда, когда нужно вам", status: "confirmed" },
+  { label: "Менеджер", value: "связь по заявке", status: "confirmed" },
   { label: "Связность", value: "несколько аплинков вместо одного", status: "confirmed" },
-  { label: "Команда", value: "All In One для IT-потребностей", status: "confirmed" }
+  { label: "Команда", value: "связь и инфраструктура в одном контуре", status: "confirmed" }
 ];
 
 export function getBusinessService(slug: string): BusinessService | undefined {

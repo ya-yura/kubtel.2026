@@ -1,0 +1,104 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getSitePath } from "@config/site";
+
+const deviceGroups = [
+  {
+    title: "Wi‑Fi-роутеры",
+    category: "Дом и офис",
+    summary:
+      "Оборудование для квартиры, частного дома или небольшой точки. Модель подбирается по площади, скорости тарифа и количеству устройств.",
+    details: ["аренда или покупка", "настройка Wi‑Fi", "проверка покрытия в помещении"],
+    href: "/connect/?service=internet#callback-request"
+  },
+  {
+    title: "ТВ-приставки",
+    category: "Домашнее ТВ",
+    summary:
+      "Приставки для просмотра цифрового ТВ, если услуга доступна по адресу и входит в выбранный пакет.",
+    details: [
+      "совместимость с ТВ-пакетом",
+      "подключение к домашней сети",
+      "условия аренды или покупки"
+    ],
+    href: "/connect/?service=tv#callback-request"
+  },
+  {
+    title: "IP-телефоны и SIP-адаптеры",
+    category: "Бизнес",
+    summary:
+      "Устройства для IP-телефонии: рабочие места операторов, стойки ресепшен, аналоговые телефоны через адаптер.",
+    details: ["SIP-порты", "городские номера", "одновременные внешние разговоры"],
+    href: "/business/?calculator=telephony#business-calculators"
+  },
+  {
+    title: "Камеры видеонаблюдения",
+    category: "Бизнес",
+    summary:
+      "Камеры Dome/Bullet и сопутствующее оборудование для объектов, где нужен онлайн-доступ и архив.",
+    details: ["количество камер", "глубина архива", "монтаж и настройка"],
+    href: "/business/?calculator=cctv#business-calculators"
+  },
+  {
+    title: "Оборудование для ЦОД",
+    category: "Инфраструктура",
+    summary:
+      "Серверы, сетевое оборудование и размещение в стойках обсуждаются в рамках colocation и доступа в ЦОД.",
+    details: ["юниты", "питание", "порт", "IPMI", "доступ инженеров"],
+    href: "/business/?calculator=colocation#business-calculators"
+  }
+];
+---
+
+<BaseLayout
+  title="Устройства для подключения"
+  description="Роутеры, ТВ-приставки, IP-телефоны, камеры и оборудование для услуг Kubtel."
+  canonicalPath="/devices/"
+>
+  <section class="section-pad compact-intro devices-page">
+    <p class="eyebrow">Устройства</p>
+    <h1>Оборудование для подключения</h1>
+    <p>
+      Раздел показывает, какие категории устройств могут понадобиться для услуг Kubtel. Конкретные
+      модели, наличие, стоимость аренды или покупки должны быть подтверждены коммерческой матрицей
+      перед публикацией.
+    </p>
+
+    <div class="device-grid">
+      {
+        deviceGroups.map((group) => (
+          <article class="device-card">
+            <div class="service-card-head">
+              <span class="service-category">{group.category}</span>
+              <span class="data-status needs_verification">Требует сверки</span>
+            </div>
+            <h2>{group.title}</h2>
+            <p>{group.summary}</p>
+            <ul class="business-mini-list">
+              {group.details.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+            <a class="card-action" href={getSitePath(group.href)}>
+              Перейти к услуге
+            </a>
+          </article>
+        ))
+      }
+    </div>
+
+    <section class="device-note" aria-label="Как уточнить оборудование">
+      <h2>Что нужно для точного подбора</h2>
+      <p>
+        Для роутера важны площадь помещения, материал стен и ожидаемая скорость. Для телефонии,
+        камер и ЦОД важны схема объекта, количество устройств и требования к обслуживанию.
+      </p>
+      <div class="button-row">
+        <a class="card-action" href={getSitePath("/connect/#callback-request")}
+          >Домашнее подключение</a
+        >
+        <a class="business-link" href={getSitePath("/business/request/")}>Заявка для бизнеса</a>
+      </div>
+    </section>
+  </section>
+</BaseLayout>

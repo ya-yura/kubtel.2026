@@ -1,6 +1,17 @@
 import type { BusinessPricingCatalog } from "@lib/business/calculators";
 
-export type CalculatorType = "telephony" | "cctv" | "vps" | "colocation" | "wifi_auth";
+export type CalculatorType =
+  | "internet"
+  | "telephony"
+  | "telephony_intrazone"
+  | "telephony_long_distance"
+  | "telephony_international"
+  | "telephony_services"
+  | "cctv"
+  | "vps"
+  | "vdi"
+  | "colocation"
+  | "wifi_auth";
 
 export type CalculatorField =
   | {
@@ -12,12 +23,14 @@ export type CalculatorField =
       step: number;
       value: number;
       suffix?: string;
+      help?: string;
     }
   | {
       kind: "checkbox";
       name: string;
       label: string;
       checked: boolean;
+      help?: string;
     }
   | {
       kind: "select";
@@ -25,6 +38,7 @@ export type CalculatorField =
       label: string;
       value: string;
       options: Array<{ value: string; label: string }>;
+      help?: string;
     };
 
 export type CalculatorLine =
@@ -46,6 +60,7 @@ export type CalculatorLine =
       keyPrefix: string;
       selectField: string;
       labelPrefix: string;
+      valueLabels?: Record<string, string>;
     }
   | {
       kind: "repeatedSelect";
@@ -53,7 +68,13 @@ export type CalculatorLine =
       selectField: string;
       quantityField: string;
       labelPrefix: string;
+      valueLabels?: Record<string, string>;
     };
+
+export type CalculatorGlossaryItem = {
+  term: string;
+  description: string;
+};
 
 export type BusinessCalculatorConfig = {
   type: CalculatorType;
@@ -63,55 +84,338 @@ export type BusinessCalculatorConfig = {
   submitLabel: string;
   fields: CalculatorField[];
   lines: CalculatorLine[];
+  sourceNote?: string;
+  glossary?: CalculatorGlossaryItem[];
 };
 
 export const businessCalculatorPricing: BusinessPricingCatalog = {
-  "telephony.port": { monthly: 250, status: "confirmed" },
-  "telephony.phone_number": { monthly: 150, status: "confirmed" },
-  "telephony.external_line": { monthly: 450, status: "confirmed" },
-  "telephony.virtual_pbx": { monthly: 1000, status: "confirmed" },
-  "telephony.auto_attendant": { monthly: 350, oneTime: 1200, status: "confirmed" },
+  "internet.speed.100": {
+    monthly: 1800,
+    status: "needs_verification",
+    unitLabel: "за канал 100 Мбит/с в месяц"
+  },
+  "internet.speed.300": {
+    monthly: 3000,
+    status: "needs_verification",
+    unitLabel: "за канал 300 Мбит/с в месяц"
+  },
+  "internet.speed.500": {
+    monthly: 4500,
+    status: "needs_verification",
+    unitLabel: "за канал 500 Мбит/с в месяц"
+  },
+  "internet.static_ip": {
+    monthly: 250,
+    status: "needs_verification",
+    unitLabel: "за IPv4-адрес в месяц"
+  },
+  "internet.backup_channel": {
+    monthly: 1800,
+    status: "needs_verification",
+    unitLabel: "за резервный канал в месяц"
+  },
+  "internet.router_setup": {
+    oneTime: 1500,
+    status: "needs_verification",
+    unitLabel: "разовая настройка маршрутизатора"
+  },
 
-  "cctv.archive.3": { monthly: 250, status: "confirmed" },
-  "cctv.archive.7": { monthly: 390, status: "confirmed" },
-  "cctv.archive.14": { monthly: 590, status: "confirmed" },
-  "cctv.archive.30": { monthly: 890, status: "confirmed" },
-  "cctv.camera": { oneTime: 4500, status: "confirmed" },
-  "cctv.install": { oneTime: 2500, status: "confirmed" },
+  "telephony.port": {
+    monthly: 250,
+    status: "needs_verification",
+    unitLabel: "за SIP-порт в месяц"
+  },
+  "telephony.phone_number": {
+    monthly: 150,
+    status: "needs_verification",
+    unitLabel: "за городской номер в месяц"
+  },
+  "telephony.external_line": {
+    monthly: 450,
+    status: "needs_verification",
+    unitLabel: "за одновременный внешний разговор в месяц"
+  },
+  "telephony.virtual_pbx": {
+    monthly: 1000,
+    status: "needs_verification",
+    unitLabel: "за виртуальную АТС в месяц"
+  },
+  "telephony.auto_attendant": {
+    monthly: 350,
+    oneTime: 1200,
+    status: "needs_verification",
+    unitLabel: "за автооператор: абонентская плата и настройка"
+  },
+  "telephony.intrazone.city": {
+    monthly: 1.2,
+    status: "needs_verification",
+    unitLabel: "за минуту внутризоновой связи"
+  },
+  "telephony.intrazone.mobile": {
+    monthly: 1.8,
+    status: "needs_verification",
+    unitLabel: "за минуту на мобильные номера региона"
+  },
+  "telephony.long_distance.russia": {
+    monthly: 2.5,
+    status: "needs_verification",
+    unitLabel: "за минуту междугородной связи по РФ"
+  },
+  "telephony.long_distance.cis": {
+    monthly: 7,
+    status: "needs_verification",
+    unitLabel: "за минуту связи со странами СНГ"
+  },
+  "telephony.international.europe": {
+    monthly: 18,
+    status: "needs_verification",
+    unitLabel: "за минуту международной связи: Европа"
+  },
+  "telephony.international.world": {
+    monthly: 35,
+    status: "needs_verification",
+    unitLabel: "за минуту международной связи: прочие направления"
+  },
+  "telephony.service.call_recording": {
+    monthly: 300,
+    status: "needs_verification",
+    unitLabel: "за запись разговоров в месяц"
+  },
+  "telephony.service.call_forwarding": {
+    monthly: 150,
+    status: "needs_verification",
+    unitLabel: "за переадресацию в месяц"
+  },
+  "telephony.service.number_identification": {
+    monthly: 100,
+    status: "needs_verification",
+    unitLabel: "за определитель номера в месяц"
+  },
 
-  "vps.cpu": { monthly: 450, status: "confirmed" },
-  "vps.ram_gb": { monthly: 180, status: "confirmed" },
-  "vps.ssd_gb": { monthly: 18, status: "confirmed" },
-  "vps.hdd_gb": { monthly: 6, status: "confirmed" },
-  "vps.ip": { monthly: 180, status: "confirmed" },
-  "vps.backup": { monthly: 500, status: "confirmed" },
-  "vps.ddos": { monthly: null, status: "unknown" },
+  "cctv.archive.3": { monthly: 250, status: "needs_verification", unitLabel: "за камеру в месяц" },
+  "cctv.archive.7": { monthly: 390, status: "needs_verification", unitLabel: "за камеру в месяц" },
+  "cctv.archive.14": { monthly: 590, status: "needs_verification", unitLabel: "за камеру в месяц" },
+  "cctv.archive.30": { monthly: 890, status: "needs_verification", unitLabel: "за камеру в месяц" },
+  "cctv.camera": { oneTime: 4500, status: "needs_verification", unitLabel: "за камеру разово" },
+  "cctv.install": {
+    oneTime: 2500,
+    status: "needs_verification",
+    unitLabel: "за монтаж точки разово"
+  },
 
-  "colocation.unit": { monthly: 2500, status: "confirmed" },
-  "colocation.power_100w": { monthly: 800, status: "confirmed" },
-  "colocation.ipv4": { monthly: 150, status: "confirmed" },
-  "colocation.port.100m": { monthly: 1000, status: "confirmed" },
-  "colocation.port.1g": { monthly: 3000, status: "confirmed" },
-  "colocation.port.10g": { monthly: null, status: "unknown" },
-  "colocation.ipmi": { monthly: 500, status: "confirmed" },
-  "colocation.remote_hands": { oneTime: 2000, status: "confirmed" },
+  "vps.cpu": { monthly: 450, status: "needs_verification", unitLabel: "за vCPU в месяц" },
+  "vps.ram_gb": { monthly: 180, status: "needs_verification", unitLabel: "за 1 ГБ RAM в месяц" },
+  "vps.ssd_gb": { monthly: 18, status: "needs_verification", unitLabel: "за 1 ГБ SSD в месяц" },
+  "vps.hdd_gb": { monthly: 6, status: "needs_verification", unitLabel: "за 1 ГБ HDD в месяц" },
+  "vps.ip": { monthly: 180, status: "needs_verification", unitLabel: "за IPv4-адрес в месяц" },
+  "vps.backup": {
+    monthly: 500,
+    status: "needs_verification",
+    unitLabel: "за резервное копирование в месяц"
+  },
+  "vps.ddos": { monthly: null, status: "unknown", unitLabel: "по параметрам защиты" },
 
-  "wifi_auth.basic": { monthly: 1500, status: "confirmed" },
-  "wifi_auth.standard": { monthly: 3000, status: "confirmed" },
-  "wifi_auth.premium": { monthly: 5000, status: "confirmed" },
-  "wifi_auth.sms": { monthly: 900, status: "confirmed" },
-  "wifi_auth.branded_page": { oneTime: 8000, status: "confirmed" }
+  "vdi.basic": {
+    monthly: 1800,
+    status: "needs_verification",
+    unitLabel: "за базовое рабочее место в месяц"
+  },
+  "vdi.standard": {
+    monthly: 2800,
+    status: "needs_verification",
+    unitLabel: "за стандартное рабочее место в месяц"
+  },
+  "vdi.power": {
+    monthly: 4200,
+    status: "needs_verification",
+    unitLabel: "за усиленное рабочее место в месяц"
+  },
+  "vdi.backup": {
+    monthly: 450,
+    status: "needs_verification",
+    unitLabel: "за резервное копирование места в месяц"
+  },
+
+  "colocation.unit": { monthly: 2500, status: "needs_verification", unitLabel: "за 1U в месяц" },
+  "colocation.power_100w": {
+    monthly: 800,
+    status: "needs_verification",
+    unitLabel: "за каждые 100 Вт в месяц"
+  },
+  "colocation.ipv4": {
+    monthly: 150,
+    status: "needs_verification",
+    unitLabel: "за IPv4-адрес в месяц"
+  },
+  "colocation.port.100m": {
+    monthly: 1000,
+    status: "needs_verification",
+    unitLabel: "за порт 100 Мбит/с в месяц"
+  },
+  "colocation.port.1g": {
+    monthly: 3000,
+    status: "needs_verification",
+    unitLabel: "за порт 1 Гбит/с в месяц"
+  },
+  "colocation.port.10g": { monthly: null, status: "unknown", unitLabel: "по проекту" },
+  "colocation.ipmi": {
+    monthly: 500,
+    status: "needs_verification",
+    unitLabel: "за IPMI-доступ в месяц"
+  },
+  "colocation.remote_hands": {
+    oneTime: 2000,
+    status: "needs_verification",
+    unitLabel: "за разовый выезд инженера"
+  },
+
+  "wifi_auth.basic": {
+    monthly: 1500,
+    status: "needs_verification",
+    unitLabel: "за площадку в месяц"
+  },
+  "wifi_auth.standard": {
+    monthly: 3000,
+    status: "needs_verification",
+    unitLabel: "за площадку в месяц"
+  },
+  "wifi_auth.premium": {
+    monthly: 5000,
+    status: "needs_verification",
+    unitLabel: "за площадку в месяц"
+  },
+  "wifi_auth.sms": {
+    monthly: 900,
+    status: "needs_verification",
+    unitLabel: "за SMS-пакет в месяц"
+  },
+  "wifi_auth.branded_page": {
+    oneTime: 8000,
+    status: "needs_verification",
+    unitLabel: "за подготовку страницы разово"
+  }
 };
 
 export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculatorConfig> = {
+  internet: {
+    type: "internet",
+    serviceSlug: "internet",
+    title: "Калькулятор интернета в офис",
+    lead: "Соберите ориентир по скорости, статическим IP, резервному каналу и настройке маршрутизатора.",
+    submitLabel: "Подключить",
+    sourceNote:
+      "Расчёт предварительный; итоговая стоимость фиксируется по действующим коммерческим условиям.",
+    fields: [
+      {
+        kind: "select",
+        name: "speedMbps",
+        label: "Скорость канала",
+        value: "300",
+        help: "Скорость доступа для офиса или точки обслуживания.",
+        options: [
+          { value: "100", label: "100 Мбит/с" },
+          { value: "300", label: "300 Мбит/с" },
+          { value: "500", label: "500 Мбит/с" }
+        ]
+      },
+      {
+        kind: "number",
+        name: "staticIpCount",
+        label: "Статические IP",
+        min: 0,
+        max: 32,
+        step: 1,
+        value: 1,
+        help: "Постоянные IPv4-адреса для касс, VPN, камер, серверов или удалённого администрирования."
+      },
+      {
+        kind: "checkbox",
+        name: "backupChannel",
+        label: "Резервный канал",
+        checked: false,
+        help: "Дополнительный канал связи, который снижает риск простоя при аварии основного канала."
+      },
+      {
+        kind: "checkbox",
+        name: "routerSetup",
+        label: "Настройка маршрутизатора",
+        checked: true,
+        help: "Разовая настройка оборудования на объекте."
+      },
+      {
+        kind: "checkbox",
+        name: "slaNeed",
+        label: "Нужен SLA",
+        checked: false,
+        help: "Фиксированные параметры реакции и восстановления требуют отдельного согласования."
+      }
+    ],
+    lines: [
+      {
+        kind: "select",
+        keyPrefix: "internet.speed.",
+        selectField: "speedMbps",
+        labelPrefix: "Канал",
+        valueLabels: {
+          "100": "100 Мбит/с",
+          "300": "300 Мбит/с",
+          "500": "500 Мбит/с"
+        }
+      },
+      {
+        kind: "repeated",
+        key: "internet.static_ip",
+        quantityField: "staticIpCount",
+        label: "Статические IPv4-адреса"
+      },
+      {
+        kind: "optional",
+        key: "internet.backup_channel",
+        enabledField: "backupChannel",
+        label: "Резервный канал"
+      },
+      {
+        kind: "optional",
+        key: "internet.router_setup",
+        enabledField: "routerSetup",
+        label: "Настройка маршрутизатора"
+      }
+    ],
+    glossary: [
+      {
+        term: "Статический IP",
+        description:
+          "постоянный внешний адрес, который не меняется после перезагрузки оборудования."
+      },
+      {
+        term: "Резервный канал",
+        description: "запасной доступ в интернет для критичных сервисов на объекте."
+      },
+      {
+        term: "SLA",
+        description: "согласованный уровень сервиса: реакция, восстановление и порядок эскалации."
+      }
+    ]
+  },
   telephony: {
     type: "telephony",
     serviceSlug: "telephony",
-    title: "Калькулятор телефонии",
-    lead: "Соберите конфигурацию по портам, номерам, внешним линиям и функциям ВАТС.",
-    submitLabel: "Передать расчёт телефонии",
+    title: "IP-телефония и ВАТС",
+    lead: "Соберите конфигурацию по портам, номерам, одновременным внешним разговорам и функциям ВАТС.",
+    submitLabel: "Подключить",
+    sourceNote:
+      "Цены за единицу показаны отдельно; итоговая стоимость фиксируется по действующим тарифам.",
     fields: [
-      { kind: "number", name: "ports", label: "SIP-порты", min: 1, max: 200, step: 1, value: 8 },
+      {
+        kind: "number",
+        name: "ports",
+        label: "SIP-порты",
+        min: 1,
+        max: 200,
+        step: 1,
+        value: 8,
+        help: "Один SIP-порт нужен для телефона, софтфона или подключения к АТС."
+      },
       {
         kind: "number",
         name: "phoneNumbers",
@@ -119,19 +423,33 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         min: 1,
         max: 100,
         step: 1,
-        value: 2
+        value: 2,
+        help: "Номера, по которым клиенты звонят в компанию."
       },
       {
         kind: "number",
         name: "externalLines",
-        label: "Внешние линии",
+        label: "Одновременные внешние разговоры",
         min: 0,
         max: 100,
         step: 1,
-        value: 2
+        value: 2,
+        help: "Сколько входящих или исходящих разговоров может идти параллельно."
       },
-      { kind: "checkbox", name: "virtualPbx", label: "Виртуальная АТС", checked: true },
-      { kind: "checkbox", name: "autoAttendant", label: "Автооператор", checked: false }
+      {
+        kind: "checkbox",
+        name: "virtualPbx",
+        label: "Виртуальная АТС",
+        checked: true,
+        help: "Облачная телефонная станция: очереди, переадресация, правила звонков."
+      },
+      {
+        kind: "checkbox",
+        name: "autoAttendant",
+        label: "Автооператор",
+        checked: false,
+        help: "Голосовое меню, которое направляет звонок в нужный отдел."
+      }
     ],
     lines: [
       { kind: "repeated", key: "telephony.port", quantityField: "ports", label: "SIP-порты" },
@@ -145,7 +463,7 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         kind: "repeated",
         key: "telephony.external_line",
         quantityField: "externalLines",
-        label: "Внешние линии"
+        label: "Одновременные внешние разговоры"
       },
       {
         kind: "optional",
@@ -159,6 +477,196 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         enabledField: "autoAttendant",
         label: "Автооператор"
       }
+    ],
+    glossary: [
+      {
+        term: "SIP-порт",
+        description: "подключение для одного телефона, софтфона или устройства в IP-телефонии."
+      },
+      {
+        term: "Внешний разговор",
+        description: "один одновременный звонок между компанией и внешним номером."
+      },
+      {
+        term: "ВАТС",
+        description:
+          "виртуальная АТС: облачная система управления звонками без отдельной станции в офисе."
+      }
+    ]
+  },
+  telephony_intrazone: {
+    type: "telephony_intrazone",
+    serviceSlug: "telephony",
+    title: "Внутризоновая связь",
+    lead: "Расчёт ориентировочной стоимости звонков внутри региона по минутам.",
+    submitLabel: "Подключить",
+    sourceNote: "Расчёт отображает стоимость за минуту по выбранному внутризоновому направлению.",
+    fields: [
+      {
+        kind: "select",
+        name: "direction",
+        label: "Направление",
+        value: "city",
+        options: [
+          { value: "city", label: "Городские номера региона" },
+          { value: "mobile", label: "Мобильные номера региона" }
+        ]
+      },
+      {
+        kind: "number",
+        name: "minutes",
+        label: "Минут в месяц",
+        min: 1,
+        max: 100000,
+        step: 10,
+        value: 500,
+        help: "Ориентировочный объём разговоров для расчёта."
+      }
+    ],
+    lines: [
+      {
+        kind: "repeatedSelect",
+        keyPrefix: "telephony.intrazone.",
+        selectField: "direction",
+        quantityField: "minutes",
+        labelPrefix: "Внутризоновая связь",
+        valueLabels: {
+          city: "городские номера региона",
+          mobile: "мобильные номера региона"
+        }
+      }
+    ]
+  },
+  telephony_long_distance: {
+    type: "telephony_long_distance",
+    serviceSlug: "telephony",
+    title: "Междугородная связь",
+    lead: "Расчёт междугородных направлений по минутам.",
+    submitLabel: "Подключить",
+    sourceNote: "Расчёт отображает стоимость за минуту по выбранному междугородному направлению.",
+    fields: [
+      {
+        kind: "select",
+        name: "direction",
+        label: "Направление",
+        value: "russia",
+        options: [
+          { value: "russia", label: "Россия" },
+          { value: "cis", label: "СНГ" }
+        ]
+      },
+      {
+        kind: "number",
+        name: "minutes",
+        label: "Минут в месяц",
+        min: 1,
+        max: 100000,
+        step: 10,
+        value: 300
+      }
+    ],
+    lines: [
+      {
+        kind: "repeatedSelect",
+        keyPrefix: "telephony.long_distance.",
+        selectField: "direction",
+        quantityField: "minutes",
+        labelPrefix: "Междугородная связь",
+        valueLabels: {
+          russia: "Россия",
+          cis: "СНГ"
+        }
+      }
+    ]
+  },
+  telephony_international: {
+    type: "telephony_international",
+    serviceSlug: "telephony",
+    title: "Международная связь",
+    lead: "Расчёт международных направлений по минутам.",
+    submitLabel: "Подключить",
+    sourceNote: "Расчёт отображает стоимость за минуту по выбранному международному направлению.",
+    fields: [
+      {
+        kind: "select",
+        name: "direction",
+        label: "Направление",
+        value: "europe",
+        options: [
+          { value: "europe", label: "Европа" },
+          { value: "world", label: "Прочие направления" }
+        ]
+      },
+      {
+        kind: "number",
+        name: "minutes",
+        label: "Минут в месяц",
+        min: 1,
+        max: 50000,
+        step: 10,
+        value: 100
+      }
+    ],
+    lines: [
+      {
+        kind: "repeatedSelect",
+        keyPrefix: "telephony.international.",
+        selectField: "direction",
+        quantityField: "minutes",
+        labelPrefix: "Международная связь",
+        valueLabels: {
+          europe: "Европа",
+          world: "прочие направления"
+        }
+      }
+    ]
+  },
+  telephony_services: {
+    type: "telephony_services",
+    serviceSlug: "telephony",
+    title: "Услуги телефонии",
+    lead: "Дополнительные услуги телефонии: запись, переадресация, определитель номера.",
+    submitLabel: "Подключить",
+    sourceNote: "Состав и стоимость услуг фиксируются по действующим тарифам телефонии.",
+    fields: [
+      {
+        kind: "checkbox",
+        name: "callRecording",
+        label: "Запись разговоров",
+        checked: true
+      },
+      {
+        kind: "checkbox",
+        name: "callForwarding",
+        label: "Переадресация",
+        checked: true
+      },
+      {
+        kind: "checkbox",
+        name: "numberIdentification",
+        label: "Определитель номера",
+        checked: false
+      }
+    ],
+    lines: [
+      {
+        kind: "optional",
+        key: "telephony.service.call_recording",
+        enabledField: "callRecording",
+        label: "Запись разговоров"
+      },
+      {
+        kind: "optional",
+        key: "telephony.service.call_forwarding",
+        enabledField: "callForwarding",
+        label: "Переадресация"
+      },
+      {
+        kind: "optional",
+        key: "telephony.service.number_identification",
+        enabledField: "numberIdentification",
+        label: "Определитель номера"
+      }
     ]
   },
   cctv: {
@@ -166,7 +674,7 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
     serviceSlug: "cctv",
     title: "Калькулятор видеонаблюдения",
     lead: "Посчитайте камеры, глубину архива, оборудование и монтаж для объекта.",
-    submitLabel: "Передать расчёт камер",
+    submitLabel: "Подключить",
     fields: [
       { kind: "number", name: "camerasCount", label: "Камер", min: 1, max: 128, step: 1, value: 8 },
       {
@@ -198,7 +706,13 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         keyPrefix: "cctv.archive.",
         selectField: "archiveDays",
         quantityField: "camerasCount",
-        labelPrefix: "Архив на камеру"
+        labelPrefix: "Архив на камеру",
+        valueLabels: {
+          "3": "3 дня",
+          "7": "7 дней",
+          "14": "14 дней",
+          "30": "30 дней"
+        }
       },
       {
         kind: "repeated",
@@ -214,7 +728,7 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
     serviceSlug: "vps",
     title: "Калькулятор VPS",
     lead: "Подберите CPU, RAM, диск, IP и опции для виртуального сервера.",
-    submitLabel: "Передать расчёт VPS",
+    submitLabel: "Подключить",
     fields: [
       { kind: "number", name: "vCpu", label: "vCPU", min: 1, max: 64, step: 1, value: 4 },
       {
@@ -261,12 +775,82 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
       { kind: "optional", key: "vps.ddos", enabledField: "ddosProtection", label: "DDoS-защита" }
     ]
   },
+  vdi: {
+    type: "vdi",
+    serviceSlug: "vdi",
+    title: "Калькулятор виртуальных рабочих мест",
+    lead: "Оцените количество рабочих мест, профиль ресурсов и резервное копирование.",
+    submitLabel: "Подключить",
+    sourceNote: "VDI относится к бизнес-услугам и не подменяет домашние тарифы для физических лиц.",
+    fields: [
+      {
+        kind: "number",
+        name: "seats",
+        label: "Рабочие места",
+        min: 1,
+        max: 200,
+        step: 1,
+        value: 5,
+        help: "Количество сотрудников, которым нужен виртуальный рабочий стол."
+      },
+      {
+        kind: "select",
+        name: "preset",
+        label: "Профиль",
+        value: "standard",
+        help: "Набор CPU, RAM и диска для одного рабочего места.",
+        options: [
+          { value: "basic", label: "Базовый" },
+          { value: "standard", label: "Стандартный" },
+          { value: "power", label: "Усиленный" }
+        ]
+      },
+      {
+        kind: "checkbox",
+        name: "backup",
+        label: "Резервное копирование",
+        checked: true,
+        help: "Опция для восстановления рабочего места после сбоя."
+      }
+    ],
+    lines: [
+      {
+        kind: "repeatedSelect",
+        keyPrefix: "vdi.",
+        selectField: "preset",
+        quantityField: "seats",
+        labelPrefix: "Рабочее место",
+        valueLabels: {
+          basic: "базовое",
+          standard: "стандартное",
+          power: "усиленное"
+        }
+      },
+      {
+        kind: "optional",
+        key: "vdi.backup",
+        enabledField: "backup",
+        label: "Резервное копирование"
+      }
+    ],
+    glossary: [
+      {
+        term: "VDI",
+        description:
+          "виртуальное рабочее место для сотрудника, размещённое в серверной инфраструктуре."
+      },
+      {
+        term: "Профиль",
+        description: "типовой набор ресурсов для одного рабочего места."
+      }
+    ]
+  },
   colocation: {
     type: "colocation",
     serviceSlug: "colocation",
     title: "Калькулятор размещения",
     lead: "Посчитайте юниты, питание, порт, IPMI, IPv4 и удалённые руки.",
-    submitLabel: "Передать расчёт размещения",
+    submitLabel: "Подключить",
     fields: [
       {
         kind: "number",
@@ -317,7 +901,12 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         kind: "select",
         keyPrefix: "colocation.port.",
         selectField: "internetPort",
-        labelPrefix: "Порт"
+        labelPrefix: "Порт",
+        valueLabels: {
+          "100m": "100 Мбит/с",
+          "1g": "1 Гбит/с",
+          "10g": "10 Гбит/с"
+        }
       },
       { kind: "optional", key: "colocation.ipmi", enabledField: "ipmi", label: "IPMI" },
       {
@@ -333,7 +922,7 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
     serviceSlug: "wifi-auth",
     title: "Калькулятор Hot-spot",
     lead: "Выберите тариф авторизации Wi‑Fi, количество площадок, SMS и брендированную страницу.",
-    submitLabel: "Передать расчёт Hot-spot",
+    submitLabel: "Подключить",
     fields: [
       {
         kind: "select",
@@ -364,7 +953,12 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         keyPrefix: "wifi_auth.",
         selectField: "plan",
         quantityField: "sitesCount",
-        labelPrefix: "Тариф"
+        labelPrefix: "Тариф",
+        valueLabels: {
+          basic: "Basic",
+          standard: "Standard",
+          premium: "Premium"
+        }
       },
       { kind: "optional", key: "wifi_auth.sms", enabledField: "smsNeed", label: "SMS-авторизация" },
       {
@@ -378,9 +972,11 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
 };
 
 const serviceToCalculator: Record<string, CalculatorType | undefined> = {
+  internet: "internet",
   telephony: "telephony",
   cctv: "cctv",
   vps: "vps",
+  vdi: "vdi",
   colocation: "colocation",
   "wifi-auth": "wifi_auth"
 };

@@ -31,6 +31,9 @@ const optionalText = (maxLength: number) =>
     .preprocess((value) => value ?? "", z.string().trim().max(maxLength))
     .transform((value) => (value ? value : ""));
 
+const requiredText = (maxLength: number, message: string) =>
+  z.preprocess((value) => value ?? "", z.string().trim().min(1, message).max(maxLength, message));
+
 const nullableNumber = z.preprocess((value) => {
   if (value === undefined || value === null || value === "") {
     return null;
@@ -41,15 +44,14 @@ const nullableNumber = z.preprocess((value) => {
 
 export const businessLeadFormSchema = z.object({
   companyName: z
-    .string("Укажите компанию")
-    .trim()
-    .min(2, "Укажите компанию")
-    .max(160, "Название компании слишком длинное"),
+    .preprocess(
+      (value) => value ?? "",
+      z.string().trim().max(160, "Название компании слишком длинное")
+    )
+    .transform((value) => (value ? value : "Компания не указана")),
   contactPerson: z
-    .string("Укажите контактное лицо")
-    .trim()
-    .min(2, "Укажите контактное лицо")
-    .max(120, "Имя слишком длинное"),
+    .preprocess((value) => value ?? "", z.string().trim().max(120, "Имя слишком длинное"))
+    .transform((value) => (value ? value : "Контакт не указан")),
   phone: z
     .string("Укажите телефон")
     .trim()
@@ -60,9 +62,9 @@ export const businessLeadFormSchema = z.object({
   email: nullableText(120),
   inn: nullableText(12),
   segment: optionalText(80),
-  service: z.string("Выберите услугу").trim().min(1, "Выберите услугу").max(80),
+  service: requiredText(80, "Выберите услугу"),
   city: optionalText(200),
-  address: nullableText(240),
+  address: requiredText(240, "Укажите город или адрес объекта"),
   urgency: z.enum(["planning", "30_days", "7_days", "asap"]).default("planning"),
   employeesOrSites: nullableNumber.default(null),
   configurationSummary: nullableText(1200),

@@ -16,7 +16,7 @@ const {
   services,
   tariffs = [],
   title = "Домашние сценарии без технического тумана",
-  lead = "Работа, кино, игры, ТВ, статический IP или роутер\u00a0— всё это повод для разговора, а не обязательная анкета до звонка."
+  lead = "Видео, игры, учёба, ТВ, статический IP или роутер\u00a0— всё это можно выбрать без обязательной анкеты до звонка."
 } = Astro.props;
 
 const categoryLabels: Record<string, string> = {
@@ -81,7 +81,7 @@ const tariffTitleBySlug = new Map(tariffs.map((tariff) => [tariff.slug, tariff.t
               class="card-action"
               href={getSitePath(`/connect/?service=${service.slug}#callback-request`)}
             >
-              Оставить телефон
+              Уточнить условия
             </a>
           </article>
         );

@@ -10,7 +10,7 @@ export const promoVisuals = {
     src: "/visuals/home-fiber-living.png",
     alt: "Современная квартира с роутером, ноутбуком и работающим домашним интернетом",
     label: "Домашний интернет",
-    caption: "Тёплая квартира, стабильный Wi‑Fi и живой разговор вместо роботов."
+    caption: "Домашний Wi‑Fi, понятные условия и живой разговор со специалистом."
   },
   business: {
     src: "/visuals/business-vip-network.png",
@@ -32,9 +32,9 @@ export const promoVisuals = {
   },
   entertainment: {
     src: "/visuals/home-entertainment.png",
-    alt: "Семья смотрит кино, играет и работает дома через стабильный Wi‑Fi",
+    alt: "Семья смотрит кино, играет и общается дома через стабильный Wi‑Fi",
     label: "Сценарии дома",
-    caption: "Фильмы, игры, работа и видеозвонки без борьбы за канал."
+    caption: "Фильмы, игры, учёба и видеозвонки без борьбы за канал."
   },
   datacenter: {
     src: "/visuals/datacenter-colocation.png",

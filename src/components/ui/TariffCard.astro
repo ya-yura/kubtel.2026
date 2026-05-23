@@ -13,7 +13,7 @@ const { tariff } = Astro.props;
 const price = calculateMonthlyPrice(tariff);
 ---
 
-<article class:list={["tariff-card", { "is-featured": tariff.isFeatured }]}>
+<article id={tariff.slug} class:list={["tariff-card", { "is-featured": tariff.isFeatured }]}>
   <div class="tariff-card-head">
     <div>
       <p class="eyebrow">{tariff.isFeatured ? "Рекомендуем" : "Тариф"}</p>

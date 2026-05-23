@@ -43,6 +43,7 @@ const payload = JSON.stringify({
                     </option>
                   ))}
                 </select>
+                {field.help && <small>{field.help}</small>}
               </label>
             );
           }
@@ -57,6 +58,7 @@ const payload = JSON.stringify({
                   data-calculator-field
                 />
                 <span>{field.label}</span>
+                {field.help && <small>{field.help}</small>}
               </label>
             );
           }
@@ -93,6 +95,7 @@ const payload = JSON.stringify({
                 </button>
               </div>
               {field.suffix && <small>{field.suffix}</small>}
+              {field.help && <small>{field.help}</small>}
             </label>
           );
         })
@@ -116,6 +119,22 @@ const payload = JSON.stringify({
       <p class="calculator-note" data-calculator-note>
         Финальная цена фиксируется после проверки площадки и&nbsp;коммерческих условий.
       </p>
+      {config.sourceNote && <p class="calculator-note">{config.sourceNote}</p>}
+      {
+        config.glossary && (
+          <details class="calculator-glossary">
+            <summary>Расшифровка терминов</summary>
+            <dl>
+              {config.glossary.map((item) => (
+                <>
+                  <dt>{item.term}</dt>
+                  <dd>{item.description}</dd>
+                </>
+              ))}
+            </dl>
+          </details>
+        )
+      }
       <a class="card-action" href={requestPath} data-calculator-cta>{config.submitLabel}</a>
     </aside>
   </div>
@@ -192,11 +211,18 @@ const payload = JSON.stringify({
       lineItems.replaceChildren(
         ...result.lines.map((line) => {
           const item = document.createElement("li");
+          const labelGroup = document.createElement("span");
           const label = document.createElement("span");
           const value = document.createElement("strong");
           label.textContent = line.label;
+          labelGroup.append(label);
+          if (line.unit) {
+            const unit = document.createElement("small");
+            unit.textContent = line.unit;
+            labelGroup.append(unit);
+          }
           value.textContent = line.value;
-          item.append(label, value);
+          item.append(labelGroup, value);
           return item;
         })
       );
@@ -255,7 +281,7 @@ const payload = JSON.stringify({
       hasOneTime: false,
       unknownItems: [] as string[],
       requiredConsultation: false,
-      lines: [] as Array<{ label: string; value: string }>
+      lines: [] as Array<{ label: string; value: string; unit?: string }>
     };
 
     for (const line of config.lines) {
@@ -273,10 +299,11 @@ const payload = JSON.stringify({
 
       if (line.kind === "select") {
         const value = String(values[line.selectField] ?? "");
+        const valueLabel = line.valueLabels?.[value] ?? value;
         addLine(
           result,
           pricing[`${line.keyPrefix}${value}`],
-          `${line.labelPrefix}: ${value}`,
+          `${line.labelPrefix}: ${valueLabel}`,
           1,
           1
         );
@@ -284,11 +311,12 @@ const payload = JSON.stringify({
 
       if (line.kind === "repeatedSelect") {
         const value = String(values[line.selectField] ?? "");
+        const valueLabel = line.valueLabels?.[value] ?? value;
         const quantity = Number(values[line.quantityField] || 0);
         addLine(
           result,
           pricing[`${line.keyPrefix}${value}`],
-          `${line.labelPrefix}: ${value}`,
+          `${line.labelPrefix}: ${valueLabel}`,
           quantity,
           quantity
         );
@@ -318,11 +346,6 @@ const payload = JSON.stringify({
       return;
     }
 
-    if (price.status === "needs_verification") {
-      result.requiredConsultation = true;
-      pushUnknown(result, label);
-    }
-
     const monthly = typeof price.monthly === "number" ? price.monthly * quantity : null;
     const oneTime = typeof price.oneTime === "number" ? price.oneTime * quantity : null;
 
@@ -343,7 +366,8 @@ const payload = JSON.stringify({
         oneTime !== null ? formatRubles(oneTime) : ""
       ]
         .filter(Boolean)
-        .join(" + ")
+        .join(" + "),
+      unit: price.unitLabel
     });
   }
 
@@ -354,8 +378,28 @@ const payload = JSON.stringify({
   }
 
   function buildSummary(type: string, values: Record<string, any>) {
+    if (type === "internet") {
+      return `Интернет в офис: ${values.speedMbps}\u00a0Мбит/с, ${values.staticIpCount} статических IP`;
+    }
+
     if (type === "telephony") {
-      return `Телефония: ${values.ports} портов, ${values.phoneNumbers} номеров`;
+      return `Телефония: ${values.ports} SIP-портов, ${values.phoneNumbers} номеров`;
+    }
+
+    if (type === "telephony_intrazone") {
+      return `Внутризоновая связь: ${values.minutes} минут`;
+    }
+
+    if (type === "telephony_long_distance") {
+      return `Междугородная связь: ${values.minutes} минут`;
+    }
+
+    if (type === "telephony_international") {
+      return `Международная связь: ${values.minutes} минут`;
+    }
+
+    if (type === "telephony_services") {
+      return "Дополнительные услуги телефонии";
     }
 
     if (type === "cctv") {
@@ -364,6 +408,15 @@ const payload = JSON.stringify({
 
     if (type === "vps") {
       return `VPS: ${values.vCpu} CPU, ${values.ramGb}\u00a0ГБ RAM`;
+    }
+
+    if (type === "vdi") {
+      const presetLabels: Record<string, string> = {
+        basic: "базовый",
+        standard: "стандартный",
+        power: "усиленный"
+      };
+      return `VDI: ${values.seats} рабочих мест, профиль ${presetLabels[values.preset] ?? values.preset}`;
     }
 
     if (type === "colocation") {

@@ -1,0 +1,295 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getSitePath } from "@config/site";
+import { sitemapRoutes } from "@config/routes";
+import { getFaqItems, getServices, getTariffs } from "@lib/content";
+import { businessSegments, businessServices } from "@lib/business/content";
+import { formatRubles } from "@lib/format";
+
+type SearchItem = {
+  title: string;
+  href: string;
+  category: string;
+  summary: string;
+  keywords: string[];
+};
+
+const tariffs = await getTariffs();
+const services = await getServices();
+const faqItems = await getFaqItems();
+
+const routeItems: SearchItem[] = sitemapRoutes.map((route) => ({
+  title: route.title,
+  href: route.path,
+  category: "Раздел",
+  summary: route.description,
+  keywords: [route.label, route.title, route.description]
+}));
+
+const tariffItems: SearchItem[] = tariffs.map((tariff) => ({
+  title: tariff.title,
+  href: `/tariffs/#${tariff.slug}`,
+  category: "Тариф",
+  summary: `${tariff.speedDownload} Мбит/с, ${formatRubles(tariff.priceMonth)} в месяц. ${tariff.benefitDescription}`,
+  keywords: [
+    tariff.title,
+    tariff.slug,
+    tariff.benefitDescription,
+    ...tariff.bestFor,
+    ...tariff.includedServices
+  ]
+}));
+
+const serviceItems: SearchItem[] = services.map((service) => ({
+  title: service.title,
+  href: `/connect/?service=${service.slug}#callback-request`,
+  category: "Домашняя услуга",
+  summary: service.shortDescription,
+  keywords: [
+    service.title,
+    service.slug,
+    service.shortDescription,
+    service.fullDescription,
+    ...service.benefits
+  ]
+}));
+
+const faqSearchItems: SearchItem[] = faqItems.map((item) => ({
+  title: item.question,
+  href: "/support/",
+  category: "FAQ",
+  summary: item.answer,
+  keywords: [item.question, item.answer, item.category, ...item.relatedServices]
+}));
+
+const businessServiceItems: SearchItem[] = businessServices.map((service) => ({
+  title: service.title,
+  href: getBusinessServiceHref(service.slug),
+  category: "Бизнес-услуга",
+  summary: service.summary,
+  keywords: [
+    service.title,
+    service.category,
+    service.summary,
+    service.businessBenefit,
+    ...service.audience,
+    ...service.options,
+    ...service.calculatorFields
+  ]
+}));
+
+const businessSegmentItems: SearchItem[] = businessSegments.map((segment) => ({
+  title: segment.title,
+  href: `/business/${segment.slug}/`,
+  category: "Для бизнеса",
+  summary: segment.summary,
+  keywords: [segment.title, segment.summary, segment.pain, segment.trigger, ...segment.fields]
+}));
+
+const searchItems = [
+  ...routeItems,
+  ...tariffItems,
+  ...serviceItems,
+  ...faqSearchItems,
+  ...businessServiceItems,
+  ...businessSegmentItems,
+  {
+    title: "SIP-порты, городские номера и внешние разговоры",
+    href: "/business/?calculator=telephony#business-calculators",
+    category: "Подсказка",
+    summary:
+      "Расшифровка терминов и расчёт телефонии с ценой за SIP-порт, номер и одновременный внешний разговор.",
+    keywords: ["sip", "sip-порт", "внешняя линия", "внешние линии", "городской номер", "телефония"]
+  }
+] satisfies SearchItem[];
+
+const searchPayload = JSON.stringify(searchItems).replace(/</g, "\\u003c");
+const initialItems = searchItems.slice(0, 8);
+
+function getBusinessServiceHref(slug: string) {
+  if (slug === "internet" || slug === "static-ip" || slug === "datacenter-access") {
+    return `/business/request/?service=${slug}`;
+  }
+
+  if (slug === "telephony") {
+    return "/business/?calculator=telephony#business-calculators";
+  }
+
+  return `/business/?calculator=${slug}#business-calculators`;
+}
+---
+
+<BaseLayout
+  title="Поиск по сайту"
+  description="Поиск по разделам Kubtel: тарифы, оплата, поддержка, документы, устройства и услуги для бизнеса."
+  canonicalPath="/search/"
+>
+  <section class="section-pad compact-intro search-page">
+    <p class="eyebrow">Поиск</p>
+    <h1>Найти раздел, тариф или ответ</h1>
+    <p>
+      Введите вопрос обычными словами: поиск подберёт ссылки по страницам, тарифам, FAQ и
+      бизнес-услугам Kubtel.
+    </p>
+
+    <div class="search-shell" data-site-search>
+      <script is:inline type="application/json" data-search-index set:html={searchPayload} />
+      <label class="search-box">
+        <span>Ваш вопрос</span>
+        <input
+          type="search"
+          autocomplete="off"
+          placeholder="Например: оплатить, роутер, SIP-порт, тариф для дома"
+          data-search-input
+        />
+      </label>
+
+      <aside class="assistant-panel" aria-label="Навигационный помощник Kubtel">
+        <strong>Помощник Kubtel</strong>
+        <p>Можно искать по словам, услугам и бытовым вопросам. Ниже — быстрые темы.</p>
+        <div class="search-suggestions" aria-label="Быстрые темы поиска">
+          {
+            ["оплата", "поддержка", "устройства", "SIP-порт", "статический IP", "бизнес"].map(
+              (item) => (
+                <button type="button" data-search-suggestion={item}>
+                  {item}
+                </button>
+              )
+            )
+          }
+        </div>
+      </aside>
+
+      <div class="search-result-head">
+        <h2 data-search-title>Популярные разделы</h2>
+        <span data-search-count>{initialItems.length}</span>
+      </div>
+
+      <div class="search-results" data-search-results>
+        {
+          initialItems.map((item) => (
+            <a class="search-result-card" href={getSitePath(item.href)}>
+              <span>{item.category}</span>
+              <strong>{item.title}</strong>
+              <p>{item.summary}</p>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const searchRoots = document.querySelectorAll<HTMLElement>("[data-site-search]");
+
+  searchRoots.forEach((root) => {
+    const indexNode = root.querySelector<HTMLScriptElement>("[data-search-index]");
+    const input = root.querySelector<HTMLInputElement>("[data-search-input]");
+    const resultsNode = root.querySelector<HTMLElement>("[data-search-results]");
+    const titleNode = root.querySelector<HTMLElement>("[data-search-title]");
+    const countNode = root.querySelector<HTMLElement>("[data-search-count]");
+    const items = JSON.parse(indexNode?.textContent ?? "[]") as Array<{
+      title: string;
+      href: string;
+      category: string;
+      summary: string;
+      keywords: string[];
+    }>;
+
+    if (!input || !resultsNode || !titleNode || !countNode) {
+      return;
+    }
+
+    const searchInput = input;
+    const searchResults = resultsNode;
+    const searchTitle = titleNode;
+    const searchCount = countNode;
+
+    root.querySelectorAll<HTMLButtonElement>("[data-search-suggestion]").forEach((button) => {
+      button.addEventListener("click", () => {
+        searchInput.value = button.dataset.searchSuggestion ?? "";
+        searchInput.focus();
+        render();
+      });
+    });
+
+    searchInput.addEventListener("input", render);
+
+    function render() {
+      const query = normalize(searchInput.value);
+      const selected = query
+        ? items
+            .map((item) => ({ item, score: getScore(item, query) }))
+            .filter((entry) => entry.score > 0)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 12)
+            .map((entry) => entry.item)
+        : items.slice(0, 8);
+
+      searchTitle.textContent = query ? "Найденные ссылки" : "Популярные разделы";
+      searchCount.textContent = String(selected.length);
+      searchResults.replaceChildren(...selected.map(createResultCard));
+
+      if (selected.length === 0) {
+        const empty = document.createElement("p");
+        empty.className = "search-empty";
+        empty.textContent =
+          "Ничего не найдено. Попробуйте другое слово или перейдите в контакты, если вопрос требует обращения к специалисту.";
+        const link = document.createElement("a");
+        link.className = "card-action";
+        link.href = "/contacts/";
+        link.textContent = "Контакты";
+        searchResults.append(empty, link);
+      }
+    }
+
+    function createResultCard(item: {
+      title: string;
+      href: string;
+      category: string;
+      summary: string;
+    }) {
+      const card = document.createElement("a");
+      const category = document.createElement("span");
+      const title = document.createElement("strong");
+      const summary = document.createElement("p");
+
+      card.className = "search-result-card";
+      card.href = item.href;
+      category.textContent = item.category;
+      title.textContent = item.title;
+      summary.textContent = item.summary;
+      card.append(category, title, summary);
+
+      return card;
+    }
+
+    function getScore(
+      item: { title: string; category: string; summary: string; keywords: string[] },
+      query: string
+    ) {
+      const haystack = normalize(
+        [item.title, item.category, item.summary, ...item.keywords].join(" ")
+      );
+      const words = query.split(/\s+/).filter(Boolean);
+      let score = haystack.includes(query) ? 8 : 0;
+
+      for (const word of words) {
+        if (normalize(item.title).includes(word)) {
+          score += 5;
+        }
+
+        if (haystack.includes(word)) {
+          score += 2;
+        }
+      }
+
+      return score;
+    }
+
+    function normalize(value: string) {
+      return value.toLowerCase().replace(/ё/g, "е").trim();
+    }
+  });
+</script>
