@@ -2,7 +2,7 @@
 import Header from "@components/layout/Header.astro";
 import Footer from "@components/layout/Footer.astro";
 import StickyCta from "@components/layout/StickyCta.astro";
-import { getAbsoluteUrl, SITE } from "@config/site";
+import { getAbsoluteUrl, getSitePath, SITE } from "@config/site";
 import { getRouteMetadata } from "@config/routes";
 import {
   buildBaseStructuredData,
@@ -76,6 +76,10 @@ const hasStickyCta = !quietStickySections.some((path) => Astro.url.pathname.star
     <meta name="format-detection" content="telephone=no" />
     <meta name="generator" content={Astro.generator} />
     <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" href={getSitePath("/favicon.ico")} sizes="any" />
+    <link rel="icon" href={getSitePath("/favicon.svg")} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={getSitePath("/apple-touch-icon.png")} />
+    <link rel="manifest" href={getSitePath("/site.webmanifest")} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
