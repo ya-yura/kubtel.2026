@@ -6,10 +6,13 @@ import { getSitePath, SITE } from "@config/site";
 <footer class="site-footer">
   <div>
     <a class="footer-brand" href={getSitePath("/")} aria-label={`${SITE.name}, на главную`}>
-      <span class="brand-mark" aria-hidden="true">
-        <img src={getSitePath("/logo-flat.svg")} alt="" width="34" height="34" />
-      </span>
-      <strong>{SITE.name}</strong>
+      <img
+        class="footer-brand-logo"
+        src={getSitePath("/logo-wordmark.svg")}
+        alt=""
+        width="114"
+        height="58"
+      />
     </a>
     <p>{SITE.shortDescription}</p>
   </div>

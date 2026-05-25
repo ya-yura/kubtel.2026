@@ -352,31 +352,15 @@ summary:focus-visible {
 .brand {
   align-items: center;
   display: inline-flex;
-  gap: 0.65rem;
-  font-size: 1.02rem;
-  font-weight: 900;
-}
-
-.brand-name {
-  font-family: var(--kb-typography-family-display);
-  font-size: 0.88rem;
-  font-weight: 800;
-  letter-spacing: 0;
-}
-
-.brand-mark {
-  align-items: center;
-  display: inline-flex;
   flex: 0 0 auto;
-  height: 38px;
-  justify-content: center;
-  width: 38px;
 }
 
-.brand-mark img {
-  height: 100%;
+.brand-logo,
+.footer-brand-logo {
+  display: block;
+  height: 40px;
   object-fit: contain;
-  width: 100%;
+  width: auto;
 }
 
 .site-nav {
@@ -2200,12 +2184,6 @@ input[type="radio"] {
 .footer-brand {
   align-items: center;
   display: inline-flex;
-  gap: 0.65rem;
-}
-
-.footer-brand strong {
-  font-family: var(--kb-typography-family-display);
-  font-size: 0.95rem;
 }
 
 .site-footer nav {
@@ -2717,8 +2695,8 @@ body.is-readable .business-page .business-calculator-result .card-action {
     gap: 0.65rem;
   }
 
-  .brand span:last-child {
-    display: none;
+  .brand-logo {
+    height: 36px;
   }
 
   .header-action {
@@ -2784,6 +2762,10 @@ body.is-readable .business-page .business-calculator-result .card-action {
 
   .site-header {
     padding-inline: 1.5rem;
+  }
+
+  .brand-logo {
+    height: 44px;
   }
 
   .address-inline {
