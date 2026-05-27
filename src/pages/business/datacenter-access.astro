@@ -1,0 +1,225 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getSitePath } from "@config/site";
+import { handleBusinessLeadFormPost } from "@lib/leads/form-handlers";
+import "@styles/business-page.css";
+
+const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
+export const prerender = false;
+
+const formStartedAt = Date.now().toString();
+const datacenterOptions = ["ул. им. Володи Головатого, 585/1"];
+const durationOptions = ["1 час", "2 часа", "3 часа", "более 3 часов"];
+const actionResult = isStaticPreview
+  ? undefined
+  : Astro.request.method === "POST"
+    ? await handleBusinessLeadFormPost(await Astro.request.formData(), Astro.request)
+    : undefined;
+const actionData = actionResult?.data;
+const actionError = actionResult?.error;
+---
+
+<BaseLayout
+  title="Заявка на доступ в ЦОД"
+  description="Заявка на доступ в ЦОД Kubtel: ФИО, лицевой счёт, телефон, площадка, дата, длительность посещения и планируемые работы."
+  canonicalPath="/business/datacenter-access/"
+  pageType="ContactPage"
+>
+  <div class="business-page">
+    <section class="business-request-hero datacenter-access-hero section-pad">
+      <div>
+        <p class="eyebrow">ЦОД</p>
+        <h1>Заявка на доступ в ЦОД</h1>
+        <p>
+          Для планового посещения укажите ФИО, лицевой счёт, телефон, площадку, дату, длительность и
+          планируемые работы.
+        </p>
+      </div>
+      <aside class="business-callout">
+        <span>Плановая заявка</span>
+        <strong>не менее чем за 24 часа</strong>
+      </aside>
+    </section>
+
+    <section class="section-pad datacenter-access-shell" id="datacenter-access-request">
+      <form
+        class="business-request-form datacenter-access-form"
+        method="post"
+        action={isStaticPreview ? "#datacenter-access-request" : Astro.url.pathname}
+        data-datacenter-access-form
+        data-static-preview={isStaticPreview ? "true" : undefined}
+      >
+        {
+          actionData && (
+            <div
+              class="form-status is-success"
+              id="datacenter-access-status"
+              role="status"
+              tabindex="-1"
+            >
+              <strong>{actionData.message}</strong>
+              <span>Номер заявки: {actionData.leadId}</span>
+            </div>
+          )
+        }
+        {
+          actionError && (
+            <div
+              class="form-status is-error"
+              id="datacenter-access-status"
+              role="alert"
+              tabindex="-1"
+            >
+              <strong>Заявка не отправлена</strong>
+              <span>{actionError.message ?? "Проверьте поля и попробуйте ещё раз."}</span>
+            </div>
+          )
+        }
+
+        <input name="sourcePath" type="hidden" value="/business/datacenter-access/" />
+        <input name="formStartedAt" type="hidden" value={formStartedAt} />
+        <input name="service" type="hidden" value="datacenter-access" />
+        <input name="companyName" type="hidden" value="Клиент ЦОД" data-dc-company />
+        <input name="segment" type="hidden" value="" />
+        <input name="urgency" type="hidden" value="planning" />
+        <input name="city" type="hidden" value="Краснодар" />
+        <input name="monthlyEstimate" type="hidden" value="" />
+        <input name="oneTimeEstimate" type="hidden" value="" />
+        <input name="configurationSummary" type="hidden" value="" data-dc-summary />
+        <input name="message" type="hidden" value="" />
+        <input name="inn" type="hidden" value="" />
+        <input name="employeesOrSites" type="hidden" value="" />
+        <label class="visually-hidden">
+          <span>Оставьте это поле пустым</span>
+          <input name="website" type="text" tabindex="-1" autocomplete="off" />
+        </label>
+
+        <div class="datacenter-access-grid">
+          <label>
+            ФИО *
+            <input name="contactPerson" type="text" autocomplete="name" maxlength="120" required />
+          </label>
+          <label>
+            Лицевой счёт *
+            <input name="accountNumber" type="text" inputmode="numeric" maxlength="40" required />
+          </label>
+          <label>
+            Телефон *
+            <input
+              name="phone"
+              type="tel"
+              autocomplete="tel"
+              inputmode="tel"
+              maxlength="32"
+              required
+            />
+          </label>
+          <label>
+            Выберите ЦОД *
+            <select name="address" required>
+              {datacenterOptions.map((option) => <option value={option}>{option}</option>)}
+            </select>
+          </label>
+          <label>
+            Дата, время посещения *
+            <input name="visitAt" type="datetime-local" required />
+          </label>
+          <label>
+            Продолжительность посещения *
+            <select name="visitDuration" required>
+              {durationOptions.map((option) => <option value={option}>{option}</option>)}
+            </select>
+          </label>
+        </div>
+
+        <label class="message-field datacenter-access-works">
+          Планируемые работы
+          <textarea name="plannedWorks" rows="5" maxlength="800"></textarea>
+        </label>
+
+        <label class="consent-line">
+          <input type="checkbox" name="consent" required />
+          <span>Согласен на обработку персональных данных для связи по заявке.</span>
+        </label>
+
+        <div class="datacenter-access-submit-row">
+          <a class="business-link" href={getSitePath("/business/")}>Вернуться к услугам</a>
+          <button type="submit">Заказать</button>
+        </div>
+      </form>
+    </section>
+  </div>
+</BaseLayout>
+
+<script>
+  const dcForm = document.querySelector<HTMLFormElement>("[data-datacenter-access-form]");
+
+  dcForm?.addEventListener("submit", (event) => {
+    syncDatacenterAccessSummary(dcForm);
+
+    if (dcForm.dataset.staticPreview !== "true" || !dcForm.checkValidity()) {
+      return;
+    }
+
+    event.preventDefault();
+    showDatacenterAccessPreviewStatus(dcForm);
+  });
+
+  function syncDatacenterAccessSummary(form: HTMLFormElement) {
+    const accountNumber = form.querySelector<HTMLInputElement>('input[name="accountNumber"]');
+    const datacenter = form.querySelector<HTMLSelectElement>('select[name="address"]');
+    const visitAt = form.querySelector<HTMLInputElement>('input[name="visitAt"]');
+    const duration = form.querySelector<HTMLSelectElement>('select[name="visitDuration"]');
+    const plannedWorksField = form.querySelector<HTMLTextAreaElement>(
+      'textarea[name="plannedWorks"]'
+    );
+    const summary = form.querySelector<HTMLInputElement>("[data-dc-summary]");
+    const company = form.querySelector<HTMLInputElement>("[data-dc-company]");
+    const plannedWorks = plannedWorksField?.value.trim() || "не указаны";
+
+    if (company) {
+      company.value = accountNumber?.value.trim()
+        ? `Лицевой счет ${accountNumber.value.trim()}`
+        : "Клиент ЦОД";
+    }
+
+    if (summary) {
+      const details = [
+        `Лицевой счет: ${accountNumber?.value.trim() || "не указан"}`,
+        `ЦОД: ${datacenter?.value || "не выбран"}`,
+        `Дата и время посещения: ${visitAt?.value || "не указаны"}`,
+        `Продолжительность посещения: ${duration?.value || "не указана"}`,
+        `Планируемые работы: ${plannedWorks}`
+      ].join("\n");
+
+      summary.value = details.slice(0, 1200);
+    }
+  }
+
+  function showDatacenterAccessPreviewStatus(form: HTMLFormElement) {
+    const existingStatus = form.querySelector<HTMLElement>("#datacenter-access-status");
+    const status = existingStatus ?? document.createElement("div");
+
+    status.className = "form-status is-success";
+    status.id = "datacenter-access-status";
+    status.setAttribute("role", "status");
+    status.setAttribute("tabindex", "-1");
+    status.replaceChildren(
+      createDatacenterStatusLine("strong", "Демо-заявка на доступ в ЦОД принята."),
+      createDatacenterStatusLine("span", "Для боевой отправки подключите production-интеграции.")
+    );
+
+    if (!existingStatus) {
+      form.prepend(status);
+    }
+
+    status.focus({ preventScroll: true });
+  }
+
+  function createDatacenterStatusLine(tagName: "strong" | "span", text: string) {
+    const element = document.createElement(tagName);
+    element.textContent = text;
+
+    return element;
+  }
+</script>

@@ -21,10 +21,12 @@ type PageEntry =
 
 export function getStaticPaths() {
   return [
-    ...businessServices.map((entry) => ({
-      params: { slug: entry.slug },
-      props: { kind: "service", entry } satisfies PageEntry
-    })),
+    ...businessServices
+      .filter((entry) => entry.slug !== "datacenter-access")
+      .map((entry) => ({
+        params: { slug: entry.slug },
+        props: { kind: "service", entry } satisfies PageEntry
+      })),
     ...businessSegments.map((entry) => ({
       params: { slug: entry.slug },
       props: { kind: "segment", entry } satisfies PageEntry
@@ -42,14 +44,44 @@ const relatedServices = isService
   : getRelatedBusinessServices(entry.serviceSlugs);
 const calculatorConfig = isService ? getBusinessCalculatorConfig(entry.slug) : undefined;
 const visual = getBusinessVisual(entry.slug);
-const entryRequestPath = getBusinessEntryHref(entry.slug);
+const isGovernmentSegment = !isService && entry.slug === "b2g";
+const b2gEmail = "tender@kubtel.ru";
+const b2gPhoneDisplay = "+7 861 200-10-32";
+const b2gPhoneHref = "tel:+78612001032";
+const b2gRequestPath = `/business/request/?segment=b2g&service=b2g-consultation&configurationSummary=${encodeURIComponent(
+  "Прошу заказать обратный звонок сотрудника сектора B2G."
+)}`;
+const b2gMailHref = `mailto:${b2gEmail}?subject=${encodeURIComponent(
+  "B2G: запрос государственного заказчика"
+)}&body=${encodeURIComponent("Здравствуйте. Просим связаться по вопросу услуг связи для государственного заказчика.")}`;
+const b2gLaws = [
+  'Федеральный закон "О контрактной системе в сфере закупок товаров, работ, услуг для обеспечения государственных и муниципальных нужд" от 05.04.2013 N 44-ФЗ',
+  'Федеральный закон "О закупках товаров, работ, услуг отдельными видами юридических лиц" от 18.07.2011 N 223-ФЗ'
+];
+const b2gPlatforms = [
+  "АГЗ РТ",
+  "Электронная торговая площадка «Фабрикант»",
+  "АО «РАД»",
+  "РТС-тендер",
+  "ЭТП ТЭК-Торг",
+  "АО «Сбербанк-АСТ»",
+  "РОСЭЛТОРГ (АО «ЕЭТП»)",
+  "ЭТП Газпромбанк",
+  "АСТ ГОЗ",
+  "ЕАТ.РФ («Березка»)"
+];
+const entryRequestPath = isGovernmentSegment ? b2gRequestPath : getBusinessEntryHref(entry.slug);
 
 function getBusinessEntryHref(slug: string) {
-  if (slug === "smb" || slug === "operators" || slug === "government") {
+  if (slug === "smb" || slug === "operators" || slug === "b2g") {
     return `/business/request/?segment=${slug}`;
   }
 
-  if (slug === "internet" || slug === "static-ip" || slug === "datacenter-access") {
+  if (slug === "datacenter-access") {
+    return "/business/datacenter-access/";
+  }
+
+  if (slug === "internet" || slug === "static-ip") {
     return `/business/request/?service=${slug}`;
   }
 
@@ -165,6 +197,70 @@ const pageSchema: JsonLdObject = isService
               ))}
             </ul>
           </article>
+        </section>
+      )
+    }
+
+    {
+      isGovernmentSegment && (
+        <section class="section-pad b2g-procurement-section" id="b2g">
+          <div class="section-heading">
+            <p class="eyebrow">B2G</p>
+            <h2>Для государственных заказчиков</h2>
+            <p>
+              КУБАНЬ-ТЕЛЕКОМ оказывает услуги связи юридическим лицам - государственным заказчикам:
+              федеральным и муниципальным бюджетным учреждениям.
+            </p>
+          </div>
+
+          <div class="b2g-framework-grid">
+            <article class="business-detail-card b2g-law-card">
+              <p class="eyebrow">Закупочная база</p>
+              <h3>Работаем в рамках 44-ФЗ и 223-ФЗ</h3>
+              <ul class="business-mini-list">
+                {b2gLaws.map((law) => (
+                  <li>{law}</li>
+                ))}
+              </ul>
+            </article>
+
+            <article class="business-detail-card b2g-platform-card">
+              <p class="eyebrow">ЕИС и ЭТП</p>
+              <h3>Аккредитация на федеральных площадках</h3>
+              <p>
+                КУБАНЬ-ТЕЛЕКОМ зарегистрировано в ЕИС, аккредитовано на 10 федеральных ЭТП и
+                принимает участие в процедурах закупки товаров, работ и услуг на ЭТП и вне торговых
+                площадок.
+              </p>
+              <div class="b2g-platform-list" aria-label="Федеральные электронные торговые площадки">
+                {b2gPlatforms.map((platform) => (
+                  <span>{platform}</span>
+                ))}
+              </div>
+            </article>
+          </div>
+
+          <div class="b2g-contact-panel">
+            <div>
+              <p class="eyebrow">Контакты сектора B2G</p>
+              <h2>Связаться с сотрудником</h2>
+              <p>
+                Можно написать на электронный адрес, позвонить напрямую или заказать обратный звонок
+                через стандартную форму заявки с согласием на обработку персональных данных.
+              </p>
+            </div>
+            <div class="b2g-contact-actions" aria-label="Способы связи с сектором B2G">
+              <a class="card-action" href={b2gMailHref}>
+                Написать на {b2gEmail}
+              </a>
+              <a class="business-phone-card" href={b2gPhoneHref}>
+                Позвонить {b2gPhoneDisplay}
+              </a>
+              <a class="business-link" href={getSitePath(b2gRequestPath)}>
+                Заказать обратный звонок
+              </a>
+            </div>
+          </div>
         </section>
       )
     }

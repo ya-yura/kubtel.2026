@@ -9,7 +9,11 @@ describe("getLegacyBusinessRedirect", () => {
     expect(getLegacyBusinessRedirect("/legal/smallbusiness/datac/colocation")).toBe(
       "/business/?calculator=colocation#business-calculators"
     );
+    expect(getLegacyBusinessRedirect("/legal/smallbusiness/datac/admission")).toBe(
+      "/business/datacenter-access/"
+    );
     expect(getLegacyBusinessRedirect("/legal/operators/")).toBe("/business/operators/");
+    expect(getLegacyBusinessRedirect("/legal/govsector/")).toBe("/business/b2g/");
   });
 
   it("redirects redundant service detail pages to the business workspace", () => {
@@ -19,10 +23,12 @@ describe("getLegacyBusinessRedirect", () => {
     expect(getLegacyBusinessRedirect("/business/telephony/")).toBe(
       "/business/?calculator=telephony#business-calculators"
     );
+    expect(getLegacyBusinessRedirect("/business/government/")).toBe("/business/b2g/");
   });
 
   it("does not redirect unrelated routes", () => {
     expect(getLegacyBusinessRedirect("/tariffs/")).toBeNull();
     expect(getLegacyBusinessRedirect("/business/operators/")).toBeNull();
+    expect(getLegacyBusinessRedirect("/business/datacenter-access/")).toBeNull();
   });
 });

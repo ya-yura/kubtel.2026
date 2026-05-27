@@ -107,7 +107,11 @@ const searchPayload = JSON.stringify(searchItems).replace(/</g, "\\u003c");
 const initialItems = searchItems.slice(0, 8);
 
 function getBusinessServiceHref(slug: string) {
-  if (slug === "internet" || slug === "static-ip" || slug === "datacenter-access") {
+  if (slug === "datacenter-access") {
+    return "/business/datacenter-access/";
+  }
+
+  if (slug === "internet" || slug === "static-ip") {
     return `/business/request/?service=${slug}`;
   }
 

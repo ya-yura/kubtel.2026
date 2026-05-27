@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { getSitePath, SITE } from "@config/site";
-import { businessServices, getBusinessService } from "@lib/business/content";
+import { businessServices, getBusinessSegment, getBusinessService } from "@lib/business/content";
 import { handleBusinessLeadFormPost } from "@lib/leads/form-handlers";
 import "@styles/business-page.css";
 
@@ -9,14 +9,36 @@ const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
 export const prerender = false;
 
 const selectedService = Astro.url.searchParams.get("service") ?? "";
-const selectedSegment = Astro.url.searchParams.get("segment") ?? "";
+const rawSelectedSegment = Astro.url.searchParams.get("segment") ?? "";
+const selectedSegment = rawSelectedSegment === "government" ? "b2g" : rawSelectedSegment;
 const selectedConfiguration = Astro.url.searchParams.get("configurationSummary") ?? "";
 const selectedMonthlyEstimate = Astro.url.searchParams.get("monthlyEstimate") ?? "";
 const selectedOneTimeEstimate = Astro.url.searchParams.get("oneTimeEstimate") ?? "";
 const service = selectedService ? getBusinessService(selectedService) : undefined;
-const contextTitle = service?.title ?? "Заявка для бизнеса";
+const segment = selectedSegment ? getBusinessSegment(selectedSegment) : undefined;
+const b2gConsultationOption = {
+  slug: "b2g-consultation",
+  title: "B2G-консультация по закупке"
+};
+const serviceOptions =
+  selectedSegment === "b2g" || selectedService === b2gConsultationOption.slug
+    ? [b2gConsultationOption, ...businessServices]
+    : businessServices;
+const contextTitle = service?.title ?? segment?.title ?? "Заявка для бизнеса";
+const isGovernmentRequest = selectedSegment === "b2g";
+const pageTitle = isGovernmentRequest ? "Обратный звонок для B2G" : "Заявка для бизнеса";
+const introText = isGovernmentRequest
+  ? "Оставьте телефон, учреждение и краткий комментарий. Сотрудник сектора B2G свяжется для уточнения закупочной процедуры и услуг связи."
+  : "Оставьте телефон, выберите услугу и укажите адрес объекта. Менеджер коммерческого отдела свяжется для уточнения условий.";
+const summaryText = isGovernmentRequest
+  ? "Форма использует стандартный серверный контур B2B-заявок и передаёт согласие на обработку персональных данных вместе с запросом."
+  : "Обязательные поля сведены к минимуму. Остальные детали можно указать в комментарии или обсудить по телефону.";
 const formStartedAt = Date.now().toString();
-const phoneHref = `tel:${SITE.salesPhone.replace(/\D/g, "")}`;
+const b2gPhoneDisplay = "+7 861 200-10-32";
+const phoneDisplay = isGovernmentRequest ? b2gPhoneDisplay : SITE.salesPhone;
+const phoneHref = isGovernmentRequest
+  ? "tel:+78612001032"
+  : `tel:${SITE.salesPhone.replace(/\D/g, "")}`;
 const actionResult = isStaticPreview
   ? undefined
   : Astro.request.method === "POST"
@@ -27,7 +49,7 @@ const actionError = actionResult?.error;
 ---
 
 <BaseLayout
-  title="Заявка для бизнеса"
+  title={pageTitle}
   description="Короткая B2B-заявка Kubtel: телефон, услуга, адрес объекта и комментарий."
   canonicalPath="/business/request/"
   pageType="ContactPage"
@@ -35,16 +57,13 @@ const actionError = actionResult?.error;
   <div class="business-page">
     <section class="business-request-hero section-pad">
       <div>
-        <p class="eyebrow">Заявка</p>
-        <h1>Заявка для бизнеса</h1>
-        <p>
-          Оставьте телефон, выберите услугу и укажите адрес объекта. Менеджер коммерческого отдела
-          свяжется для уточнения условий.
-        </p>
+        <p class="eyebrow">{isGovernmentRequest ? "B2G" : "Заявка"}</p>
+        <h1>{pageTitle}</h1>
+        <p>{introText}</p>
       </div>
       <aside class="business-callout">
         <span>Можно позвонить без формы</span>
-        <a href={phoneHref}>{SITE.salesPhone}</a>
+        <a href={phoneHref}>{phoneDisplay}</a>
       </aside>
     </section>
 
@@ -111,6 +130,10 @@ const actionError = actionResult?.error;
               Контактное лицо
               <input name="contactPerson" type="text" autocomplete="name" maxlength="120" />
             </label>
+            <label>
+              Электронная почта
+              <input name="email" type="email" autocomplete="email" maxlength="120" />
+            </label>
           </div>
         </fieldset>
 
@@ -118,11 +141,11 @@ const actionError = actionResult?.error;
           <legend>Заявка</legend>
           <div class="contact-grid compact-business-grid">
             <label>
-              Услуга *
+              Услуга или тема *
               <select name="service" required>
-                <option value="">Выберите услугу</option>
+                <option value="">Выберите услугу или тему</option>
                 {
-                  businessServices.map((item) => (
+                  serviceOptions.map((item) => (
                     <option value={item.slug} selected={item.slug === selectedService}>
                       {item.title}
                     </option>
@@ -168,11 +191,8 @@ const actionError = actionResult?.error;
       <aside class="business-request-summary compact-request-summary" aria-label="Контекст заявки">
         <span class="service-category">Контекст</span>
         <h2>{contextTitle}</h2>
-        <p>
-          Обязательные поля сведены к минимуму. Остальные детали можно указать в комментарии или
-          обсудить по телефону.
-        </p>
-        <a class="business-phone-card" href={phoneHref}>{SITE.salesPhone}</a>
+        <p>{summaryText}</p>
+        <a class="business-phone-card" href={phoneHref}>{phoneDisplay}</a>
         <a class="business-link" href={getSitePath("/business/")}>Вернуться к услугам</a>
       </aside>
     </section>

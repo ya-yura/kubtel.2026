@@ -669,6 +669,147 @@
   margin-bottom: 0;
 }
 
+.b2g-procurement-section,
+.b2g-contact-panel {
+  display: grid;
+  gap: 1rem;
+}
+
+.b2g-framework-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.b2g-law-card,
+.b2g-platform-card {
+  align-content: start;
+}
+
+.b2g-law-card .business-mini-list {
+  gap: 0.75rem;
+}
+
+.b2g-platform-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+}
+
+.b2g-platform-list span {
+  background: rgba(215, 86, 156, 0.12);
+  border: 1px solid rgba(215, 86, 156, 0.28);
+  border-radius: 999px;
+  color: rgba(244, 250, 255, 0.9);
+  font-size: 0.82rem;
+  font-weight: 760;
+  padding: 0.42rem 0.62rem;
+}
+
+.b2g-contact-panel {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025)),
+    var(--business-panel-strong);
+  border: 1px solid var(--business-line);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+
+.b2g-contact-panel h2,
+.b2g-contact-panel p {
+  margin-bottom: 0;
+}
+
+.b2g-contact-actions {
+  align-content: start;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.b2g-contact-actions .card-action,
+.b2g-contact-actions .business-link,
+.b2g-contact-actions .business-phone-card {
+  justify-self: stretch;
+  min-height: 46px;
+  text-align: center;
+  white-space: normal;
+  width: 100%;
+}
+
+.datacenter-access-hero .business-callout strong {
+  color: var(--business-text);
+  font-family: var(--kb-typography-family-display);
+  font-size: 1.25rem;
+  line-height: 1.16;
+}
+
+.datacenter-access-shell {
+  padding-top: 1.5rem;
+}
+
+.datacenter-access-form {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025)),
+    var(--business-panel);
+  border: 1px solid var(--business-line);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.datacenter-access-grid {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.datacenter-access-grid label,
+.datacenter-access-works {
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(215, 86, 156, 0.18);
+  border-radius: var(--radius);
+  color: rgba(244, 250, 255, 0.9);
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.85rem;
+}
+
+.datacenter-access-grid input,
+.datacenter-access-grid select,
+.datacenter-access-works textarea {
+  background: rgba(5, 9, 14, 0.72);
+  border: 1px solid rgba(215, 86, 156, 0.28);
+  border-radius: var(--radius);
+  color: var(--business-text);
+  min-height: 46px;
+  padding: 0.72rem 0.8rem;
+  width: 100%;
+}
+
+.datacenter-access-grid input:hover,
+.datacenter-access-grid select:hover,
+.datacenter-access-works textarea:hover {
+  border-color: rgba(215, 86, 156, 0.46);
+}
+
+.datacenter-access-works textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.datacenter-access-submit-row {
+  align-items: center;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.datacenter-access-submit-row .business-link,
+.datacenter-access-submit-row button {
+  justify-self: stretch;
+  text-align: center;
+  width: 100%;
+}
+
 .business-page .business-calculator-section .section-heading {
   margin-bottom: 0.8rem;
 }
@@ -882,6 +1023,33 @@
 
   .business-ops-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .b2g-framework-grid {
+    grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+  }
+
+  .b2g-contact-panel {
+    align-items: center;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.46fr);
+  }
+
+  .datacenter-access-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .datacenter-access-submit-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .datacenter-access-submit-row .business-link {
+    justify-self: start;
+    width: auto;
+  }
+
+  .datacenter-access-submit-row button {
+    min-width: 180px;
+    width: auto;
   }
 
   .business-service-list {

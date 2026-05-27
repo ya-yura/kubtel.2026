@@ -115,7 +115,7 @@ const pageSchema: JsonLdObject = {
       </div>
       <div class="business-quick-actions" aria-label="Быстрые действия">
         <a class="card-action" href={getSitePath(`${requestPath}?service=internet`)}>Подключить</a>
-        <a class="business-link" href={getSitePath(`${requestPath}?service=datacenter-access`)}>
+        <a class="business-link" href={getSitePath("/business/datacenter-access/")}>
           Заявка на посещение ЦОД
         </a>
         <a class="business-link" href={SITE.paymentUrl} target="_blank" rel="noopener noreferrer">
@@ -189,7 +189,7 @@ const pageSchema: JsonLdObject = {
         <h2>Операционные действия</h2>
       </div>
       <div class="business-ops-grid">
-        <a class="business-ops-card" href={getSitePath(`${requestPath}?service=datacenter-access`)}>
+        <a class="business-ops-card" href={getSitePath("/business/datacenter-access/")}>
           <span>ЦОД</span>
           <strong>Заявка на посещение ЦОД</strong>
           <p>Для планового доступа к оборудованию укажите площадку, дату, время и состав работ.</p>
@@ -236,8 +236,8 @@ const pageSchema: JsonLdObject = {
         <p class="eyebrow">Сегменты</p>
         <h2>Решения для разных типов клиентов</h2>
         <p>
-          Сегментные страницы остаются доступными: малому и среднему бизнесу, операторам связи и
-          государственному сектору.
+          Сегментные страницы остаются доступными: малому и среднему бизнесу, операторам связи и B2G
+          для государственных заказчиков.
         </p>
       </div>
       <div class="business-segment-grid">

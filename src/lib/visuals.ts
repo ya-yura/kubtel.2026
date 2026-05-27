@@ -74,6 +74,7 @@ const businessVisualKeys: Record<string, keyof typeof promoVisuals> = {
   "datacenter-access": "datacenter",
   smb: "cafeWifi",
   operators: "datacenter",
+  b2g: "business",
   government: "business"
 };
 

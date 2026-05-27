@@ -126,13 +126,23 @@ export const sitemapRoutes: SitemapRoute[] = [
     lastModified
   },
   {
-    path: "/business/government/",
-    label: "Госсектору",
-    title: "Связь для государственного сектора",
+    path: "/business/b2g/",
+    label: "B2G",
+    title: "B2G: связь для государственных заказчиков",
     description:
-      "Kubtel для государственных учреждений: телеком-услуги, инфраструктура, хранение информации и заявка на консультацию.",
+      "КУБАНЬ-ТЕЛЕКОМ для государственных заказчиков: услуги связи по 44-ФЗ и 223-ФЗ, ЕИС, федеральные ЭТП и контакты сектора B2G.",
     changeFrequency: "monthly",
     priority: 0.74,
+    lastModified
+  },
+  {
+    path: "/business/datacenter-access/",
+    label: "Доступ в ЦОД",
+    title: "Заявка на доступ в ЦОД",
+    description:
+      "Заявка на доступ в ЦОД Kubtel: ФИО, лицевой счёт, телефон, площадка, дата, длительность посещения и планируемые работы.",
+    changeFrequency: "monthly",
+    priority: 0.78,
     lastModified
   },
   {

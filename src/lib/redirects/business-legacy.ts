@@ -7,9 +7,10 @@ const legacyBusinessRedirects: Record<string, string> = {
   "/legal/smallbusiness/datac/vserver/": "/business/?calculator=vps#business-calculators",
   "/legal/smallbusiness/datac/vdi/": "/business/?calculator=vdi#business-calculators",
   "/legal/smallbusiness/datac/colocation/": "/business/?calculator=colocation#business-calculators",
-  "/legal/smallbusiness/datac/admission/": "/business/request/?service=datacenter-access",
+  "/legal/smallbusiness/datac/admission/": "/business/datacenter-access/",
   "/legal/operators/": "/business/operators/",
-  "/legal/govsector/": "/business/government/",
+  "/legal/govsector/": "/business/b2g/",
+  "/business/government/": "/business/b2g/",
   "/business/internet/": "/business/request/?service=internet",
   "/business/static-ip/": "/business/request/?service=static-ip",
   "/business/telephony/": "/business/?calculator=telephony#business-calculators",
@@ -17,8 +18,7 @@ const legacyBusinessRedirects: Record<string, string> = {
   "/business/wifi-auth/": "/business/?calculator=wifi-auth#business-calculators",
   "/business/vps/": "/business/?calculator=vps#business-calculators",
   "/business/vdi/": "/business/?calculator=vdi#business-calculators",
-  "/business/colocation/": "/business/?calculator=colocation#business-calculators",
-  "/business/datacenter-access/": "/business/request/?service=datacenter-access"
+  "/business/colocation/": "/business/?calculator=colocation#business-calculators"
 };
 
 export function getLegacyBusinessRedirect(pathname: string): string | null {

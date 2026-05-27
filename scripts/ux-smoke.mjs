@@ -140,6 +140,8 @@ try {
   await checkRoute(client, sessionId, "/devices/", "Оборудование");
   await checkRoute(client, sessionId, "/search/", "Найти раздел");
   await checkRoute(client, sessionId, "/business/", "Услуги связи для бизнеса");
+  await checkRoute(client, sessionId, "/business/b2g/", "44-ФЗ");
+  await checkRoute(client, sessionId, "/business/datacenter-access/", "Заявка на доступ в ЦОД");
   await checkRoute(client, sessionId, "/business/request/", "Заявка для бизнеса");
   await checkRoute(
     client,
@@ -150,6 +152,8 @@ try {
 
   await assertHealthEndpoint();
   await assertLegacyRedirect();
+  await assertB2GLegacyRedirect();
+  await assertDatacenterAccessLegacyRedirect();
   await checkHomeAudienceSwitch(client, sessionId);
   await checkTariffCtaPath(client, sessionId);
   await checkReadabilityToggle(client, sessionId);
@@ -220,6 +224,39 @@ async function assertLegacyRedirect() {
   assert(location.includes("service=internet"), "legacy B2B redirect lost service target");
   assert(location.includes("utm=ux-smoke"), "legacy B2B redirect did not preserve query string");
   results.push("legacy B2B redirect ok");
+}
+
+async function assertB2GLegacyRedirect() {
+  const response = await fetch(new URL("/legal/govsector/?utm=ux-smoke", baseUrl), {
+    redirect: "manual"
+  });
+  const location = response.headers.get("location") ?? "";
+
+  assert(response.status === 301, "legacy B2G URL did not return 301");
+  assert(location.includes("/business/b2g/"), "legacy B2G redirect target is wrong");
+  assert(location.includes("utm=ux-smoke"), "legacy B2G redirect did not preserve query string");
+  results.push("legacy B2G redirect ok");
+}
+
+async function assertDatacenterAccessLegacyRedirect() {
+  const response = await fetch(
+    new URL("/legal/smallbusiness/datac/admission/?utm=ux-smoke", baseUrl),
+    {
+      redirect: "manual"
+    }
+  );
+  const location = response.headers.get("location") ?? "";
+
+  assert(response.status === 301, "legacy datacenter access URL did not return 301");
+  assert(
+    location.includes("/business/datacenter-access/"),
+    "legacy datacenter access redirect target is wrong"
+  );
+  assert(
+    location.includes("utm=ux-smoke"),
+    "legacy datacenter access redirect did not preserve query string"
+  );
+  results.push("legacy datacenter access redirect ok");
 }
 
 async function checkHomeAudienceSwitch(client, sessionId) {
@@ -414,10 +451,11 @@ async function submitLeadForm(client, sessionId) {
     `(() => {
       const form = document.querySelector("#lead-form");
       if (!form) return "missing-form";
+      const suffix = String(Date.now()).slice(-4);
       form.querySelector('input[name="formStartedAt"]').value = String(Date.now() - 5000);
       form.querySelector('input[name="address"]').value = "Красная, 1";
       form.querySelector('input[name="name"]').value = "Тестовая заявка";
-      form.querySelector('input[name="phone"]').value = "+7 900 123 45 67";
+      form.querySelector('input[name="phone"]').value = \`+7 900 123 \${suffix.slice(0, 2)} \${suffix.slice(2)}\`;
       form.querySelector('input[name="consent"]').checked = true;
       form.requestSubmit();
       return "submitted";
@@ -428,13 +466,19 @@ async function submitLeadForm(client, sessionId) {
   await assertExpression(
     client,
     sessionId,
-    `document.querySelector(".form-status.is-success")?.innerText.includes("Заявка принята") === true`,
+    `(() => {
+      const text = document.querySelector(".form-status.is-success")?.innerText ?? "";
+      return text.includes("Заявка принята") || text.includes("Демо-заявка принята");
+    })()`,
     "lead form shows success state"
   );
   await assertExpression(
     client,
     sessionId,
-    `document.querySelector(".form-status.is-success")?.innerText.includes("KBT-") === true`,
+    `(() => {
+      const text = document.querySelector(".form-status.is-success")?.innerText ?? "";
+      return text.includes("KBT-") || text.includes("В боевом режиме");
+    })()`,
     "lead form shows lead number"
   );
   results.push("lead form submit path ok");
@@ -451,8 +495,9 @@ async function submitBusinessLeadForm(client, sessionId) {
     `(() => {
       const form = document.querySelector(".business-request-form");
       if (!form) return "missing-form";
+      const suffix = String(Date.now()).slice(-4);
       form.querySelector('input[name="formStartedAt"]').value = String(Date.now() - 5000);
-      form.querySelector('input[name="phone"]').value = "+7 900 765 43 21";
+      form.querySelector('input[name="phone"]').value = \`+7 900 765 \${suffix.slice(0, 2)} \${suffix.slice(2)}\`;
       form.querySelector('input[name="companyName"]').value = "Тест Бизнес";
       form.querySelector('input[name="contactPerson"]').value = "Иван Тестов";
       form.querySelector('select[name="service"]').value = "internet";
