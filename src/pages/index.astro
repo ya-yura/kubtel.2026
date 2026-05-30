@@ -35,16 +35,15 @@ const pageSchema = [buildInternetServiceSchema(tariffs, "/"), buildFaqSchema(faq
   <section class="section-pad service-hub" aria-label="Быстрые разделы для абонентов">
     <article class="service-hub-primary">
       <span class="service-category">Абонентам</span>
-      <h2>Оплата, новости, документы и поддержка</h2>
+      <h2>Оплата, документы и поддержка в один переход</h2>
       <p>
-        Главная страница должна вести не только к заявке. Здесь собраны быстрые входы для текущих
-        абонентов: оплатить услуги, прочитать изменения тарифов, найти документы или связаться с
-        поддержкой.
+        Если услуга уже подключена, не нужно искать нужный раздел по всему сайту: оплатите услуги,
+        проверьте официальные сообщения, откройте документы или сразу свяжитесь с поддержкой.
       </p>
     </article>
     <a class="service-hub-card" href={getSitePath("/payment/")}>
       <span>Оплата</span>
-      <strong>Личный кабинет и реквизиты</strong>
+      <strong>Личный кабинет и способы оплаты</strong>
     </a>
     <a class="service-hub-card" href={getSitePath("/news/")}>
       <span>Новости</span>

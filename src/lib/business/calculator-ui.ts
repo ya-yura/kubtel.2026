@@ -507,6 +507,7 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         name: "direction",
         label: "Направление",
         value: "city",
+        help: "Выберите тип номеров внутри региона, по которым нужно оценить расход.",
         options: [
           { value: "city", label: "Городские номера региона" },
           { value: "mobile", label: "Мобильные номера региона" }
@@ -550,6 +551,7 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         name: "direction",
         label: "Направление",
         value: "russia",
+        help: "Направление влияет на поминутную стоимость междугородной связи.",
         options: [
           { value: "russia", label: "Россия" },
           { value: "cis", label: "СНГ" }
@@ -562,7 +564,8 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         min: 1,
         max: 100000,
         step: 10,
-        value: 300
+        value: 300,
+        help: "Ориентировочный месячный объём разговоров."
       }
     ],
     lines: [
@@ -592,6 +595,7 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         name: "direction",
         label: "Направление",
         value: "europe",
+        help: "Для нестандартных стран итоговую стоимость уточняет менеджер.",
         options: [
           { value: "europe", label: "Европа" },
           { value: "world", label: "Прочие направления" }
@@ -604,7 +608,8 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         min: 1,
         max: 50000,
         step: 10,
-        value: 100
+        value: 100,
+        help: "Оценка регулярного месячного объёма звонков."
       }
     ],
     lines: [
@@ -633,19 +638,22 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         kind: "checkbox",
         name: "callRecording",
         label: "Запись разговоров",
-        checked: true
+        checked: true,
+        help: "Помогает контролировать качество продаж и поддержки."
       },
       {
         kind: "checkbox",
         name: "callForwarding",
         label: "Переадресация",
-        checked: true
+        checked: true,
+        help: "Перевод звонков между сотрудниками, отделами или внешними номерами."
       },
       {
         kind: "checkbox",
         name: "numberIdentification",
         label: "Определитель номера",
-        checked: false
+        checked: false,
+        help: "Показывает номер входящего звонка, если услуга доступна на выбранной схеме."
       }
     ],
     lines: [
@@ -676,12 +684,22 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
     lead: "Посчитайте камеры, глубину архива, оборудование и монтаж для объекта.",
     submitLabel: "Подключить",
     fields: [
-      { kind: "number", name: "camerasCount", label: "Камер", min: 1, max: 128, step: 1, value: 8 },
+      {
+        kind: "number",
+        name: "camerasCount",
+        label: "Камер",
+        min: 1,
+        max: 128,
+        step: 1,
+        value: 8,
+        help: "Сколько точек наблюдения нужно видеть в облачном архиве."
+      },
       {
         kind: "select",
         name: "archiveDays",
         label: "Архив",
         value: "7",
+        help: "Глубина хранения записей по каждой камере.",
         options: [
           { value: "3", label: "3\u00a0дня" },
           { value: "7", label: "7\u00a0дней" },
@@ -696,9 +714,16 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         min: 0,
         max: 128,
         step: 1,
-        value: 8
+        value: 8,
+        help: "Сколько камер нужно поставить вместе с услугой. Если оборудование уже есть, оставьте 0."
       },
-      { kind: "checkbox", name: "installNeed", label: "Нужен монтаж", checked: true }
+      {
+        kind: "checkbox",
+        name: "installNeed",
+        label: "Нужен монтаж",
+        checked: true,
+        help: "Выезд и настройка точки на объекте; точный объём работ подтверждается после осмотра."
+      }
     ],
     lines: [
       {
@@ -730,7 +755,16 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
     lead: "Подберите CPU, RAM, диск, IP и опции для виртуального сервера.",
     submitLabel: "Подключить",
     fields: [
-      { kind: "number", name: "vCpu", label: "vCPU", min: 1, max: 64, step: 1, value: 4 },
+      {
+        kind: "number",
+        name: "vCpu",
+        label: "vCPU",
+        min: 1,
+        max: 64,
+        step: 1,
+        value: 4,
+        help: "Виртуальные процессорные ядра для приложений и сервисов."
+      },
       {
         kind: "number",
         name: "ramGb",
@@ -739,7 +773,8 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         max: 256,
         step: 1,
         value: 8,
-        suffix: "ГБ"
+        suffix: "ГБ",
+        help: "Оперативная память для серверных приложений, 1С, CRM или телефонии."
       },
       {
         kind: "number",
@@ -749,7 +784,8 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         max: 4000,
         step: 10,
         value: 160,
-        suffix: "ГБ"
+        suffix: "ГБ",
+        help: "Быстрый диск для системы, базы данных и активных файлов."
       },
       {
         kind: "number",
@@ -759,11 +795,33 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         max: 20000,
         step: 100,
         value: 0,
-        suffix: "ГБ"
+        suffix: "ГБ",
+        help: "Более объёмное хранение для архивов и редко используемых данных."
       },
-      { kind: "number", name: "ipCount", label: "IPv4", min: 0, max: 64, step: 1, value: 1 },
-      { kind: "checkbox", name: "backup", label: "Backup", checked: true },
-      { kind: "checkbox", name: "ddosProtection", label: "DDoS-защита", checked: false }
+      {
+        kind: "number",
+        name: "ipCount",
+        label: "IPv4",
+        min: 0,
+        max: 64,
+        step: 1,
+        value: 1,
+        help: "Публичные адреса для доступа к серверу и сервисам."
+      },
+      {
+        kind: "checkbox",
+        name: "backup",
+        label: "Backup",
+        checked: true,
+        help: "Регулярное резервное копирование для восстановления после сбоя."
+      },
+      {
+        kind: "checkbox",
+        name: "ddosProtection",
+        label: "DDoS-защита",
+        checked: false,
+        help: "Подбирается по профилю трафика и рискам, поэтому может требовать отдельного расчёта."
+      }
     ],
     lines: [
       { kind: "repeated", key: "vps.cpu", quantityField: "vCpu", label: "vCPU" },
@@ -860,7 +918,8 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         max: 48,
         step: 1,
         value: 2,
-        suffix: "U"
+        suffix: "U",
+        help: "Высота оборудования в стойке. 1U - один стандартный юнит серверной стойки."
       },
       {
         kind: "number",
@@ -870,22 +929,45 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         max: 5000,
         step: 50,
         value: 400,
-        suffix: "Вт"
+        suffix: "Вт",
+        help: "Потребляемая мощность оборудования. Расчёт округляет питание до блоков по 100 Вт."
       },
-      { kind: "number", name: "ipv4Count", label: "IPv4", min: 0, max: 128, step: 1, value: 1 },
+      {
+        kind: "number",
+        name: "ipv4Count",
+        label: "IPv4",
+        min: 0,
+        max: 128,
+        step: 1,
+        value: 1,
+        help: "Публичные адреса для серверов, VPN, сервисов или администрирования."
+      },
       {
         kind: "select",
         name: "internetPort",
         label: "Порт",
         value: "1g",
+        help: "Скорость порта подключения. 10 Гбит/с требует инженерной проверки.",
         options: [
           { value: "100m", label: "100\u00a0Мбит/с" },
           { value: "1g", label: "1\u00a0Гбит/с" },
           { value: "10g", label: "10\u00a0Гбит/с" }
         ]
       },
-      { kind: "checkbox", name: "ipmi", label: "IPMI", checked: true },
-      { kind: "checkbox", name: "remoteHands", label: "Удалённые руки", checked: false }
+      {
+        kind: "checkbox",
+        name: "ipmi",
+        label: "IPMI",
+        checked: true,
+        help: "Отдельный канал управления сервером для перезагрузки и диагностики."
+      },
+      {
+        kind: "checkbox",
+        name: "remoteHands",
+        label: "Удалённые руки",
+        checked: false,
+        help: "Разовая работа инженера на площадке: кабель, перезагрузка, проверка индикации."
+      }
     ],
     lines: [
       { kind: "repeated", key: "colocation.unit", quantityField: "rackUnits", label: "Юниты" },
@@ -915,6 +997,21 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         enabledField: "remoteHands",
         label: "Удалённые руки"
       }
+    ],
+    glossary: [
+      {
+        term: "Юнит",
+        description: "единица высоты оборудования в серверной стойке; 1U равен 44,45 мм."
+      },
+      {
+        term: "IPMI",
+        description:
+          "интерфейс удалённого управления сервером, который работает независимо от основной ОС."
+      },
+      {
+        term: "Удалённые руки",
+        description: "работа инженера ЦОД с оборудованием клиента по согласованной заявке."
+      }
     ]
   },
   wifi_auth: {
@@ -929,6 +1026,7 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         name: "plan",
         label: "Тариф",
         value: "standard",
+        help: "Пакет авторизации подбирается по нагрузке и требованиям публичной точки.",
         options: [
           { value: "basic", label: "Basic" },
           { value: "standard", label: "Standard" },
@@ -942,10 +1040,23 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         min: 1,
         max: 100,
         step: 1,
-        value: 1
+        value: 1,
+        help: "Количество кафе, офисов, торговых точек или других площадок."
       },
-      { kind: "checkbox", name: "smsNeed", label: "SMS-авторизация", checked: true },
-      { kind: "checkbox", name: "brandedPage", label: "Брендированная страница", checked: false }
+      {
+        kind: "checkbox",
+        name: "smsNeed",
+        label: "SMS-авторизация",
+        checked: true,
+        help: "Подходит для публичного Wi-Fi, где нужна идентификация посетителей."
+      },
+      {
+        kind: "checkbox",
+        name: "brandedPage",
+        label: "Брендированная страница",
+        checked: false,
+        help: "Стартовая страница Wi-Fi с брендом точки и полезной информацией для посетителей."
+      }
     ],
     lines: [
       {

@@ -1,5 +1,6 @@
 ---
 import PromoImage from "@components/ui/PromoImage.astro";
+import { getSitePath } from "@config/site";
 import { promoVisuals } from "@lib/visuals";
 ---
 
@@ -49,4 +50,8 @@ import { promoVisuals } from "@lib/visuals";
       </p>
     </li>
   </ol>
+  <div class="funnel-actions" aria-label="Дальше по сценарию подключения">
+    <a class="card-action" href={getSitePath("/connect/#callback-request")}>Оставить телефон</a>
+    <a class="business-link" href={getSitePath("/tariffs/")}>Посмотреть тарифы</a>
+  </div>
 </section>

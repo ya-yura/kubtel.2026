@@ -13,6 +13,7 @@ import "@styles/business-page.css";
 type CalculatorTab = {
   slug: string;
   title: string;
+  navTitle?: string;
   summary: string;
   options: string[];
   configs?: BusinessCalculatorConfig[];
@@ -30,6 +31,27 @@ const calculatorTabs: CalculatorTab[] = [
     configs: [businessCalculatorConfigs.internet]
   },
   {
+    slug: "telephony",
+    title: "Телефония",
+    summary: "IP-телефония, внутризоновая, междугородная и международная связь.",
+    options: ["SIP-порты", "городские номера", "внешние линии", "ВАТС", "направления связи"],
+    configs: [
+      businessCalculatorConfigs.telephony,
+      businessCalculatorConfigs.telephony_intrazone,
+      businessCalculatorConfigs.telephony_long_distance,
+      businessCalculatorConfigs.telephony_international,
+      businessCalculatorConfigs.telephony_services
+    ]
+  },
+  {
+    slug: "cctv",
+    title: "Видеонаблюдение",
+    navTitle: "Камеры",
+    summary: "Камеры, облачный архив, оборудование и монтаж для офисов, складов и торговых точек.",
+    options: ["количество камер", "глубина архива", "поставка камер", "монтаж"],
+    configs: [businessCalculatorConfigs.cctv]
+  },
+  {
     slug: "colocation",
     title: "Размещение",
     summary: "Размещение серверного оборудования в ЦОД Kubtel с питанием и связностью.",
@@ -44,24 +66,20 @@ const calculatorTabs: CalculatorTab[] = [
     configs: [businessCalculatorConfigs.wifi_auth]
   },
   {
-    slug: "telephony",
-    title: "Телефония",
-    summary: "IP-телефония, внутризоновая, междугородная и международная связь.",
-    options: ["SIP-порты", "городские номера", "внешние линии", "ВАТС", "направления связи"],
-    configs: [
-      businessCalculatorConfigs.telephony,
-      businessCalculatorConfigs.telephony_intrazone,
-      businessCalculatorConfigs.telephony_long_distance,
-      businessCalculatorConfigs.telephony_international,
-      businessCalculatorConfigs.telephony_services
-    ]
-  },
-  {
     slug: "vps",
     title: "Виртуальный сервер",
+    navTitle: "VPS",
     summary: "CPU, RAM, диски, IP-адреса и резервное копирование.",
     options: ["CPU", "RAM", "SSD/HDD", "IPv4", "резервное копирование", "DDoS-защита"],
     configs: [businessCalculatorConfigs.vps]
+  },
+  {
+    slug: "vdi",
+    title: "Рабочие места",
+    navTitle: "VDI",
+    summary: "Виртуальные рабочие места для сотрудников с профилем ресурсов и backup.",
+    options: ["количество мест", "профиль ресурсов", "резервное копирование"],
+    configs: [businessCalculatorConfigs.vdi]
   }
 ];
 
@@ -146,7 +164,7 @@ const pageSchema: JsonLdObject = {
                 aria-pressed={index === 0 ? "true" : "false"}
               >
                 <span>{String(index + 1).padStart(2, "0")}</span>
-                <strong>{item.title}</strong>
+                <strong>{item.navTitle ?? item.title}</strong>
                 <small>Калькулятор</small>
                 <p>{item.summary}</p>
               </button>
@@ -212,9 +230,9 @@ const pageSchema: JsonLdObject = {
         <p class="eyebrow">Все направления</p>
         <h2>Сохранённый реестр бизнес-услуг</h2>
         <p>
-          Помимо основных пяти услуг, в разделе остаются действующие B2B-направления, которые уже
-          были описаны в структуре сайта: статические IP-адреса, видеонаблюдение, виртуальные
-          рабочие места и заявки по ЦОД.
+          Помимо услуг с быстрым расчётом, в разделе остаются действующие B2B-направления, которые
+          уже были описаны в структуре сайта: статические IP-адреса, заявки по ЦОД и сегментные
+          решения для разных типов клиентов.
         </p>
       </div>
       <div class="business-service-rail">
@@ -260,7 +278,9 @@ const pageSchema: JsonLdObject = {
     const tabs = [...root.querySelectorAll<HTMLButtonElement>("[data-service-tab]")];
     const panels = [...root.querySelectorAll<HTMLElement>("[data-service-panel]")];
 
-    const requestedTab = new URLSearchParams(window.location.search).get("calculator");
+    const requestedTab = normalizeCalculatorParam(
+      new URLSearchParams(window.location.search).get("calculator")
+    );
     activate(
       tabs.some((tab) => tab.dataset.serviceTab === requestedTab) ? requestedTab : "internet"
     );
@@ -279,6 +299,14 @@ const pageSchema: JsonLdObject = {
       panels.forEach((panel) => {
         panel.classList.toggle("is-active", panel.dataset.servicePanel === slug);
       });
+    }
+
+    function normalizeCalculatorParam(value: string | null) {
+      if (value === "wifi_auth") {
+        return "wifi-auth";
+      }
+
+      return value;
     }
   });
 </script>

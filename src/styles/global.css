@@ -774,6 +774,7 @@ input[type="radio"] {
 }
 
 .bento-grid article,
+.scenario-card,
 .funnel-steps li,
 .service-card,
 .state-card,
@@ -788,6 +789,7 @@ input[type="radio"] {
 }
 
 .bento-grid article,
+.scenario-card,
 .funnel-steps li,
 .pathway-grid article,
 .state-card,
@@ -801,6 +803,7 @@ input[type="radio"] {
 }
 
 .bento-grid article:hover,
+.scenario-card:hover,
 .funnel-steps li:hover,
 .pathway-grid article:hover,
 .state-card:hover,
@@ -811,9 +814,22 @@ input[type="radio"] {
   transform: translateY(-2px);
 }
 
-.bento-grid article {
+.bento-grid article,
+.scenario-card {
   min-height: 230px;
   padding: 1.25rem;
+}
+
+.scenario-card {
+  align-content: start;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.scenario-card strong {
+  align-self: end;
+  color: var(--color-accent-active);
+  font-weight: 850;
 }
 
 .bento-grid span {
@@ -871,8 +887,16 @@ input[type="radio"] {
 
 .funnel-steps p,
 .pathway-grid p,
-.state-card p {
+.state-card p,
+.scenario-card p {
   margin-bottom: 0;
+}
+
+.funnel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1rem;
 }
 
 .tariff-card {
@@ -2368,6 +2392,17 @@ input[type="radio"] {
   text-transform: uppercase;
 }
 
+.device-audience {
+  background: var(--color-soft);
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  color: var(--color-muted);
+  font-size: 0.82rem;
+  font-weight: 780;
+  justify-self: start;
+  padding: 0.34rem 0.58rem;
+}
+
 .search-result-card strong {
   color: var(--color-ink);
   font-family: var(--kb-typography-family-display);
@@ -2379,6 +2414,20 @@ input[type="radio"] {
 .device-card p,
 .device-note p {
   margin-bottom: 0;
+}
+
+.device-terms {
+  background: var(--color-soft);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.8rem;
+}
+
+.device-terms strong {
+  color: var(--color-ink);
+  font-size: 0.94rem;
 }
 
 .search-empty {
@@ -2648,6 +2697,7 @@ body.is-readable .business-page .business-calculator-result .card-action {
   .hero-panel,
   .section-heading,
   .bento-grid article,
+  .scenario-card,
   .career-vacancy-card,
   .funnel-steps li,
   .service-card,

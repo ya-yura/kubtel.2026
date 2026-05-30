@@ -1,6 +1,38 @@
 ---
 import PromoImage from "@components/ui/PromoImage.astro";
+import { getSitePath } from "@config/site";
 import { promoVisuals } from "@lib/visuals";
+
+const scenarios = [
+  {
+    number: "01",
+    title: "После большой тройки",
+    text: "Люди приходят после сложных меню и поддержки «для галочки». Здесь важны быстрый отклик, понятный статус обращения и уважительный разговор.",
+    href: "/connect/#callback-request",
+    action: "Проверить подключение"
+  },
+  {
+    number: "02",
+    title: "По рекомендации",
+    text: "Типичный амбассадор - технически подкованный сосед, коллега или друг. Он советует тех, кто отвечает за слова.",
+    href: "/about/",
+    action: "Узнать о компании"
+  },
+  {
+    number: "03",
+    title: "Когда нужна помощь",
+    text: "Ценность Kubtel особенно видна при обращении в сервис: просьба или проблема не тонет в бюрократии, а попадает к живой команде.",
+    href: "/support/",
+    action: "Перейти в поддержку"
+  },
+  {
+    number: "04",
+    title: "Когда возвращаются",
+    text: "Часть клиентов уходит к громкому бренду или акции, разочаровывается и возвращается туда, где обещанное правда происходит.",
+    href: "/tariffs/",
+    action: "Сравнить тарифы"
+  }
+];
 ---
 
 <section class="section-pad scenarios-section">
@@ -10,37 +42,15 @@ import { promoVisuals } from "@lib/visuals";
   </div>
   <PromoImage visual={promoVisuals.localTeam} class="is-banner scenarios-visual" />
   <div class="bento-grid">
-    <article>
-      <span>01</span>
-      <h3>После большой тройки</h3>
-      <p>
-        Люди приходят после сложных меню и&nbsp;поддержки «для галочки». Здесь важны быстрый отклик,
-        понятный статус обращения и&nbsp;уважительный разговор.
-      </p>
-    </article>
-    <article>
-      <span>02</span>
-      <h3>По рекомендации</h3>
-      <p>
-        Типичный амбассадор&nbsp;— технически подкованный сосед, коллега или друг. Он советует тех,
-        кто отвечает за&nbsp;слова.
-      </p>
-    </article>
-    <article>
-      <span>03</span>
-      <h3>Когда нужна помощь</h3>
-      <p>
-        Ценность Kubtel особенно видна при обращении в&nbsp;сервис: просьба или проблема
-        не&nbsp;тонет в&nbsp;бюрократии, а&nbsp;попадает к&nbsp;живой команде.
-      </p>
-    </article>
-    <article>
-      <span>04</span>
-      <h3>Когда возвращаются</h3>
-      <p>
-        Часть клиентов уходит к&nbsp;громкому бренду или акции, разочаровывается и&nbsp;возвращается
-        туда, где обещанное правда происходит.
-      </p>
-    </article>
+    {
+      scenarios.map((scenario) => (
+        <a class="scenario-card" href={getSitePath(scenario.href)}>
+          <span>{scenario.number}</span>
+          <h3>{scenario.title}</h3>
+          <p>{scenario.text}</p>
+          <strong>{scenario.action}</strong>
+        </a>
+      ))
+    }
   </div>
 </section>
