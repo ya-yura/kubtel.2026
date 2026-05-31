@@ -280,7 +280,27 @@ async function checkHomeAudienceSwitch(client, sessionId) {
     `document.querySelector('a[href="https://my.kubtel.ru/"]') !== null`,
     "subscriber cabinet link is present"
   );
-  results.push("home audience switch and cabinet link ok");
+  await assertExpression(
+    client,
+    sessionId,
+    `(() => {
+      const tools = document.querySelector(".subscriber-tools");
+      if (!tools) return false;
+      const cabinet = tools.querySelector('form[action="https://my.kubtel.ru/"]');
+      const payment = tools.querySelector(".payment-tool-card");
+      return (
+        tools.innerText.includes("Личный кабинет Кубтел") &&
+        tools.innerText.includes("Пополнение счёта") &&
+        cabinet?.querySelector('input[name="login"][required]') !== null &&
+        cabinet?.querySelector('input[name="password"][required]') !== null &&
+        payment?.querySelector('input[name="account"][required]') !== null &&
+        payment?.querySelector('input[name="amount"][required]') !== null &&
+        payment?.querySelector('a[href="/payment/"]') !== null
+      );
+    })()`,
+    "home exposes subscriber cabinet and payment forms"
+  );
+  results.push("home audience switch, cabinet link and payment forms ok");
 }
 
 async function checkTariffCtaPath(client, sessionId) {
@@ -463,6 +483,12 @@ async function submitLeadForm(client, sessionId) {
   );
   await load.catch(() => undefined);
   await waitForReady(client, sessionId);
+  await waitForExpression(
+    client,
+    sessionId,
+    `document.querySelector(".form-status") !== null`,
+    "lead form status appeared"
+  );
   await assertExpression(
     client,
     sessionId,
@@ -510,6 +536,12 @@ async function submitBusinessLeadForm(client, sessionId) {
   );
   await load.catch(() => undefined);
   await waitForReady(client, sessionId);
+  await waitForExpression(
+    client,
+    sessionId,
+    `document.querySelector(".form-status") !== null`,
+    "business lead form status appeared"
+  );
   await assertExpression(
     client,
     sessionId,
@@ -547,6 +579,20 @@ async function waitForReady(client, sessionId) {
     await delay(100);
   }
   throw new Error("Page did not become ready");
+}
+
+async function waitForExpression(client, sessionId, expression, message, timeoutMs = 5000) {
+  const startedAt = Date.now();
+
+  while (Date.now() - startedAt < timeoutMs) {
+    if ((await evaluate(client, sessionId, expression)) === true) {
+      return;
+    }
+
+    await delay(100);
+  }
+
+  throw new Error(message);
 }
 
 async function setViewport(client, sessionId, viewport) {

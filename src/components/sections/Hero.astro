@@ -1,6 +1,6 @@
 ---
 import PromoImage from "@components/ui/PromoImage.astro";
-import { getSitePath, SITE } from "@config/site";
+import { getSitePath } from "@config/site";
 import { promoVisuals } from "@lib/visuals";
 ---
 
@@ -24,9 +24,7 @@ import { promoVisuals } from "@lib/visuals";
         <strong>Связь без простоя</strong>
         <small>Интернет, Hot-spot, телефония, камеры, VPS и&nbsp;размещение.</small>
       </a>
-      <a class="audience-login" href={SITE.accountUrl} target="_blank" rel="noopener noreferrer">
-        Личный кабинет абонента
-      </a>
+      <a class="audience-login" href="#subscriber-tools">Личный кабинет абонента</a>
     </div>
     <form
       class="address-inline"

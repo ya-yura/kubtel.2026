@@ -32,6 +32,96 @@ const pageSchema = [buildInternetServiceSchema(tariffs, "/"), buildFaqSchema(faq
   schema={pageSchema}
 >
   <Hero />
+  <section
+    class="section-pad subscriber-tools"
+    id="subscriber-tools"
+    aria-label="Личный кабинет и пополнение счёта"
+  >
+    <form class="subscriber-tool-card" action={SITE.accountUrl} method="post">
+      <h2>Личный кабинет Кубтел</h2>
+      <p>
+        Любой абонент Кубтела имеет доступ к своему личному кабинету. Войдите, чтобы получить доступ
+        к вашим персональным данным.
+      </p>
+      <label>
+        <span class="visually-hidden">Логин</span>
+        <input name="login" autocomplete="username" placeholder="Логин" required />
+      </label>
+      <label>
+        <span class="visually-hidden">Пароль</span>
+        <input
+          name="password"
+          type="password"
+          autocomplete="current-password"
+          placeholder="Пароль"
+          required
+        />
+      </label>
+      <div class="subscriber-tool-actions">
+        <button type="submit">Войти</button>
+        <a href={SITE.accountUrl} target="_blank" rel="noopener noreferrer">
+          Не помню пароль/логин
+        </a>
+      </div>
+    </form>
+
+    <form class="subscriber-tool-card payment-tool-card" action={SITE.paymentUrl} method="get">
+      <h2>Пополнение счёта</h2>
+      <div class="payment-fields">
+        <label>
+          <span class="visually-hidden">Лицевой счёт</span>
+          <input
+            name="account"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="Лицевой счёт"
+            required
+          />
+        </label>
+        <label>
+          <span class="visually-hidden">Сумма пополнения</span>
+          <input
+            name="amount"
+            type="number"
+            min="1"
+            step="1"
+            inputmode="numeric"
+            placeholder="Сумма"
+            required
+          />
+        </label>
+        <span class="payment-currency" aria-hidden="true">₽</span>
+      </div>
+      <div class="payment-methods" aria-label="Основные способы оплаты">
+        <span class="payment-method-icon is-kubtel" aria-label="Оплата Kubtel">
+          <svg viewBox="0 0 40 40" aria-hidden="true">
+            <path d="M8 5v30l12-7.5v-15L8 5Z"></path>
+            <path d="M20 5v30l12-7.5v-15L20 5Z"></path>
+          </svg>
+        </span>
+        <span class="payment-method-icon" aria-label="Банковская карта">
+          <svg viewBox="0 0 56 40" aria-hidden="true">
+            <rect x="5" y="10" width="46" height="25" rx="5"></rect>
+            <path d="M5 18h46"></path>
+            <path d="M15 28h7M27 28h10"></path>
+            <path d="M28 10 38 2l12 8"></path>
+          </svg>
+        </span>
+        <span class="payment-method-icon" aria-label="Быстрый платёж">
+          <svg viewBox="0 0 44 44" aria-hidden="true">
+            <path d="M34 12a16 16 0 1 0 4 10"></path>
+            <path d="m28 12 7 7 7-11"></path>
+            <path d="m14 23 6 6 12-14"></path>
+          </svg>
+        </span>
+        <span class="payment-method-text" aria-label="ЮMoney">Ю</span>
+      </div>
+      <p class="payment-all-methods">
+        или <a href={getSitePath("/payment/")}>все способы оплаты</a>
+      </p>
+      <button type="submit">Оплатить</button>
+    </form>
+  </section>
   <section class="section-pad service-hub" aria-label="Быстрые разделы для абонентов">
     <article class="service-hub-primary">
       <span class="service-category">Абонентам</span>
