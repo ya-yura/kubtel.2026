@@ -383,7 +383,12 @@ const payload = JSON.stringify({
     }
 
     if (type === "telephony") {
-      return `Телефония: ${values.ports} SIP-портов, ${values.phoneNumbers} номеров`;
+      const locationLabels: Record<string, string> = {
+        krasnodar: "Краснодар",
+        takhtamukay: "Тахтамукайский район",
+        manual: "нужна проверка населённого пункта"
+      };
+      return `Телефония: ${values.ports} сотрудников/устройств, ${values.phoneNumbers} номеров, ${locationLabels[String(values.location)] ?? values.location}`;
     }
 
     if (type === "telephony_intrazone") {

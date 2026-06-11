@@ -158,6 +158,7 @@ try {
   await checkTariffCtaPath(client, sessionId);
   await checkReadabilityToggle(client, sessionId);
   await checkMobilePath(client, sessionId);
+  await checkMobileB2GRequest(client, sessionId);
   await checkBusinessCalculator(client, sessionId);
   await submitLeadForm(client, sessionId);
   await submitBusinessLeadForm(client, sessionId);
@@ -374,6 +375,30 @@ async function checkMobilePath(client, sessionId) {
   results.push("mobile navigation path ok");
 }
 
+async function checkMobileB2GRequest(client, sessionId) {
+  await setViewport(client, sessionId, mobileViewport());
+  await navigate(client, sessionId, "/business/request/?segment=b2g&service=b2g-consultation");
+  await assertExpression(
+    client,
+    sessionId,
+    `document.documentElement.scrollWidth <= window.innerWidth`,
+    "B2G request has no horizontal overflow on mobile"
+  );
+  await assertExpression(
+    client,
+    sessionId,
+    `document.querySelector('input[name="mobilePhone"]') !== null`,
+    "B2G request exposes optional mobile phone"
+  );
+  await assertExpression(
+    client,
+    sessionId,
+    `document.querySelectorAll('input[name="preferredContact"]').length === 3`,
+    "B2G request exposes contact preference choices"
+  );
+  results.push("mobile B2G request path ok");
+}
+
 async function checkReadabilityToggle(client, sessionId) {
   await setViewport(client, sessionId, desktopViewport());
   await navigate(client, sessionId, "/business/");
@@ -539,8 +564,13 @@ async function submitBusinessLeadForm(client, sessionId) {
   await waitForExpression(
     client,
     sessionId,
-    `document.querySelector(".form-status") !== null`,
-    "business lead form status appeared"
+    `(document.querySelector(".form-status")?.innerText ?? "").trim().length > 0`,
+    "business lead form status appeared with text"
+  );
+  const businessStatusText = await evaluate(
+    client,
+    sessionId,
+    `document.querySelector(".form-status")?.innerText ?? ""`
   );
   await assertExpression(
     client,
@@ -549,7 +579,7 @@ async function submitBusinessLeadForm(client, sessionId) {
       const text = document.querySelector(".form-status.is-success")?.innerText ?? "";
       return text.includes("B2B-заявка принята") || text.includes("Демо-заявка принята");
     })()`,
-    "business lead form shows success state"
+    `business lead form shows success state: ${businessStatusText}`
   );
   await assertExpression(
     client,

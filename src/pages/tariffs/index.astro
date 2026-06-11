@@ -11,6 +11,20 @@ const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
 export const prerender = false;
 
 const tariffs = await getTariffs();
+const tvChoiceItems = [
+  {
+    title: "Новый клиент",
+    text: "Выбирает пакет «Интернет + ТВ» и оставляет адрес, телефон и желаемый сценарий просмотра."
+  },
+  {
+    title: "Уже есть интернет Kubtel",
+    text: "Указывает номер договора и уточняет, можно ли добавить ТВ к текущему типу подключения."
+  },
+  {
+    title: "Нужна помощь с ТВ",
+    text: "Если не показывает, забыт пароль или нужно приложение для Smart TV, обращение лучше отправить в поддержку."
+  }
+];
 const leadActionResult =
   !isStaticPreview && Astro.request.method === "POST"
     ? await handleLeadFormPost(await Astro.request.formData(), Astro.request)
@@ -23,7 +37,7 @@ const pageSchema = [
 
 <BaseLayout
   title="Тарифы домашнего интернета"
-  description="Сравнение тарифов Kubtel для квартиры, семьи, видео, онлайн-учёбы, игр и домашних устройств."
+  description="Сравнение тарифов Kubtel для квартиры, семьи, видео, онлайн-учёбы, Smart TV и сценария Интернет + ТВ."
   canonicalPath="/tariffs/"
   pageType="CollectionPage"
   schema={pageSchema}
@@ -42,6 +56,26 @@ const pageSchema = [
     lead="Каждая карточка описывает бытовое использование: видео, онлайн-учёба, игры, ТВ и несколько домашних устройств."
   />
   <TariffComparison tariffs={tariffs} />
+  <section class="section-pad tv-choice-section" id="tv">
+    <div class="section-heading">
+      <p class="eyebrow">Интернет + ТВ</p>
+      <h2>ТВ зависит от подключения и устройства</h2>
+      <p>
+        У Kubtel ТВ лучше выбирать как часть домашнего сценария: единый список каналов, архив
+        передач и оборудование проверяются вместе с адресом, типом подключения и устройством.
+      </p>
+    </div>
+    <div class="service-grid">
+      {
+        tvChoiceItems.map((item) => (
+          <article class="service-card">
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
   <AddressCheckPanel
     tariffs={tariffs}
     title={"Проверить подключение и уточнить тариф"}

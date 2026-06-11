@@ -44,8 +44,8 @@ export type BusinessLeadSubmission = {
     details: Record<string, unknown>;
   };
   routing: {
-    pipeline: "b2b" | "operators" | "datacenter";
-    department: "business_sales" | "partner_sales" | "noc";
+    pipeline: "b2b" | "b2g" | "operators" | "datacenter";
+    department: "business_sales" | "b2g" | "partner_sales" | "noc";
     priority: BusinessLeadPriority;
     slaResponseMinutes: number;
   };
@@ -71,8 +71,7 @@ export function buildBusinessLeadSubmission({
   now?: Date;
   userAgent?: string | null;
 }): BusinessLeadSubmission {
-  const configurationSummary =
-    input.configurationSummary || input.message || "Индивидуальный расчёт по B2B-заявке";
+  const configurationSummary = buildConfigurationSummary(input);
   const unknownItems = getUnknownItems(input);
   const score = scoreBusinessLead({
     leadType: "b2b",
@@ -90,7 +89,7 @@ export function buildBusinessLeadSubmission({
     unknownItems,
     requiredConsultation: true
   });
-  const routing = getRouting(input.service, score.priority);
+  const routing = getRouting(input.service, input.segment || null, score.priority);
 
   return {
     id: createBusinessLeadId(input, now),
@@ -123,7 +122,9 @@ export function buildBusinessLeadSubmission({
       requiredConsultation: true,
       details: {
         address: input.address,
-        employeesOrSites: input.employeesOrSites
+        employeesOrSites: input.employeesOrSites,
+        mobilePhone: input.mobilePhone,
+        preferredContact: input.preferredContact || null
       }
     },
     routing,
@@ -155,10 +156,35 @@ function getUnknownItems(input: BusinessLeadFormInput): string[] {
   return [...unknownItems];
 }
 
+function buildConfigurationSummary(input: BusinessLeadFormInput): string {
+  const baseSummary =
+    input.configurationSummary || input.message || "Индивидуальный расчёт по B2B-заявке";
+  const contactDetails = [
+    input.preferredContact ? `предпочтительный канал связи: ${input.preferredContact}` : "",
+    input.mobilePhone ? `мобильный телефон: ${input.mobilePhone}` : ""
+  ].filter(Boolean);
+
+  if (contactDetails.length === 0) {
+    return baseSummary;
+  }
+
+  return `${baseSummary}. ${contactDetails.join("; ")}.`;
+}
+
 function getRouting(
   serviceInterest: string,
+  segment: string | null,
   priority: BusinessLeadPriority
 ): BusinessLeadSubmission["routing"] {
+  if (segment === "b2g" || serviceInterest === "b2g-consultation") {
+    return {
+      pipeline: "b2g",
+      department: "b2g",
+      priority: "urgent",
+      slaResponseMinutes: 30
+    };
+  }
+
   if (serviceInterest === "operators") {
     return {
       pipeline: "operators",

@@ -167,6 +167,61 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.business-jobs-section {
+  display: grid;
+  gap: 1rem;
+  padding-top: 1.5rem;
+}
+
+.business-proof-strip {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.business-proof-strip span,
+.business-job-card,
+.telephony-guide-panel,
+.preferred-contact-group {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.02)),
+    var(--business-panel);
+  border: 1px solid var(--business-line);
+  border-radius: var(--radius);
+}
+
+.business-proof-strip span {
+  color: rgba(244, 250, 255, 0.9);
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.85rem;
+}
+
+.business-proof-strip strong {
+  color: var(--business-neon);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.business-jobs-grid {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.business-job-card {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.business-job-card h2 {
+  font-size: 1.18rem;
+  margin-bottom: 0;
+}
+
+.business-job-card p {
+  margin-bottom: 0;
+}
+
 .business-service-tabs {
   display: grid;
   gap: 1.2rem;
@@ -307,6 +362,30 @@
 .business-page .business-request-layout.is-compact .message-field,
 .business-page .business-request-layout.is-compact .consent-line {
   padding: 0.85rem;
+}
+
+.preferred-contact-group {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.85rem;
+  padding: 0.85rem;
+}
+
+.preferred-contact-group > span {
+  color: rgba(244, 250, 255, 0.9);
+  font-weight: 850;
+}
+
+.preferred-contact-group label {
+  align-items: center;
+  color: rgba(244, 250, 255, 0.86);
+  display: flex;
+  gap: 0.55rem;
+}
+
+.preferred-contact-group input {
+  accent-color: var(--business-neon);
+  width: auto;
 }
 
 .business-page .compact-business-grid {
@@ -680,6 +759,10 @@
   gap: 1rem;
 }
 
+.business-page .section-heading.is-tight {
+  margin-bottom: 0;
+}
+
 .b2g-framework-grid {
   display: grid;
   gap: 1rem;
@@ -711,6 +794,10 @@
   padding: 0.42rem 0.62rem;
 }
 
+.b2g-service-grid {
+  margin-top: -0.2rem;
+}
+
 .b2g-contact-panel {
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025)),
@@ -739,6 +826,23 @@
   text-align: center;
   white-space: normal;
   width: 100%;
+}
+
+.telephony-guide-panel {
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 1rem;
+  padding: 1rem;
+}
+
+.telephony-guide-panel h3 {
+  font-size: 1.24rem;
+  margin-bottom: 0;
+}
+
+.telephony-guide-panel .card-action {
+  justify-self: start;
+  width: auto;
 }
 
 .datacenter-access-hero .business-callout strong {
@@ -1027,6 +1131,14 @@
   }
 
   .business-ops-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .business-proof-strip {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .business-jobs-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 

@@ -24,8 +24,10 @@
 | Контакты и режим работы        | телефоны, email, адреса, часы                | `src/config/site.ts` или CMS                        | операционная команда     |
 | Брендовые материалы            | логотипы, фото, иконки, правила              | media library / assets                              | маркетинг                |
 | CRM webhook                    | URL + secret + payload rules                 | `CRM_WEBHOOK_URL`, `CRM_WEBHOOK_SECRET`             | CRM owner                |
+| Redmine/B2G routing            | проект, трекер, ответственный, payload rules | CRM/Redmine integration contract                    | B2G owner / CRM owner    |
 | Telegram продажи               | bot token + chat id                          | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_SALES_CHAT_ID`      | sales ops                |
 | Analytics                      | endpoint + secret + event schema             | `ANALYTICS_WEBHOOK_URL`, `ANALYTICS_WEBHOOK_SECRET` | аналитик                 |
+| ТВ-каналы и приложения         | список каналов, архив, Smart TV links, APK   | `services/tv`, `tariffs/family-tv`, devices         | коммерческий отдел       |
 | Домен/DNS/SSL                  | production host + cert + redirects           | hosting/DNS panel                                   | release manager          |
 
 ## Production env checklist
@@ -52,6 +54,7 @@ LEAD_OUTBOX_DIR=/var/kubtel/lead-outbox
 - Все публичные цены и SLA имеют статус `confirmed`.
 - Адресная база содержит не только город, но районы/улицы/дома или внешний проверяемый API.
 - Тестовая B2C и B2B заявки дошли в CRM и Telegram на production.
+- Тестовая B2G-заявка дошла в нужный Redmine/CRM-маршрут и назначилась на B2G.
 - Analytics получил `lead_submitted`, `b2b_lead_submitted` и `b2b_lead_success`.
 - DNS, SSL, canonical redirects и legacy B2B redirects проверены на production origin.
 - Отдел продаж подтвердил, что видит routing pipeline, приоритет, конфигурацию и обратную связь по заявкам.

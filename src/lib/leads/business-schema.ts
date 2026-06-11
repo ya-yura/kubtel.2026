@@ -59,6 +59,8 @@ export const businessLeadFormSchema = z.object({
     .max(32, "Телефон слишком длинный")
     .transform(normalizePhone)
     .refine((phone) => phonePattern.test(phone), "Укажите телефон в международном формате"),
+  mobilePhone: nullableText(32),
+  preferredContact: optionalText(80),
   email: nullableText(120),
   inn: nullableText(12),
   segment: optionalText(80),

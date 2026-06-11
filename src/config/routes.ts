@@ -60,7 +60,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "Тарифы",
     title: "Тарифы домашнего интернета",
     description:
-      "Сравнение тарифов Kubtel для квартиры, семьи, видео, онлайн-учёбы и домашних устройств.",
+      "Сравнение тарифов Kubtel для квартиры, семьи, видео, онлайн-учёбы, Smart TV и сценария Интернет + ТВ.",
     changeFrequency: "weekly",
     priority: 0.9,
     lastModified
@@ -80,7 +80,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "Бизнесу",
     title: "Услуги связи для бизнеса",
     description:
-      "Услуги связи Kubtel для бизнеса: заявка, калькуляторы, доступ в\u00a0ЦОД и оплата услуг.",
+      "Услуги связи Kubtel для бизнеса: быстрое подключение офиса, калькуляторы, прямой контакт коммерческого отдела, доступ в\u00a0ЦОД и оплата.",
     changeFrequency: "weekly",
     priority: 0.95,
     lastModified
@@ -90,7 +90,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "Устройства",
     title: "Устройства для подключения",
     description:
-      "Роутеры, ТВ-приставки, IP-телефоны и другое оборудование, которое может понадобиться для услуг Kubtel.",
+      "Роутеры, ТВ-приставки, Smart TV-приложения, IP-телефоны и другое оборудование, которое может понадобиться для услуг Kubtel.",
     changeFrequency: "monthly",
     priority: 0.74,
     lastModified
@@ -130,7 +130,7 @@ export const sitemapRoutes: SitemapRoute[] = [
     label: "B2G",
     title: "B2G: связь для государственных заказчиков",
     description:
-      "КУБАНЬ-ТЕЛЕКОМ для государственных заказчиков: услуги связи по 44-ФЗ и 223-ФЗ, ЕИС, федеральные ЭТП и контакты сектора B2G.",
+      "КУБАНЬ-ТЕЛЕКОМ для государственных заказчиков: услуги связи по 44-ФЗ и 223-ФЗ, ЕИС, федеральные ЭТП, телефония, интернет и контакты сектора B2G.",
     changeFrequency: "monthly",
     priority: 0.74,
     lastModified
@@ -149,7 +149,8 @@ export const sitemapRoutes: SitemapRoute[] = [
     path: "/business/request/",
     label: "Заявка для бизнеса",
     title: "Заявка для бизнеса",
-    description: "Короткая B2B-заявка Kubtel: телефон, услуга, адрес объекта и комментарий.",
+    description:
+      "Короткая B2B/B2G-заявка Kubtel: контакт, услуга, адрес или учреждение, предпочтительный канал связи и комментарий.",
     changeFrequency: "weekly",
     priority: 0.86,
     lastModified

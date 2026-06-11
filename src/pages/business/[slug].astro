@@ -70,6 +70,46 @@ const b2gPlatforms = [
   "АСТ ГОЗ",
   "ЕАТ.РФ («Березка»)"
 ];
+const b2gServiceScenarios = [
+  {
+    title: "Интернет для учреждения",
+    text: "Подключение, перенос услуги при переезде, увеличение скорости и проверка технической возможности."
+  },
+  {
+    title: "Резервирование интернета",
+    text: "Обсуждаем резервный канал для критичных объектов, если это возможно технически и бюджетно."
+  },
+  {
+    title: "Телефония и ВАТС",
+    text: "Помогаем разобрать местную и IP-телефонию, количество разговоров, номера, оборудование и запись разговоров."
+  },
+  {
+    title: "Hot-spot и ЛВС",
+    text: "Можно обсудить публичный Wi-Fi с авторизацией, оборудование, настройку и организацию рабочих мест."
+  }
+];
+const b2gFaq = [
+  {
+    question: "Работает ли КУБАНЬ-ТЕЛЕКОМ по 44-ФЗ и 223-ФЗ?",
+    answer:
+      "Да. Компания оказывает услуги связи государственным заказчикам в рамках 44-ФЗ и 223-ФЗ, зарегистрирована в ЕИС и аккредитована на федеральных ЭТП."
+  },
+  {
+    question: "Можно ли получить лицензии?",
+    answer:
+      "Да, лицензии и реквизиты нужно запрашивать у сотрудника сектора B2G. Перед публикацией номера лицензий и реквизиты требуют отдельной сверки."
+  },
+  {
+    question: "Как быстро будет обратная связь?",
+    answer:
+      "Заявка с сайта маркируется как B2G; целевой ориентир первичной обратной связи - до 30 минут в рабочее время."
+  }
+];
+const telephonyGuides = [
+  "Если нет готового ТЗ, опишите задачу обычными словами: новый офис, модернизация старой связи, колл-центр или снижение расходов на междугородную связь.",
+  "В калькуляторе внешние линии названы как одновременные внешние разговоры, а SIP-порты - как сотрудники или устройства.",
+  "Для сложных схем менеджер уточнит оборудование, населённый пункт, текущего оператора и требования к записи разговоров."
+];
 const entryRequestPath = isGovernmentSegment ? b2gRequestPath : getBusinessEntryHref(entry.slug);
 
 function getBusinessEntryHref(slug: string) {
@@ -240,6 +280,25 @@ const pageSchema: JsonLdObject = isService
             </article>
           </div>
 
+          <div class="section-heading is-tight">
+            <p class="eyebrow">Услуги</p>
+            <h2>Что можно обсудить с сектором B2G</h2>
+            <p>
+              Для государственных заказчиков не смешиваем разные бюджетные статьи в одно обещание.
+              На сайте показываем направления, а конкретное решение, документы и формулировки
+              уточняет сотрудник сектора B2G.
+            </p>
+          </div>
+          <div class="business-card-grid b2g-service-grid">
+            {b2gServiceScenarios.map((scenario) => (
+              <article class="business-card">
+                <span class="service-category">B2G</span>
+                <h3>{scenario.title}</h3>
+                <p>{scenario.text}</p>
+              </article>
+            ))}
+          </div>
+
           <div class="b2g-contact-panel">
             <div>
               <p class="eyebrow">Контакты сектора B2G</p>
@@ -261,6 +320,15 @@ const pageSchema: JsonLdObject = isService
               </a>
             </div>
           </div>
+
+          <div class="business-faq-grid">
+            {b2gFaq.map((item) => (
+              <article>
+                <h3>{item.question}</h3>
+                <p>{item.answer}</p>
+              </article>
+            ))}
+          </div>
         </section>
       )
     }
@@ -278,10 +346,10 @@ const pageSchema: JsonLdObject = isService
           </div>
           <div class="business-card-grid">
             {[
-              "SIP-порты для сотрудников и устройств",
+              "Сотрудники и устройства",
               "Городские номера",
               "Одновременные внешние разговоры",
-              "Виртуальная АТС и автооператор"
+              "Виртуальная АТС, автооператор и запись"
             ].map((item) => (
               <article class="business-card">
                 <span class="service-category">Калькулятор</span>
@@ -289,6 +357,20 @@ const pageSchema: JsonLdObject = isService
                 <p>Позиция попадает в итоговую конфигурацию и передаётся менеджеру в заявке.</p>
               </article>
             ))}
+          </div>
+          <div class="telephony-guide-panel">
+            <h3>Если нет готового ТЗ</h3>
+            <ul class="business-mini-list">
+              {telephonyGuides.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+            <a
+              class="card-action"
+              href={getSitePath("/business/?calculator=telephony#business-calculators")}
+            >
+              Открыть калькулятор телефонии
+            </a>
           </div>
         </section>
       )

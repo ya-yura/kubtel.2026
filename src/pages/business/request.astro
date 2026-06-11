@@ -28,13 +28,14 @@ const contextTitle = service?.title ?? segment?.title ?? "Заявка для б
 const isGovernmentRequest = selectedSegment === "b2g";
 const pageTitle = isGovernmentRequest ? "Обратный звонок для B2G" : "Заявка для бизнеса";
 const introText = isGovernmentRequest
-  ? "Оставьте телефон, учреждение и краткий комментарий. Сотрудник сектора B2G свяжется для уточнения закупочной процедуры и услуг связи."
+  ? "Оставьте имя, отчество при необходимости и удобный контакт. Сотрудник сектора B2G свяжется, чтобы рассмотреть и обсудить ваш вопрос по услугам связи."
   : "Оставьте телефон, выберите услугу и укажите адрес объекта. Менеджер коммерческого отдела свяжется для уточнения условий.";
 const summaryText = isGovernmentRequest
-  ? "Форма использует стандартный серверный контур B2B-заявок и передаёт согласие на обработку персональных данных вместе с запросом."
+  ? "B2G-заявки маркируются отдельным маршрутом. Ориентир первичной обратной связи - до 30 минут в рабочее время."
   : "Обязательные поля сведены к минимуму. Остальные детали можно указать в комментарии или обсудить по телефону.";
 const formStartedAt = Date.now().toString();
 const b2gPhoneDisplay = "+7 861 200-10-32";
+const b2gEmail = "tender@kubtel.ru";
 const phoneDisplay = isGovernmentRequest ? b2gPhoneDisplay : SITE.salesPhone;
 const phoneHref = isGovernmentRequest
   ? "tel:+78612001032"
@@ -50,7 +51,7 @@ const actionError = actionResult?.error;
 
 <BaseLayout
   title={pageTitle}
-  description="Короткая B2B-заявка Kubtel: телефон, услуга, адрес объекта и комментарий."
+  description="Короткая B2B/B2G-заявка Kubtel: контакт, услуга, адрес или учреждение, предпочтительный канал связи и комментарий."
   canonicalPath="/business/request/"
   pageType="ContactPage"
 >
@@ -102,7 +103,7 @@ const actionError = actionResult?.error;
         <input name="oneTimeEstimate" type="hidden" value={selectedOneTimeEstimate} />
         <input name="city" type="hidden" value="" />
         <input name="segment" type="hidden" value={selectedSegment} />
-        <input name="urgency" type="hidden" value="planning" />
+        <input name="urgency" type="hidden" value={isGovernmentRequest ? "asap" : "planning"} />
         <label class="visually-hidden">
           <span>Оставьте это поле пустым</span>
           <input name="website" type="text" tabindex="-1" autocomplete="off" />
@@ -112,36 +113,87 @@ const actionError = actionResult?.error;
           <legend>Контакт</legend>
           <div class="contact-grid compact-business-grid">
             <label>
-              Телефон *
+              {isGovernmentRequest ? "Рабочий телефон *" : "Телефон *"}
               <input
                 name="phone"
                 type="tel"
                 autocomplete="tel"
                 inputmode="tel"
                 maxlength="32"
+                placeholder={isGovernmentRequest
+                  ? "+7 861 ... добавочный можно указать в комментарии"
+                  : undefined}
                 required
               />
             </label>
             <label>
-              Компания
-              <input name="companyName" type="text" autocomplete="organization" maxlength="160" />
+              {isGovernmentRequest ? "Учреждение" : "Компания"}
+              <input
+                name="companyName"
+                type="text"
+                autocomplete="organization"
+                maxlength="160"
+                placeholder={isGovernmentRequest
+                  ? "Название учреждения, если удобно указать"
+                  : undefined}
+              />
             </label>
             <label>
-              Контактное лицо
-              <input name="contactPerson" type="text" autocomplete="name" maxlength="120" />
+              {isGovernmentRequest ? "Имя и отчество" : "Контактное лицо"}
+              <input
+                name="contactPerson"
+                type="text"
+                autocomplete="name"
+                maxlength="120"
+                required={isGovernmentRequest}
+              />
             </label>
             <label>
               Электронная почта
               <input name="email" type="email" autocomplete="email" maxlength="120" />
             </label>
+            {
+              isGovernmentRequest && (
+                <label>
+                  Мобильный телефон
+                  <input
+                    name="mobilePhone"
+                    type="tel"
+                    autocomplete="tel"
+                    inputmode="tel"
+                    maxlength="32"
+                    placeholder="+7 ..."
+                  />
+                </label>
+              )
+            }
           </div>
+          {
+            isGovernmentRequest && (
+              <div class="preferred-contact-group" aria-label="Предпочтительный канал связи">
+                <span>Связаться удобнее</span>
+                <label>
+                  <input type="radio" name="preferredContact" value="рабочий телефон" checked />
+                  по рабочему телефону
+                </label>
+                <label>
+                  <input type="radio" name="preferredContact" value="мобильный телефон" />
+                  по мобильному телефону
+                </label>
+                <label>
+                  <input type="radio" name="preferredContact" value="e-mail" />
+                  написать на e-mail
+                </label>
+              </div>
+            )
+          }
         </fieldset>
 
         <fieldset class="form-group">
           <legend>Заявка</legend>
           <div class="contact-grid compact-business-grid">
             <label>
-              Услуга или тема *
+              {isGovernmentRequest ? "Тема обращения *" : "Услуга или тема *"}
               <select name="service" required>
                 <option value="">Выберите услугу или тему</option>
                 {
@@ -154,12 +206,15 @@ const actionError = actionResult?.error;
               </select>
             </label>
             <label>
-              Город или адрес объекта *
+              {isGovernmentRequest ? "Учреждение, город или адрес *" : "Город или адрес объекта *"}
               <input
                 name="address"
                 type="text"
                 autocomplete="street-address"
                 maxlength="240"
+                placeholder={isGovernmentRequest
+                  ? "Например: Краснодар, учреждение или адрес объекта"
+                  : undefined}
                 required
               />
             </label>
@@ -172,7 +227,9 @@ const actionError = actionResult?.error;
             name="configurationSummary"
             rows="4"
             maxlength="1200"
-            placeholder="Например: нужен интернет в офис, телефония, доступ в ЦОД или удобное время звонка"
+            placeholder={isGovernmentRequest
+              ? "Например: нужна телефония, интернет, резервирование или консультация по документации"
+              : "Например: нужен интернет в офис, телефония, доступ в ЦОД или удобное время звонка"}
             >{selectedConfiguration}</textarea
           >
         </label>
@@ -193,6 +250,13 @@ const actionError = actionResult?.error;
         <h2>{contextTitle}</h2>
         <p>{summaryText}</p>
         <a class="business-phone-card" href={phoneHref}>{phoneDisplay}</a>
+        {
+          isGovernmentRequest && (
+            <a class="business-link" href={`mailto:${b2gEmail}`}>
+              {b2gEmail}
+            </a>
+          )
+        }
         <a class="business-link" href={getSitePath("/business/")}>Вернуться к услугам</a>
       </aside>
     </section>

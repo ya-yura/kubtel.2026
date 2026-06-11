@@ -401,20 +401,32 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
     type: "telephony",
     serviceSlug: "telephony",
     title: "IP-телефония и ВАТС",
-    lead: "Соберите конфигурацию по портам, номерам, одновременным внешним разговорам и функциям ВАТС.",
-    submitLabel: "Подключить",
+    lead: "Опишите схему простыми параметрами: сколько сотрудников звонит, сколько разговоров идёт одновременно, нужны ли номера и ВАТС.",
+    submitLabel: "Получить консультацию",
     sourceNote:
-      "Цены за единицу показаны отдельно; итоговая стоимость фиксируется по действующим тарифам.",
+      "Телефония доступна для абонентов в г. Краснодар и Тахтамукайском районе. При подключении через сторонний интернет качество зависит от этого канала.",
     fields: [
+      {
+        kind: "select",
+        name: "location",
+        label: "Населённый пункт",
+        value: "krasnodar",
+        help: "География влияет на возможность подключения и схему оказания услуги.",
+        options: [
+          { value: "krasnodar", label: "Краснодар" },
+          { value: "takhtamukay", label: "Тахтамукайский район" },
+          { value: "manual", label: "Уточнить у менеджера" }
+        ]
+      },
       {
         kind: "number",
         name: "ports",
-        label: "SIP-порты",
+        label: "Сотрудники/устройства",
         min: 1,
         max: 200,
         step: 1,
         value: 8,
-        help: "Один SIP-порт нужен для телефона, софтфона или подключения к АТС."
+        help: "Обычно один SIP-порт нужен для телефона, софтфона или подключения к АТС."
       },
       {
         kind: "number",
@@ -452,7 +464,12 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
       }
     ],
     lines: [
-      { kind: "repeated", key: "telephony.port", quantityField: "ports", label: "SIP-порты" },
+      {
+        kind: "repeated",
+        key: "telephony.port",
+        quantityField: "ports",
+        label: "Подключения сотрудников/устройств"
+      },
       {
         kind: "repeated",
         key: "telephony.phone_number",
@@ -481,11 +498,13 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
     glossary: [
       {
         term: "SIP-порт",
-        description: "подключение для одного телефона, софтфона или устройства в IP-телефонии."
+        description:
+          "техническое название подключения для одного телефона, софтфона или устройства."
       },
       {
         term: "Внешний разговор",
-        description: "один одновременный звонок между компанией и внешним номером."
+        description:
+          "максимальное количество разговоров, которые могут идти параллельно с внешними номерами."
       },
       {
         term: "ВАТС",

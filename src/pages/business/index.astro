@@ -6,7 +6,7 @@ import {
   businessCalculatorConfigs,
   type BusinessCalculatorConfig
 } from "@lib/business/calculator-ui";
-import { businessSegments, businessServices } from "@lib/business/content";
+import { businessProofStrip, businessSegments, businessServices } from "@lib/business/content";
 import type { JsonLdObject } from "@lib/seo/schema";
 import "@styles/business-page.css";
 
@@ -21,6 +21,43 @@ type CalculatorTab = {
 
 const requestPath = "/business/request/";
 const phoneHref = `tel:${SITE.salesPhone.replace(/\D/g, "")}`;
+const commercialPhoneDisplay = "+7 861 200-10-34";
+const commercialPhoneHref = "tel:+78612001034";
+const businessJobs = [
+  {
+    title: "Подключить офис или точку",
+    text: "Клиенту важно быстро понять техническую возможность, срок и контакт менеджера."
+  },
+  {
+    title: "Переехать без потери связи",
+    text: "При переносе услуги ключевые данные - новый адрес, желаемая дата и действующие услуги."
+  },
+  {
+    title: "Уйти от плохого качества",
+    text: "Снимаем тревогу резервными магистралями, поддержкой 24/7 и прямым контактом."
+  },
+  {
+    title: "Не ошибиться с оплатой",
+    text: "Показываем путь к оплате и объясняем, что тариф можно изменить через менеджера."
+  }
+];
+const businessFaq = [
+  {
+    question: "Как быстро происходит подключение?",
+    answer:
+      "Типовой ориентир для стандартного подключения - 1-3 рабочих дня с момента оплаты счёта, если по адресу есть техническая возможность."
+  },
+  {
+    question: "Можно ли сменить тариф после подключения?",
+    answer:
+      "Да, тариф можно изменить в любой момент через менеджера. На сайте лучше оставить заявку или позвонить в коммерческий отдел."
+  },
+  {
+    question: "Как оплачивать услуги?",
+    answer:
+      "В начале месяца на почту приходят счета. Оплату нужно провести до 1 числа следующего месяца, чтобы не рисковать блокировкой услуги."
+  }
+];
 
 const calculatorTabs: CalculatorTab[] = [
   {
@@ -117,29 +154,54 @@ const pageSchema: JsonLdObject = {
 
 <BaseLayout
   title="Kubtel для бизнеса"
-  description="Услуги связи Kubtel для бизнеса: заявка, калькуляторы, доступ в ЦОД и оплата услуг."
+  description="Услуги связи Kubtel для бизнеса: быстрое подключение офиса, калькуляторы, прямой контакт коммерческого отдела, доступ в ЦОД и оплата услуг."
   canonicalPath="/business/"
   schema={pageSchema}
 >
   <div class="business-page">
     <section class="business-compact-hero section-pad">
       <div>
-        <p class="eyebrow">Бизнесу</p>
+        <p class="eyebrow">Подключить интернет без очереди</p>
         <h1>Услуги связи для бизнеса</h1>
         <p>
-          Интернет, размещение оборудования, Hot-spot, телефония и виртуальные серверы. Выберите
-          услугу, выполните предварительный расчёт и отправьте заявку на подключение.
+          Интернет, телефония, Hot-spot, видеонаблюдение, размещение оборудования и виртуальные
+          серверы. Сайт помогает быстро выбрать услугу, получить ориентир по расчёту и связаться с
+          менеджером без лишних кругов.
         </p>
       </div>
       <div class="business-quick-actions" aria-label="Быстрые действия">
         <a class="card-action" href={getSitePath(`${requestPath}?service=internet`)}>Подключить</a>
+        <a class="business-phone-card" href={commercialPhoneHref}>{commercialPhoneDisplay}</a>
         <a class="business-link" href={getSitePath("/business/datacenter-access/")}>
           Заявка на посещение ЦОД
         </a>
         <a class="business-link" href={SITE.paymentUrl} target="_blank" rel="noopener noreferrer">
           Оплатить услуги
         </a>
-        <a class="business-phone-card" href={phoneHref}>{SITE.salesPhone}</a>
+        <a class="business-link" href={phoneHref}>{SITE.salesPhone}</a>
+      </div>
+    </section>
+
+    <section class="section-pad business-jobs-section" aria-label="Задачи клиентов бизнеса">
+      <div class="business-proof-strip">
+        {
+          businessProofStrip.map((item) => (
+            <span>
+              <strong>{item.label}</strong>
+              {item.value}
+            </span>
+          ))
+        }
+      </div>
+      <div class="business-jobs-grid">
+        {
+          businessJobs.map((job) => (
+            <article class="business-job-card">
+              <h2>{job.title}</h2>
+              <p>{job.text}</p>
+            </article>
+          ))
+        }
       </div>
     </section>
 
@@ -207,6 +269,14 @@ const pageSchema: JsonLdObject = {
         <h2>Операционные действия</h2>
       </div>
       <div class="business-ops-grid">
+        <a class="business-ops-card" href={commercialPhoneHref}>
+          <span>Юрлица</span>
+          <strong>Позвонить в коммерческий отдел</strong>
+          <p>
+            Прямой номер для заявок юридических лиц: {commercialPhoneDisplay}. Все заявки уточняются
+            менеджером.
+          </p>
+        </a>
         <a class="business-ops-card" href={getSitePath("/business/datacenter-access/")}>
           <span>ЦОД</span>
           <strong>Заявка на посещение ЦОД</strong>
@@ -222,6 +292,27 @@ const pageSchema: JsonLdObject = {
           <strong>Оплатить услуги на сайте</strong>
           <p>Переход в личный кабинет для оплаты услуг юридических лиц и ИП.</p>
         </a>
+      </div>
+    </section>
+
+    <section class="section-pad business-faq-section">
+      <div class="section-heading">
+        <p class="eyebrow">FAQ</p>
+        <h2>Ответы, которые нужны до звонка</h2>
+        <p>
+          На сайте не даём безусловных обещаний: сроки, цены и техническая возможность
+          подтверждаются после проверки адреса и действующих условий.
+        </p>
+      </div>
+      <div class="business-faq-grid">
+        {
+          businessFaq.map((item) => (
+            <article>
+              <h3>{item.question}</h3>
+              <p>{item.answer}</p>
+            </article>
+          ))
+        }
       </div>
     </section>
 

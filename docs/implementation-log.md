@@ -935,3 +935,50 @@
 - production CRM pipeline и sales SLA требуют подтверждения Kubtel.
 
 Статус: standalone Prompt 04 CRO artifact completed; engineering implementation pending in later prompts.
+
+### Модернизация по department brief-ответам
+
+Файлы:
+
+- `brief/b2b.txt`;
+- `brief/b2g.txt`;
+- `brief/телефония.txt`;
+- `brief/телевидение.txt`;
+- `docs/jtbd-brief-modernization-2026-06-11.md`;
+- `src/pages/business/index.astro`;
+- `src/pages/business/[slug].astro`;
+- `src/pages/business/request.astro`;
+- `src/lib/business/content.ts`;
+- `src/lib/business/calculator-ui.ts`;
+- `src/components/sections/BusinessCalculator.astro`;
+- `src/lib/leads/business-schema.ts`;
+- `src/lib/leads/business-submission.ts`;
+- `src/pages/tariffs/index.astro`;
+- `src/pages/devices.astro`;
+- `src/content/services/tv.json`;
+- `src/content/tariffs/family-tv.json`.
+
+Контекст:
+
+- руководители подтвердили, что B2B-сайт должен быть коротким маршрутизатором связи, а не набором громких обещаний;
+- B2G требует явного указания 44-ФЗ, 223-ФЗ, ЕИС, ЭТП, лицензий, контакта `tender@kubtel.ru`, прямого телефона и формы обратной связи;
+- телефония требует калькуляторов с переводом терминов на обычный язык и рекомендацией консультации;
+- ТВ нужно показывать как `Интернет + ТВ`, с отдельным путём для действующих абонентов и поддержки.
+
+Результат:
+
+- `/business/` получил B2B JTBD-блок, direct commercial CTA `+7 861 200-10-34`, proof strip и FAQ по срокам, смене тарифа и оплате;
+- `/business/b2g/` получил блок обсуждаемых услуг, B2G FAQ, контакты и аккуратные формулировки для госзаказчиков;
+- `/business/request/` получил B2G-режим контактов: имя/отчество, рабочий телефон, мобильный по желанию, e-mail и предпочтительный канал связи;
+- B2G payload теперь маршрутизируется как `pipeline=b2g`, `department=b2g`, `priority=urgent`, `slaResponseMinutes=30`;
+- телефонный калькулятор получил поле населённого пункта и клиентские формулировки вместо части технических терминов;
+- ТВ-контент, `/tariffs/` и `/devices/` обновлены под `Интернет + ТВ`, Smart TV/приставку, архив и поддержку;
+- добавлен unit test B2G routing.
+
+Ограничения:
+
+- Redmine routing проекта «Общий» и трекера «Входящее обращение» не реализован без production integration contract;
+- номера лицензий, реквизиты, список каналов, ссылки на приложения/APK, цены и SLA требуют финальной сверки Kubtel;
+- `brief/b2c.txt` в папке присутствует, но пустой.
+
+Статус: implementation completed in repository; production verification depends on deploy credentials and live environment checks.
