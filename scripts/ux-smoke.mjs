@@ -159,6 +159,7 @@ try {
   await checkReadabilityToggle(client, sessionId);
   await checkMobilePath(client, sessionId);
   await checkMobileB2GRequest(client, sessionId);
+  await checkBusinessInternetProfiles(client, sessionId);
   await checkBusinessCalculator(client, sessionId);
   await submitLeadForm(client, sessionId);
   await submitBusinessLeadForm(client, sessionId);
@@ -483,6 +484,45 @@ async function checkBusinessCalculator(client, sessionId) {
     "business calculator passes configuration into request link"
   );
   results.push("business calculator path ok");
+}
+
+async function checkBusinessInternetProfiles(client, sessionId) {
+  await setViewport(client, sessionId, desktopViewport());
+  await navigate(client, sessionId, "/business/?calculator=internet#business-calculators");
+  await assertExpression(
+    client,
+    sessionId,
+    `document.querySelector('[data-service-panel="internet"].is-active .office-profile-panel') !== null`,
+    "internet tab shows office profile panel"
+  );
+  await assertExpression(
+    client,
+    sessionId,
+    `(() => {
+      const text = document.querySelector('[data-service-panel="internet"]')?.innerText ?? "";
+      return text.includes("Малый офис") &&
+        text.includes("Средний офис") &&
+        text.includes("Крупный офис") &&
+        text.includes("10-20 Мбит/с") &&
+        text.includes("30-50 Мбит/с") &&
+        text.includes("70-100 Мбит/с");
+    })()`,
+    "internet tab exposes office size speed profiles"
+  );
+  await assertExpression(
+    client,
+    sessionId,
+    `(() => {
+      const hrefs = [...document.querySelectorAll('[data-service-panel="internet"] .office-profile-card a')]
+        .map((link) => link.href);
+      return hrefs.length === 3 &&
+        hrefs.every((href) => href.includes("/business/request/")) &&
+        hrefs.every((href) => href.includes("service=internet")) &&
+        hrefs.every((href) => href.includes("configurationSummary="));
+    })()`,
+    "internet profile CTA links pass selected profile into request"
+  );
+  results.push("business internet office profiles ok");
 }
 
 async function submitLeadForm(client, sessionId) {

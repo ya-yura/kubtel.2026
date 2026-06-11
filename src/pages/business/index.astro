@@ -58,6 +58,29 @@ const businessFaq = [
       "В начале месяца на почту приходят счета. Оплату нужно провести до 1 числа следующего месяца, чтобы не рисковать блокировкой услуги."
   }
 ];
+const internetOfficeProfiles = [
+  {
+    title: "Малый офис",
+    seats: "2-5 рабочих мест",
+    speed: "10-20 Мбит/с",
+    summary: "Для небольшой команды, базовой телефонии, почты, мессенджеров и рабочих сервисов.",
+    configuration: "Малый офис: 2-5 рабочих мест, ориентир скорости 10-20 Мбит/с."
+  },
+  {
+    title: "Средний офис",
+    seats: "10-15 рабочих мест",
+    speed: "30-50 Мбит/с",
+    summary: "Для офиса с общими файлами, CRM, видеозвонками и несколькими активными сервисами.",
+    configuration: "Средний офис: 10-15 рабочих мест, ориентир скорости 30-50 Мбит/с."
+  },
+  {
+    title: "Крупный офис",
+    seats: "20 и более рабочих мест",
+    speed: "70-100 Мбит/с",
+    summary: "Для большого офиса, активных видеоконференций, облачных систем и резервирования.",
+    configuration: "Крупный офис: 20 и более рабочих мест, ориентир скорости 70-100 Мбит/с."
+  }
+];
 
 const calculatorTabs: CalculatorTab[] = [
   {
@@ -252,9 +275,43 @@ const pageSchema: JsonLdObject = {
                   </ul>
                 </div>
                 <div class="business-calculator-stack">
-                  {item.configs?.map((config) => (
-                    <BusinessCalculator config={config} />
-                  ))}
+                  {item.slug === "internet" ? (
+                    <section
+                      class="office-profile-panel"
+                      aria-label="Подбор интернета по размеру офиса"
+                    >
+                      <div class="section-heading is-tight">
+                        <p class="eyebrow">Интернет в офис</p>
+                        <h3>Выберите размер офиса</h3>
+                        <p>
+                          Ориентиры по скорости помогают быстро начать заявку. Финальную полосу и
+                          техническую возможность менеджер подтвердит после проверки адреса.
+                        </p>
+                      </div>
+                      <div class="office-profile-grid">
+                        {internetOfficeProfiles.map((profile) => (
+                          <article class="office-profile-card">
+                            <span>{profile.seats}</span>
+                            <h4>{profile.title}</h4>
+                            <strong>{profile.speed}</strong>
+                            <p>{profile.summary}</p>
+                            <a
+                              class="card-action"
+                              href={getSitePath(
+                                `${requestPath}?service=internet&configurationSummary=${encodeURIComponent(
+                                  profile.configuration
+                                )}`
+                              )}
+                            >
+                              Подключить
+                            </a>
+                          </article>
+                        ))}
+                      </div>
+                    </section>
+                  ) : (
+                    item.configs?.map((config) => <BusinessCalculator config={config} />)
+                  )}
                 </div>
               </article>
             ))
