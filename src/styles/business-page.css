@@ -371,6 +371,20 @@
   padding: 0.85rem;
 }
 
+.b2g-extra-contact {
+  margin-top: 0.85rem;
+}
+
+.b2g-extra-contact summary {
+  color: rgba(244, 250, 255, 0.9);
+  cursor: pointer;
+  font-weight: 850;
+}
+
+.b2g-extra-contact .contact-grid {
+  margin-top: 0.85rem;
+}
+
 .preferred-contact-group > span {
   color: rgba(244, 250, 255, 0.9);
   font-weight: 850;

@@ -20,10 +20,7 @@ const b2gConsultationOption = {
   slug: "b2g-consultation",
   title: "B2G-консультация по закупке"
 };
-const serviceOptions =
-  selectedSegment === "b2g" || selectedService === b2gConsultationOption.slug
-    ? [b2gConsultationOption, ...businessServices]
-    : businessServices;
+const serviceOptions = [b2gConsultationOption, ...businessServices];
 const contextTitle = service?.title ?? segment?.title ?? "Заявка для бизнеса";
 const isGovernmentRequest = selectedSegment === "b2g";
 const pageTitle = isGovernmentRequest ? "Обратный звонок для B2G" : "Заявка для бизнеса";
@@ -58,9 +55,9 @@ const actionError = actionResult?.error;
   <div class="business-page">
     <section class="business-request-hero section-pad">
       <div>
-        <p class="eyebrow">{isGovernmentRequest ? "B2G" : "Заявка"}</p>
-        <h1>{pageTitle}</h1>
-        <p>{introText}</p>
+        <p class="eyebrow" data-request-eyebrow>{isGovernmentRequest ? "B2G" : "Заявка"}</p>
+        <h1 data-request-title>{pageTitle}</h1>
+        <p data-request-intro>{introText}</p>
       </div>
       <aside class="business-callout">
         <span>Можно позвонить без формы</span>
@@ -152,41 +149,43 @@ const actionError = actionResult?.error;
               Электронная почта
               <input name="email" type="email" autocomplete="email" maxlength="120" />
             </label>
-            {
-              isGovernmentRequest && (
-                <label>
-                  Мобильный телефон
-                  <input
-                    name="mobilePhone"
-                    type="tel"
-                    autocomplete="tel"
-                    inputmode="tel"
-                    maxlength="32"
-                    placeholder="+7 ..."
-                  />
-                </label>
-              )
-            }
           </div>
-          {
-            isGovernmentRequest && (
-              <div class="preferred-contact-group" aria-label="Предпочтительный канал связи">
-                <span>Связаться удобнее</span>
-                <label>
-                  <input type="radio" name="preferredContact" value="рабочий телефон" checked />
-                  по рабочему телефону
-                </label>
-                <label>
-                  <input type="radio" name="preferredContact" value="мобильный телефон" />
-                  по мобильному телефону
-                </label>
-                <label>
-                  <input type="radio" name="preferredContact" value="e-mail" />
-                  написать на e-mail
-                </label>
-              </div>
-            )
-          }
+          <details class="b2g-extra-contact" data-b2g-extra-contact open={isGovernmentRequest}>
+            <summary>Дополнительно для B2G</summary>
+            <div class="contact-grid compact-business-grid">
+              <label>
+                Мобильный телефон
+                <input
+                  name="mobilePhone"
+                  type="tel"
+                  autocomplete="tel"
+                  inputmode="tel"
+                  maxlength="32"
+                  placeholder="+7 ..."
+                />
+              </label>
+            </div>
+            <div class="preferred-contact-group" aria-label="Предпочтительный канал связи">
+              <span>Связаться удобнее</span>
+              <label>
+                <input
+                  type="radio"
+                  name="preferredContact"
+                  value="рабочий телефон"
+                  checked={isGovernmentRequest}
+                />
+                по рабочему телефону
+              </label>
+              <label>
+                <input type="radio" name="preferredContact" value="мобильный телефон" />
+                по мобильному телефону
+              </label>
+              <label>
+                <input type="radio" name="preferredContact" value="e-mail" />
+                написать на e-mail
+              </label>
+            </div>
+          </details>
         </fieldset>
 
         <fieldset class="form-group">
@@ -247,16 +246,17 @@ const actionError = actionResult?.error;
 
       <aside class="business-request-summary compact-request-summary" aria-label="Контекст заявки">
         <span class="service-category">Контекст</span>
-        <h2>{contextTitle}</h2>
-        <p>{summaryText}</p>
+        <h2 data-request-context-title>{contextTitle}</h2>
+        <p data-request-summary>{summaryText}</p>
         <a class="business-phone-card" href={phoneHref}>{phoneDisplay}</a>
-        {
-          isGovernmentRequest && (
-            <a class="business-link" href={`mailto:${b2gEmail}`}>
-              {b2gEmail}
-            </a>
-          )
-        }
+        <a
+          class="business-link"
+          href={`mailto:${b2gEmail}`}
+          data-b2g-only
+          hidden={!isGovernmentRequest}
+        >
+          {b2gEmail}
+        </a>
         <a class="business-link" href={getSitePath("/business/")}>Вернуться к услугам</a>
       </aside>
     </section>
@@ -265,6 +265,17 @@ const actionError = actionResult?.error;
 
 <script>
   const businessForm = document.querySelector<HTMLFormElement>("[data-business-request-form]");
+  const requestParams = new URLSearchParams(window.location.search);
+  const requestedService = requestParams.get("service");
+  const requestedSegment = requestParams.get("segment");
+  const isB2GRequest =
+    requestedSegment === "b2g" ||
+    requestedSegment === "government" ||
+    requestedService === "b2g-consultation";
+
+  if (businessForm) {
+    applyBusinessRequestContext(businessForm, requestParams, isB2GRequest);
+  }
 
   if (businessForm?.dataset.staticPreview === "true") {
     businessForm.addEventListener("submit", (event) => {
@@ -275,6 +286,70 @@ const actionError = actionResult?.error;
       event.preventDefault();
       showBusinessPreviewStatus(businessForm);
     });
+  }
+
+  function applyBusinessRequestContext(
+    form: HTMLFormElement,
+    params: URLSearchParams,
+    isB2G: boolean
+  ) {
+    const requestedService = params.get("service");
+    const requestedSegment = params.get("segment");
+    const serviceSelect = form.querySelector<HTMLSelectElement>('select[name="service"]');
+    const segmentInput = form.querySelector<HTMLInputElement>('input[name="segment"]');
+    const urgencyInput = form.querySelector<HTMLInputElement>('input[name="urgency"]');
+    const b2gExtra = form.querySelector<HTMLDetailsElement>("[data-b2g-extra-contact]");
+
+    if (requestedService && serviceSelect) {
+      serviceSelect.value = requestedService;
+    }
+
+    if (requestedSegment && segmentInput) {
+      segmentInput.value = requestedSegment === "government" ? "b2g" : requestedSegment;
+    }
+
+    if (isB2G && urgencyInput) {
+      urgencyInput.value = "asap";
+    }
+
+    if (!isB2G) {
+      return;
+    }
+
+    if (b2gExtra) {
+      b2gExtra.open = true;
+    }
+
+    const preferredWorkPhone = form.querySelector<HTMLInputElement>(
+      'input[name="preferredContact"][value="рабочий телефон"]'
+    );
+    if (preferredWorkPhone) {
+      preferredWorkPhone.checked = true;
+    }
+
+    setText("[data-request-eyebrow]", "B2G");
+    setText("[data-request-title]", "Обратный звонок для B2G");
+    setText(
+      "[data-request-intro]",
+      "Оставьте имя, отчество при необходимости и удобный контакт. Сотрудник сектора B2G свяжется, чтобы рассмотреть и обсудить ваш вопрос по услугам связи."
+    );
+    setText("[data-request-context-title]", "B2G: государственным заказчикам");
+    setText(
+      "[data-request-summary]",
+      "B2G-заявки маркируются отдельным маршрутом. Ориентир первичной обратной связи - до 30 минут в рабочее время."
+    );
+
+    document.querySelectorAll<HTMLElement>("[data-b2g-only]").forEach((element) => {
+      element.hidden = false;
+    });
+  }
+
+  function setText(selector: string, text: string) {
+    const element = document.querySelector<HTMLElement>(selector);
+
+    if (element) {
+      element.textContent = text;
+    }
   }
 
   function showBusinessPreviewStatus(form: HTMLFormElement) {
