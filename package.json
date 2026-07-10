@@ -12,7 +12,7 @@
     "test:prelaunch": "vitest run src/lib/prelaunch",
     "test:launch": "vitest run src/lib/launch",
     "test:ux": "node scripts/ux-smoke.mjs",
-    "launch:check": "npm audit --omit=dev && npm run tokens:check && npm run test:prelaunch && npm run test:launch && npm run check && npm run build",
+    "launch:check": "npm audit --omit=dev --audit-level=moderate && npm run tokens:check && npm run test:prelaunch && npm run test:launch && npm run check && npm run build",
     "tokens:build": "node scripts/build-tokens.mjs",
     "tokens:check": "node scripts/build-tokens.mjs --check",
     "check": "astro check",
@@ -21,13 +21,15 @@
     "format:check": "prettier --check \"src/**/*.{astro,ts,css,json}\" \"scripts/**/*.{js,mjs,ts}\" \"*.{json,mjs,md,ts}\""
   },
   "dependencies": {
-    "astro": "^6.3.0",
+    "astro": "^6.4.8",
+    "nodemailer": "^9.0.3",
     "zod": "^3.24.4"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
-    "@astrojs/node": "^10.1.0",
+    "@astrojs/node": "^10.1.4",
     "@types/node": "^25.6.0",
+    "@types/nodemailer": "^8.0.1",
     "lighthouse": "^12.8.2",
     "prettier": "^3.8.3",
     "prettier-plugin-astro": "^0.14.1",

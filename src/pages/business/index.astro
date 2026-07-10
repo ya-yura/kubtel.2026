@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import BusinessCalculator from "@components/sections/BusinessCalculator.astro";
-import { getAbsoluteUrl, getSitePath, SITE } from "@config/site";
+import { getAbsoluteUrl, getPhoneHref, getSitePath, SITE } from "@config/site";
 import {
   businessCalculatorConfigs,
   type BusinessCalculatorConfig
@@ -20,9 +20,10 @@ type CalculatorTab = {
 };
 
 const requestPath = "/business/request/";
-const phoneHref = `tel:${SITE.salesPhone.replace(/\D/g, "")}`;
-const commercialPhoneDisplay = "+7 861 200-10-34";
-const commercialPhoneHref = "tel:+78612001034";
+const legalRequestPath = `${requestPath}?segment=legal`;
+const budgetRequestPath = `${requestPath}?segment=b2g`;
+const businessPhoneHref = getPhoneHref(SITE.businessPhone);
+const budgetPhoneHref = getPhoneHref(SITE.budgetPhone);
 const businessJobs = [
   {
     title: "Подключить офис или точку",
@@ -193,15 +194,75 @@ const pageSchema: JsonLdObject = {
         </p>
       </div>
       <div class="business-quick-actions" aria-label="Быстрые действия">
-        <a class="card-action" href={getSitePath(`${requestPath}?service=internet`)}>Подключить</a>
-        <a class="business-phone-card" href={commercialPhoneHref}>{commercialPhoneDisplay}</a>
+        <a class="card-action" href={getSitePath(`${legalRequestPath}&service=connection-request`)}>
+          Оставить заявку
+        </a>
+        <a class="business-link" href="#organization-routes">Выбрать отдел</a>
         <a class="business-link" href={getSitePath("/business/datacenter-access/")}>
           Заявка на посещение ЦОД
         </a>
         <a class="business-link" href={SITE.paymentUrl} target="_blank" rel="noopener noreferrer">
           Оплатить услуги
         </a>
-        <a class="business-link" href={phoneHref}>{SITE.salesPhone}</a>
+      </div>
+    </section>
+
+    <section
+      class="section-pad business-routing-section"
+      id="organization-routes"
+      aria-labelledby="organization-routes-title"
+    >
+      <div class="section-heading">
+        <p class="eyebrow">Два отдельных маршрута</p>
+        <h2 id="organization-routes-title">Выберите тип организации</h2>
+        <p>
+          Заявка сразу попадёт нужным специалистам. Для юридических лиц и бюджетных организаций
+          действуют разные адреса и телефоны.
+        </p>
+      </div>
+
+      <div class="business-routing-grid">
+        <article class="business-routing-card is-legal" aria-labelledby="legal-route-title">
+          <div class="business-routing-card__header">
+            <span class="business-routing-number" aria-hidden="true">01</span>
+            <div>
+              <p class="eyebrow">Безналичный расчёт</p>
+              <h3 id="legal-route-title">Для юридических лиц</h3>
+            </div>
+          </div>
+          <p class="business-routing-hint">
+            Юридические лица оплачивают услуги по безналичному расчёту. По всем вопросам
+            (подключение, документы, оплата, акт сверки и т.д.) обращайтесь сюда.
+          </p>
+          <div class="business-routing-contacts" aria-label="Контакты для юридических лиц">
+            <a href={`mailto:${SITE.businessEmail}`}>{SITE.businessEmail}</a>
+            <a href={businessPhoneHref}>{SITE.businessPhone}</a>
+          </div>
+          <a class="card-action" href={getSitePath(legalRequestPath)}>
+            Оставить заявку для юрлица
+          </a>
+        </article>
+
+        <article class="business-routing-card is-budget" aria-labelledby="budget-route-title">
+          <div class="business-routing-card__header">
+            <span class="business-routing-number" aria-hidden="true">02</span>
+            <div>
+              <p class="eyebrow">Отдельный сектор</p>
+              <h3 id="budget-route-title">Для бюджетных организаций</h3>
+            </div>
+          </div>
+          <p class="business-routing-hint">
+            Если вы бюджетная организация — отправляйте заявку на подключение, запрос документов или
+            любой другой вопрос на {SITE.budgetEmail} или звоните по телефону {SITE.budgetPhone}.
+          </p>
+          <div class="business-routing-contacts" aria-label="Контакты для бюджетных организаций">
+            <a href={`mailto:${SITE.budgetEmail}`}>{SITE.budgetEmail}</a>
+            <a href={budgetPhoneHref}>{SITE.budgetPhone}</a>
+          </div>
+          <a class="card-action" href={getSitePath(budgetRequestPath)}>
+            Оставить заявку для бюджетной организации
+          </a>
+        </article>
       </div>
     </section>
 
@@ -326,13 +387,10 @@ const pageSchema: JsonLdObject = {
         <h2>Операционные действия</h2>
       </div>
       <div class="business-ops-grid">
-        <a class="business-ops-card" href={commercialPhoneHref}>
+        <a class="business-ops-card" href="#organization-routes">
           <span>Юрлица</span>
-          <strong>Позвонить в коммерческий отдел</strong>
-          <p>
-            Прямой номер для заявок юридических лиц: {commercialPhoneDisplay}. Все заявки уточняются
-            менеджером.
-          </p>
+          <strong>Оплата, документы и акт сверки</strong>
+          <p>Выберите тип организации, чтобы обратиться по правильному адресу без переадресаций.</p>
         </a>
         <a class="business-ops-card" href={getSitePath("/business/datacenter-access/")}>
           <span>ЦОД</span>

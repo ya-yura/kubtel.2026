@@ -162,6 +162,110 @@
   border-color: rgba(215, 86, 156, 0.48);
 }
 
+.business-routing-section {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  gap: 1.1rem;
+  padding-bottom: 2rem;
+  padding-top: 2rem;
+}
+
+.business-routing-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.business-routing-card {
+  --route-accent: 215, 86, 156;
+  background:
+    linear-gradient(145deg, rgba(var(--route-accent), 0.16), transparent 42%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.02)),
+    var(--business-panel-strong);
+  border: 1px solid rgba(var(--route-accent), 0.42);
+  border-radius: var(--radius);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  display: grid;
+  gap: 1rem;
+  overflow: hidden;
+  padding: 1.1rem;
+  position: relative;
+}
+
+.business-routing-card::before {
+  background: rgb(var(--route-accent));
+  content: "";
+  height: 3px;
+  inset: 0 0 auto;
+  position: absolute;
+}
+
+.business-routing-card.is-budget {
+  --route-accent: 69, 153, 216;
+}
+
+.business-routing-card__header {
+  align-items: center;
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.business-routing-card__header .eyebrow,
+.business-routing-card__header h3,
+.business-routing-hint {
+  margin-bottom: 0;
+}
+
+.business-routing-card__header h3 {
+  font-size: 1.45rem;
+}
+
+.business-routing-number {
+  align-items: center;
+  background: rgba(var(--route-accent), 0.16);
+  border: 1px solid rgba(var(--route-accent), 0.4);
+  border-radius: 999px;
+  color: rgb(var(--route-accent));
+  display: inline-flex;
+  font-family: var(--kb-typography-family-display);
+  font-size: 0.88rem;
+  font-weight: 900;
+  height: 2.75rem;
+  justify-content: center;
+  width: 2.75rem;
+}
+
+.business-routing-hint {
+  font-size: 1rem;
+  line-height: 1.62;
+}
+
+.business-routing-contacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.business-routing-contacts a {
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(var(--route-accent), 0.25);
+  border-radius: 999px;
+  color: rgba(244, 250, 255, 0.86);
+  font-size: 0.88rem;
+  font-weight: 760;
+  padding: 0.45rem 0.68rem;
+}
+
+.business-routing-contacts a:hover {
+  background: rgba(var(--route-accent), 0.14);
+  border-color: rgba(var(--route-accent), 0.48);
+}
+
+.business-routing-card .card-action {
+  justify-self: stretch;
+  text-align: center;
+}
+
 .business-service-workspace,
 .business-ops-section {
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -344,6 +448,13 @@
   font-weight: 850;
 }
 
+.request-contact-callout a + a {
+  color: var(--business-muted);
+  font-family: var(--kb-typography-family-sans);
+  font-size: 0.94rem;
+  font-weight: 760;
+}
+
 .business-page .business-request-layout.is-compact {
   align-items: start;
   padding-top: 1.5rem;
@@ -404,6 +515,13 @@
 
 .business-page .compact-business-grid {
   grid-template-columns: 1fr;
+}
+
+.business-page [data-request-address-hint] {
+  color: var(--business-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 .compact-request-summary h2 {
@@ -1220,6 +1338,14 @@
 
   .business-ops-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .business-routing-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .business-routing-card {
+    padding: 1.35rem;
   }
 
   .business-proof-strip {

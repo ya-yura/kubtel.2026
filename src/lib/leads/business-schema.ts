@@ -42,7 +42,7 @@ const nullableNumber = z.preprocess((value) => {
   return Number(value);
 }, z.number().nonnegative().nullable());
 
-export const businessLeadFormSchema = z.object({
+const businessLeadBaseSchema = z.object({
   companyName: z
     .preprocess(
       (value) => value ?? "",
@@ -66,7 +66,7 @@ export const businessLeadFormSchema = z.object({
   segment: optionalText(80),
   service: requiredText(80, "Выберите услугу"),
   city: optionalText(200),
-  address: requiredText(240, "Укажите город или адрес объекта"),
+  address: nullableText(240),
   urgency: z.enum(["planning", "30_days", "7_days", "asap"]).default("planning"),
   employeesOrSites: nullableNumber.default(null),
   configurationSummary: nullableText(1200),
@@ -77,6 +77,18 @@ export const businessLeadFormSchema = z.object({
   website: honeypotSchema.default(""),
   formStartedAt: formStartedAtSchema.default(null),
   sourcePath: z.string().trim().max(160).optional().default("/business/request/")
+});
+
+const generalInquiryTopics = new Set(["documents-payment", "callback", "other"]);
+
+export const businessLeadFormSchema = businessLeadBaseSchema.superRefine((input, context) => {
+  if (!generalInquiryTopics.has(input.service) && !input.address) {
+    context.addIssue({
+      code: "custom",
+      message: "Укажите город или адрес объекта",
+      path: ["address"]
+    });
+  }
 });
 
 export type BusinessLeadFormInput = z.infer<typeof businessLeadFormSchema>;

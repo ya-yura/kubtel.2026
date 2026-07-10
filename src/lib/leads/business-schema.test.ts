@@ -66,4 +66,21 @@ describe("businessLeadFormSchema", () => {
 
     expect(result.success).toBe(false);
   });
+
+  it("allows document and callback requests without an object address", () => {
+    const input = businessLeadFormSchema.parse({
+      companyName: "ООО Тест",
+      contactPerson: "Иван",
+      phone: "+7 900 765 43 21",
+      service: "documents-payment",
+      address: "",
+      consent: "on",
+      website: "",
+      formStartedAt: Date.now(),
+      sourcePath: "/business/request/?segment=legal"
+    });
+
+    expect(input.address).toBeNull();
+    expect(input.service).toBe("documents-payment");
+  });
 });

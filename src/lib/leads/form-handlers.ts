@@ -12,6 +12,7 @@ import {
 } from "@lib/careers/submission";
 import { getCoverageAreas, getJobVacancies, getTariffs } from "@lib/content";
 import { sendLeadToCrm } from "@lib/integrations/crm";
+import { sendBusinessLeadToEmail } from "@lib/integrations/email";
 import { sendLeadToTelegram } from "@lib/integrations/telegram";
 import type { DeliveryResult } from "@lib/integrations/types";
 import {
@@ -196,10 +197,16 @@ export async function handleBusinessLeadFormPost(
     input,
     userAgent: request.headers.get("user-agent")
   });
-  const delivery = await Promise.all([sendLeadToCrm(lead), sendLeadToTelegram(lead)]);
+  const delivery = await Promise.all([
+    sendLeadToCrm(lead),
+    sendLeadToTelegram(lead),
+    sendBusinessLeadToEmail(lead)
+  ]);
+  const emailDelivery = delivery.find((result) => result.channel === "email");
   const shouldSaveToOutbox =
     delivery.some((result) => result.status === "failed") ||
-    delivery.every((result) => result.status === "skipped");
+    delivery.every((result) => result.status === "skipped") ||
+    emailDelivery?.status !== "sent";
   const outboxResult = shouldSaveToOutbox
     ? await saveLeadToOutbox(lead, delivery)
     : createSkippedOutboxResult();

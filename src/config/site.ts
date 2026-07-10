@@ -30,6 +30,10 @@ export const SITE = {
   salesPhone: "8 800 222-17-30",
   supportEmail: "support@kubtel.ru",
   email: "kubtel@kubtel.ru",
+  businessEmail: "kubtel@kubtel.ru",
+  businessPhone: "8 861 200-10-11",
+  budgetEmail: "tender@kubtel.ru",
+  budgetPhone: "8 861 200-10-32",
   officeAddress: "350049, г. Краснодар, ул. им. Тургенева, д. 135/1",
   legalAddress: "350020, г. Краснодар, ул. Красная, д. 145/1",
   inn: "2311077082",
@@ -58,4 +62,12 @@ export function getSitePath(path = "/"): string {
   }
 
   return `${SITE.basePath}${normalizedPath}`;
+}
+
+export function getPhoneHref(phone: string): string {
+  const digits = phone.replace(/\D/g, "");
+  const normalizedDigits =
+    digits.length === 11 && digits.startsWith("8") ? `7${digits.slice(1)}` : digits;
+
+  return `tel:+${normalizedDigits}`;
 }

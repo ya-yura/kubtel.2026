@@ -2,7 +2,7 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import BusinessCalculator from "@components/sections/BusinessCalculator.astro";
 import PromoImage from "@components/ui/PromoImage.astro";
-import { getAbsoluteUrl, getSitePath } from "@config/site";
+import { getAbsoluteUrl, getPhoneHref, getSitePath, SITE } from "@config/site";
 import { getBusinessCalculatorConfig } from "@lib/business/calculator-ui";
 import {
   businessSegments,
@@ -45,9 +45,9 @@ const relatedServices = isService
 const calculatorConfig = isService ? getBusinessCalculatorConfig(entry.slug) : undefined;
 const visual = getBusinessVisual(entry.slug);
 const isGovernmentSegment = !isService && entry.slug === "b2g";
-const b2gEmail = "tender@kubtel.ru";
-const b2gPhoneDisplay = "+7 861 200-10-32";
-const b2gPhoneHref = "tel:+78612001032";
+const b2gEmail = SITE.budgetEmail;
+const b2gPhoneDisplay = SITE.budgetPhone;
+const b2gPhoneHref = getPhoneHref(SITE.budgetPhone);
 const b2gRequestPath = `/business/request/?segment=b2g&service=b2g-consultation&configurationSummary=${encodeURIComponent(
   "Прошу заказать обратный звонок сотрудника сектора B2G."
 )}`;

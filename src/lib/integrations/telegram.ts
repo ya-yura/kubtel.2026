@@ -108,6 +108,7 @@ function formatTelegramBusinessLead(lead: BusinessLeadSubmission): string {
     `Квалификация: ${escapeHtml(lead.qualification.qualification)} / ${lead.qualification.leadScore}`,
     `Приоритет: ${escapeHtml(lead.routing.priority)}`,
     `Pipeline: ${escapeHtml(lead.routing.pipeline)}`,
+    `Получатель: ${escapeHtml(lead.routing.recipientEmail)}`,
     `Конфигурация: ${escapeHtml(lead.configuration.summary)}`,
     `Неизвестные позиции: ${escapeHtml(lead.configuration.unknownItems.join(", "))}`
   ]
