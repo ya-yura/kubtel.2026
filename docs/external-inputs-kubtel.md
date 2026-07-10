@@ -11,6 +11,36 @@
 - B2B legacy redirects `/legal/** -> /business/**` реализованы в middleware.
 - `npm run launch:check` проверяет зависимости, tokens, prelaunch, launch audit, типы и сборку.
 - `npm run test:ux` проверяет B2C и B2B маршруты, формы и redirects на локальном сервере.
+- GitHub Pages workflow собирает честный static preview: формы на Pages не показывают демо-успех и вместо этого дают прямые контакты.
+
+## Подтвержденные публичные факты, использованные в текущей версии
+
+Дата сверки: 2026-07-10.
+
+| Факт | Источник |
+| --- | --- |
+| Онлайн-оплата для физлиц и ИП, квитанция, реквизиты и условия возврата | `https://kubtel.ru/individual/pay/` |
+| Личный кабинет абонента | `https://my.kubtel.ru/` |
+| Телефония Kubtel, доступные собственные опции и детализация по e-mail 0 ₽ | `https://kubtel.ru/legal/smallbusiness/tel/` |
+| Внутризоновая, междугородная и международная телефония вынесены в официальный PDF оператора дальней связи | `https://kubtel.ru/files/file/tariffs-megafon.pdf` |
+| Hot-spot: публичный состав тарифов без публикации актуальных цен | `https://kubtel.ru/legal/smallbusiness/wifi/` |
+| VDI: публичный базовый пакет 2 ядра / 4 ГБ ОЗУ / 50 ГБ HDD без публикации актуальной цены | `https://kubtel.ru/legal/smallbusiness/datac/vdi` |
+| Лицензии | `https://kubtel.ru/about/licencies/` |
+| Политика обработки персональных данных | `https://kubtel.ru/about/personsdata/` |
+| Официальные контакты и адрес офиса | `https://kubtel.ru/about/contactus/` |
+| Условия оказания услуг физическим лицам | `https://kubtel.ru/individual/termsofuse` |
+| Официальные документы/формы договора | `https://kubtel.ru/docs/` |
+| Официальная новостная лента и архив уведомлений | `https://kubtel.ru/about/news/` |
+
+## Что намеренно не опубликовано без подтверждения Kubtel
+
+- Публичные числовые цены B2B-калькуляторов, кроме подтвержденной нулевой стоимости детализации телефонии по e-mail.
+- Калькуляторы для интернета в офис, Hot-spot и VDI: для них нет утвержденной публичной матрицы расчета.
+- Модели и цены клиентского оборудования, ссылки на ТВ-приложения/APK и список ТВ-каналов.
+- MAX/VK chat URLs: кнопки показываются только при наличии валидных `PUBLIC_MAX_CHAT_URL` / `PUBLIC_VK_CHAT_URL`.
+- Production CRM/Redmine routing, project/tracker IDs и ответственные.
+- Подтверждение доставки B2C/B2B/B2G/HR заявок на production.
+- DNS, SSL, canonical redirects и production Node hosting для `kubtel.ru`.
 
 ## Нужные входы от Kubtel
 

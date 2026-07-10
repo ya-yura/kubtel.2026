@@ -1,26 +1,55 @@
 {
   "business": {
+    "surface": {
+      "canvasStart": { "value": "{color.surface.businessCanvasStart}", "type": "color" },
+      "canvasMiddle": { "value": "{color.surface.businessCanvasMiddle}", "type": "color" },
+      "canvasEnd": { "value": "{color.surface.businessCanvasEnd}", "type": "color" },
+      "canvasDeep": { "value": "{color.surface.businessCanvasDeep}", "type": "color" },
+      "panel": { "value": "{color.surface.businessPanel}", "type": "color" },
+      "panelStrong": { "value": "{color.surface.businessPanelStrong}", "type": "color" },
+      "glass": { "value": "{color.overlay.whiteSubtle}", "type": "color" },
+      "glassStrong": { "value": "{color.overlay.whiteSoft}", "type": "color" },
+      "glassDeep": { "value": "{color.overlay.businessGlass}", "type": "color" }
+    },
+    "text": {
+      "primary": { "value": "{color.text.onBusiness}", "type": "color" },
+      "secondary": { "value": "{color.text.onBusinessMuted}", "type": "color" },
+      "subtle": { "value": "{color.text.onBusinessSubtle}", "type": "color" }
+    },
+    "border": {
+      "default": { "value": "{color.border.business}", "type": "color" },
+      "strong": { "value": "{color.border.businessStrong}", "type": "color" },
+      "subtle": { "value": "{color.border.inverseSubtle}", "type": "color" },
+      "neutral": { "value": "{color.border.inverse}", "type": "color" }
+    },
+    "accent": {
+      "primary": { "value": "{color.action.primary.background}", "type": "color" },
+      "soft": { "value": "{color.overlay.accent18}", "type": "color" },
+      "hover": { "value": "{color.overlay.accent42}", "type": "color" },
+      "selected": { "value": "{color.overlay.accent46}", "type": "color" },
+      "info": { "value": "{color.status.info.text}", "type": "color" }
+    },
     "hero": {
       "panelBackground": {
-        "value": "linear-gradient(135deg, {color.alpha.accent20}, transparent 42%), linear-gradient(160deg, {color.surface.darkDeep}, {color.surface.darkRaisedAlt})",
+        "value": "linear-gradient(135deg, {color.overlay.accent20}, transparent 42%), linear-gradient(160deg, {color.surface.inverseDeep}, {color.surface.inverseStrong})",
         "type": "gradient"
       },
-      "panelItemBackground": { "value": "{color.alpha.white08}", "type": "color" },
-      "proofText": { "value": "{color.alpha.white72}", "type": "color" }
+      "panelItemBackground": { "value": "{color.overlay.whiteSoft}", "type": "color" },
+      "proofText": { "value": "{color.overlay.white72}", "type": "color" }
     },
     "proof": {
       "confirmed": {
-        "background": { "value": "{color.status.successSoft}", "type": "color" },
-        "border": { "value": "{color.alpha.success18}", "type": "color" },
-        "text": { "value": "{color.status.success}", "type": "color" }
+        "background": { "value": "{color.status.success.backgroundSoft}", "type": "color" },
+        "border": { "value": "{color.overlay.success18}", "type": "color" },
+        "text": { "value": "{color.status.success.text}", "type": "color" }
       },
       "needsVerification": {
-        "background": { "value": "{color.surface.warm}", "type": "color" },
-        "border": { "value": "{color.alpha.accent24}", "type": "color" },
-        "text": { "value": "{color.action.primaryActive}", "type": "color" }
+        "background": { "value": "{color.status.warning.background}", "type": "color" },
+        "border": { "value": "{color.overlay.accent24}", "type": "color" },
+        "text": { "value": "{color.status.warning.text}", "type": "color" }
       },
       "draft": {
-        "background": { "value": "{color.surface.soft}", "type": "color" },
+        "background": { "value": "{color.status.info.background}", "type": "color" },
         "border": { "value": "{color.border.default}", "type": "color" },
         "text": { "value": "{color.text.secondary}", "type": "color" }
       }

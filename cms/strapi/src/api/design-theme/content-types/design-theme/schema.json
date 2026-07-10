@@ -15,6 +15,11 @@
       "enum": ["default", "business", "critical"],
       "default": "default"
     },
+    "themeMode": {
+      "type": "enumeration",
+      "enum": ["light", "business"],
+      "default": "light"
+    },
     "heroVariant": {
       "type": "enumeration",
       "enum": ["standard", "business", "compact", "proof-led"],
@@ -27,16 +32,41 @@
     },
     "ctaVariant": {
       "type": "enumeration",
-      "enum": ["primary", "secondary", "business", "critical"],
+      "enum": ["primary", "secondary", "ghost", "business", "critical"],
       "default": "primary"
+    },
+    "contentAlignment": {
+      "type": "enumeration",
+      "enum": ["start", "center", "split"],
+      "default": "start"
+    },
+    "compositionPreset": {
+      "type": "enumeration",
+      "enum": [
+        "page-intro",
+        "card-grid",
+        "service-workspace",
+        "calculator-workspace",
+        "contact-grid",
+        "business-routing"
+      ],
+      "default": "page-intro"
     },
     "serviceCardLayout": {
       "type": "enumeration",
       "enum": ["grid", "list", "comparison"],
       "default": "grid"
     },
-    "proofVisibility": { "type": "boolean", "default": true },
-    "allowedTokenRefs": { "type": "json" },
+    "proofVisibility": {
+      "type": "enumeration",
+      "enum": ["full", "compact", "hidden"],
+      "default": "full"
+    },
+    "statusTone": {
+      "type": "enumeration",
+      "enum": ["neutral", "success", "warning", "danger", "info"],
+      "default": "neutral"
+    },
     "notes": { "type": "text" },
     "workflowStatus": {
       "type": "enumeration",

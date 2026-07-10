@@ -1,5 +1,57 @@
 # Kubtel.ru: журнал реализации
 
+## 2026-07-10
+
+### Завершен финальный проход по Redmine #233865 comments 49-57
+
+Файлы:
+
+- `src/pages/index.astro`;
+- `src/pages/business/index.astro`;
+- `src/pages/business/[slug].astro`;
+- `src/pages/business/request.astro`;
+- `src/pages/payment.astro`;
+- `src/pages/documents.astro`;
+- `src/pages/news.astro`;
+- `src/pages/search.astro`;
+- `src/components/sections/BusinessCalculator.astro`;
+- `src/lib/business/calculator-ui.ts`;
+- `src/lib/business/calculators.ts`;
+- `src/lib/leads/**`;
+- `src/lib/careers/resume.ts`;
+- `scripts/ux-smoke.mjs`;
+- `docs/external-inputs-kubtel.md`;
+- `docs/production-deployment-maintenance.md`;
+- `docs/security-publication-decision.md`.
+
+Результат:
+
+- главная показывает тарифы и форму заявки сразу после hero, отдельный B2B/B2G callout, официальный путь оплаты и прямые контакты;
+- публичная оплата ведет только на официальный Kubtel payment page, без локальной имитации платежной формы;
+- бизнес-раздел приведен к 7 направлениям в требуемом порядке: Internet, Colocation, Telephony, VPS, CCTV, Hot-spot, VDI;
+- B2B-калькуляторы сокращены до четырех подтверждаемых конфигураторов: телефония, видеонаблюдение, VPS, colocation;
+- интернет в офис переведен на профили малого/среднего/крупного офиса, Hot-spot и VDI показывают подтвержденный состав без неподтвержденных цен;
+- B2G отделен от B2B: `tender@kubtel.ru`, `8 861 200-10-32`, 44-ФЗ/223-ФЗ, ЕИС/ЭТП и отдельная заявка;
+- forms на GitHub Pages static preview не показывают demo-success и вместо этого дают прямой контакт;
+- careers resume upload ограничен типами и размером, имя файла нормализуется, outbox сохраняется с закрытым режимом доступа;
+- `/business/[slug].astro` получил SSR fallback по `Astro.params.slug`, чтобы server runtime не зависел от `getStaticPaths()` props;
+- UX smoke проверяет payment/B2B/B2G/DC/search/mobile paths, legacy redirects, readability mode, static-preview aware forms и отсутствие неподтвержденных B2B estimates.
+
+Проверка:
+
+- `npm run tokens:check` выполнен;
+- `npm run check` выполнен: 0 errors, 0 warnings, 0 hints;
+- `npm run build` выполнен;
+- `npm run test:ux` выполнен на локальном server build.
+
+Ограничения:
+
+- production proof of delivery невозможен без Node runtime env и доступов Kubtel к CRM/Redmine/Telegram/SMTP;
+- GitHub Pages остается static preview, а не production delivery;
+- B2B price matrix, MAX/VK chat URLs, закрытые юридические/коммерческие условия и production secrets не были предоставлены.
+
+Статус: technical implementation completed; production delivery blocked by external inputs.
+
 ## 2026-05-13
 
 ### Завершен технический контур B2B/CMS/design tokens и production launch QA

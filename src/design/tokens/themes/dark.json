@@ -1,13 +1,28 @@
 {
   "theme": {
-    "name": { "value": "dark", "type": "string" },
-    "colorScheme": { "value": "dark", "type": "string" },
+    "name": "business",
+    "selector": ".business-page, [data-theme=\"business\"]",
+    "colorScheme": "dark",
     "overrides": {
-      "color.surface.page": { "value": "{color.neutral.600}", "type": "color" },
-      "color.surface.raised": { "value": "{color.neutral.650}", "type": "color" },
-      "color.text.primary": { "value": "{color.neutral.0}", "type": "color" },
-      "color.text.secondary": { "value": "{color.alpha.white78}", "type": "color" },
-      "color.border.default": { "value": "{color.alpha.darkBorder}", "type": "color" }
+      "color.surface.page": { "value": "{color.business.canvasMiddle}", "type": "color" },
+      "color.surface.section": { "value": "{color.alpha.business.panel78}", "type": "color" },
+      "color.surface.raised": { "value": "{color.alpha.business.panel92}", "type": "color" },
+      "color.text.primary": { "value": "{color.business.frost}", "type": "color" },
+      "color.text.secondary": { "value": "{color.alpha.frost.70}", "type": "color" },
+      "color.text.subtle": { "value": "{color.alpha.frost.62}", "type": "color" },
+      "color.border.default": { "value": "{color.alpha.accent.24}", "type": "color" },
+      "color.border.strong": { "value": "{color.alpha.accent.46}", "type": "color" },
+      "color.action.secondary.background": { "value": "{color.alpha.white.045}", "type": "color" },
+      "color.action.secondary.backgroundHover": {
+        "value": "{color.alpha.accent.12}",
+        "type": "color"
+      },
+      "color.action.secondary.backgroundActive": {
+        "value": "{color.alpha.accent.18}",
+        "type": "color"
+      },
+      "color.action.secondary.border": { "value": "{color.alpha.accent.24}", "type": "color" },
+      "color.action.secondary.text": { "value": "{color.business.frost}", "type": "color" }
     }
   }
 }

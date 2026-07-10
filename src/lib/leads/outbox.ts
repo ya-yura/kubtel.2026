@@ -5,17 +5,20 @@ import type { CareerApplicationSubmission } from "@lib/careers/submission";
 import type { DeliveryResult } from "@lib/integrations/types";
 import type { LeadSubmission } from "@lib/leads/submission";
 import type { BusinessLeadSubmission } from "@lib/leads/business-submission";
+import type { CareerResumeAttachment } from "@lib/careers/resume";
 
 type OutboxLead = LeadSubmission | BusinessLeadSubmission | CareerApplicationSubmission;
 
 type LeadOutboxRecord = {
   lead: OutboxLead;
   delivery: DeliveryResult[];
+  attachment?: Omit<CareerResumeAttachment, "bytes">;
 };
 
 export async function saveLeadToOutbox(
   lead: OutboxLead,
   delivery: DeliveryResult[],
+  attachment?: CareerResumeAttachment | null,
   env = process.env
 ): Promise<DeliveryResult> {
   const outboxDir = env.LEAD_OUTBOX_DIR ?? ".lead-outbox";
@@ -31,14 +34,34 @@ export async function saveLeadToOutbox(
   try {
     const absoluteOutboxDir = path.resolve(process.cwd(), outboxDir);
     const fileName = `${lead.id}-${randomUUID().slice(0, 8)}.json`;
-    const record: LeadOutboxRecord = { lead, delivery };
+    const record: LeadOutboxRecord = {
+      lead,
+      delivery,
+      ...(attachment
+        ? {
+            attachment: {
+              originalName: attachment.originalName,
+              safeName: attachment.safeName,
+              mimeType: attachment.mimeType,
+              size: attachment.size
+            }
+          }
+        : {})
+    };
 
     await mkdir(absoluteOutboxDir, { recursive: true });
+    if (attachment) {
+      await writeFile(path.join(absoluteOutboxDir, attachment.safeName), attachment.bytes, {
+        flag: "wx",
+        mode: 0o600
+      });
+    }
     await writeFile(
       path.join(absoluteOutboxDir, fileName),
       `${JSON.stringify(record, null, 2)}\n`,
       {
-        flag: "wx"
+        flag: "wx",
+        mode: 0o600
       }
     );
 

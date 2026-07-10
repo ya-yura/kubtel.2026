@@ -7,6 +7,8 @@ import { getBusinessCalculatorConfig } from "@lib/business/calculator-ui";
 import {
   businessSegments,
   businessServices,
+  getBusinessSegment,
+  getBusinessService,
   getRelatedBusinessServices,
   type BusinessSegment,
   type BusinessService
@@ -34,7 +36,13 @@ export function getStaticPaths() {
   ];
 }
 
-const { kind, entry } = Astro.props as PageEntry;
+const pageEntry = isPageEntry(Astro.props) ? Astro.props : getPageEntry(Astro.params.slug);
+
+if (!pageEntry) {
+  return Astro.redirect(getSitePath("/business/"), 302);
+}
+
+const { kind, entry } = pageEntry;
 const isService = kind === "service";
 const title = isService ? entry.seoTitle : entry.seoTitle;
 const description = isService ? entry.seoDescription : entry.seoDescription;
@@ -130,6 +138,34 @@ function getBusinessEntryHref(slug: string) {
   }
 
   return `/business/?calculator=${slug}#business-calculators`;
+}
+
+function getPageEntry(slug: string | undefined): PageEntry | undefined {
+  if (!slug) {
+    return undefined;
+  }
+
+  const service = getBusinessService(slug);
+  if (service) {
+    return { kind: "service", entry: service };
+  }
+
+  const segment = getBusinessSegment(slug);
+  if (segment) {
+    return { kind: "segment", entry: segment };
+  }
+
+  return undefined;
+}
+
+function isPageEntry(value: unknown): value is PageEntry {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "kind" in value &&
+    "entry" in value &&
+    ((value as PageEntry).kind === "service" || (value as PageEntry).kind === "segment")
+  );
 }
 
 const pageSchema: JsonLdObject = isService

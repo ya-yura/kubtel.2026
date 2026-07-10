@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
 import { getJobVacancies } from "@lib/content";
 import { handleCareerApplicationFormPost } from "@lib/leads/form-handlers";
 import type { JobEmploymentType } from "@models/domain";
@@ -112,10 +113,7 @@ const employmentLabels: Record<JobEmploymentType, string> = {
           <article class="career-vacancy-card">
             <span class="service-category">HR</span>
             <h3>Открытые вакансии уточняются</h3>
-            <p>
-              Раздел уже готов к публикации вакансий из CMS. Как только команда добавит активную
-              роль, она появится здесь автоматически.
-            </p>
+            <p>Сейчас на сайте нет открытых вакансий. Контакт для общего обращения указан ниже.</p>
           </article>
         )
       }
@@ -219,7 +217,10 @@ const employmentLabels: Record<JobEmploymentType, string> = {
 
       <label class="consent-line">
         <input type="checkbox" name="consent" required />
-        <span>Согласен на&nbsp;обработку персональных данных для связи по&nbsp;отклику.</span>
+        <span>
+          Согласен на&nbsp;обработку персональных данных для связи по&nbsp;отклику и ознакомлен с
+          <a href={SITE.privacyUrl} target="_blank" rel="noopener noreferrer">политикой ПД</a>.
+        </span>
       </label>
 
       <button type="submit" disabled={vacancies.length === 0}>Отправить отклик</button>
@@ -269,11 +270,11 @@ const employmentLabels: Record<JobEmploymentType, string> = {
       }
 
       event.preventDefault();
-      showCareerPreviewStatus(careerForm);
+      showCareerPreviewNotice(careerForm);
     });
   }
 
-  function showCareerPreviewStatus(form: HTMLFormElement) {
+  function showCareerPreviewNotice(form: HTMLFormElement) {
     const existingStatus = form.querySelector<HTMLElement>("#career-form-status");
     const status = existingStatus ?? document.createElement("div");
     const name =
@@ -281,17 +282,14 @@ const employmentLabels: Record<JobEmploymentType, string> = {
     const vacancy = form.querySelector<HTMLSelectElement>('select[name="vacancySlug"]');
     const vacancyTitle = vacancy?.selectedOptions[0]?.textContent?.trim() || "выбранная вакансия";
 
-    status.className = "form-status is-success";
+    status.className = "form-status is-error";
     status.id = "career-form-status";
-    status.setAttribute("role", "status");
+    status.setAttribute("role", "alert");
     status.setAttribute("tabindex", "-1");
     status.replaceChildren(
-      createCareerStatusLine("strong", "Демо-отклик принят в\u00a0онлайн-превью."),
+      createCareerStatusLine("strong", "Отклик не отправлен с этого адреса."),
       createCareerStatusLine("span", `${name}: ${vacancyTitle}.`),
-      createCareerStatusLine(
-        "span",
-        "Для боевой отправки подключите Node-хостинг, Strapi write token, CRM или Telegram."
-      )
+      createCareerStatusLine("span", "Напишите на kubtel@kubtel.ru или позвоните 8 861 200-10-11.")
     );
 
     if (!existingStatus) {

@@ -15,6 +15,8 @@
     "launch:check": "npm audit --omit=dev --audit-level=moderate && npm run tokens:check && npm run test:prelaunch && npm run test:launch && npm run check && npm run build",
     "tokens:build": "node scripts/build-tokens.mjs",
     "tokens:check": "node scripts/build-tokens.mjs --check",
+    "design:audit": "node scripts/design-audit.mjs",
+    "design:verify": "npm run tokens:check && npm run design:audit && vitest run src/lib/design",
     "check": "astro check",
     "lint": "astro check",
     "format": "prettier --write \"src/**/*.{astro,ts,css,json}\" \"scripts/**/*.{js,mjs,ts}\" \"*.{json,mjs,md,ts}\"",

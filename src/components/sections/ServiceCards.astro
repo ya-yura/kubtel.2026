@@ -1,9 +1,10 @@
 ---
 import PromoImage from "@components/ui/PromoImage.astro";
-import { getVerificationLabel } from "@lib/verification";
 import { getSitePath } from "@config/site";
 import { getResidentialServiceVisual } from "@lib/visuals";
 import type { Service, Tariff } from "@models/domain";
+import SectionHeading from "@components/ui/SectionHeading.astro";
+import StatusBadge from "@components/ui/StatusBadge.astro";
 
 type Props = {
   services: Service[];
@@ -29,15 +30,11 @@ const tariffTitleBySlug = new Map(tariffs.map((tariff) => [tariff.slug, tariff.t
 ---
 
 <section class="section-pad services-section" id="services">
-  <div class="section-heading">
-    <p class="eyebrow">Услуги</p>
-    <h2>{title}</h2>
-    <p>{lead}</p>
-  </div>
+  <SectionHeading eyebrow="Услуги" title={title} description={lead} />
   <div class="service-grid">
     {
       services.map((service) => {
-        const primaryFact = service.facts[0];
+        const primaryFact = service.facts.find((fact) => fact.status === "confirmed");
         const visual = getResidentialServiceVisual(service.slug);
         const relatedTariffs = service.relatedTariffs
           .map((slug) => tariffTitleBySlug.get(slug) ?? slug)
@@ -49,9 +46,9 @@ const tariffTitleBySlug = new Map(tariffs.map((tariff) => [tariff.slug, tariff.t
               <span class="service-category">
                 {categoryLabels[service.category] ?? service.category}
               </span>
-              <span class:list={["data-status", service.contentSource.status]}>
-                {getVerificationLabel(service.contentSource.status)}
-              </span>
+              {service.contentSource.status === "confirmed" && (
+                <StatusBadge status="confirmed" label="Официальная услуга" />
+              )}
             </div>
             <PromoImage visual={visual} class="is-card service-card-media" showMeta={false} />
             <h3>{service.title}</h3>

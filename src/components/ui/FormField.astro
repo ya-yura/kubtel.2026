@@ -1,0 +1,45 @@
+---
+type Props = {
+  id: string;
+  name?: string;
+  label: string;
+  type?: "text" | "tel" | "email";
+  placeholder?: string;
+  hint?: string;
+  state?: "default" | "error" | "success" | "read-only";
+  disabled?: boolean;
+  required?: boolean;
+  value?: string;
+};
+
+const {
+  id,
+  name = id,
+  label,
+  type = "text",
+  placeholder,
+  hint,
+  state = "default",
+  disabled = false,
+  required = false,
+  value
+} = Astro.props;
+const messageId = hint ? `${id}-hint` : undefined;
+---
+
+<label class:list={["ds-field", `is-${state}`]} for={id}>
+  <span>{label}</span>
+  <input
+    id={id}
+    name={name}
+    type={type}
+    placeholder={placeholder}
+    aria-describedby={messageId}
+    aria-invalid={state === "error" ? "true" : undefined}
+    disabled={disabled}
+    required={required}
+    readonly={state === "read-only"}
+    value={value}
+  />
+  {hint && <small id={messageId}>{hint}</small>}
+</label>

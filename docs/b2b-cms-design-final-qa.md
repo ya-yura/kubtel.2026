@@ -11,11 +11,15 @@
 Редактору доступны только governed presets:
 
 - `pageAccent`: `default`, `business`, `critical`;
+- `themeMode`: `light`, `business`;
 - `heroVariant`: `standard`, `business`, `compact`, `proof-led`;
 - `sectionDensity`: `comfortable`, `compact`, `dense`;
-- `ctaVariant`: `primary`, `secondary`, `business`, `critical`;
+- `contentAlignment`: `start`, `center`, `split`;
+- `compositionPreset`: `page-intro`, `card-grid`, `service-workspace`, `calculator-workspace`, `contact-grid`, `business-routing`;
+- `ctaVariant`: `primary`, `secondary`, `ghost`, `business`, `critical`;
 - `serviceCardLayout`: `grid`, `list`, `comparison`;
-- `proofVisibility`: boolean.
+- `proofVisibility`: `full`, `compact`, `hidden`;
+- `statusTone`: `neutral`, `success`, `warning`, `danger`, `info`.
 
 ### Token levels
 
@@ -198,11 +202,11 @@ Redirect map реализован в `src/lib/redirects/business-legacy.ts` и �
 - token sources: `src/design/tokens/**`;
 - build script: `scripts/build-tokens.mjs`;
 - generated CSS: `src/styles/tokens.css`;
-- scripts: `npm run tokens:build`, `npm run tokens:check`;
+- scripts: `npm run tokens:build`, `npm run tokens:check`, `npm run design:audit`, `npm run design:verify`;
 - `BaseLayout.astro` imports tokens before global styles;
-- `global.css` migrated to semantic/component tokens where reasonable;
-- raw hex guard for source `.astro`/`.css` files excluding generated `tokens.css`;
-- theme-ready structure with `themes/light.json` and `themes/dark.json`.
+- `global.css` and `business-page.css` migrated to semantic/component tokens for critical styling values;
+- source audit blocks raw colors, legacy vars, unknown tokens, raw motion/radius/shadow/z-index and unapproved media breakpoints;
+- theme-ready structure with `themes/light.json`, `themes/dark.json` as business theme and `themes/readable.json`.
 
 ## Prompt 19: Editor guide
 
@@ -215,6 +219,8 @@ Redirect map реализован в `src/lib/redirects/business-legacy.ts` и �
 Перед сдачей должны пройти:
 
 - `npm run tokens:check`;
+- `npm run design:audit`;
+- `npm run design:verify`;
 - `npm run format:check`;
 - `npm test`;
 - `npm run check`;

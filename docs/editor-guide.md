@@ -96,14 +96,20 @@
 
 Редактор выбирает только утвержденные presets:
 
-- hero variant;
-- page accent;
-- section density;
-- CTA variant;
-- service card layout;
-- proof/status visibility.
+- theme mode: `light` или `business`;
+- hero variant: `standard`, `business`, `compact`, `proof-led`;
+- page accent: `default`, `business`, `critical`;
+- section density: `comfortable`, `compact`, `dense`;
+- content alignment: `start`, `center`, `split`;
+- composition preset: `page-intro`, `card-grid`, `service-workspace`, `calculator-workspace`, `contact-grid`, `business-routing`;
+- CTA variant: `primary`, `secondary`, `ghost`, `business`, `critical`;
+- service card layout: `grid`, `list`, `comparison`;
+- proof visibility: `full`, `compact`, `hidden`;
+- status tone: `neutral`, `success`, `warning`, `danger`, `info`.
 
 Если нужен новый цвет, размер, сетка или необычная композиция, это задача для дизайнера и разработчика через `src/design/tokens/**`.
+
+Нельзя добавлять в CMS raw hex/RGB/HSL, px/rem, box-shadow, transition, z-index, custom class, inline CSS или прямые token JSON. Правила зафиксированы в `docs/design-system-governance.md`.
 
 ## Как работает публикация
 

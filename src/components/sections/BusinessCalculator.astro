@@ -121,6 +121,15 @@ const payload = JSON.stringify({
       </p>
       {config.sourceNote && <p class="calculator-note">{config.sourceNote}</p>}
       {
+        config.sourceUrl && (
+          <p class="calculator-note">
+            <a href={config.sourceUrl} target="_blank" rel="noopener noreferrer">
+              {config.sourceLabel ?? "Официальный источник"}
+            </a>
+          </p>
+        )
+      }
+      {
         config.glossary && (
           <details class="calculator-glossary">
             <summary>Расшифровка терминов</summary>
@@ -202,12 +211,19 @@ const payload = JSON.stringify({
       const values = readValues(calculatorForm);
       const result = calculate(config, pricing, values);
       const summary = buildSummary(config.type, values);
+      const isIndividual = result.unknownItems.length > 0 || result.requiredConsultation;
 
       summaryValue.textContent = summary;
-      monthlyValue.textContent = result.hasMonthly
-        ? `${formatRubles(result.monthly)}/мес.`
-        : "По запросу";
-      oneTimeValue.textContent = result.hasOneTime ? formatRubles(result.oneTime) : "По запросу";
+      monthlyValue.textContent = isIndividual
+        ? "Индивидуальный расчёт"
+        : result.hasMonthly
+          ? `${formatRubles(result.monthly)}/мес.`
+          : "По запросу";
+      oneTimeValue.textContent = isIndividual
+        ? "Индивидуальный расчёт"
+        : result.hasOneTime
+          ? formatRubles(result.oneTime)
+          : "По запросу";
       lineItems.replaceChildren(
         ...result.lines.map((line) => {
           const item = document.createElement("li");
@@ -230,7 +246,7 @@ const payload = JSON.stringify({
       if (noteNode) {
         noteNode.textContent =
           result.unknownItems.length > 0 || result.requiredConsultation
-            ? `Нужно уточнить: ${result.unknownItems.join(", ")}.`
+            ? `Индивидуальный расчёт: ${result.unknownItems.join(", ")}.`
             : "Расчёт можно передать в\u00a0заявку вместе с выбранной конфигурацией.";
       }
 
@@ -239,11 +255,11 @@ const payload = JSON.stringify({
         configurationSummary: buildConfigurationText(summary, result)
       });
 
-      if (result.hasMonthly) {
+      if (!isIndividual && result.hasMonthly) {
         params.set("monthlyEstimate", String(result.monthly));
       }
 
-      if (result.hasOneTime) {
+      if (!isIndividual && result.hasOneTime) {
         params.set("oneTimeEstimate", String(result.oneTime));
       }
 
@@ -339,10 +355,10 @@ const payload = JSON.stringify({
       return;
     }
 
-    if (!price || price.status === "unknown") {
+    if (!price || price.status !== "confirmed") {
       result.requiredConsultation = true;
       pushUnknown(result, label);
-      result.lines.push({ label: `${label} × ${rawQuantity}`, value: "по запросу" });
+      result.lines.push({ label: `${label} × ${rawQuantity}`, value: "индивидуально" });
       return;
     }
 
@@ -378,10 +394,6 @@ const payload = JSON.stringify({
   }
 
   function buildSummary(type: string, values: Record<string, any>) {
-    if (type === "internet") {
-      return `Интернет в офис: ${values.speedMbps}\u00a0Мбит/с, ${values.staticIpCount} статических IP`;
-    }
-
     if (type === "telephony") {
       const locationLabels: Record<string, string> = {
         krasnodar: "Краснодар",
@@ -389,22 +401,6 @@ const payload = JSON.stringify({
         manual: "нужна проверка населённого пункта"
       };
       return `Телефония: ${values.ports} сотрудников/устройств, ${values.phoneNumbers} номеров, ${locationLabels[String(values.location)] ?? values.location}`;
-    }
-
-    if (type === "telephony_intrazone") {
-      return `Внутризоновая связь: ${values.minutes} минут`;
-    }
-
-    if (type === "telephony_long_distance") {
-      return `Междугородная связь: ${values.minutes} минут`;
-    }
-
-    if (type === "telephony_international") {
-      return `Международная связь: ${values.minutes} минут`;
-    }
-
-    if (type === "telephony_services") {
-      return "Дополнительные услуги телефонии";
     }
 
     if (type === "cctv") {
@@ -415,27 +411,16 @@ const payload = JSON.stringify({
       return `VPS: ${values.vCpu} CPU, ${values.ramGb}\u00a0ГБ RAM`;
     }
 
-    if (type === "vdi") {
-      const presetLabels: Record<string, string> = {
-        basic: "базовый",
-        standard: "стандартный",
-        power: "усиленный"
-      };
-      return `VDI: ${values.seats} рабочих мест, профиль ${presetLabels[values.preset] ?? values.preset}`;
-    }
-
-    if (type === "colocation") {
-      return `Размещение: ${values.rackUnits}U, ${values.powerWatts}\u00a0Вт, порт ${values.internetPort}`;
-    }
-
-    return `Hot-spot: ${values.plan}, площадок ${values.sitesCount}`;
+    return `Размещение: ${values.rackUnits}U, ${values.powerWatts}\u00a0Вт, порт ${values.internetPort}`;
   }
 
   function buildConfigurationText(summary: string, result: any) {
+    const isIndividual = result.unknownItems.length > 0 || result.requiredConsultation;
     const totals = [
-      result.hasMonthly ? `ежемесячно ${formatRubles(result.monthly)}` : "",
-      result.hasOneTime ? `разово ${formatRubles(result.oneTime)}` : "",
-      result.unknownItems.length > 0 ? `уточнить: ${result.unknownItems.join(", ")}` : ""
+      isIndividual ? "индивидуальный расчёт" : "",
+      !isIndividual && result.hasMonthly ? `ежемесячно ${formatRubles(result.monthly)}` : "",
+      !isIndividual && result.hasOneTime ? `разово ${formatRubles(result.oneTime)}` : "",
+      result.unknownItems.length > 0 ? `состав: ${result.unknownItems.join(", ")}` : ""
     ].filter(Boolean);
 
     return `${summary}. ${totals.join("; ")}.`;

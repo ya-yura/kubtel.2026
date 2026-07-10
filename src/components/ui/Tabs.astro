@@ -1,0 +1,43 @@
+---
+type TabItem = {
+  id: string;
+  label: string;
+  disabled?: boolean;
+};
+
+type Props = {
+  items: TabItem[];
+  selected: string;
+  label: string;
+};
+
+const { items, selected, label } = Astro.props;
+---
+
+<div class="ds-tabs" role="tablist" aria-label={label} data-tabs>
+  {
+    items.map((item) => (
+      <button
+        type="button"
+        role="tab"
+        aria-selected={item.id === selected ? "true" : "false"}
+        disabled={item.disabled}
+        data-tab={item.id}
+      >
+        {item.label}
+      </button>
+    ))
+  }
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-tabs]").forEach((tabList) => {
+    tabList.addEventListener("click", (event) => {
+      const tab = (event.target as HTMLElement).closest<HTMLButtonElement>("[role=tab]");
+      if (!tab || tab.disabled) return;
+      tabList.querySelectorAll<HTMLElement>("[role=tab]").forEach((item) => {
+        item.setAttribute("aria-selected", String(item === tab));
+      });
+    });
+  });
+</script>

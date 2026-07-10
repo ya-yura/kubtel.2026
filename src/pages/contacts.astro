@@ -1,6 +1,11 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { getSitePath, SITE } from "@config/site";
+import { getPhoneHref, getSitePath, SITE } from "@config/site";
+
+const chatLinks = [
+  SITE.maxChatUrl ? { label: "MAX", href: SITE.maxChatUrl } : null,
+  SITE.vkChatUrl ? { label: "VK", href: SITE.vkChatUrl } : null
+].filter((item): item is { label: string; href: string } => Boolean(item));
 ---
 
 <BaseLayout
@@ -22,23 +27,33 @@ import { getSitePath, SITE } from "@config/site";
       <span>Подключение</span>
       <h2>{SITE.salesPhone}</h2>
       <p>Для подключения домашнего интернета, уточнения адреса и выбора тарифа.</p>
-      <a class="card-action" href={`tel:${SITE.salesPhone.replace(/\D/g, "")}`}>Позвонить</a>
+      <a class="card-action" href={getPhoneHref(SITE.salesPhone)}>Позвонить</a>
     </article>
     <article class="contact-card">
       <span>Поддержка</span>
-      <h2>{SITE.supportPhone}</h2>
+      <h2>{SITE.supportDirectPhone}</h2>
       <p>Технические вопросы, аварии, начисления, состояние услуги и помощь абонентам.</p>
-      <a class="card-action" href={`mailto:${SITE.supportEmail}`}>{SITE.supportEmail}</a>
+      <div class="button-row">
+        <a class="card-action" href={getPhoneHref(SITE.supportDirectPhone)}>Позвонить</a>
+        <a class="business-link" href={`mailto:${SITE.supportEmail}`}>{SITE.supportEmail}</a>
+      </div>
     </article>
-    <article class="contact-card" id="messengers">
-      <span>Чаты</span>
-      <h2>MAX и VK</h2>
-      <p>
-        Места под официальные ссылки на чаты поддержки. Перед публикацией URL должны подтвердить
-        администратор и служба поддержки.
-      </p>
-      <a class="card-action" href={getSitePath("/support/")}>Поддержка</a>
-    </article>
+    {
+      chatLinks.length > 0 && (
+        <article class="contact-card" id="messengers">
+          <span>Чаты</span>
+          <h2>Официальные каналы</h2>
+          <p>Переход откроется в выбранном приложении или браузере.</p>
+          <div class="button-row">
+            {chatLinks.map((chat) => (
+              <a class="card-action" href={chat.href} target="_blank" rel="noopener noreferrer">
+                {chat.label}
+              </a>
+            ))}
+          </div>
+        </article>
+      )
+    }
     <article class="contact-card">
       <span>Офис</span>
       <h2>{SITE.officeAddress}</h2>
@@ -53,8 +68,8 @@ import { getSitePath, SITE } from "@config/site";
     </article>
     <article class="contact-card">
       <span>Оплата</span>
-      <h2>Личный кабинет</h2>
-      <p>Проверка баланса, оплата услуг и переход к реквизитам для банковского платежа.</p>
+      <h2>Оплата физлиц и ИП</h2>
+      <p>Онлайн-оплата, квитанция, банковские реквизиты и условия возврата.</p>
       <a class="card-action" href={getSitePath("/payment/")}>Способы оплаты</a>
     </article>
   </section>

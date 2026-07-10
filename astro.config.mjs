@@ -13,6 +13,6 @@ export default defineConfig({
       }),
   base: process.env.PUBLIC_BASE_PATH ?? "/",
   site: process.env.PUBLIC_SITE_URL ?? "http://127.0.0.1:4321",
-  output: "static",
+  output: staticPreview ? "static" : "server",
   trailingSlash: "always"
 });

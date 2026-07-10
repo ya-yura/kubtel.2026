@@ -1,75 +1,104 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { SITE } from "@config/site";
+import { getSitePath, SITE } from "@config/site";
+
+const documents = [
+  {
+    category: "Лицензии",
+    title: "Лицензии и сертификаты",
+    text: "Официальная страница Kubtel содержит действующие виды лицензий и сканы документов.",
+    href: SITE.licensesUrl,
+    label: "Открыть лицензии Kubtel"
+  },
+  {
+    category: "Персональные данные",
+    title: "Политика обработки персональных данных",
+    text: "Официальная страница оператора и опубликованный документ политики обработки персональных данных.",
+    href: SITE.privacyUrl,
+    label: "Открыть политику ПД"
+  },
+  {
+    category: "Физические лица",
+    title: "Условия предоставления услуг связи",
+    text: "Пользовательское соглашение Kubtel: состав услуг, права и обязанности, расчёты и порядок расторжения.",
+    href: SITE.individualTermsUrl,
+    label: "Открыть условия"
+  },
+  {
+    category: "Оплата и возврат",
+    title: "Квитанция, реквизиты и возврат средств",
+    text: "Официальная платёжная страница содержит способы оплаты, банковские реквизиты, условия возврата и заявление абонента.",
+    href: SITE.paymentDocumentsUrl,
+    label: "Открыть платёжные документы"
+  },
+  {
+    category: "Договор",
+    title: "Документы для заключения договора",
+    text: "Перечни документов для физических и юридических лиц опубликованы Kubtel отдельно.",
+    href: SITE.officialDocumentsUrl,
+    label: "Открыть перечни"
+  },
+  {
+    category: "Юридические лица",
+    title: "Условия и договорные документы",
+    text: "Актуальные условия для конкретной услуги и договор направляет отдел по работе с юридическими лицами.",
+    href: getSitePath("/business/request/?segment=legal&service=documents-payment"),
+    label: "Запросить документы"
+  }
+];
 ---
 
 <BaseLayout
   title="Документы, реквизиты и условия"
-  description="Реквизиты ООО «КУБАНЬ-ТЕЛЕКОМ», документы, лицензии, условия оказания услуг связи и политика обработки персональных данных."
+  description="Официальные лицензии, политика персональных данных, условия услуг, реквизиты, оплата и возвраты Kubtel."
   canonicalPath="/documents/"
 >
-  <section class="page-intro section-pad compact-intro">
+  <section class="section-pad compact-intro documents-page">
     <p class="eyebrow">Документы</p>
-    <h1>Реквизиты, лицензии и условия связи</h1>
+    <h1>Официальные документы и реквизиты</h1>
     <p>
-      На этой странице собраны данные компании и места для обязательных документов: лицензий,
-      условий оказания услуг связи и политики обработки персональных данных.
+      Ссылки ведут на действующие материалы Kubtel. Для договорных документов юридического лица
+      предусмотрен прямой запрос в профильный отдел.
     </p>
+
+    <div class="document-grid">
+      {
+        documents.map((document) => (
+          <article class="document-card">
+            <span class="service-category">{document.category}</span>
+            <h2>{document.title}</h2>
+            <p>{document.text}</p>
+            <a
+              class="card-action"
+              href={document.href}
+              target={document.href.startsWith("http") ? "_blank" : undefined}
+              rel={document.href.startsWith("http") ? "noopener noreferrer" : undefined}
+            >
+              {document.label}
+            </a>
+          </article>
+        ))
+      }
+    </div>
   </section>
 
-  <section class="section-pad document-grid" id="requisites">
-    <article class="document-card">
-      <span class="service-category">Реквизиты</span>
-      <h2>{SITE.legalName}</h2>
-      <dl class="details-list">
-        <div>
-          <dt>ИНН / КПП</dt>
-          <dd>{SITE.inn} / {SITE.kpp}</dd>
-        </div>
-        <div>
-          <dt>ОГРН</dt>
-          <dd>{SITE.ogrn}</dd>
-        </div>
-        <div>
-          <dt>Юридический адрес</dt>
-          <dd>{SITE.legalAddress}</dd>
-        </div>
-        <div>
-          <dt>Офис</dt>
-          <dd>{SITE.officeAddress}</dd>
-        </div>
-        <div>
-          <dt>E-mail</dt>
-          <dd><a href={`mailto:${SITE.email}`}>{SITE.email}</a></dd>
-        </div>
-      </dl>
-    </article>
-
-    <article class="document-card">
-      <span class="service-category">Лицензии</span>
-      <h2>Лицензии оператора связи</h2>
-      <p>
-        Для production нужно загрузить актуальные сканы или ссылки на реестр лицензий. Номера
-        лицензий нельзя переносить из памяти: их должен подтвердить ответственный сотрудник.
-      </p>
-    </article>
-
-    <article class="document-card">
-      <span class="service-category">Персональные данные</span>
-      <h2>Политика обработки персональных данных</h2>
-      <p>
-        Формы сайта собирают телефон, имя, адрес, e-mail и данные отклика. Финальный PDF или HTML
-        политики должен быть опубликован здесь до приёма боевых заявок.
-      </p>
-    </article>
-
-    <article class="document-card">
-      <span class="service-category">Договор</span>
-      <h2>Условия оказания услуг связи</h2>
-      <p>
-        Раздел предназначен для публичных условий связи для физических и юридических лиц: порядок
-        подключения, оплаты, блокировки, изменения тарифов и расторжения договора.
-      </p>
-    </article>
+  <section class="section-pad document-card" id="requisites">
+    <span class="service-category">Реквизиты</span>
+    <h2>{SITE.legalName}</h2>
+    <dl class="requisite-list">
+      <div><dt>ИНН</dt><dd>{SITE.inn}</dd></div>
+      <div><dt>КПП</dt><dd>{SITE.kpp}</dd></div>
+      <div><dt>ОГРН</dt><dd>{SITE.ogrn}</dd></div>
+      <div><dt>Юридический адрес</dt><dd>{SITE.legalAddress}</dd></div>
+      <div><dt>Электронная почта</dt><dd>{SITE.email}</dd></div>
+    </dl>
+    <a
+      class="business-link"
+      href={SITE.officialContactsUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Сверить банковские реквизиты на официальном сайте
+    </a>
   </section>
 </BaseLayout>

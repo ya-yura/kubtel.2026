@@ -1,6 +1,7 @@
 ---
-import { getVerificationLabel } from "@lib/verification";
 import type { FaqItem } from "@models/domain";
+import SectionHeading from "@components/ui/SectionHeading.astro";
+import StatusBadge from "@components/ui/StatusBadge.astro";
 
 type Props = {
   items: FaqItem[];
@@ -10,20 +11,19 @@ const { items } = Astro.props;
 ---
 
 <section class="section-pad faq-section" id="faq">
-  <div class="section-heading">
-    <p class="eyebrow">FAQ</p>
-    <h2>Ответы, после которых спокойнее</h2>
-  </div>
+  <SectionHeading eyebrow="FAQ" title="Ответы, после которых спокойнее" />
   <div class="faq-list">
     {
       items.map((item) => (
         <details>
           <summary>{item.question}</summary>
           <p>{item.answer}</p>
-          {item.proof && (
-            <p class:list={["data-status", item.proof.status]}>
-              {getVerificationLabel(item.proof.status)}: {item.proof.value}
-            </p>
+          {item.proof.status === "confirmed" && (
+            <StatusBadge
+              as="p"
+              status="confirmed"
+              label={`${item.proof.label}: ${item.proof.value}`}
+            />
           )}
         </details>
       ))

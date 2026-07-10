@@ -18,14 +18,6 @@ export type BusinessCalculationResult<TDetails extends Record<string, unknown>> 
   details: TDetails;
 };
 
-export type InternetOfficeInput = {
-  speedMbps: number;
-  staticIpCount?: number;
-  backupChannel?: boolean;
-  routerSetup?: boolean;
-  slaNeed?: boolean;
-};
-
 export type TelephonyInput = {
   ports: number;
   phoneNumbers: number;
@@ -52,12 +44,6 @@ export type VpsInput = {
   ddosProtection?: boolean;
 };
 
-export type VdiInput = {
-  seats: number;
-  preset: "basic" | "standard" | "power";
-  backup?: boolean;
-};
-
 export type ColocationInput = {
   rackUnits: number;
   powerWatts: number;
@@ -66,50 +52,6 @@ export type ColocationInput = {
   ipmi?: boolean;
   remoteHands?: boolean;
 };
-
-export type WifiAuthInput = {
-  plan: "basic" | "standard" | "premium";
-  sitesCount: number;
-  smsNeed?: boolean;
-  brandedPage?: boolean;
-};
-
-export function calculateInternetOffice(
-  input: InternetOfficeInput,
-  pricing: BusinessPricingCatalog
-): BusinessCalculationResult<InternetOfficeInput> {
-  const accumulator = createAccumulator();
-
-  addLine(
-    accumulator,
-    pricing[`internet.speed.${input.speedMbps}`],
-    `internet.speed.${input.speedMbps}`
-  );
-  addRepeatedLine(
-    accumulator,
-    pricing["internet.static_ip"],
-    input.staticIpCount ?? 0,
-    "internet.static_ip"
-  );
-  addOptionalLine(
-    accumulator,
-    pricing["internet.backup_channel"],
-    Boolean(input.backupChannel),
-    "internet.backup_channel"
-  );
-  addOptionalLine(
-    accumulator,
-    pricing["internet.router_setup"],
-    Boolean(input.routerSetup),
-    "internet.router_setup"
-  );
-
-  if (input.slaNeed) {
-    accumulator.unknownItems.add("internet.sla");
-  }
-
-  return finalizeCalculation(accumulator, input, `Интернет ${input.speedMbps} Мбит/с`);
-}
 
 export function calculateTelephony(
   input: TelephonyInput,
@@ -189,22 +131,6 @@ export function calculateVps(
   return finalizeCalculation(accumulator, input, `VPS: ${input.vCpu} CPU, ${input.ramGb} ГБ RAM`);
 }
 
-export function calculateVdi(
-  input: VdiInput,
-  pricing: BusinessPricingCatalog
-): BusinessCalculationResult<VdiInput> {
-  const accumulator = createAccumulator();
-
-  addRepeatedLine(accumulator, pricing[`vdi.${input.preset}`], input.seats, `vdi.${input.preset}`);
-  addOptionalLine(accumulator, pricing["vdi.backup"], Boolean(input.backup), "vdi.backup");
-
-  return finalizeCalculation(
-    accumulator,
-    input,
-    `VDI: ${input.seats} рабочих мест, preset ${input.preset}`
-  );
-}
-
 export function calculateColocation(
   input: ColocationInput,
   pricing: BusinessPricingCatalog
@@ -240,33 +166,6 @@ export function calculateColocation(
     accumulator,
     input,
     `Colocation: ${input.rackUnits}U, ${input.powerWatts} Вт, порт ${input.internetPort}`
-  );
-}
-
-export function calculateWifiAuth(
-  input: WifiAuthInput,
-  pricing: BusinessPricingCatalog
-): BusinessCalculationResult<WifiAuthInput> {
-  const accumulator = createAccumulator();
-
-  addRepeatedLine(
-    accumulator,
-    pricing[`wifi_auth.${input.plan}`],
-    input.sitesCount,
-    `wifi_auth.${input.plan}`
-  );
-  addOptionalLine(accumulator, pricing["wifi_auth.sms"], Boolean(input.smsNeed), "wifi_auth.sms");
-  addOptionalLine(
-    accumulator,
-    pricing["wifi_auth.branded_page"],
-    Boolean(input.brandedPage),
-    "wifi_auth.branded_page"
-  );
-
-  return finalizeCalculation(
-    accumulator,
-    input,
-    `Wi‑Fi-авторизация: ${input.plan}, ${input.sitesCount} площадок`
   );
 }
 
@@ -320,15 +219,10 @@ function addLine(
   key: string,
   quantity = 1
 ): void {
-  if (!price || price.status === "unknown") {
+  if (!price || price.status !== "confirmed") {
     accumulator.unknownItems.add(key);
     accumulator.requiredConsultation = true;
     return;
-  }
-
-  if (price.status === "needs_verification") {
-    accumulator.unknownItems.add(key);
-    accumulator.requiredConsultation = true;
   }
 
   if (typeof price.monthly === "number") {

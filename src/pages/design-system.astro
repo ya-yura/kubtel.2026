@@ -1,0 +1,302 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import ActionLink from "@components/ui/ActionLink.astro";
+import Button from "@components/ui/Button.astro";
+import FormField from "@components/ui/FormField.astro";
+import SectionHeading from "@components/ui/SectionHeading.astro";
+import StatusBadge from "@components/ui/StatusBadge.astro";
+import Tabs from "@components/ui/Tabs.astro";
+import TariffCard from "@components/ui/TariffCard.astro";
+import { getTariffs } from "@lib/content";
+
+export const prerender = false;
+
+const tariffs = await getTariffs();
+const colorTokens = [
+  ["Text / primary", "--kb-color-text-primary"],
+  ["Text / secondary", "--kb-color-text-secondary"],
+  ["Surface / page", "--kb-color-surface-page"],
+  ["Surface / section", "--kb-color-surface-section"],
+  ["Action / primary", "--kb-color-action-primary-background"],
+  ["Status / success", "--kb-color-status-success-text"],
+  ["Status / warning", "--kb-color-status-warning-text"],
+  ["Status / danger", "--kb-color-status-danger-text"],
+  ["Status / info", "--kb-color-status-info-text"]
+];
+const spacingTokens = [
+  { name: "spacing.1", value: "var(--kb-spacing-1)" },
+  { name: "spacing.2", value: "var(--kb-spacing-2)" },
+  { name: "spacing.3", value: "var(--kb-spacing-3)" },
+  { name: "spacing.4", value: "var(--kb-spacing-4)" },
+  { name: "spacing.5", value: "var(--kb-spacing-5)" },
+  { name: "spacing.6", value: "var(--kb-spacing-6)" },
+  { name: "spacing.7", value: "var(--kb-spacing-7)" },
+  { name: "spacing.8", value: "var(--kb-spacing-8)" }
+];
+const tabs = [
+  { id: "internet", label: "Интернет" },
+  { id: "tv", label: "ТВ" },
+  { id: "archive", label: "Архив", disabled: true }
+];
+---
+
+<BaseLayout
+  title="Design system"
+  description="Внутренний showcase компонентов и дизайн-токенов Kubtel."
+  canonicalPath="/design-system/"
+  noindex
+>
+  <section class="page-intro section-pad compact-intro ds-intro">
+    <p class="eyebrow">Internal / noindex</p>
+    <h1>Дизайн-система Kubtel</h1>
+    <p>Один source of truth для light, business dark, readable mode, компонентов и композиций.</p>
+  </section>
+
+  <section class="section-pad ds-section" id="foundations">
+    <SectionHeading
+      eyebrow="Foundations"
+      title="Цвет, типографика и ритм"
+      description="Все образцы используют сгенерированные CSS custom properties, а не локальные значения."
+    />
+    <div class="ds-swatch-grid">
+      {
+        colorTokens.map(([label, token]) => (
+          <article class="ds-swatch" style={`--ds-swatch: var(${token})`}>
+            <span aria-hidden="true" />
+            <strong>{label}</strong>
+            <code>{token}</code>
+          </article>
+        ))
+      }
+    </div>
+    <div class="ds-type-stack">
+      <p class="ds-display">Display — интернет без технического тумана</p>
+      <h2>Heading — понятные условия подключения</h2>
+      <p>Body — читаемый основной текст с корректной кириллицей и предсказуемой длиной строки.</p>
+      <small>Caption — пояснение, статус или редакторская метка.</small>
+    </div>
+    <div class="ds-spacing" aria-label="Шкала отступов">
+      {
+        spacingTokens.map((token) => (
+          <span style={`--ds-space: ${token.value}`}>
+            <>
+              <i aria-hidden="true" />
+              <code>{token.name}</code>
+            </>
+          </span>
+        ))
+      }
+    </div>
+    <div class="ds-foundation-row">
+      <article class="ds-radius-card">Radius / card</article>
+      <article class="ds-shadow-card">Elevation / floating</article>
+    </div>
+  </section>
+
+  <section class="section-pad ds-section" id="components">
+    <SectionHeading
+      eyebrow="Components"
+      title="Состояния компонентов"
+      description="Hover, active, selected и focus-visible имеют независимые контракты."
+    />
+    <div class="ds-component-stack">
+      <div class="button-row">
+        <ActionLink href="#components">Primary link</ActionLink>
+        <ActionLink href="#components" variant="secondary">Secondary link</ActionLink>
+        <Button>Primary button</Button>
+        <Button variant="secondary">Secondary button</Button>
+        <Button loading>Loading</Button>
+        <Button disabled>Disabled</Button>
+      </div>
+      <div class="ds-form-grid">
+        <FormField id="ds-default" label="Телефон" type="tel" placeholder="+7" hint="Default" />
+        <FormField
+          id="ds-success"
+          label="Адрес"
+          value="Краснодар"
+          state="success"
+          hint="Адрес распознан"
+        />
+        <FormField
+          id="ds-error"
+          label="E-mail"
+          type="email"
+          value="mail@"
+          state="error"
+          hint="Проверьте адрес"
+        />
+        <FormField
+          id="ds-read-only"
+          label="Тариф"
+          value="Домашний 300"
+          state="read-only"
+          hint="Read-only"
+        />
+      </div>
+      <Tabs items={tabs} selected="internet" label="Пример вкладок" />
+      <div class="ds-status-row">
+        <StatusBadge status="confirmed" label="Подтверждено" />
+        <StatusBadge status="needs_verification" label="Нужна сверка" />
+        <StatusBadge status="draft" label="Черновик" />
+      </div>
+    </div>
+    {
+      tariffs[0] && (
+        <div class="ds-card-sample">
+          <TariffCard tariff={tariffs[0]} />
+        </div>
+      )
+    }
+  </section>
+
+  <section class="section-pad ds-section" id="compositions">
+    <SectionHeading
+      eyebrow="Recipes"
+      title="Композиционные паттерны"
+      description="Page shell, split hero, card grid, form with summary и mobile action bar собираются из общих recipe tokens."
+    />
+    <div class="ds-composition-grid">
+      <article>
+        <strong>Page shell</strong><span>container + inline padding + section rhythm</span>
+      </article>
+      <article><strong>Split hero</strong><span>content + visual, collapse at xl</span></article>
+      <article><strong>Card grid</strong><span>auto-fit cards with governed gap</span></article>
+      <article>
+        <strong>Form with summary</strong><span>form + sticky contextual summary</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="section-pad ds-section" id="themes">
+    <SectionHeading eyebrow="Themes" title="Light, business и readable" />
+    <div class="ds-theme-grid">
+      <article data-theme="light">
+        <strong>Light</strong><p>B2C semantic roles.</p><Button>Действие</Button>
+      </article>
+      <article data-theme="business">
+        <strong>Business dark</strong><p>Те же роли с dark overrides.</p><Button>Рассчитать</Button>
+      </article>
+      <article data-theme="readable">
+        <strong>Readable</strong><p>Ахроматический режим и крупные controls.</p><Button
+          >Продолжить</Button
+        >
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .ds-section {
+    display: grid;
+    gap: var(--kb-layout-grid-gap);
+  }
+
+  .ds-swatch-grid,
+  .ds-composition-grid,
+  .ds-theme-grid,
+  .ds-form-grid {
+    display: grid;
+    gap: var(--kb-composition-card-grid-gap);
+    grid-template-columns: var(--kb-composition-card-grid-columns);
+  }
+
+  .ds-swatch,
+  .ds-composition-grid article,
+  .ds-theme-grid article,
+  .ds-type-stack,
+  .ds-component-stack,
+  .ds-foundation-row article {
+    background: var(--kb-component-card-background);
+    border: var(--kb-stroke-default) solid var(--kb-component-card-border);
+    border-radius: var(--kb-component-card-radius);
+    padding: var(--kb-component-card-padding);
+  }
+
+  .ds-swatch {
+    display: grid;
+    gap: var(--kb-layout-grid-gap-compact);
+  }
+
+  .ds-swatch > span {
+    background: var(--ds-swatch);
+    border: var(--kb-stroke-default) solid var(--kb-color-border-default);
+    border-radius: var(--kb-shape-control-small);
+    min-height: var(--kb-layout-touch-target-input);
+  }
+
+  .ds-swatch code,
+  .ds-spacing code {
+    overflow-wrap: anywhere;
+  }
+
+  .ds-type-stack {
+    max-width: var(--kb-layout-content-text-max-width);
+  }
+
+  .ds-display {
+    color: var(--kb-color-text-primary);
+    font-family: var(--kb-typography-display-family);
+    font-size: var(--kb-font-size-display-sm);
+    font-weight: var(--kb-typography-display-weight);
+    line-height: var(--kb-typography-display-line-height);
+  }
+
+  .ds-spacing,
+  .ds-spacing span,
+  .ds-status-row,
+  .ds-foundation-row {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kb-layout-grid-gap);
+  }
+
+  .ds-spacing span {
+    gap: var(--kb-layout-grid-gap-compact);
+  }
+
+  .ds-spacing i {
+    background: var(--kb-color-action-primary-background);
+    block-size: var(--kb-spacing-4);
+    inline-size: var(--ds-space);
+  }
+
+  .ds-foundation-row article {
+    flex: 1 1 var(--kb-composition-tariff-comparison-min-column-width);
+  }
+
+  .ds-radius-card {
+    border-radius: var(--kb-shape-panel) !important;
+  }
+
+  .ds-shadow-card {
+    box-shadow: var(--kb-elevation-floating);
+  }
+
+  .ds-component-stack {
+    display: grid;
+    gap: var(--kb-layout-grid-gap);
+  }
+
+  .ds-card-sample {
+    max-width: var(--kb-composition-tariff-comparison-min-column-width);
+  }
+
+  .ds-composition-grid article,
+  .ds-theme-grid article {
+    display: grid;
+    gap: var(--kb-layout-grid-gap-compact);
+  }
+
+  .ds-theme-grid [data-theme="business"] {
+    background: var(--kb-color-surface-page);
+    border-color: var(--kb-color-border-default);
+    color: var(--kb-color-text-primary);
+  }
+
+  .ds-theme-grid [data-theme="readable"] {
+    background: var(--kb-color-surface-page);
+    border-color: var(--kb-color-border-strong);
+    color: var(--kb-color-text-primary);
+  }
+</style>

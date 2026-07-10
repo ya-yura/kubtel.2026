@@ -1,0 +1,20 @@
+---
+type Props = {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  level?: 2 | 3;
+  tight?: boolean;
+  class?: string;
+};
+
+const { eyebrow, title, description, level = 2, tight = false, class: className } = Astro.props;
+const Heading = `h${level}` as "h2" | "h3";
+---
+
+<div class:list={["section-heading", className, { "is-tight": tight }]}>
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  <Heading>{title}</Heading>
+  {description && <p>{description}</p>}
+  <slot />
+</div>

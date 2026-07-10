@@ -1,0 +1,23 @@
+---
+import { getVerificationLabel } from "@lib/verification";
+import type { VerificationStatus } from "@models/domain";
+
+type Props = {
+  status: VerificationStatus;
+  label?: string;
+  as?: "p" | "span";
+  class?: string;
+};
+
+const {
+  status,
+  label = getVerificationLabel(status),
+  as = "span",
+  class: className
+} = Astro.props as Props;
+const Tag = as;
+---
+
+<Tag class:list={["data-status", status, className]} data-status={status}>
+  <span class="visually-hidden">Статус: </span>{label}<slot />
+</Tag>

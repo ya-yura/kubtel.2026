@@ -10,13 +10,14 @@ import { businessProofStrip, businessSegments, businessServices } from "@lib/bus
 import type { JsonLdObject } from "@lib/seo/schema";
 import "@styles/business-page.css";
 
-type CalculatorTab = {
+type ServiceTab = {
   slug: string;
   title: string;
   navTitle?: string;
+  badge: string;
   summary: string;
   options: string[];
-  configs?: BusinessCalculatorConfig[];
+  config?: BusinessCalculatorConfig;
 };
 
 const requestPath = "/business/request/";
@@ -61,6 +62,7 @@ const businessFaq = [
 ];
 const internetOfficeProfiles = [
   {
+    slug: "small",
     title: "Малый офис",
     seats: "2-5 рабочих мест",
     speed: "10-20 Мбит/с",
@@ -68,6 +70,7 @@ const internetOfficeProfiles = [
     configuration: "Малый офис: 2-5 рабочих мест, ориентир скорости 10-20 Мбит/с."
   },
   {
+    slug: "medium",
     title: "Средний офис",
     seats: "10-15 рабочих мест",
     speed: "30-50 Мбит/с",
@@ -75,6 +78,7 @@ const internetOfficeProfiles = [
     configuration: "Средний офис: 10-15 рабочих мест, ориентир скорости 30-50 Мбит/с."
   },
   {
+    slug: "large",
     title: "Крупный офис",
     seats: "20 и более рабочих мест",
     speed: "70-100 Мбит/с",
@@ -83,64 +87,118 @@ const internetOfficeProfiles = [
   }
 ];
 
-const calculatorTabs: CalculatorTab[] = [
+const telephonyAgencyRoutes = [
   {
-    slug: "internet",
-    title: "Интернет",
-    summary: "Корпоративный доступ в интернет для офиса, магазина, склада или точки обслуживания.",
-    options: ["скорость канала", "статические IP", "резервный канал", "настройка маршрутизатора"],
-    configs: [businessCalculatorConfigs.internet]
+    title: "Внутризоновая связь",
+    text: "Тарификацию по направлениям определяет оператор дальней связи; Kubtel подключает услугу как агент."
   },
   {
-    slug: "telephony",
-    title: "Телефония",
-    summary: "IP-телефония, внутризоновая, междугородная и международная связь.",
-    options: ["SIP-порты", "городские номера", "внешние линии", "ВАТС", "направления связи"],
-    configs: [
-      businessCalculatorConfigs.telephony,
-      businessCalculatorConfigs.telephony_intrazone,
-      businessCalculatorConfigs.telephony_long_distance,
-      businessCalculatorConfigs.telephony_international,
-      businessCalculatorConfigs.telephony_services
+    title: "Междугородная связь",
+    text: "Стоимость зависит от конкретного направления и берётся из официальной таблицы оператора дальней связи."
+  },
+  {
+    title: "Международная связь",
+    text: "Цена зависит от страны, типа сети и направления, поэтому единый калькулятор давал бы неверный результат."
+  }
+];
+const telephonyAgencyTariffsUrl = "https://kubtel.ru/files/file/tariffs-megafon.pdf";
+const hotspotPlans = [
+  {
+    title: "Базовый",
+    features: [
+      "авторизация по звонку без лимита",
+      "брендированная стартовая страница",
+      "рекламный баннер",
+      "база посетителей и мультиязычность"
     ]
   },
   {
-    slug: "cctv",
-    title: "Видеонаблюдение",
-    navTitle: "Камеры",
-    summary: "Камеры, облачный архив, оборудование и монтаж для офисов, складов и торговых точек.",
-    options: ["количество камер", "глубина архива", "поставка камер", "монтаж"],
-    configs: [businessCalculatorConfigs.cctv]
+    title: "Стандарт",
+    features: [
+      "возможности базового тарифа",
+      "пакет 200 SMS для авторизации",
+      "перенаправление после авторизации",
+      "управление трафиком"
+    ]
+  },
+  {
+    title: "Премиум",
+    features: [
+      "возможности стандартного тарифа",
+      "авторизация по ваучеру",
+      "периодическое перенаправление",
+      "до трёх страниц для перенаправления"
+    ]
+  }
+];
+const vdiPackages = [
+  {
+    title: "Виртуальное рабочее место",
+    resources: "2 ядра, 4 ГБ ОЗУ, 50 ГБ HDD",
+    features: [
+      "удалённый доступ с компьютера или мобильного устройства",
+      "выбранная операционная система и бизнес-приложения",
+      "резервное копирование"
+    ]
+  }
+];
+
+const serviceTabs: ServiceTab[] = [
+  {
+    slug: "internet",
+    title: "Интернет в офис",
+    badge: "Профили",
+    summary: "Корпоративный доступ в интернет для офиса, магазина, склада или точки обслуживания.",
+    options: ["малый офис", "средний офис", "крупный офис"]
   },
   {
     slug: "colocation",
     title: "Размещение",
+    badge: "Калькулятор",
     summary: "Размещение серверного оборудования в ЦОД Kubtel с питанием и связностью.",
     options: ["юниты", "питание", "порт", "IPv4", "IPMI", "удалённые работы"],
-    configs: [businessCalculatorConfigs.colocation]
+    config: businessCalculatorConfigs.colocation
   },
   {
-    slug: "wifi-auth",
-    title: "Hot-spot",
-    summary: "Гостевой Wi-Fi с авторизацией посетителей для публичных точек.",
-    options: ["тариф", "количество площадок", "SMS-авторизация", "брендированная страница"],
-    configs: [businessCalculatorConfigs.wifi_auth]
+    slug: "telephony",
+    title: "Телефония",
+    badge: "Калькулятор",
+    summary: "Собственные услуги Kubtel и официальные тарифы оператора дальней связи.",
+    options: ["SIP-порты", "городские номера", "линии", "ВАТС", "автооператор"],
+    config: businessCalculatorConfigs.telephony
   },
   {
     slug: "vps",
     title: "Виртуальный сервер",
     navTitle: "VPS",
+    badge: "Калькулятор",
     summary: "CPU, RAM, диски, IP-адреса и резервное копирование.",
     options: ["CPU", "RAM", "SSD/HDD", "IPv4", "резервное копирование", "DDoS-защита"],
-    configs: [businessCalculatorConfigs.vps]
+    config: businessCalculatorConfigs.vps
+  },
+  {
+    slug: "cctv",
+    title: "Видеонаблюдение",
+    navTitle: "Камеры",
+    badge: "Калькулятор",
+    summary: "Камеры, облачный архив, оборудование и монтаж для офисов, складов и торговых точек.",
+    options: ["количество камер", "глубина архива", "поставка камер", "монтаж"],
+    config: businessCalculatorConfigs.cctv
+  },
+  {
+    slug: "wifi-auth",
+    title: "Hot-spot",
+    badge: "Тарифы",
+    summary: "Гостевой Wi-Fi с подтверждёнными способами авторизации и пакетами функций.",
+    options: ["Базовый", "Стандарт", "Премиум"]
   },
   {
     slug: "vdi",
-    title: "Рабочие места",
+    title: "Виртуальные рабочие места",
     navTitle: "VDI",
-    summary: "Виртуальные рабочие места для сотрудников с профилем ресурсов и backup.",
-    options: ["количество мест", "профиль ресурсов", "резервное копирование"],
-    configs: [businessCalculatorConfigs.vdi]
+    badge: "Пакеты",
+    summary: "Удалённые рабочие места с подтверждённым базовым профилем ресурсов.",
+    options: ["2 ядра", "4 ГБ ОЗУ", "50 ГБ HDD"]
   }
 ];
 
@@ -201,8 +259,11 @@ const pageSchema: JsonLdObject = {
         <a class="business-link" href={getSitePath("/business/datacenter-access/")}>
           Заявка на посещение ЦОД
         </a>
-        <a class="business-link" href={SITE.paymentUrl} target="_blank" rel="noopener noreferrer">
-          Оплатить услуги
+        <a
+          class="business-link"
+          href={getSitePath(`${legalRequestPath}&service=documents-payment`)}
+        >
+          Запросить платёжные документы
         </a>
       </div>
     </section>
@@ -291,18 +352,31 @@ const pageSchema: JsonLdObject = {
 
     <section class="section-pad business-service-workspace" id="business-calculators">
       <div class="section-heading">
-        <p class="eyebrow">Услуги и калькуляторы</p>
+        <p class="eyebrow">Семь направлений</p>
         <h2>Информация, расчёт и заявка</h2>
         <p>
-          По каждой основной услуге доступен калькулятор и кнопка «Подключить» с передачей выбранной
-          конфигурации в заявку.
+          Четыре услуги можно собрать в калькуляторе. Для интернета выбирается профиль офиса, а
+          Hot-spot и виртуальные рабочие места представлены подтверждёнными пакетами без
+          неподтверждённых цен.
         </p>
       </div>
 
       <div class="business-service-tabs" data-business-service-tabs>
+        <label class="business-service-select">
+          <span>Направление</span>
+          <select data-service-select aria-label="Выберите бизнес-услугу">
+            {
+              serviceTabs.map((item, index) => (
+                <option value={item.slug} selected={index === 0}>
+                  {item.title}
+                </option>
+              ))
+            }
+          </select>
+        </label>
         <nav class="business-service-list" aria-label="Услуги для бизнеса">
           {
-            calculatorTabs.map((item, index) => (
+            serviceTabs.map((item, index) => (
               <button
                 class="business-service-row"
                 type="button"
@@ -311,7 +385,7 @@ const pageSchema: JsonLdObject = {
               >
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <strong>{item.navTitle ?? item.title}</strong>
-                <small>Калькулятор</small>
+                <small>{item.badge}</small>
                 <p>{item.summary}</p>
               </button>
             ))
@@ -320,7 +394,7 @@ const pageSchema: JsonLdObject = {
 
         <div class="business-service-panel" aria-live="polite">
           {
-            calculatorTabs.map((item, index) => (
+            serviceTabs.map((item, index) => (
               <article
                 class:list={["business-service-panel-item", { "is-active": index === 0 }]}
                 data-service-panel={item.slug}
@@ -359,19 +433,129 @@ const pageSchema: JsonLdObject = {
                             <a
                               class="card-action"
                               href={getSitePath(
-                                `${requestPath}?service=internet&configurationSummary=${encodeURIComponent(
-                                  profile.configuration
-                                )}`
+                                `${requestPath}?segment=legal&service=internet&officeProfile=${profile.slug}&configurationSummary=${encodeURIComponent(profile.configuration)}`
                               )}
                             >
-                              Подключить
+                              Оставить заявку
                             </a>
                           </article>
                         ))}
                       </div>
                     </section>
+                  ) : item.slug === "telephony" ? (
+                    <>
+                      {item.config && <BusinessCalculator config={item.config} />}
+                      <section class="hotspot-plan-panel telephony-agency-panel">
+                        <div class="section-heading is-tight">
+                          <p class="eyebrow">Агентская схема</p>
+                          <h3>Внутризоновая, междугородная и международная связь</h3>
+                          <p>
+                            Эти направления оказывает оператор дальней связи, а Kubtel выступает
+                            агентом. Поэтому они не считаются отдельными калькуляторами.
+                          </p>
+                        </div>
+                        <div class="hotspot-plan-grid">
+                          {telephonyAgencyRoutes.map((route) => (
+                            <article>
+                              <h3>{route.title}</h3>
+                              <p>{route.text}</p>
+                            </article>
+                          ))}
+                        </div>
+                        <a
+                          class="business-link"
+                          href={telephonyAgencyTariffsUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Официальные тарифы по направлениям, PDF
+                        </a>
+                      </section>
+                    </>
+                  ) : item.slug === "wifi-auth" ? (
+                    <section class="hotspot-plan-panel" aria-label="Тарифы Hot-spot">
+                      <div class="section-heading is-tight">
+                        <p class="eyebrow">Подтверждённый состав</p>
+                        <h3>Тарифы Hot-spot</h3>
+                        <p>
+                          Цена подбирается индивидуально: официальный источник подтверждает состав
+                          тарифов, но не публикует актуальные значения.
+                        </p>
+                      </div>
+                      <div class="hotspot-plan-grid">
+                        {hotspotPlans.map((plan) => (
+                          <article>
+                            <h3>{plan.title}</h3>
+                            <ul class="business-mini-list">
+                              {plan.features.map((feature) => (
+                                <li>{feature}</li>
+                              ))}
+                            </ul>
+                            <a
+                              class="card-action"
+                              href={getSitePath(
+                                `${requestPath}?segment=legal&service=wifi-auth&configurationSummary=${encodeURIComponent(`Hot-spot, тариф ${plan.title}. Индивидуальный расчёт.`)}`
+                              )}
+                            >
+                              Оставить заявку
+                            </a>
+                          </article>
+                        ))}
+                      </div>
+                      <a
+                        class="business-link"
+                        href="https://kubtel.ru/legal/smallbusiness/wifi/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Официальное описание Hot-spot Kubtel
+                      </a>
+                    </section>
+                  ) : item.slug === "vdi" ? (
+                    <section
+                      class="hotspot-plan-panel"
+                      aria-label="Пакеты виртуальных рабочих мест"
+                    >
+                      <div class="section-heading is-tight">
+                        <p class="eyebrow">Подтверждённый пакет</p>
+                        <h3>Виртуальные рабочие места</h3>
+                        <p>
+                          Стоимость зависит от количества мест, ОС, приложений и лицензий и
+                          рассчитывается индивидуально.
+                        </p>
+                      </div>
+                      <div class="hotspot-plan-grid is-single">
+                        {vdiPackages.map((pack) => (
+                          <article>
+                            <h3>{pack.title}</h3>
+                            <strong>{pack.resources}</strong>
+                            <ul class="business-mini-list">
+                              {pack.features.map((feature) => (
+                                <li>{feature}</li>
+                              ))}
+                            </ul>
+                            <a
+                              class="card-action"
+                              href={getSitePath(
+                                `${requestPath}?segment=legal&service=vdi&configurationSummary=${encodeURIComponent(`${pack.title}: ${pack.resources}. Индивидуальный расчёт.`)}`
+                              )}
+                            >
+                              Оставить заявку
+                            </a>
+                          </article>
+                        ))}
+                      </div>
+                      <a
+                        class="business-link"
+                        href="https://kubtel.ru/legal/smallbusiness/datac/vdi"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Официальное описание VDI Kubtel
+                      </a>
+                    </section>
                   ) : (
-                    item.configs?.map((config) => <BusinessCalculator config={config} />)
+                    item.config && <BusinessCalculator config={item.config} />
                   )}
                 </div>
               </article>
@@ -397,15 +581,10 @@ const pageSchema: JsonLdObject = {
           <strong>Заявка на посещение ЦОД</strong>
           <p>Для планового доступа к оборудованию укажите площадку, дату, время и состав работ.</p>
         </a>
-        <a
-          class="business-ops-card"
-          href={SITE.paymentUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <span>Оплата</span>
-          <strong>Оплатить услуги на сайте</strong>
-          <p>Переход в личный кабинет для оплаты услуг юридических лиц и ИП.</p>
+        <a class="business-ops-card" href={getSitePath(budgetRequestPath)}>
+          <span>B2G</span>
+          <strong>Бюджетные организации</strong>
+          <p>Отдельное обращение в сектор государственных заказчиков без смешения с B2B.</p>
         </a>
       </div>
     </section>
@@ -483,18 +662,25 @@ const pageSchema: JsonLdObject = {
   document.querySelectorAll<HTMLElement>("[data-business-service-tabs]").forEach((root) => {
     const tabs = [...root.querySelectorAll<HTMLButtonElement>("[data-service-tab]")];
     const panels = [...root.querySelectorAll<HTMLElement>("[data-service-panel]")];
+    const select = root.querySelector<HTMLSelectElement>("[data-service-select]");
+    const params = new URLSearchParams(window.location.search);
 
-    const requestedTab = normalizeCalculatorParam(
-      new URLSearchParams(window.location.search).get("calculator")
-    );
+    const requestedTab = normalizeServiceParam(params.get("calculator") ?? params.get("service"));
     activate(
       tabs.some((tab) => tab.dataset.serviceTab === requestedTab) ? requestedTab : "internet"
     );
 
     tabs.forEach((tab) => {
       tab.addEventListener("click", () => {
-        activate(tab.dataset.serviceTab ?? "internet");
+        const slug = tab.dataset.serviceTab ?? "internet";
+        activate(slug);
+        persistSelection(slug);
       });
+    });
+
+    select?.addEventListener("change", () => {
+      activate(select.value);
+      persistSelection(select.value);
     });
 
     function activate(slug: string | null) {
@@ -505,10 +691,25 @@ const pageSchema: JsonLdObject = {
       panels.forEach((panel) => {
         panel.classList.toggle("is-active", panel.dataset.servicePanel === slug);
       });
+
+      if (select && slug) {
+        select.value = slug;
+      }
     }
 
-    function normalizeCalculatorParam(value: string | null) {
+    function persistSelection(slug: string) {
+      const nextUrl = new URL(window.location.href);
+      nextUrl.searchParams.set("calculator", slug);
+      nextUrl.searchParams.delete("service");
+      window.history.replaceState({}, "", nextUrl);
+    }
+
+    function normalizeServiceParam(value: string | null) {
       if (value === "wifi_auth") {
+        return "wifi-auth";
+      }
+
+      if (value === "hotspot" || value === "hot-spot") {
         return "wifi-auth";
       }
 

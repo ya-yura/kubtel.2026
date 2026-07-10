@@ -125,7 +125,8 @@ export function buildBusinessLeadSubmission({
         address: input.address,
         employeesOrSites: input.employeesOrSites,
         mobilePhone: input.mobilePhone,
-        preferredContact: input.preferredContact || null
+        preferredContact: input.preferredContact || null,
+        officeProfile: input.officeProfile || null
       }
     },
     routing,

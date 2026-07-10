@@ -30,7 +30,11 @@ const tariffItems: SearchItem[] = tariffs.map((tariff) => ({
   title: tariff.title,
   href: `/tariffs/#${tariff.slug}`,
   category: "Тариф",
-  summary: `${tariff.speedDownload} Мбит/с, ${formatRubles(tariff.priceMonth)} в месяц. ${tariff.benefitDescription}`,
+  summary:
+    tariff.commercialReview.priceStatus === "confirmed" &&
+    tariff.commercialReview.speedStatus === "confirmed"
+      ? `${tariff.speedDownload} Мбит/с, ${formatRubles(tariff.priceMonth)} в месяц. ${tariff.benefitDescription}`
+      : `${tariff.benefitDescription} Параметры уточняются по адресу подключения.`,
   keywords: [
     tariff.title,
     tariff.slug,
@@ -86,7 +90,7 @@ const businessSegmentItems: SearchItem[] = businessSegments.map((segment) => ({
   keywords: [segment.title, segment.summary, segment.pain, segment.trigger, ...segment.fields]
 }));
 
-const searchItems = [
+const rawSearchItems = [
   ...routeItems,
   ...tariffItems,
   ...serviceItems,
@@ -98,10 +102,12 @@ const searchItems = [
     href: "/business/?calculator=telephony#business-calculators",
     category: "Подсказка",
     summary:
-      "Расшифровка терминов и расчёт телефонии с ценой за SIP-порт, номер и одновременный внешний разговор.",
+      "Расшифровка терминов и индивидуальный расчёт SIP-портов, номеров и одновременных линий.",
     keywords: ["sip", "sip-порт", "внешняя линия", "внешние линии", "городской номер", "телефония"]
   }
 ] satisfies SearchItem[];
+
+const searchItems = rawSearchItems.map((item) => ({ ...item, href: getSitePath(item.href) }));
 
 const searchPayload = JSON.stringify(searchItems).replace(/</g, "\\u003c");
 const initialItems = searchItems.slice(0, 8);
@@ -136,7 +142,7 @@ function getBusinessServiceHref(slug: string) {
       бизнес-услугам Kubtel.
     </p>
 
-    <div class="search-shell" data-site-search>
+    <div class="search-shell" data-site-search data-contacts-path={getSitePath("/contacts/")}>
       <script is:inline type="application/json" data-search-index set:html={searchPayload} />
       <label class="search-box">
         <span>Ваш вопрос</span>
@@ -172,7 +178,7 @@ function getBusinessServiceHref(slug: string) {
       <div class="search-results" data-search-results>
         {
           initialItems.map((item) => (
-            <a class="search-result-card" href={getSitePath(item.href)}>
+            <a class="search-result-card" href={item.href}>
               <span>{item.category}</span>
               <strong>{item.title}</strong>
               <p>{item.summary}</p>
@@ -193,6 +199,7 @@ function getBusinessServiceHref(slug: string) {
     const resultsNode = root.querySelector<HTMLElement>("[data-search-results]");
     const titleNode = root.querySelector<HTMLElement>("[data-search-title]");
     const countNode = root.querySelector<HTMLElement>("[data-search-count]");
+    const contactsPath = root.dataset.contactsPath ?? "/contacts/";
     const items = JSON.parse(indexNode?.textContent ?? "[]") as Array<{
       title: string;
       href: string;
@@ -242,7 +249,7 @@ function getBusinessServiceHref(slug: string) {
           "Ничего не найдено. Попробуйте другое слово или перейдите в контакты, если вопрос требует обращения к специалисту.";
         const link = document.createElement("a");
         link.className = "card-action";
-        link.href = "/contacts/";
+        link.href = contactsPath;
         link.textContent = "Контакты";
         searchResults.append(empty, link);
       }

@@ -1,9 +1,9 @@
 ---
 import { formatRubles } from "@lib/format";
 import { calculateMonthlyPrice } from "@lib/pricing";
-import { getVerificationLabel } from "@lib/verification";
 import { getSitePath } from "@config/site";
 import type { Tariff } from "@models/domain";
+import ActionLink from "@components/ui/ActionLink.astro";
 
 type Props = {
   tariff: Tariff;
@@ -11,6 +11,8 @@ type Props = {
 
 const { tariff } = Astro.props;
 const price = calculateMonthlyPrice(tariff);
+const hasConfirmedPrice = tariff.commercialReview.priceStatus === "confirmed";
+const hasConfirmedSpeed = tariff.commercialReview.speedStatus === "confirmed";
 ---
 
 <article id={tariff.slug} class:list={["tariff-card", { "is-featured": tariff.isFeatured }]}>
@@ -19,24 +21,27 @@ const price = calculateMonthlyPrice(tariff);
       <p class="eyebrow">{tariff.isFeatured ? "Рекомендуем" : "Тариф"}</p>
       <h3>{tariff.title}</h3>
     </div>
-    <span class="speed">{tariff.speedDownload}&nbsp;Мбит/с</span>
+    <span class="speed">
+      {hasConfirmedSpeed ? `${tariff.speedDownload}\u00a0Мбит/с` : "По адресу"}
+    </span>
   </div>
   <p>{tariff.benefitDescription}</p>
   <ul class="tag-list" aria-label="Кому подходит">
     {tariff.bestFor.map((item) => <li>{item}</li>)}
   </ul>
   <div class="tariff-price">
-    <strong>{formatRubles(price.total)}</strong>
-    <span>в&nbsp;месяц</span>
+    <strong>{hasConfirmedPrice ? formatRubles(price.total) : "Уточняется"}</strong>
+    <span>{hasConfirmedPrice ? "в\u00a0месяц" : "для вашего адреса"}</span>
   </div>
-  <p class:list={["proof", tariff.proof.status]}>
-    <strong>{tariff.proof.label}:</strong>
-    {tariff.proof.value}
-  </p>
-  <p class:list={["data-status", tariff.commercialReview.status]}>
-    Коммерческие сведения: {getVerificationLabel(tariff.commercialReview.status)}
-  </p>
-  <a class="card-action" href={getSitePath(`/connect/?tariff=${tariff.slug}#callback-request`)}>
+  {
+    tariff.proof.status === "confirmed" && (
+      <p class="proof confirmed">
+        <strong>{tariff.proof.label}:</strong>
+        {tariff.proof.value}
+      </p>
+    )
+  }
+  <ActionLink href={getSitePath(`/connect/?tariff=${tariff.slug}#callback-request`)}>
     Хочу звонок по&nbsp;тарифу
-  </a>
+  </ActionLink>
 </article>

@@ -18,6 +18,7 @@ function createBudgetLead() {
       email: "office@example.ru",
       inn: null,
       segment: "b2g",
+      officeProfile: "",
       service: "b2g-consultation",
       city: "",
       address: "Краснодар",

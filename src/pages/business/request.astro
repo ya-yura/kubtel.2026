@@ -12,6 +12,7 @@ const selectedService = Astro.url.searchParams.get("service") ?? "";
 const rawSelectedSegment = Astro.url.searchParams.get("segment") ?? "";
 const selectedSegment = rawSelectedSegment === "government" ? "b2g" : rawSelectedSegment;
 const selectedConfiguration = Astro.url.searchParams.get("configurationSummary") ?? "";
+const selectedOfficeProfile = Astro.url.searchParams.get("officeProfile") ?? "";
 const selectedMonthlyEstimate = Astro.url.searchParams.get("monthlyEstimate") ?? "";
 const selectedOneTimeEstimate = Astro.url.searchParams.get("oneTimeEstimate") ?? "";
 const service = selectedService ? getBusinessService(selectedService) : undefined;
@@ -112,6 +113,7 @@ const actionError = actionResult?.error;
         <input name="oneTimeEstimate" type="hidden" value={selectedOneTimeEstimate} />
         <input name="city" type="hidden" value="" />
         <input name="segment" type="hidden" value={selectedSegment} />
+        <input name="officeProfile" type="hidden" value={selectedOfficeProfile} />
         <input name="urgency" type="hidden" value={isBudgetRequest ? "asap" : "planning"} />
         <label class="visually-hidden">
           <span>Оставьте это поле пустым</span>
@@ -269,7 +271,10 @@ const actionError = actionResult?.error;
 
         <label class="consent-line">
           <input type="checkbox" name="consent" required />
-          <span>Согласен на обработку персональных данных для связи по заявке.</span>
+          <span>
+            Согласен на обработку персональных данных для связи по заявке и ознакомлен с
+            <a href={SITE.privacyUrl} target="_blank" rel="noopener noreferrer">политикой ПД</a>.
+          </span>
         </label>
 
         <button type="submit">Отправить заявку</button>
@@ -310,7 +315,7 @@ const actionError = actionResult?.error;
       }
 
       event.preventDefault();
-      showBusinessPreviewStatus(businessForm);
+      showBusinessPreviewNotice(businessForm);
     });
   }
 
@@ -437,20 +442,25 @@ const actionError = actionResult?.error;
     }
   }
 
-  function showBusinessPreviewStatus(form: HTMLFormElement) {
+  function showBusinessPreviewNotice(form: HTMLFormElement) {
     const existingStatus = form.querySelector<HTMLElement>("#business-form-status");
     const status = existingStatus ?? document.createElement("div");
     const service = form.querySelector<HTMLSelectElement>('select[name="service"]');
     const serviceTitle = service?.selectedOptions[0]?.textContent?.trim() || "выбранная услуга";
 
-    status.className = "form-status is-success";
+    status.className = "form-status is-error";
     status.id = "business-form-status";
-    status.setAttribute("role", "status");
+    status.setAttribute("role", "alert");
     status.setAttribute("tabindex", "-1");
     status.replaceChildren(
-      createBusinessStatusLine("strong", "Демо-заявка принята в онлайн-превью."),
+      createBusinessStatusLine("strong", "Заявка не отправлена с этого адреса."),
       createBusinessStatusLine("span", serviceTitle),
-      createBusinessStatusLine("span", "Для боевой отправки подключите production-интеграции.")
+      createBusinessStatusLine(
+        "span",
+        isB2GRequest
+          ? "Напишите на tender@kubtel.ru или позвоните 8 861 200-10-32."
+          : "Напишите на kubtel@kubtel.ru или позвоните 8 861 200-10-11."
+      )
     );
 
     if (!existingStatus) {

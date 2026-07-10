@@ -1,0 +1,20 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"a"> & {
+  href: string;
+  variant?: "primary" | "secondary" | "ghost";
+  loading?: boolean;
+};
+
+const { href, variant = "primary", loading = false, class: className, ...attributes } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={["card-action", `is-${variant}`, className, { "is-loading": loading }]}
+  aria-busy={loading ? "true" : undefined}
+  {...attributes}
+>
+  <slot />
+</a>

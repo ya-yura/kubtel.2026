@@ -12,6 +12,19 @@ function normalizeBasePath(basePath: string): string {
   return `/${basePath.replace(/^\/+|\/+$/g, "")}/`;
 }
 
+function getOptionalPublicUrl(value: string | undefined): string | null {
+  if (!value) {
+    return null;
+  }
+
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" ? url.href : null;
+  } catch {
+    return null;
+  }
+}
+
 const basePath = normalizeBasePath(import.meta.env.BASE_URL ?? "/");
 
 export const SITE = {
@@ -25,8 +38,18 @@ export const SITE = {
   defaultDescription:
     "Домашний интернет Kubtel в\u00a0Краснодаре: тарифы, оплата, поддержка и понятное подключение.",
   accountUrl: "https://my.kubtel.ru/",
-  paymentUrl: "https://my.kubtel.ru/",
+  paymentUrl: "https://kubtel.ru/individual/pay/",
+  paymentDocumentsUrl: "https://kubtel.ru/individual/pay/",
+  licensesUrl: "https://kubtel.ru/about/licencies/",
+  privacyUrl: "https://kubtel.ru/about/personsdata/",
+  individualTermsUrl: "https://kubtel.ru/individual/termsofuse",
+  officialDocumentsUrl: "https://kubtel.ru/docs/",
+  officialNewsUrl: "https://kubtel.ru/about/news/",
+  officialContactsUrl: "https://kubtel.ru/about/contactus/",
+  maxChatUrl: getOptionalPublicUrl(import.meta.env.PUBLIC_MAX_CHAT_URL),
+  vkChatUrl: getOptionalPublicUrl(import.meta.env.PUBLIC_VK_CHAT_URL),
   supportPhone: "8 800 222-17-30",
+  supportDirectPhone: "8 861 200-10-10",
   salesPhone: "8 800 222-17-30",
   supportEmail: "support@kubtel.ru",
   email: "kubtel@kubtel.ru",
@@ -34,13 +57,13 @@ export const SITE = {
   businessPhone: "8 861 200-10-11",
   budgetEmail: "tender@kubtel.ru",
   budgetPhone: "8 861 200-10-32",
-  officeAddress: "350049, г. Краснодар, ул. им. Тургенева, д. 135/1",
-  legalAddress: "350020, г. Краснодар, ул. Красная, д. 145/1",
-  inn: "2311077082",
-  kpp: "231101001",
-  ogrn: "1042306433221",
+  officeAddress: "г. Краснодар, ул. им. Володи Головатого, 585",
+  legalAddress: "350075, г. Краснодар, ул. Стасова, 182/1",
+  inn: "2311128247",
+  kpp: "231201001",
+  ogrn: "1102311005862",
   titleTemplate: "%s | Kubtel",
-  themeColor: "#d7569c",
+  themeColor: "#c43d87",
   shortDescription: "Местная команда связи для жителей и\u00a0бизнеса Краснодара.",
   areaServed: "Краснодар",
   countryCode: "RU",

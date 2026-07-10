@@ -1,0 +1,27 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"button"> & {
+  variant?: "primary" | "secondary" | "ghost";
+  loading?: boolean;
+};
+
+const {
+  variant = "primary",
+  loading = false,
+  disabled = false,
+  class: className,
+  type = "button",
+  ...attributes
+} = Astro.props;
+---
+
+<button
+  type={type}
+  class:list={["ds-button", `is-${variant}`, className, { "is-loading": loading }]}
+  aria-busy={loading ? "true" : undefined}
+  disabled={loading || disabled}
+  {...attributes}
+>
+  <slot />
+</button>

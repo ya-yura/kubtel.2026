@@ -1,5 +1,6 @@
 ---
 import PromoImage from "@components/ui/PromoImage.astro";
+import { SITE } from "@config/site";
 import { formatRubles } from "@lib/format";
 import { calculateMonthlyPrice } from "@lib/pricing";
 import { promoVisuals } from "@lib/visuals";
@@ -50,7 +51,10 @@ const defaultTariffSlug =
   tariffs[0]?.slug ??
   "";
 const selectedTariffData = tariffs.find((tariff) => tariff.slug === defaultTariffSlug);
-const selectedPrice = selectedTariffData ? calculateMonthlyPrice(selectedTariffData).total : null;
+const selectedPrice =
+  selectedTariffData?.commercialReview.priceStatus === "confirmed"
+    ? calculateMonthlyPrice(selectedTariffData).total
+    : null;
 const selectedPriceLabel =
   selectedPrice !== null ? `${formatRubles(selectedPrice)}/мес. до\u00a0дополнительных опций` : "";
 const availableOptions = Array.from(new Set(tariffs.flatMap((tariff) => tariff.availableOptions)));
@@ -62,6 +66,11 @@ const describedBy = actionData || actionError ? `lead-form-note ${formStatusId}`
 
 function getOptionHint(option: TariffOption): string {
   const optionPrice = tariffs
+    .filter(
+      (tariff) =>
+        tariff.commercialReview.priceStatus === "confirmed" &&
+        tariff.commercialReview.optionsStatus === "confirmed"
+    )
     .map(
       (tariff) =>
         calculateMonthlyPrice(tariff, [option]).options.find((item) => item.id === option)?.amount
@@ -117,8 +126,7 @@ function getOptionHint(option: TariffOption): string {
           <strong>{actionData.message}</strong>
           <span>Номер заявки: {actionData.leadId}</span>
           <span>
-            Специалист перезвонит, уточнит детали и&nbsp;предложит вариант. Ориентир:{" "}
-            {actionData.tariffTitle}, {formatRubles(actionData.monthlyTotal)}/мес.
+            Специалист перезвонит, уточнит детали и&nbsp;предложит актуальный вариант по адресу.
           </span>
         </div>
       )
@@ -171,12 +179,17 @@ function getOptionHint(option: TariffOption): string {
           <div class="choice-grid">
             {tariffs.map((tariff) => {
               const price = calculateMonthlyPrice(tariff);
+              const hasConfirmedPrice = tariff.commercialReview.priceStatus === "confirmed";
+              const hasConfirmedSpeed = tariff.commercialReview.speedStatus === "confirmed";
+              const priceLabel = hasConfirmedPrice
+                ? `${formatRubles(price.total)}/мес. до\u00a0дополнительных опций`
+                : "стоимость уточняется по адресу";
 
               return (
                 <label
                   class:list={["choice-card", { "is-selected": tariff.slug === defaultTariffSlug }]}
                   data-tariff-title={tariff.title}
-                  data-tariff-price={`${formatRubles(price.total)}/мес. до\u00a0дополнительных опций`}
+                  data-tariff-price={priceLabel}
                   data-available-options={tariff.availableOptions.join(" ")}
                 >
                   <input
@@ -187,8 +200,12 @@ function getOptionHint(option: TariffOption): string {
                   />
                   <span>
                     <strong>{tariff.title}</strong>
-                    <small>{tariff.speedDownload} Мбит/с</small>
-                    <em>{formatRubles(price.total)}/мес.</em>
+                    <small>
+                      {hasConfirmedSpeed ? `${tariff.speedDownload} Мбит/с` : "скорость по адресу"}
+                    </small>
+                    <em>
+                      {hasConfirmedPrice ? `${formatRubles(price.total)}/мес.` : "уточняется"}
+                    </em>
                   </span>
                 </label>
               );
@@ -250,8 +267,8 @@ function getOptionHint(option: TariffOption): string {
     <label class="consent-check">
       <input name="consent" type="checkbox" value="true" required />
       <span>
-        Согласен на обработку персональных данных для обратного звонка и&nbsp;подготовки
-        предложения.
+        Согласен на обработку персональных данных для обратного звонка и&nbsp;ознакомлен с
+        <a href={SITE.privacyUrl} target="_blank" rel="noopener noreferrer">политикой ПД</a>.
       </span>
     </label>
 
@@ -370,14 +387,14 @@ function getOptionHint(option: TariffOption): string {
     const title = choice?.dataset.tariffTitle ?? "выбранный тариф";
     const price = choice?.dataset.tariffPrice ?? "стоимость уточним на\u00a0звонке";
 
-    status.className = "form-status is-success";
+    status.className = "form-status is-error";
     status.id = "lead-form-status";
-    status.setAttribute("role", "status");
+    status.setAttribute("role", "alert");
     status.setAttribute("tabindex", "-1");
     status.replaceChildren(
-      createStatusLine("strong", "Демо-заявка принята в\u00a0онлайн-превью."),
-      createStatusLine("span", "В боевом режиме менеджер получает телефон и\u00a0перезванивает."),
-      createStatusLine("span", `Ориентир: ${title}, ${price}.`)
+      createStatusLine("strong", "Заявка не отправлена с этого адреса."),
+      createStatusLine("span", "Позвоните 8 800 222-17-30 или напишите на kubtel@kubtel.ru."),
+      createStatusLine("span", `Вы выбрали: ${title}, ${price}.`)
     );
 
     if (!existingStatus) {

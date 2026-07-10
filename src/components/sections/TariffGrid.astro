@@ -3,6 +3,7 @@ import PromoImage from "@components/ui/PromoImage.astro";
 import TariffCard from "@components/ui/TariffCard.astro";
 import { promoVisuals } from "@lib/visuals";
 import type { Tariff } from "@models/domain";
+import SectionHeading from "@components/ui/SectionHeading.astro";
 
 type Props = {
   tariffs: Tariff[];
@@ -19,11 +20,7 @@ const {
 
 <section class="section-pad tariffs-section">
   <div class="visual-section-head">
-    <div class="section-heading">
-      <p class="eyebrow">Тарифная сетка</p>
-      <h2>{title}</h2>
-      <p>{lead}</p>
-    </div>
+    <SectionHeading eyebrow="Тарифная сетка" title={title} description={lead} />
     <PromoImage visual={promoVisuals.entertainment} class="is-inline" />
   </div>
   <div class="tariff-grid">

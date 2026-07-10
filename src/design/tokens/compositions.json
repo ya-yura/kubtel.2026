@@ -1,0 +1,88 @@
+{
+  "composition": {
+    "pageShell": {
+      "maxWidth": { "value": "{layout.content.maxWidth}", "type": "dimension" },
+      "inlinePadding": { "value": "{layout.page.inlinePadding}", "type": "dimension" },
+      "blockGap": { "value": "{layout.section.blockPadding}", "type": "dimension" }
+    },
+    "pageIntro": {
+      "maxWidth": { "value": "{layout.content.textMaxWidth}", "type": "dimension" },
+      "gap": { "value": "{layout.grid.gap}", "type": "dimension" },
+      "paddingBlock": { "value": "{layout.section.blockPaddingCompact}", "type": "dimension" }
+    },
+    "compactHero": {
+      "columns": { "value": "1fr", "type": "gridTemplate" },
+      "gap": { "value": "{layout.grid.gap}", "type": "dimension" },
+      "paddingBlock": { "value": "{layout.section.blockPaddingCompact}", "type": "dimension" }
+    },
+    "splitHero": {
+      "columns": { "value": "minmax(0, 1.08fr) minmax(20rem, 0.92fr)", "type": "gridTemplate" },
+      "gap": { "value": "{layout.grid.gap}", "type": "dimension" },
+      "collapseAt": { "value": "{breakpoint.xl}", "type": "dimension" }
+    },
+    "contentSection": {
+      "gap": { "value": "{layout.grid.gap}", "type": "dimension" },
+      "paddingBlock": { "value": "{layout.section.blockPadding}", "type": "dimension" }
+    },
+    "cardGrid": {
+      "columns": {
+        "value": "repeat(auto-fit, minmax(min(100%, 16rem), 1fr))",
+        "type": "gridTemplate"
+      },
+      "gap": { "value": "{layout.grid.gap}", "type": "dimension" },
+      "align": { "value": "stretch", "type": "string" }
+    },
+    "serviceWorkspace": {
+      "columns": { "value": "minmax(15rem, 0.72fr) minmax(0, 1.28fr)", "type": "gridTemplate" },
+      "gap": { "value": "{layout.grid.gap}", "type": "dimension" },
+      "collapseAt": { "value": "{breakpoint.md}", "type": "dimension" }
+    },
+    "stickySidebar": {
+      "columns": { "value": "minmax(0, 1fr) minmax(18rem, 0.42fr)", "type": "gridTemplate" },
+      "gap": { "value": "{layout.grid.gap}", "type": "dimension" },
+      "top": { "value": "{layout.header.height}", "type": "dimension" }
+    },
+    "formWithSummary": {
+      "columns": { "value": "minmax(0, 1fr) minmax(18rem, 0.55fr)", "type": "gridTemplate" },
+      "gap": { "value": "{layout.grid.gap}", "type": "dimension" },
+      "collapseAt": { "value": "{breakpoint.xl}", "type": "dimension" }
+    },
+    "tariffComparison": {
+      "minColumnWidth": { "value": "16rem", "type": "dimension" },
+      "gap": { "value": "{layout.grid.gapCompact}", "type": "dimension" },
+      "overflow": { "value": "auto", "type": "string" }
+    },
+    "calculatorWorkspace": {
+      "columns": { "value": "minmax(0, 0.9fr) minmax(18rem, 0.55fr)", "type": "gridTemplate" },
+      "gap": { "value": "{layout.grid.gap}", "type": "dimension" },
+      "collapseAt": { "value": "{breakpoint.xl}", "type": "dimension" }
+    },
+    "contactGrid": {
+      "columns": {
+        "value": "repeat(auto-fit, minmax(min(100%, 17rem), 1fr))",
+        "type": "gridTemplate"
+      },
+      "gap": { "value": "{layout.grid.gap}", "type": "dimension" }
+    },
+    "businessRouting": {
+      "columns": { "value": "repeat(2, minmax(0, 1fr))", "type": "gridTemplate" },
+      "gap": { "value": "{layout.grid.gap}", "type": "dimension" },
+      "collapseAt": { "value": "{breakpoint.md}", "type": "dimension" }
+    },
+    "narrativeSection": {
+      "columns": { "value": "minmax(0, 0.85fr) minmax(0, 1.15fr)", "type": "gridTemplate" },
+      "gap": { "value": "{layout.grid.gap}", "type": "dimension" },
+      "collapseAt": { "value": "{breakpoint.xl}", "type": "dimension" }
+    },
+    "footerNavigation": {
+      "columns": { "value": "minmax(14rem, 0.8fr) minmax(0, 1.2fr)", "type": "gridTemplate" },
+      "gap": { "value": "{layout.grid.gap}", "type": "dimension" },
+      "collapseAt": { "value": "{breakpoint.md}", "type": "dimension" }
+    },
+    "mobileActionBar": {
+      "gap": { "value": "{layout.grid.gapCompact}", "type": "dimension" },
+      "paddingInline": { "value": "{layout.page.inlinePadding}", "type": "dimension" },
+      "minHeight": { "value": "{layout.touchTarget.input}", "type": "dimension" }
+    }
+  }
+}

@@ -22,6 +22,14 @@
 
 GitHub Pages workflow в `.github/workflows/pages.yml` собирает только static preview. Его можно использовать для визуального предпросмотра, но не как полноценный боевой запуск с рабочими заявками.
 
+Поведение static preview:
+
+- `PUBLIC_STATIC_PREVIEW=true` переводит Astro в статическую сборку для GitHub Pages;
+- формы B2C, B2B, B2G, ЦОД и вакансий не показывают фиктивный success-state;
+- при отправке формы на Pages пользователь получает сообщение "не отправлена с этого адреса" и прямой телефон/e-mail;
+- онлайн-оплата ведет только на официальную страницу Kubtel `https://kubtel.ru/individual/pay/`;
+- юридические лица и B2G не направляются в онлайн-оплату физлиц, а получают маршрут на запрос документов или прямые контакты.
+
 ## 2. Состав проекта
 
 Основные зоны:
@@ -981,6 +989,8 @@ npm run build
 - ответственный sales owner, который подтверждает получение заявок.
 
 Если хотя бы CRM/Telegram/outbox не проверены тестовой заявкой на production, запуск нельзя считать завершенным.
+
+Отдельно: GitHub Pages preview по адресу `https://ya-yura.github.io/kubtel.2026/` не может подтвердить реальную доставку заявок, потому что это статическая публикация без серверных env-секретов. Для proof of delivery нужен Node production runtime с заполненными `CRM_WEBHOOK_URL`, `CRM_WEBHOOK_SECRET`, `TELEGRAM_*`, `SMTP_*` или проверенным `LEAD_OUTBOX_DIR`.
 
 ## 23. Короткий release checklist
 

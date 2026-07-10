@@ -6,6 +6,7 @@ const prerenderFiles = [
   "src/pages/careers.astro",
   "src/pages/connect.astro",
   "src/pages/tariffs/index.astro",
+  "src/pages/design-system.astro",
   "src/pages/business/datacenter-access.astro",
   "src/pages/business/request.astro",
   "src/pages/api/health.json.ts"

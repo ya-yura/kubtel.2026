@@ -32,66 +32,54 @@ const pageSchema = [buildInternetServiceSchema(tariffs, "/"), buildFaqSchema(faq
   schema={pageSchema}
 >
   <Hero />
+  <TariffGrid tariffs={tariffs} />
+  <AddressCheckPanel
+    tariffs={tariffs}
+    actionResult={leadActionResult}
+    staticPreview={isStaticPreview}
+    formAction={Astro.url.pathname}
+  />
+  <section class="section-pad homepage-b2g-callout" aria-label="Работа с организациями">
+    <div>
+      <span class="service-category">B2B и B2G</span>
+      <h2>
+        КУБАНЬ-ТЕЛЕКОМ работает с юридическими лицами и государственными заказчиками по 44-ФЗ и
+        223-ФЗ
+      </h2>
+    </div>
+    <div class="button-row">
+      <a class="card-action" href={getSitePath("/business/b2g/")}>Перейти в B2G</a>
+      <a
+        class="business-link"
+        href={`tel:+${SITE.budgetPhone.replace(/\D/g, "").replace(/^8/, "7")}`}
+      >
+        {SITE.budgetPhone}
+      </a>
+    </div>
+  </section>
   <section
     class="section-pad subscriber-tools"
     id="subscriber-tools"
     aria-label="Личный кабинет и пополнение счёта"
   >
-    <form class="subscriber-tool-card" action={SITE.accountUrl} method="post">
+    <article class="subscriber-tool-card">
       <h2>Личный кабинет Кубтел</h2>
       <p>
-        Любой абонент Кубтела имеет доступ к своему личному кабинету. Войдите, чтобы получить доступ
-        к вашим персональным данным.
+        Баланс, состояние услуг и данные договора доступны на защищённом сайте личного кабинета.
       </p>
-      <label>
-        <span class="visually-hidden">Логин</span>
-        <input name="login" autocomplete="username" placeholder="Логин" required />
-      </label>
-      <label>
-        <span class="visually-hidden">Пароль</span>
-        <input
-          name="password"
-          type="password"
-          autocomplete="current-password"
-          placeholder="Пароль"
-          required
-        />
-      </label>
       <div class="subscriber-tool-actions">
-        <button type="submit">Войти</button>
-        <a href={SITE.accountUrl} target="_blank" rel="noopener noreferrer">
-          Не помню пароль/логин
+        <a class="card-action" href={SITE.accountUrl} target="_blank" rel="noopener noreferrer">
+          Открыть личный кабинет
         </a>
       </div>
-    </form>
+    </article>
 
-    <form class="subscriber-tool-card payment-tool-card" action={SITE.paymentUrl} method="get">
-      <h2>Пополнение счёта</h2>
-      <div class="payment-fields">
-        <label>
-          <span class="visually-hidden">Лицевой счёт</span>
-          <input
-            name="account"
-            inputmode="numeric"
-            autocomplete="off"
-            placeholder="Лицевой счёт"
-            required
-          />
-        </label>
-        <label>
-          <span class="visually-hidden">Сумма пополнения</span>
-          <input
-            name="amount"
-            type="number"
-            min="1"
-            step="1"
-            inputmode="numeric"
-            placeholder="Сумма"
-            required
-          />
-        </label>
-        <span class="payment-currency" aria-hidden="true">₽</span>
-      </div>
+    <article class="subscriber-tool-card payment-tool-card">
+      <h2>Онлайн-оплата для физлиц и ИП</h2>
+      <p>
+        Лицевой счёт и сумма вводятся только на действующей платёжной странице Kubtel. Юридические
+        лица запрашивают счёт и документы отдельно.
+      </p>
       <div class="payment-methods" aria-label="Основные способы оплаты">
         <span class="payment-method-icon is-kubtel" aria-label="Оплата Kubtel">
           <svg viewBox="0 0 40 40" aria-hidden="true">
@@ -116,11 +104,30 @@ const pageSchema = [buildInternetServiceSchema(tariffs, "/"), buildFaqSchema(faq
         </span>
         <span class="payment-method-text" aria-label="ЮMoney">Ю</span>
       </div>
-      <p class="payment-all-methods">
-        или <a href={getSitePath("/payment/")}>все способы оплаты</a>
-      </p>
-      <button type="submit">Оплатить</button>
-    </form>
+      <div class="subscriber-tool-actions">
+        <a class="card-action" href={SITE.paymentUrl} target="_blank" rel="noopener noreferrer">
+          Перейти к оплате
+        </a>
+        <a href={getSitePath("/payment/")}>Все платёжные маршруты</a>
+      </div>
+    </article>
+  </section>
+  <section class="section-pad homepage-direct-contacts" aria-label="Прямые контакты Kubtel">
+    <div>
+      <span class="service-category">Прямой контакт</span>
+      <h2>Не обязательно оставлять форму</h2>
+      <p>Для технических вопросов позвоните или напишите напрямую в поддержку.</p>
+    </div>
+    <div class="button-row">
+      <a
+        class="card-action"
+        href={`tel:+${SITE.supportDirectPhone.replace(/\D/g, "").replace(/^8/, "7")}`}
+      >
+        {SITE.supportDirectPhone}
+      </a>
+      <a class="business-link" href={`mailto:${SITE.supportEmail}`}>{SITE.supportEmail}</a>
+      <a class="business-link" href={getSitePath("/contacts/")}>Все контакты</a>
+    </div>
   </section>
   <section class="section-pad service-hub" aria-label="Быстрые разделы для абонентов">
     <article class="service-hub-primary">
@@ -151,12 +158,5 @@ const pageSchema = [buildInternetServiceSchema(tariffs, "/"), buildFaqSchema(faq
   <FunnelOverview />
   <HumanScenarios />
   <ServiceCards services={services} tariffs={tariffs} />
-  <TariffGrid tariffs={tariffs} />
-  <AddressCheckPanel
-    tariffs={tariffs}
-    actionResult={leadActionResult}
-    staticPreview={isStaticPreview}
-    formAction={Astro.url.pathname}
-  />
   <FaqList items={faqItems} />
 </BaseLayout>

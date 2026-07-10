@@ -44,9 +44,18 @@ const optionLabels: Record<TariffOption, string> = {
               .map((option) => optionLabels[option as TariffOption])
               .join(", ");
             const connectionPrice =
+              tariff.commercialReview.connectionStatus !== "confirmed" ||
               tariff.connectionPrice === null
                 ? "уточним на\u00a0звонке"
                 : formatRubles(tariff.connectionPrice);
+            const speed =
+              tariff.commercialReview.speedStatus === "confirmed"
+                ? `${tariff.speedDownload} Мбит/с`
+                : "уточним по адресу";
+            const monthly =
+              tariff.commercialReview.priceStatus === "confirmed"
+                ? `${formatRubles(price.total)}/мес.`
+                : "уточним по адресу";
 
             return (
               <tr>
@@ -54,8 +63,8 @@ const optionLabels: Record<TariffOption, string> = {
                   <strong>{tariff.title}</strong>
                   {tariff.isFeatured && <span>Рекомендуем</span>}
                 </th>
-                <td>{tariff.speedDownload} Мбит/с</td>
-                <td>{formatRubles(price.total)}/мес.</td>
+                <td>{speed}</td>
+                <td>{monthly}</td>
                 <td>{tariff.bestFor.slice(0, 3).join(", ")}</td>
                 <td>{options}</td>
                 <td>{connectionPrice}</td>

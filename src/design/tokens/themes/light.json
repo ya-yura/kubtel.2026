@@ -1,7 +1,8 @@
 {
   "theme": {
-    "name": { "value": "light", "type": "string" },
-    "colorScheme": { "value": "light", "type": "string" },
+    "name": "light",
+    "selector": ":root",
+    "colorScheme": "light",
     "overrides": {
       "color.surface.page": { "value": "{color.neutral.0}", "type": "color" },
       "color.surface.raised": { "value": "{color.neutral.0}", "type": "color" },

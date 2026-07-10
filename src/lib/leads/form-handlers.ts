@@ -1,6 +1,11 @@
 import { trackServerEvent } from "@lib/analytics/server";
 import { saveCareerApplicationToCms } from "@lib/careers/cms-delivery";
 import {
+  CareerResumeError,
+  validateCareerResumeFile,
+  type CareerResumeAttachment
+} from "@lib/careers/resume";
+import {
   careerApplicationFormSchema,
   hasHoneypotValue as hasCareerHoneypotValue,
   isSuspiciousSubmitSpeed as isSuspiciousCareerSubmitSpeed
@@ -12,7 +17,11 @@ import {
 } from "@lib/careers/submission";
 import { getCoverageAreas, getJobVacancies, getTariffs } from "@lib/content";
 import { sendLeadToCrm } from "@lib/integrations/crm";
-import { sendBusinessLeadToEmail } from "@lib/integrations/email";
+import {
+  sendBusinessLeadToEmail,
+  sendCareerApplicationToEmail,
+  sendLeadToEmail
+} from "@lib/integrations/email";
 import { sendLeadToTelegram } from "@lib/integrations/telegram";
 import type { DeliveryResult } from "@lib/integrations/types";
 import {
@@ -94,7 +103,11 @@ export async function handleLeadFormPost(
       coverageAreas,
       userAgent: request.headers.get("user-agent")
     });
-    const delivery = await Promise.all([sendLeadToCrm(lead), sendLeadToTelegram(lead)]);
+    const delivery = await Promise.all([
+      sendLeadToCrm(lead),
+      sendLeadToTelegram(lead),
+      sendLeadToEmail(lead)
+    ]);
     const shouldSaveToOutbox =
       delivery.some((result) => result.status === "failed") ||
       delivery.every((result) => result.status === "skipped");
@@ -312,16 +325,33 @@ export async function handleCareerApplicationFormPost(
       vacancies,
       userAgent: request.headers.get("user-agent")
     });
+    let resumeAttachment: CareerResumeAttachment | null;
+
+    try {
+      resumeAttachment = await validateCareerResumeFile(formData.get("resumeFile"), application.id);
+    } catch (error) {
+      if (error instanceof CareerResumeError) {
+        return createFormError(error.message, 400);
+      }
+
+      throw error;
+    }
+
+    application.resume.fileName = resumeAttachment?.originalName ?? null;
+
     const delivery = await Promise.all([
       saveCareerApplicationToCms(application),
       sendLeadToCrm(application),
-      sendLeadToTelegram(application)
+      sendLeadToTelegram(application),
+      sendCareerApplicationToEmail(application, resumeAttachment)
     ]);
+    const resumeEmailDelivery = delivery.find((result) => result.channel === "email");
     const shouldSaveToOutbox =
       delivery.some((result) => result.status === "failed") ||
-      delivery.every((result) => result.status === "skipped");
+      delivery.every((result) => result.status === "skipped") ||
+      (resumeAttachment !== null && resumeEmailDelivery?.status !== "sent");
     const outboxResult = shouldSaveToOutbox
-      ? await saveLeadToOutbox(application, delivery)
+      ? await saveLeadToOutbox(application, delivery, resumeAttachment)
       : createSkippedOutboxResult();
     const allDelivery = [...delivery, outboxResult];
 

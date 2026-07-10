@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
@@ -89,6 +89,11 @@ class CdpClient {
 }
 
 const baseUrl = process.env.UX_SMOKE_BASE_URL ?? "http://127.0.0.1:4321";
+const basePathFromUrl = new URL(baseUrl).pathname.replace(/\/$/, "");
+const pathPrefix = (
+  process.env.UX_SMOKE_PATH_PREFIX ?? (basePathFromUrl === "/" ? "" : basePathFromUrl)
+).replace(/\/$/, "");
+const screenshotDir = process.env.UX_SMOKE_SCREENSHOT_DIR;
 const chromePath = findChrome();
 const userDataDir = await mkdtemp(join(tmpdir(), "kubtel-ux-smoke-"));
 const remoteDebuggingPort = await getFreePort();
@@ -155,6 +160,7 @@ try {
   await assertB2GLegacyRedirect();
   await assertDatacenterAccessLegacyRedirect();
   await checkHomeAudienceSwitch(client, sessionId);
+  await checkPaymentRoutes(client, sessionId);
   await checkTariffCtaPath(client, sessionId);
   await checkReadabilityToggle(client, sessionId);
   await checkMobilePath(client, sessionId);
@@ -163,6 +169,9 @@ try {
   await checkBusinessCalculator(client, sessionId);
   await submitLeadForm(client, sessionId);
   await submitBusinessLeadForm(client, sessionId);
+  if (screenshotDir) {
+    await captureVisualSamples(client, sessionId, screenshotDir);
+  }
 
   await client.close();
   console.log("UX smoke passed");
@@ -188,7 +197,7 @@ try {
 async function checkRoute(client, sessionId, path, expectedText) {
   await setViewport(client, sessionId, desktopViewport());
   await navigate(client, sessionId, path);
-  await assertExpression(
+  await waitForExpression(
     client,
     sessionId,
     `document.body.innerText.includes(${JSON.stringify(expectedText)})`,
@@ -204,7 +213,7 @@ async function checkRoute(client, sessionId, path, expectedText) {
 }
 
 async function assertHealthEndpoint() {
-  const response = await fetch(new URL("/api/health.json", baseUrl));
+  const response = await fetch(routeUrl("/api/health.json"));
   assert(response.ok, "health endpoint returned non-OK status");
   const health = await response.json();
   assert(health.status === "ok", "health endpoint status is not ok");
@@ -216,42 +225,46 @@ async function assertHealthEndpoint() {
 }
 
 async function assertLegacyRedirect() {
-  const response = await fetch(new URL("/legal/smallbusiness/inet/?utm=ux-smoke", baseUrl), {
+  const response = await fetch(routeUrl("/legal/smallbusiness/inet/?utm=ux-smoke"), {
     redirect: "manual"
   });
   const location = response.headers.get("location") ?? "";
 
   assert(response.status === 301, "legacy B2B URL did not return 301");
-  assert(location.includes("/business/request/"), "legacy B2B redirect target is wrong");
+  assert(
+    location.includes(routePath("/business/request/")) || location.includes("/business/request/"),
+    "legacy B2B redirect target is wrong"
+  );
   assert(location.includes("service=internet"), "legacy B2B redirect lost service target");
   assert(location.includes("utm=ux-smoke"), "legacy B2B redirect did not preserve query string");
   results.push("legacy B2B redirect ok");
 }
 
 async function assertB2GLegacyRedirect() {
-  const response = await fetch(new URL("/legal/govsector/?utm=ux-smoke", baseUrl), {
+  const response = await fetch(routeUrl("/legal/govsector/?utm=ux-smoke"), {
     redirect: "manual"
   });
   const location = response.headers.get("location") ?? "";
 
   assert(response.status === 301, "legacy B2G URL did not return 301");
-  assert(location.includes("/business/b2g/"), "legacy B2G redirect target is wrong");
+  assert(
+    location.includes(routePath("/business/b2g/")) || location.includes("/business/b2g/"),
+    "legacy B2G redirect target is wrong"
+  );
   assert(location.includes("utm=ux-smoke"), "legacy B2G redirect did not preserve query string");
   results.push("legacy B2G redirect ok");
 }
 
 async function assertDatacenterAccessLegacyRedirect() {
-  const response = await fetch(
-    new URL("/legal/smallbusiness/datac/admission/?utm=ux-smoke", baseUrl),
-    {
-      redirect: "manual"
-    }
-  );
+  const response = await fetch(routeUrl("/legal/smallbusiness/datac/admission/?utm=ux-smoke"), {
+    redirect: "manual"
+  });
   const location = response.headers.get("location") ?? "";
 
   assert(response.status === 301, "legacy datacenter access URL did not return 301");
   assert(
-    location.includes("/business/datacenter-access/"),
+    location.includes(routePath("/business/datacenter-access/")) ||
+      location.includes("/business/datacenter-access/"),
     "legacy datacenter access redirect target is wrong"
   );
   assert(
@@ -288,21 +301,53 @@ async function checkHomeAudienceSwitch(client, sessionId) {
     `(() => {
       const tools = document.querySelector(".subscriber-tools");
       if (!tools) return false;
-      const cabinet = tools.querySelector('form[action="https://my.kubtel.ru/"]');
       const payment = tools.querySelector(".payment-tool-card");
+      const hrefs = [...tools.querySelectorAll('a[href]')].map((link) => link.href);
       return (
-        tools.innerText.includes("Личный кабинет Кубтел") &&
-        tools.innerText.includes("Пополнение счёта") &&
-        cabinet?.querySelector('input[name="login"][required]') !== null &&
-        cabinet?.querySelector('input[name="password"][required]') !== null &&
-        payment?.querySelector('input[name="account"][required]') !== null &&
-        payment?.querySelector('input[name="amount"][required]') !== null &&
-        payment?.querySelector('a[href="/payment/"]') !== null
+        payment !== null &&
+        tools.querySelector("form") === null &&
+        tools.querySelector("input") === null &&
+        hrefs.some((href) => href.startsWith("https://my.kubtel.ru/")) &&
+        hrefs.some((href) => href.startsWith("https://kubtel.ru/individual/pay")) &&
+        hrefs.some((href) => new URL(href).pathname.endsWith("/payment/"))
       );
     })()`,
-    "home exposes subscriber cabinet and payment forms"
+    "home exposes safe cabinet and official payment links"
   );
-  results.push("home audience switch, cabinet link and payment forms ok");
+  results.push("home audience switch, cabinet link and official payment links ok");
+}
+
+async function checkPaymentRoutes(client, sessionId) {
+  await setViewport(client, sessionId, desktopViewport());
+  await navigate(client, sessionId, "/payment/");
+  const paymentState = await evaluate(
+    client,
+    sessionId,
+    `(() => {
+      const hrefs = [...document.querySelectorAll('a[href]')].map((link) => link.href);
+      const state = {
+        hasOfficialPayment: hrefs.some((href) => href.startsWith("https://kubtel.ru/individual/pay")),
+        hasLegalRequest: hrefs.some((href) => href.includes("/business/request/?segment=legal&service=documents-payment")),
+        hasB2GRequest: hrefs.some((href) => href.includes("/business/request/?segment=b2g")),
+        hasB2GPhone: hrefs.some((href) => href === "tel:+78612001032"),
+        hasB2GEmail: hrefs.some((href) => href === "mailto:tender@kubtel.ru"),
+        hasRouteCards: document.querySelectorAll(".service-hub-card").length >= 3,
+        hrefs
+      };
+      return { ok: Object.entries(state).every(([key, value]) => key === "hrefs" || value === true), ...state };
+    })()`
+  );
+  assert(
+    paymentState.ok === true,
+    `payment page separates physical, legal and B2G routes: ${JSON.stringify(paymentState)}`
+  );
+  await assertExpression(
+    client,
+    sessionId,
+    `document.querySelector('form') === null && document.querySelector('input[name="account"]') === null`,
+    "payment page does not emulate payment collection"
+  );
+  results.push("payment routes ok");
 }
 
 async function checkTariffCtaPath(client, sessionId) {
@@ -313,7 +358,7 @@ async function checkTariffCtaPath(client, sessionId) {
     client,
     sessionId,
     `(() => {
-      const link = document.querySelector('a[href^="/connect/?tariff="]');
+      const link = document.querySelector('a[href*="/connect/?tariff="]');
       if (!link) return false;
       link.click();
       return true;
@@ -324,7 +369,7 @@ async function checkTariffCtaPath(client, sessionId) {
   await assertExpression(
     client,
     sessionId,
-    `location.pathname === "/connect/" && location.search.includes("tariff=")`,
+    `location.pathname === ${JSON.stringify(routePath("/connect/"))} && location.search.includes("tariff=")`,
     "tariff CTA opened connect page with tariff query"
   );
   await assertExpression(
@@ -434,8 +479,11 @@ async function checkReadabilityToggle(client, sessionId) {
   await assertExpression(
     client,
     sessionId,
-    `getComputedStyle(document.body).filter.includes("grayscale")`,
-    "readability mode applies grayscale palette"
+    `(() => {
+      const style = getComputedStyle(document.body);
+      return style.filter === "none" && style.color === "rgb(0, 0, 0)";
+    })()`,
+    "readability mode uses token-driven achromatic colors without CSS filters"
   );
   await assertExpression(
     client,
@@ -457,6 +505,22 @@ async function checkBusinessCalculator(client, sessionId) {
   await assertExpression(
     client,
     sessionId,
+    `document.querySelectorAll("[data-business-calculator]").length === 4`,
+    "business page exposes exactly four calculators"
+  );
+  await assertExpression(
+    client,
+    sessionId,
+    `(() => {
+      return ["internet", "wifi-auth", "vdi"].every((slug) =>
+        document.querySelector(\`[data-service-panel="\${slug}"] [data-business-calculator]\`) === null
+      );
+    })()`,
+    "internet, Hot-spot and VDI do not expose calculators"
+  );
+  await assertExpression(
+    client,
+    sessionId,
     `document.querySelector('[data-service-panel="vps"].is-active [data-business-calculator]') !== null`,
     "VPS page contains business calculator"
   );
@@ -471,17 +535,35 @@ async function checkBusinessCalculator(client, sessionId) {
       return true;
     })()`
   );
-  await assertExpression(
+  await waitForExpression(
     client,
     sessionId,
-    `document.querySelector('[data-service-panel="vps"] [data-calculator-monthly]')?.innerText.includes("₽") === true`,
-    "business calculator shows monthly result"
+    `document.querySelector('[data-service-panel="vps"] [data-calculator-monthly]')?.innerText.includes("Индивидуальный расчёт") === true`,
+    "business calculator hides unapproved monthly totals"
+  );
+  await waitForExpression(
+    client,
+    sessionId,
+    `(() => {
+      const href = document.querySelector('[data-service-panel="vps"] [data-calculator-cta]')?.href ?? "";
+      return href.includes("configurationSummary=") &&
+        !href.includes("monthlyEstimate=") &&
+        !href.includes("oneTimeEstimate=");
+    })()`,
+    "business calculator passes configuration without unapproved estimates"
   );
   await assertExpression(
     client,
     sessionId,
-    `document.querySelector('[data-service-panel="vps"] [data-calculator-cta]')?.href.includes("configurationSummary=") === true`,
-    "business calculator passes configuration into request link"
+    `(() => {
+      const panel = document.querySelector('[data-service-panel="telephony"]');
+      const text = panel?.innerText ?? "";
+      return text.includes("Внутризоновая связь") &&
+        text.includes("Междугородная связь") &&
+        text.includes("Международная связь") &&
+        panel?.querySelector('a[href="https://kubtel.ru/files/file/tariffs-megafon.pdf"]') !== null;
+    })()`,
+    "telephony directions are shown as official tariff links, not calculators"
   );
   results.push("business calculator path ok");
 }
@@ -518,6 +600,7 @@ async function checkBusinessInternetProfiles(client, sessionId) {
       return hrefs.length === 3 &&
         hrefs.every((href) => href.includes("/business/request/")) &&
         hrefs.every((href) => href.includes("service=internet")) &&
+        hrefs.every((href) => href.includes("officeProfile=")) &&
         hrefs.every((href) => href.includes("configurationSummary="));
     })()`,
     "internet profile CTA links pass selected profile into request"
@@ -558,26 +641,35 @@ async function submitLeadForm(client, sessionId) {
     client,
     sessionId,
     `(() => {
-      const text = document.querySelector(".form-status.is-success")?.innerText ?? "";
-      return text.includes("Заявка принята") || text.includes("Демо-заявка принята");
+      const form = document.querySelector("#lead-form");
+      const text = document.querySelector(".form-status")?.innerText ?? "";
+      const isStaticPreview = form?.closest("[data-static-preview='true']") !== null;
+      if (text.includes("Демо-заявка")) return false;
+      return isStaticPreview
+        ? text.includes("Заявка не отправлена с этого адреса")
+        : text.includes("Заявка принята");
     })()`,
-    "lead form shows success state"
+    "lead form shows real server success or static-preview error"
   );
   await assertExpression(
     client,
     sessionId,
     `(() => {
-      const text = document.querySelector(".form-status.is-success")?.innerText ?? "";
-      return text.includes("KBT-") || text.includes("В боевом режиме");
+      const form = document.querySelector("#lead-form");
+      const text = document.querySelector(".form-status")?.innerText ?? "";
+      const isStaticPreview = form?.closest("[data-static-preview='true']") !== null;
+      return isStaticPreview
+        ? text.includes("8 800 222-17-30") || text.includes("kubtel@kubtel.ru")
+        : text.includes("KBT-");
     })()`,
-    "lead form shows lead number"
+    "lead form confirms production lead id or direct static-preview contact"
   );
   results.push("lead form submit path ok");
 }
 
 async function submitBusinessLeadForm(client, sessionId) {
   await setViewport(client, sessionId, desktopViewport());
-  await navigate(client, sessionId, "/business/request/?service=internet");
+  await navigate(client, sessionId, "/business/request/?service=internet&officeProfile=small");
   await delay(1300);
   const load = client.waitForEvent("Page.loadEventFired", { sessionId, timeoutMs: 15000 });
   await evaluate(
@@ -588,6 +680,7 @@ async function submitBusinessLeadForm(client, sessionId) {
       if (!form) return "missing-form";
       const suffix = String(Date.now()).slice(-4);
       form.querySelector('input[name="formStartedAt"]').value = String(Date.now() - 5000);
+      form.querySelector('input[name="officeProfile"]').value = "small";
       form.querySelector('input[name="phone"]').value = \`+7 900 765 \${suffix.slice(0, 2)} \${suffix.slice(2)}\`;
       form.querySelector('input[name="companyName"]').value = "Тест Бизнес";
       form.querySelector('input[name="contactPerson"]').value = "Иван Тестов";
@@ -616,32 +709,102 @@ async function submitBusinessLeadForm(client, sessionId) {
     client,
     sessionId,
     `(() => {
-      const text = document.querySelector(".form-status.is-success")?.innerText ?? "";
-      return text.includes("B2B-заявка принята") || text.includes("Демо-заявка принята");
+      const form = document.querySelector(".business-request-form");
+      const text = document.querySelector(".form-status")?.innerText ?? "";
+      const isStaticPreview = form?.dataset.staticPreview === "true";
+      if (text.includes("Демо-заявка")) return false;
+      return isStaticPreview
+        ? text.includes("Заявка не отправлена с этого адреса")
+        : text.includes("B2B-заявка принята");
     })()`,
-    `business lead form shows success state: ${businessStatusText}`
+    `business lead form shows real server success or static-preview error: ${businessStatusText}`
   );
   await assertExpression(
     client,
     sessionId,
     `(() => {
-      const text = document.querySelector(".form-status.is-success")?.innerText ?? "";
-      return text.includes("KBT-B2B-") || text.includes("Для боевой отправки");
+      const form = document.querySelector(".business-request-form");
+      const text = document.querySelector(".form-status")?.innerText ?? "";
+      const isStaticPreview = form?.dataset.staticPreview === "true";
+      return form?.querySelector('input[name="officeProfile"]')?.value === "small" &&
+        (isStaticPreview ? text.includes("kubtel@kubtel.ru") : text.includes("KBT-B2B-"));
     })()`,
-    "business lead form confirms production or preview handling"
+    "business lead form preserves office profile and confirms delivery mode"
   );
   results.push("business lead form submit path ok");
 }
 
+async function captureVisualSamples(client, sessionId, directory) {
+  await mkdir(directory, { recursive: true });
+  await evaluate(
+    client,
+    sessionId,
+    `(() => {
+      localStorage.setItem("kubtel-readable-mode", "false");
+      document.body.classList.remove("is-readable");
+      return true;
+    })()`
+  );
+  const routes = [
+    { path: "/", name: "home" },
+    { path: "/business/", name: "business" },
+    { path: "/business/request/", name: "business-request" },
+    { path: "/design-system/", name: "design-system" }
+  ];
+  const viewports = [
+    { name: "320", viewport: { width: 320, height: 720, deviceScaleFactor: 2, mobile: true } },
+    { name: "390", viewport: mobileViewport() },
+    { name: "768", viewport: { width: 768, height: 1024, deviceScaleFactor: 1, mobile: false } },
+    { name: "1440", viewport: desktopViewport() }
+  ];
+
+  for (const { path, name } of routes) {
+    for (const { name: viewportName, viewport } of viewports) {
+      await setViewport(client, sessionId, viewport);
+      await navigate(client, sessionId, path);
+      await assertExpression(
+        client,
+        sessionId,
+        "document.documentElement.scrollWidth <= window.innerWidth",
+        `${path} has no horizontal overflow for screenshot viewport ${viewportName}`
+      );
+      await writeScreenshot(client, sessionId, join(directory, `${name}-${viewportName}.png`));
+    }
+  }
+
+  await setViewport(client, sessionId, mobileViewport());
+  await navigate(client, sessionId, "/design-system/");
+  await evaluate(
+    client,
+    sessionId,
+    `(() => {
+      localStorage.setItem("kubtel-readable-mode", "true");
+      document.body.classList.add("is-readable");
+      return true;
+    })()`
+  );
+  await writeScreenshot(client, sessionId, join(directory, "design-system-readable-390.png"));
+  results.push(`visual screenshots captured: ${directory}`);
+}
+
+async function writeScreenshot(client, sessionId, filePath) {
+  const { data } = await client.send(
+    "Page.captureScreenshot",
+    { format: "png", captureBeyondViewport: false, fromSurface: true },
+    sessionId
+  );
+  await writeFile(filePath, Buffer.from(data, "base64"));
+}
+
 async function navigate(client, sessionId, path) {
   const load = client.waitForEvent("Page.loadEventFired", { sessionId, timeoutMs: 15000 });
-  await client.send("Page.navigate", { url: new URL(path, baseUrl).href }, sessionId);
+  await client.send("Page.navigate", { url: routeUrl(path).href }, sessionId);
   await load.catch(() => undefined);
   await waitForReady(client, sessionId);
 }
 
 async function waitForReady(client, sessionId) {
-  for (let attempt = 0; attempt < 50; attempt += 1) {
+  for (let attempt = 0; attempt < 120; attempt += 1) {
     const ready = await evaluate(client, sessionId, "document.readyState", false);
     if (ready === "complete" || ready === "interactive") {
       return;
@@ -737,6 +900,15 @@ function mobileViewport() {
     deviceScaleFactor: 2,
     mobile: true
   };
+}
+
+function routeUrl(path) {
+  return new URL(routePath(path), baseUrl);
+}
+
+function routePath(path) {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  return `${pathPrefix}${normalizedPath}`;
 }
 
 async function waitForChrome(port) {

@@ -1,30 +1,26 @@
 .business-page {
-  --business-neon: var(--color-accent);
-  --business-blue: var(--color-info);
-  --business-neon-soft: rgba(215, 86, 156, 0.18);
-  --business-accent-soft: var(--kb-color-alpha-accent20);
-  --business-panel: rgba(13, 20, 29, 0.78);
-  --business-panel-strong: rgba(20, 30, 42, 0.92);
-  --business-line: rgba(215, 86, 156, 0.24);
-  --business-muted: rgba(234, 246, 255, 0.7);
-  --business-text: var(--kb-color-text-inverse);
   background:
-    linear-gradient(135deg, rgba(215, 86, 156, 0.08), transparent 34rem),
-    linear-gradient(120deg, rgba(215, 86, 156, 0.04) 1px, transparent 1px),
-    linear-gradient(180deg, rgb(7, 10, 15) 0%, rgb(11, 17, 24) 46%, rgb(8, 12, 18) 100%);
+    linear-gradient(135deg, var(--kb-color-overlay-accent-softest), transparent 34rem),
+    linear-gradient(120deg, var(--kb-color-overlay-accent-faint) 1px, transparent 1px),
+    linear-gradient(
+      180deg,
+      var(--kb-color-surface-business-canvas-start) 0%,
+      var(--kb-color-surface-business-canvas-middle) 46%,
+      var(--kb-color-surface-business-canvas-end) 100%
+    );
   background-size:
     auto,
     42px 42px,
     auto;
-  color: var(--business-text);
+  color: var(--kb-business-text-primary);
   overflow: hidden;
   position: relative;
 }
 
 .business-page::before {
   background:
-    linear-gradient(90deg, transparent, rgba(215, 86, 156, 0.28), transparent),
-    linear-gradient(180deg, transparent, rgba(69, 153, 216, 0.14), transparent);
+    linear-gradient(90deg, transparent, var(--kb-color-overlay-accent28), transparent),
+    linear-gradient(180deg, transparent, var(--kb-color-overlay-info14), transparent);
   content: "";
   height: 52rem;
   left: 50%;
@@ -38,8 +34,8 @@
 
 .business-page .section-pad {
   position: relative;
-  width: min(100%, var(--max-page));
-  z-index: 1;
+  width: min(100%, var(--kb-layout-content-max-width));
+  z-index: var(--kb-layer-content);
 }
 
 .business-page
@@ -54,16 +50,16 @@
 .business-page h1,
 .business-page h2,
 .business-page h3 {
-  color: var(--business-text);
+  color: var(--kb-business-text-primary);
 }
 
 .business-page p,
 .business-page small {
-  color: var(--business-muted);
+  color: var(--kb-business-text-secondary);
 }
 
 .business-page .eyebrow {
-  color: var(--business-neon);
+  color: var(--kb-business-accent-primary);
 }
 
 .business-page .business-hero {
@@ -82,7 +78,7 @@
 }
 
 .business-page .business-hero-copy p {
-  color: rgba(244, 250, 255, 0.82);
+  color: var(--kb-color-overlay-frost82);
   font-size: 1.08rem;
   max-width: 760px;
 }
@@ -92,20 +88,20 @@
 }
 
 .business-page .business-link {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: var(--business-line);
-  color: var(--business-text);
+  background: var(--kb-color-overlay-white04);
+  border-color: var(--kb-business-border-default);
+  color: var(--kb-business-text-primary);
 }
 
 .business-page .business-link:hover {
-  background: rgba(215, 86, 156, 0.12);
-  border-color: rgba(215, 86, 156, 0.42);
+  background: var(--kb-color-overlay-accent12);
+  border-color: var(--kb-color-overlay-accent42);
 }
 
 .business-page .business-compact-hero,
 .business-page .business-request-hero {
   align-items: start;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--kb-color-overlay-white-soft);
   display: grid;
   gap: 1.2rem;
   padding-bottom: 2rem;
@@ -146,10 +142,10 @@
 
 .business-phone-card {
   align-items: center;
-  background: rgba(255, 255, 255, 0.045);
-  border: 1px solid rgba(215, 86, 156, 0.3);
-  border-radius: var(--radius);
-  color: var(--business-text);
+  background: var(--kb-color-overlay-white-subtle);
+  border: 1px solid var(--kb-color-overlay-accent30);
+  border-radius: var(--kb-shape-card);
+  color: var(--kb-business-text-primary);
   display: inline-flex;
   font-weight: 850;
   justify-content: center;
@@ -158,12 +154,12 @@
 }
 
 .business-phone-card:hover {
-  background: rgba(215, 86, 156, 0.12);
-  border-color: rgba(215, 86, 156, 0.48);
+  background: var(--kb-color-overlay-accent12);
+  border-color: var(--kb-color-overlay-accent48);
 }
 
 .business-routing-section {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--kb-color-overlay-white-soft);
   display: grid;
   gap: 1.1rem;
   padding-bottom: 2rem;
@@ -178,12 +174,12 @@
 .business-routing-card {
   --route-accent: 215, 86, 156;
   background:
-    linear-gradient(145deg, rgba(var(--route-accent), 0.16), transparent 42%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.02)),
-    var(--business-panel-strong);
-  border: 1px solid rgba(var(--route-accent), 0.42);
-  border-radius: var(--radius);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    linear-gradient(145deg, rgb(var(--route-accent) / 0.16), transparent 42%),
+    linear-gradient(135deg, var(--kb-color-overlay-white065), var(--kb-color-overlay-white02)),
+    var(--kb-business-surface-panel-strong);
+  border: 1px solid rgb(var(--route-accent) / 0.42);
+  border-radius: var(--kb-shape-card);
+  box-shadow: var(--kb-elevation-glass-inset-strong);
   display: grid;
   gap: 1rem;
   overflow: hidden;
@@ -222,12 +218,12 @@
 
 .business-routing-number {
   align-items: center;
-  background: rgba(var(--route-accent), 0.16);
-  border: 1px solid rgba(var(--route-accent), 0.4);
-  border-radius: 999px;
+  background: rgb(var(--route-accent) / 0.16);
+  border: 1px solid rgb(var(--route-accent) / 0.4);
+  border-radius: var(--kb-shape-pill);
   color: rgb(var(--route-accent));
   display: inline-flex;
-  font-family: var(--kb-typography-family-display);
+  font-family: var(--kb-typography-display-family);
   font-size: 0.88rem;
   font-weight: 900;
   height: 2.75rem;
@@ -247,18 +243,18 @@
 }
 
 .business-routing-contacts a {
-  background: rgba(255, 255, 255, 0.045);
-  border: 1px solid rgba(var(--route-accent), 0.25);
-  border-radius: 999px;
-  color: rgba(244, 250, 255, 0.86);
+  background: var(--kb-color-overlay-white-subtle);
+  border: 1px solid rgb(var(--route-accent) / 0.25);
+  border-radius: var(--kb-shape-pill);
+  color: var(--kb-color-overlay-frost86);
   font-size: 0.88rem;
   font-weight: 760;
   padding: 0.45rem 0.68rem;
 }
 
 .business-routing-contacts a:hover {
-  background: rgba(var(--route-accent), 0.14);
-  border-color: rgba(var(--route-accent), 0.48);
+  background: rgb(var(--route-accent) / 0.14);
+  border-color: rgb(var(--route-accent) / 0.48);
 }
 
 .business-routing-card .card-action {
@@ -268,7 +264,7 @@
 
 .business-service-workspace,
 .business-ops-section {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--kb-color-overlay-white-soft);
 }
 
 .business-jobs-section {
@@ -287,21 +283,21 @@
 .telephony-guide-panel,
 .preferred-contact-group {
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.02)),
-    var(--business-panel);
-  border: 1px solid var(--business-line);
-  border-radius: var(--radius);
+    linear-gradient(135deg, var(--kb-color-overlay-white065), var(--kb-color-overlay-white02)),
+    var(--kb-business-surface-panel);
+  border: 1px solid var(--kb-business-border-default);
+  border-radius: var(--kb-shape-card);
 }
 
 .business-proof-strip span {
-  color: rgba(244, 250, 255, 0.9);
+  color: var(--kb-color-overlay-frost90);
   display: grid;
   gap: 0.2rem;
   padding: 0.85rem;
 }
 
 .business-proof-strip strong {
-  color: var(--business-neon);
+  color: var(--kb-business-accent-primary);
   font-size: 0.78rem;
   text-transform: uppercase;
 }
@@ -331,8 +327,31 @@
   gap: 1.2rem;
 }
 
-.business-service-list {
+.business-service-select {
   display: grid;
+  gap: 0.45rem;
+}
+
+.business-service-select span {
+  color: var(--kb-business-text-secondary);
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.business-service-select select {
+  background: var(--kb-business-surface-panel-strong);
+  border: 1px solid var(--kb-color-overlay-accent42);
+  border-radius: var(--kb-shape-card);
+  color: var(--kb-business-text-primary);
+  font: inherit;
+  min-height: 48px;
+  padding: 0.7rem 2.5rem 0.7rem 0.85rem;
+  width: 100%;
+}
+
+.business-service-list {
+  display: none;
   gap: 0.65rem;
 }
 
@@ -381,24 +400,31 @@
 
 .business-page button.business-service-row:hover,
 .business-page button.business-service-row:active {
-  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.24);
+  box-shadow: var(--kb-elevation-business-card);
   transform: translateY(-1px);
 }
 
 .business-service-row[aria-pressed="true"] {
   background:
-    linear-gradient(90deg, rgba(215, 86, 156, 0.18), rgba(69, 153, 216, 0.08)),
-    var(--business-panel-strong);
-  border-color: rgba(215, 86, 156, 0.56);
+    linear-gradient(90deg, var(--kb-color-overlay-accent18), var(--kb-color-overlay-info08)),
+    var(--kb-business-surface-panel-strong);
+  border-color: var(--kb-color-overlay-accent56);
+  box-shadow: var(--kb-elevation-accent-rail);
+}
+
+.business-page button.business-service-row:focus-visible,
+.business-service-select select:focus-visible {
+  outline: 3px solid var(--kb-business-accent-primary);
+  outline-offset: 3px;
 }
 
 .hotspot-plan-panel,
 .compact-request-summary {
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)),
-    var(--business-panel);
-  border: 1px solid var(--business-line);
-  border-radius: var(--radius);
+    linear-gradient(135deg, var(--kb-color-overlay-white07), var(--kb-color-overlay-white02)),
+    var(--kb-business-surface-panel);
+  border: 1px solid var(--kb-business-border-default);
+  border-radius: var(--kb-shape-card);
   display: grid;
   gap: 1rem;
   padding: 1rem;
@@ -410,9 +436,9 @@
 }
 
 .hotspot-plan-grid article {
-  background: rgba(255, 255, 255, 0.045);
-  border: 1px solid rgba(215, 86, 156, 0.2);
-  border-radius: var(--radius);
+  background: var(--kb-color-overlay-white-subtle);
+  border: 1px solid var(--kb-color-overlay-accent20);
+  border-radius: var(--kb-shape-card);
   display: grid;
   gap: 0.75rem;
   padding: 1rem;
@@ -427,30 +453,34 @@
   margin-bottom: 0;
 }
 
+.hotspot-plan-grid.is-single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .business-callout {
-  background: rgba(255, 255, 255, 0.045);
-  border: 1px solid var(--business-line);
-  border-radius: var(--radius);
+  background: var(--kb-color-overlay-white-subtle);
+  border: 1px solid var(--kb-business-border-default);
+  border-radius: var(--kb-shape-card);
   display: grid;
   gap: 0.35rem;
   padding: 1rem;
 }
 
 .business-callout span {
-  color: var(--business-muted);
+  color: var(--kb-business-text-secondary);
   font-size: 0.9rem;
 }
 
 .business-callout a {
-  color: var(--business-text);
-  font-family: var(--kb-typography-family-display);
+  color: var(--kb-business-text-primary);
+  font-family: var(--kb-typography-display-family);
   font-size: 1.35rem;
   font-weight: 850;
 }
 
 .request-contact-callout a + a {
-  color: var(--business-muted);
-  font-family: var(--kb-typography-family-sans);
+  color: var(--kb-business-text-secondary);
+  font-family: var(--kb-typography-body-family);
   font-size: 0.94rem;
   font-weight: 760;
 }
@@ -462,10 +492,10 @@
 
 .business-page .business-request-layout.is-compact .business-request-form {
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)),
-    var(--business-panel);
-  border: 1px solid var(--business-line);
-  border-radius: var(--radius);
+    linear-gradient(135deg, var(--kb-color-overlay-white07), var(--kb-color-overlay-white02)),
+    var(--kb-business-surface-panel);
+  border: 1px solid var(--kb-business-border-default);
+  border-radius: var(--kb-shape-card);
   padding: 1rem;
 }
 
@@ -487,7 +517,7 @@
 }
 
 .b2g-extra-contact summary {
-  color: rgba(244, 250, 255, 0.9);
+  color: var(--kb-color-overlay-frost90);
   cursor: pointer;
   font-weight: 850;
 }
@@ -497,19 +527,19 @@
 }
 
 .preferred-contact-group > span {
-  color: rgba(244, 250, 255, 0.9);
+  color: var(--kb-color-overlay-frost90);
   font-weight: 850;
 }
 
 .preferred-contact-group label {
   align-items: center;
-  color: rgba(244, 250, 255, 0.86);
+  color: var(--kb-color-overlay-frost86);
   display: flex;
   gap: 0.55rem;
 }
 
 .preferred-contact-group input {
-  accent-color: var(--business-neon);
+  accent-color: var(--kb-business-accent-primary);
   width: auto;
 }
 
@@ -518,7 +548,7 @@
 }
 
 .business-page [data-request-address-hint] {
-  color: var(--business-muted);
+  color: var(--kb-business-text-secondary);
   font-size: 0.78rem;
   font-weight: 600;
   line-height: 1.4;
@@ -530,13 +560,11 @@
 
 .business-page .business-hero-panel {
   background:
-    linear-gradient(135deg, rgba(215, 86, 156, 0.2), transparent 38%),
-    linear-gradient(160deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03)),
-    rgba(8, 13, 20, 0.82);
-  border: 1px solid var(--business-line);
-  box-shadow:
-    0 28px 80px rgba(0, 0, 0, 0.38),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    linear-gradient(135deg, var(--kb-color-overlay-accent20), transparent 38%),
+    linear-gradient(160deg, var(--kb-color-overlay-white09), var(--kb-color-overlay-white03)),
+    var(--kb-color-surface-business-glass-strong);
+  border: 1px solid var(--kb-business-border-default);
+  box-shadow: var(--kb-elevation-business-panel), var(--kb-elevation-glass-inset);
   gap: 0;
   min-height: 560px;
   position: relative;
@@ -559,20 +587,28 @@
 
 .business-page .business-panel-image::after {
   background:
-    linear-gradient(180deg, rgba(5, 9, 14, 0.08), rgba(5, 9, 14, 0.62)),
-    radial-gradient(circle at 78% 20%, rgba(215, 86, 156, 0.34), transparent 15rem),
-    radial-gradient(circle at 16% 18%, rgba(69, 153, 216, 0.18), transparent 18rem);
+    linear-gradient(
+      180deg,
+      var(--kb-color-overlay-business-soft),
+      var(--kb-color-overlay-business-scrim)
+    ),
+    radial-gradient(circle at 78% 20%, var(--kb-color-overlay-accent34), transparent 15rem),
+    radial-gradient(circle at 16% 18%, var(--kb-color-overlay-info18), transparent 18rem);
 }
 
 .business-page .promo-visual::after {
   background:
-    linear-gradient(180deg, rgba(5, 9, 14, 0.04) 35%, rgba(5, 9, 14, 0.72) 100%),
-    radial-gradient(circle at 80% 12%, rgba(215, 86, 156, 0.26), transparent 20rem),
-    radial-gradient(circle at 10% 18%, rgba(69, 153, 216, 0.16), transparent 18rem);
+    linear-gradient(
+      180deg,
+      var(--kb-color-overlay-business-faint) 35%,
+      var(--kb-color-overlay-business-glass) 100%
+    ),
+    radial-gradient(circle at 80% 12%, var(--kb-color-overlay-accent26), transparent 20rem),
+    radial-gradient(circle at 10% 18%, var(--kb-color-overlay-info16), transparent 18rem);
 }
 
 .business-page .business-hero-panel::after {
-  background: linear-gradient(180deg, transparent, rgba(215, 86, 156, 0.18), transparent);
+  background: linear-gradient(180deg, transparent, var(--kb-color-overlay-accent18), transparent);
   content: "";
   height: 100%;
   position: absolute;
@@ -590,13 +626,13 @@
   place-items: center;
   pointer-events: none;
   position: absolute;
-  z-index: 2;
+  z-index: var(--kb-layer-raised);
 }
 
 .business-hero-radar::before {
   background:
-    linear-gradient(90deg, transparent 49%, rgba(215, 86, 156, 0.44) 50%, transparent 51%),
-    linear-gradient(0deg, transparent 49%, rgba(215, 86, 156, 0.34) 50%, transparent 51%);
+    linear-gradient(90deg, transparent 49%, var(--kb-color-overlay-accent44) 50%, transparent 51%),
+    linear-gradient(0deg, transparent 49%, var(--kb-color-overlay-accent34) 50%, transparent 51%);
   content: "";
   height: 14rem;
   position: absolute;
@@ -604,8 +640,8 @@
 }
 
 .business-hero-radar span {
-  border: 1px solid rgba(215, 86, 156, 0.28);
-  border-radius: 999px;
+  border: 1px solid var(--kb-color-overlay-accent28);
+  border-radius: var(--kb-shape-pill);
   position: absolute;
 }
 
@@ -620,29 +656,29 @@
 }
 
 .business-hero-radar span:nth-child(3) {
-  border-color: rgba(69, 153, 216, 0.34);
+  border-color: var(--kb-color-overlay-info34);
   height: 14rem;
   width: 14rem;
 }
 
 .business-page .business-hero-panel article {
-  background: rgba(255, 255, 255, 0.045);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--kb-color-overlay-white-subtle);
+  border-top: 1px solid var(--kb-color-overlay-white-soft);
   min-height: 138px;
   padding: 1.1rem;
 }
 
 .business-page .business-hero-panel article:nth-of-type(odd) {
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid var(--kb-color-overlay-white-soft);
 }
 
 .business-page .business-hero-panel span {
-  color: var(--business-neon);
+  color: var(--kb-business-accent-primary);
 }
 
 .business-page .business-hero-panel strong {
-  color: var(--business-text);
-  font-family: var(--kb-typography-family-display);
+  color: var(--kb-business-text-primary);
+  font-family: var(--kb-typography-display-family);
   font-size: 1.28rem;
   line-height: 1.14;
 }
@@ -650,7 +686,7 @@
 .business-service-inventory,
 .business-calculators-showcase,
 .business-faq-section {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--kb-color-overlay-white-soft);
 }
 
 .business-service-rail {
@@ -661,45 +697,46 @@
 .business-service-row {
   align-items: center;
   background:
-    linear-gradient(90deg, rgba(215, 86, 156, 0.1), transparent 48%), var(--business-panel);
-  border: 1px solid var(--business-line);
-  border-radius: var(--radius);
+    linear-gradient(90deg, var(--kb-color-overlay-accent10), transparent 48%),
+    var(--kb-business-surface-panel);
+  border: 1px solid var(--kb-business-border-default);
+  border-radius: var(--kb-shape-card);
   display: grid;
   gap: 0.7rem;
   grid-template-columns: auto minmax(0, 1fr);
   min-height: 84px;
   padding: 0.95rem;
   transition:
-    background-color 180ms ease,
-    border-color 180ms ease,
-    box-shadow 180ms ease,
-    transform 180ms ease;
+    background-color var(--kb-motion-duration-base) var(--kb-motion-easing-standard),
+    border-color var(--kb-motion-duration-base) var(--kb-motion-easing-standard),
+    box-shadow var(--kb-motion-duration-base) var(--kb-motion-easing-standard),
+    transform var(--kb-motion-duration-base) var(--kb-motion-easing-standard);
 }
 
 .business-service-row:hover {
-  border-color: rgba(215, 86, 156, 0.46);
-  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.24);
+  border-color: var(--kb-color-overlay-accent46);
+  box-shadow: var(--kb-elevation-business-card);
   transform: translateY(-1px);
 }
 
 .business-service-row span {
-  color: var(--business-neon);
+  color: var(--kb-business-accent-primary);
   font-size: 0.82rem;
   font-weight: 900;
   width: 2.3rem;
 }
 
 .business-service-row strong {
-  color: var(--business-text);
-  font-family: var(--kb-typography-family-display);
+  color: var(--kb-business-text-primary);
+  font-family: var(--kb-typography-display-family);
   font-size: 0.98rem;
   line-height: 1.22;
 }
 
 .business-service-row small {
-  border: 1px solid rgba(215, 86, 156, 0.32);
-  border-radius: 999px;
-  color: var(--business-neon);
+  border: 1px solid var(--kb-color-overlay-accent32);
+  border-radius: var(--kb-shape-pill);
+  color: var(--kb-business-accent-primary);
   font-size: 0.72rem;
   font-weight: 850;
   justify-self: start;
@@ -730,11 +767,11 @@
 .business-page .business-request-summary,
 .business-page .business-segment-card {
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)),
-    var(--business-panel);
-  border: 1px solid var(--business-line);
-  border-radius: var(--radius);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    linear-gradient(135deg, var(--kb-color-overlay-white07), var(--kb-color-overlay-white02)),
+    var(--kb-business-surface-panel);
+  border: 1px solid var(--kb-business-border-default);
+  border-radius: var(--kb-shape-card);
+  box-shadow: var(--kb-elevation-glass-inset);
 }
 
 .business-comfort-copy,
@@ -746,13 +783,13 @@
 }
 
 .business-page .business-mini-list li {
-  color: rgba(244, 250, 255, 0.88);
+  color: var(--kb-color-overlay-frost88);
 }
 
 .business-page .business-mini-list li::before {
-  background: var(--business-neon);
-  border-color: rgba(215, 86, 156, 0.38);
-  box-shadow: 0 0 18px rgba(215, 86, 156, 0.42);
+  background: var(--kb-business-accent-primary);
+  border-color: var(--kb-color-overlay-accent38);
+  box-shadow: var(--kb-elevation-accent-glow);
 }
 
 .business-portrait-list {
@@ -765,8 +802,8 @@
 }
 
 .business-vip-console > strong {
-  color: var(--business-neon);
-  font-family: var(--kb-typography-family-display);
+  color: var(--kb-business-accent-primary);
+  font-family: var(--kb-typography-display-family);
   font-size: 0.82rem;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -780,9 +817,9 @@
 }
 
 .business-vip-console div span {
-  background: var(--color-accent);
-  border-radius: 999px;
-  box-shadow: 0 0 20px rgba(215, 86, 156, 0.46);
+  background: var(--kb-color-action-primary-background);
+  border-radius: var(--kb-shape-pill);
+  box-shadow: var(--kb-elevation-accent-glow-strong);
   height: 0.72rem;
   margin-top: 0.45rem;
   width: 0.72rem;
@@ -799,10 +836,10 @@
 
 .office-profile-panel {
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)),
-    var(--business-panel);
-  border: 1px solid var(--business-line);
-  border-radius: var(--radius);
+    linear-gradient(135deg, var(--kb-color-overlay-white07), var(--kb-color-overlay-white02)),
+    var(--kb-business-surface-panel);
+  border: 1px solid var(--kb-business-border-default);
+  border-radius: var(--kb-shape-card);
   display: grid;
   gap: 1rem;
   padding: 1rem;
@@ -815,31 +852,31 @@
 
 .office-profile-card {
   background:
-    linear-gradient(180deg, rgba(215, 86, 156, 0.11), rgba(69, 153, 216, 0.045)),
-    rgba(255, 255, 255, 0.045);
-  border: 1px solid rgba(215, 86, 156, 0.24);
-  border-radius: var(--radius);
+    linear-gradient(180deg, var(--kb-color-overlay-accent11), var(--kb-color-overlay-info-faint)),
+    var(--kb-color-overlay-white-subtle);
+  border: 1px solid var(--kb-color-overlay-accent24);
+  border-radius: var(--kb-shape-card);
   display: grid;
   gap: 0.62rem;
   min-height: 260px;
   padding: 1rem;
   transition:
-    border-color 180ms ease,
-    box-shadow 180ms ease,
-    transform 180ms ease;
+    border-color var(--kb-motion-duration-base) var(--kb-motion-easing-standard),
+    box-shadow var(--kb-motion-duration-base) var(--kb-motion-easing-standard),
+    transform var(--kb-motion-duration-base) var(--kb-motion-easing-standard);
 }
 
 .office-profile-card:hover {
-  border-color: rgba(215, 86, 156, 0.48);
-  box-shadow: 0 20px 54px rgba(0, 0, 0, 0.28);
+  border-color: var(--kb-color-overlay-accent48);
+  box-shadow: var(--kb-elevation-business-card-strong);
   transform: translateY(-1px);
 }
 
 .office-profile-card span {
-  background: rgba(215, 86, 156, 0.14);
-  border: 1px solid rgba(215, 86, 156, 0.28);
-  border-radius: 999px;
-  color: var(--business-neon);
+  background: var(--kb-color-overlay-accent14);
+  border: 1px solid var(--kb-color-overlay-accent28);
+  border-radius: var(--kb-shape-pill);
+  color: var(--kb-business-accent-primary);
   font-size: 0.76rem;
   font-weight: 850;
   justify-self: start;
@@ -847,16 +884,16 @@
 }
 
 .office-profile-card h4 {
-  color: var(--business-text);
-  font-family: var(--kb-typography-family-display);
+  color: var(--kb-business-text-primary);
+  font-family: var(--kb-typography-display-family);
   font-size: 1.35rem;
   line-height: 1.15;
   margin: 0;
 }
 
 .office-profile-card strong {
-  color: var(--business-text);
-  font-family: var(--kb-typography-family-display);
+  color: var(--kb-business-text-primary);
+  font-family: var(--kb-typography-display-family);
   font-size: 1.85rem;
   line-height: 1.05;
 }
@@ -881,10 +918,10 @@
 
 .business-service-info {
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.02)),
-    var(--business-panel);
-  border: 1px solid var(--business-line);
-  border-radius: var(--radius);
+    linear-gradient(135deg, var(--kb-color-overlay-white065), var(--kb-color-overlay-white02)),
+    var(--kb-business-surface-panel);
+  border: 1px solid var(--kb-business-border-default);
+  border-radius: var(--kb-shape-card);
   display: grid;
   gap: 0.75rem;
   padding: 1rem;
@@ -905,9 +942,9 @@
 
 .business-service-info .service-category,
 .business-ops-card span {
-  background: rgba(215, 86, 156, 0.14);
-  border-radius: 999px;
-  color: var(--business-neon);
+  background: var(--kb-color-overlay-accent14);
+  border-radius: var(--kb-shape-pill);
+  color: var(--kb-business-accent-primary);
   font-size: 0.72rem;
   font-weight: 850;
   justify-self: start;
@@ -928,29 +965,29 @@
 
 .business-ops-card {
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.02)),
-    var(--business-panel);
-  border: 1px solid var(--business-line);
-  border-radius: var(--radius);
+    linear-gradient(135deg, var(--kb-color-overlay-white065), var(--kb-color-overlay-white02)),
+    var(--kb-business-surface-panel);
+  border: 1px solid var(--kb-business-border-default);
+  border-radius: var(--kb-shape-card);
   display: grid;
   gap: 0.65rem;
   padding: 1rem;
   transition:
-    background-color 180ms ease,
-    border-color 180ms ease,
-    box-shadow 180ms ease,
-    transform 180ms ease;
+    background-color var(--kb-motion-duration-base) var(--kb-motion-easing-standard),
+    border-color var(--kb-motion-duration-base) var(--kb-motion-easing-standard),
+    box-shadow var(--kb-motion-duration-base) var(--kb-motion-easing-standard),
+    transform var(--kb-motion-duration-base) var(--kb-motion-easing-standard);
 }
 
 .business-ops-card:hover {
-  border-color: rgba(215, 86, 156, 0.46);
-  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.24);
+  border-color: var(--kb-color-overlay-accent46);
+  box-shadow: var(--kb-elevation-business-card);
   transform: translateY(-1px);
 }
 
 .business-ops-card strong {
-  color: var(--business-text);
-  font-family: var(--kb-typography-family-display);
+  color: var(--kb-business-text-primary);
+  font-family: var(--kb-typography-display-family);
   font-size: 1.12rem;
   line-height: 1.24;
 }
@@ -991,10 +1028,10 @@
 }
 
 .b2g-platform-list span {
-  background: rgba(215, 86, 156, 0.12);
-  border: 1px solid rgba(215, 86, 156, 0.28);
-  border-radius: 999px;
-  color: rgba(244, 250, 255, 0.9);
+  background: var(--kb-color-overlay-accent12);
+  border: 1px solid var(--kb-color-overlay-accent28);
+  border-radius: var(--kb-shape-pill);
+  color: var(--kb-color-overlay-frost90);
   font-size: 0.82rem;
   font-weight: 760;
   padding: 0.42rem 0.62rem;
@@ -1006,10 +1043,10 @@
 
 .b2g-contact-panel {
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025)),
-    var(--business-panel-strong);
-  border: 1px solid var(--business-line);
-  border-radius: var(--radius);
+    linear-gradient(135deg, var(--kb-color-overlay-white075), var(--kb-color-overlay-white025)),
+    var(--kb-business-surface-panel-strong);
+  border: 1px solid var(--kb-business-border-default);
+  border-radius: var(--kb-shape-card);
   padding: 1rem;
 }
 
@@ -1052,8 +1089,8 @@
 }
 
 .datacenter-access-hero .business-callout strong {
-  color: var(--business-text);
-  font-family: var(--kb-typography-family-display);
+  color: var(--kb-business-text-primary);
+  font-family: var(--kb-typography-display-family);
   font-size: 1.25rem;
   line-height: 1.16;
 }
@@ -1064,10 +1101,10 @@
 
 .datacenter-access-form {
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025)),
-    var(--business-panel);
-  border: 1px solid var(--business-line);
-  border-radius: var(--radius);
+    linear-gradient(135deg, var(--kb-color-overlay-white075), var(--kb-color-overlay-white025)),
+    var(--kb-business-surface-panel);
+  border: 1px solid var(--kb-business-border-default);
+  border-radius: var(--kb-shape-card);
   display: grid;
   gap: 1rem;
   padding: 1rem;
@@ -1080,10 +1117,10 @@
 
 .datacenter-access-grid label,
 .datacenter-access-works {
-  background: rgba(255, 255, 255, 0.045);
-  border: 1px solid rgba(215, 86, 156, 0.18);
-  border-radius: var(--radius);
-  color: rgba(244, 250, 255, 0.9);
+  background: var(--kb-color-overlay-white-subtle);
+  border: 1px solid var(--kb-color-overlay-accent18);
+  border-radius: var(--kb-shape-card);
+  color: var(--kb-color-overlay-frost90);
   display: grid;
   gap: 0.45rem;
   padding: 0.85rem;
@@ -1092,10 +1129,10 @@
 .datacenter-access-grid input,
 .datacenter-access-grid select,
 .datacenter-access-works textarea {
-  background: rgba(5, 9, 14, 0.72);
-  border: 1px solid rgba(215, 86, 156, 0.28);
-  border-radius: var(--radius);
-  color: var(--business-text);
+  background: var(--kb-color-overlay-business-glass);
+  border: 1px solid var(--kb-color-overlay-accent28);
+  border-radius: var(--kb-shape-card);
+  color: var(--kb-business-text-primary);
   min-height: 46px;
   padding: 0.72rem 0.8rem;
   width: 100%;
@@ -1104,7 +1141,7 @@
 .datacenter-access-grid input:hover,
 .datacenter-access-grid select:hover,
 .datacenter-access-works textarea:hover {
-  border-color: rgba(215, 86, 156, 0.46);
+  border-color: var(--kb-color-overlay-accent46);
 }
 
 .datacenter-access-works textarea {
@@ -1135,73 +1172,75 @@
 
 .business-page .business-calculator {
   background:
-    linear-gradient(135deg, rgba(215, 86, 156, 0.12), transparent 38%), var(--business-panel-strong);
-  border-color: var(--business-line);
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.26);
+    linear-gradient(135deg, var(--kb-color-overlay-accent12), transparent 38%),
+    var(--kb-business-surface-panel-strong);
+  border-color: var(--kb-business-border-default);
+  box-shadow: var(--kb-elevation-business-panel);
 }
 
 .business-page .business-calculator-form label {
-  background: rgba(255, 255, 255, 0.045);
-  border-color: rgba(215, 86, 156, 0.18);
+  background: var(--kb-color-overlay-white-subtle);
+  border-color: var(--kb-color-overlay-accent18);
 }
 
 .business-page .business-calculator-form label span {
-  color: rgba(244, 250, 255, 0.86);
+  color: var(--kb-color-overlay-frost86);
 }
 
 .business-page .business-calculator-form input,
 .business-page .business-calculator-form select {
-  background: rgba(5, 9, 14, 0.72);
-  border-color: rgba(215, 86, 156, 0.28);
-  color: var(--business-text);
+  background: var(--kb-color-overlay-business-glass);
+  border-color: var(--kb-color-overlay-accent28);
+  color: var(--kb-business-text-primary);
 }
 
 .business-page .calculator-number-control {
-  background: rgba(5, 9, 14, 0.72);
-  border-color: rgba(215, 86, 156, 0.28);
+  background: var(--kb-color-overlay-business-glass);
+  border-color: var(--kb-color-overlay-accent28);
 }
 
 .business-page .calculator-number-control input {
   background: transparent;
-  border-color: rgba(215, 86, 156, 0.22);
+  border-color: var(--kb-color-overlay-accent22);
 }
 
 .business-page .calculator-step-button {
-  color: var(--business-neon);
+  color: var(--kb-business-accent-primary);
 }
 
 .business-page .calculator-step-button:hover {
-  background: rgba(215, 86, 156, 0.16);
+  background: var(--kb-color-overlay-accent16);
 }
 
 .business-page .business-calculator-form input:hover,
 .business-page .business-calculator-form select:hover {
-  border-color: rgba(215, 86, 156, 0.46);
+  border-color: var(--kb-color-overlay-accent46);
 }
 
 .business-page .business-calculator-result {
   background:
-    radial-gradient(circle at 100% 0, rgba(215, 86, 156, 0.3), transparent 16rem), rgb(5, 9, 14);
-  border: 1px solid rgba(215, 86, 156, 0.24);
+    radial-gradient(circle at 100% 0, var(--kb-color-overlay-accent30), transparent 16rem),
+    var(--kb-color-surface-business-canvas-deep);
+  border: 1px solid var(--kb-color-overlay-accent24);
 }
 
 .business-page .business-calculator-result .service-category {
-  background: rgba(215, 86, 156, 0.14);
-  color: var(--business-neon);
+  background: var(--kb-color-overlay-accent14);
+  color: var(--kb-business-accent-primary);
 }
 
 .business-page .calculator-total-grid div {
-  background: rgba(255, 255, 255, 0.055);
-  border-color: rgba(255, 255, 255, 0.11);
+  background: var(--kb-color-overlay-white055);
+  border-color: var(--kb-color-overlay-white11);
 }
 
 .business-page .calculator-total-grid strong,
 .business-page .calculator-lines strong {
-  font-family: var(--kb-typography-family-display);
+  font-family: var(--kb-typography-display-family);
 }
 
 .business-page .calculator-lines li {
-  border-bottom-color: rgba(255, 255, 255, 0.12);
+  border-bottom-color: var(--kb-color-overlay-white-border);
 }
 
 .business-page .business-segment-card {
@@ -1211,33 +1250,33 @@
 .business-page .business-card,
 .business-page .business-detail-card,
 .business-page .business-request-summary {
-  color: var(--business-text);
+  color: var(--kb-business-text-primary);
 }
 
 .business-page .business-card:hover,
 .business-page .business-detail-card:hover,
 .business-page .business-request-summary:hover {
-  border-color: rgba(215, 86, 156, 0.46);
-  box-shadow: 0 20px 54px rgba(0, 0, 0, 0.28);
+  border-color: var(--kb-color-overlay-accent46);
+  box-shadow: var(--kb-elevation-business-card-strong);
 }
 
 .business-page .business-card .service-category,
 .business-page .business-request-summary .service-category,
 .business-page .business-calculator-result .service-category {
-  background: rgba(215, 86, 156, 0.14);
-  color: var(--business-neon);
+  background: var(--kb-color-overlay-accent14);
+  color: var(--kb-business-accent-primary);
 }
 
 .business-page .business-segment-card strong {
-  color: var(--business-text);
+  color: var(--kb-business-text-primary);
 }
 
 .business-page .business-proof-list span,
 .business-page .form-group,
 .business-page .message-field,
 .business-page .consent-line {
-  background: rgba(255, 255, 255, 0.045);
-  border-color: rgba(215, 86, 156, 0.18);
+  background: var(--kb-color-overlay-white-subtle);
+  border-color: var(--kb-color-overlay-accent18);
 }
 
 .business-page .business-proof-list strong,
@@ -1246,25 +1285,25 @@
 .business-page .business-request-form label span,
 .business-page .message-field,
 .business-page .consent-line span {
-  color: rgba(244, 250, 255, 0.9);
+  color: var(--kb-color-overlay-frost90);
 }
 
 .business-page .business-proof-list small {
-  color: rgba(244, 250, 255, 0.62);
+  color: var(--kb-color-overlay-frost62);
 }
 
 .business-page .business-request-form input,
 .business-page .business-request-form select,
 .business-page .business-request-form textarea {
-  background: rgba(5, 9, 14, 0.72);
-  border-color: rgba(215, 86, 156, 0.28);
-  color: var(--business-text);
+  background: var(--kb-color-overlay-business-glass);
+  border-color: var(--kb-color-overlay-accent28);
+  color: var(--kb-business-text-primary);
 }
 
 .business-page .business-request-form input:hover,
 .business-page .business-request-form select:hover,
 .business-page .business-request-form textarea:hover {
-  border-color: rgba(215, 86, 156, 0.46);
+  border-color: var(--kb-color-overlay-accent46);
 }
 
 .business-proof-column {
@@ -1297,7 +1336,7 @@
   .business-page .section-pad {
     padding-left: 0;
     padding-right: 0;
-    width: min(calc(100% - 2rem), var(--max-page));
+    width: min(calc(100% - 2rem), var(--kb-layout-content-max-width));
   }
 
   .business-quick-actions {
@@ -1388,7 +1427,12 @@
   }
 
   .business-service-list {
+    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .business-service-select {
+    display: none;
   }
 
   .business-page .business-hero-copy h1 {
@@ -1414,9 +1458,22 @@
 }
 
 @media (min-width: 980px) {
+  .business-service-tabs {
+    align-items: start;
+    grid-template-columns: minmax(220px, 0.28fr) minmax(0, 1fr);
+  }
+
   .business-service-list {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-    position: static;
+    grid-template-columns: minmax(0, 1fr);
+    max-height: calc(100vh - 7rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    position: sticky;
+    top: 5.75rem;
+  }
+
+  .business-service-list .business-service-row {
+    min-height: 88px;
   }
 
   .business-page .business-service-panel .business-calculator {

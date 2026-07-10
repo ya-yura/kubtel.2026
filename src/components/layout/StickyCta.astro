@@ -12,7 +12,8 @@ const quietSections = [
   "/news/",
   "/search/",
   "/devices/",
-  "/careers/"
+  "/careers/",
+  "/design-system/"
 ];
 const shouldRender = !quietSections.some((path) => currentPath.startsWith(path));
 const label = isBusinessPath ? "Расчёт для бизнеса" : "Проверить подключение";

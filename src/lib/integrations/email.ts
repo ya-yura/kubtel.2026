@@ -1,53 +1,83 @@
 import nodemailer from "nodemailer";
+import type { CareerResumeAttachment } from "@lib/careers/resume";
+import type { CareerApplicationSubmission } from "@lib/careers/submission";
 import type { DeliveryResult } from "@lib/integrations/types";
 import type { BusinessLeadSubmission } from "@lib/leads/business-submission";
+import type { LeadSubmission } from "@lib/leads/submission";
+
+export async function sendLeadToEmail(
+  lead: LeadSubmission,
+  env = process.env
+): Promise<DeliveryResult> {
+  return sendEmail(
+    {
+      to: env.SALES_EMAIL ?? "kubtel@kubtel.ru",
+      subject: `[${lead.id}] Домашнее подключение: ${lead.tariff.title}`,
+      text: [
+        "Новая заявка с сайта Kubtel",
+        `Номер: ${lead.id}`,
+        `Имя: ${lead.customer.name}`,
+        `Телефон: ${lead.customer.phone}`,
+        `Адрес: ${lead.address}`,
+        `Тариф: ${lead.tariff.title}`,
+        `Опции: ${lead.options.join(", ") || "без дополнительных опций"}`,
+        `Источник: ${lead.sourcePath}`
+      ].join("\n")
+    },
+    env
+  );
+}
+
+export async function sendCareerApplicationToEmail(
+  application: CareerApplicationSubmission,
+  attachment: CareerResumeAttachment | null,
+  env = process.env
+): Promise<DeliveryResult> {
+  return sendEmail(
+    {
+      to: env.HR_EMAIL ?? "kubtel@kubtel.ru",
+      replyTo: application.applicant.email,
+      subject: `[${application.id}] Отклик: ${application.vacancy.title}`,
+      text: [
+        "Новый отклик с сайта Kubtel",
+        `Номер: ${application.id}`,
+        `Вакансия: ${application.vacancy.title}`,
+        `Имя: ${application.applicant.name}`,
+        `Телефон: ${application.applicant.phone}`,
+        `Email: ${application.applicant.email}`,
+        application.resume.url ? `Ссылка на резюме: ${application.resume.url}` : null,
+        application.message ? `Комментарий: ${application.message}` : null,
+        `Источник: ${application.sourcePath}`
+      ]
+        .filter((line): line is string => Boolean(line))
+        .join("\n"),
+      attachments: attachment
+        ? [
+            {
+              filename: attachment.safeName,
+              content: Buffer.from(attachment.bytes),
+              contentType: attachment.mimeType
+            }
+          ]
+        : undefined
+    },
+    env
+  );
+}
 
 export async function sendBusinessLeadToEmail(
   lead: BusinessLeadSubmission,
   env = process.env
 ): Promise<DeliveryResult> {
-  const host = env.SMTP_HOST;
-  const from = env.SMTP_FROM ?? env.SMTP_USER;
-
-  if (!host || !from) {
-    return {
-      channel: "email",
-      status: "skipped",
-      message: "SMTP host или адрес отправителя не настроены"
-    };
-  }
-
-  const port = parseSmtpPort(env.SMTP_PORT);
-  const secure = env.SMTP_SECURE ? env.SMTP_SECURE === "true" : port === 465;
-  const auth = env.SMTP_USER
-    ? {
-        user: env.SMTP_USER,
-        pass: env.SMTP_PASSWORD ?? ""
-      }
-    : undefined;
-
-  try {
-    const transport = nodemailer.createTransport({ host, port, secure, auth });
-    await transport.sendMail({
-      from,
+  return sendEmail(
+    {
       to: lead.routing.recipientEmail,
       replyTo: lead.contact.email ?? undefined,
       subject: buildBusinessLeadEmailSubject(lead),
       text: buildBusinessLeadEmailText(lead)
-    });
-
-    return {
-      channel: "email",
-      status: "sent",
-      message: `Заявка отправлена на ${lead.routing.recipientEmail}`
-    };
-  } catch (error) {
-    return {
-      channel: "email",
-      status: "failed",
-      message: error instanceof Error ? error.message : "Не удалось отправить заявку по email"
-    };
-  }
+    },
+    env
+  );
 }
 
 export function buildBusinessLeadEmailSubject(lead: BusinessLeadSubmission): string {
@@ -77,4 +107,50 @@ export function buildBusinessLeadEmailText(lead: BusinessLeadSubmission): string
 function parseSmtpPort(value: string | undefined): number {
   const port = Number(value ?? 465);
   return Number.isInteger(port) && port > 0 ? port : 465;
+}
+
+type EmailMessage = {
+  to: string;
+  replyTo?: string;
+  subject: string;
+  text: string;
+  attachments?: Array<{
+    filename: string;
+    content: Buffer;
+    contentType: string;
+  }>;
+};
+
+async function sendEmail(message: EmailMessage, env: NodeJS.ProcessEnv): Promise<DeliveryResult> {
+  const host = env.SMTP_HOST;
+  const from = env.SMTP_FROM ?? env.SMTP_USER;
+
+  if (!host || !from) {
+    return {
+      channel: "email",
+      status: "skipped",
+      message: "SMTP host или адрес отправителя не настроены"
+    };
+  }
+
+  const port = parseSmtpPort(env.SMTP_PORT);
+  const secure = env.SMTP_SECURE ? env.SMTP_SECURE === "true" : port === 465;
+  const auth = env.SMTP_USER ? { user: env.SMTP_USER, pass: env.SMTP_PASSWORD ?? "" } : undefined;
+
+  try {
+    const transport = nodemailer.createTransport({ host, port, secure, auth });
+    await transport.sendMail({ from, ...message });
+
+    return {
+      channel: "email",
+      status: "sent",
+      message: `Сообщение отправлено на ${message.to}`
+    };
+  } catch (error) {
+    return {
+      channel: "email",
+      status: "failed",
+      message: error instanceof Error ? error.message : "Не удалось отправить сообщение по email"
+    };
+  }
 }

@@ -64,6 +64,7 @@ const businessLeadBaseSchema = z.object({
   email: nullableText(120),
   inn: nullableText(12),
   segment: optionalText(80),
+  officeProfile: optionalText(40),
   service: requiredText(80, "Выберите услугу"),
   city: optionalText(200),
   address: nullableText(240),

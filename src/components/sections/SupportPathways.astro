@@ -1,22 +1,25 @@
 ---
-import { getSitePath, SITE } from "@config/site";
+import { getPhoneHref, getSitePath, SITE } from "@config/site";
+import SectionHeading from "@components/ui/SectionHeading.astro";
+
+const chatLinks = [
+  SITE.maxChatUrl ? { label: "MAX", href: SITE.maxChatUrl } : null,
+  SITE.vkChatUrl ? { label: "VK", href: SITE.vkChatUrl } : null
+].filter((item): item is { label: string; href: string } => Boolean(item));
 ---
 
 <section class="section-pad support-pathways" id="support-pathways">
-  <div class="section-heading">
-    <p class="eyebrow">Каналы связи</p>
-    <h2>Выберите удобный способ обращения</h2>
-    <p>
-      Абоненту не нужно оставлять контакты заново, если он хочет сам позвонить или написать.
-      Основные каналы вынесены первыми.
-    </p>
-  </div>
+  <SectionHeading
+    eyebrow="Каналы связи"
+    title="Выберите удобный способ обращения"
+    description="Абоненту не нужно оставлять контакты заново, если он хочет сам позвонить или написать. Основные каналы вынесены первыми."
+  />
   <div class="pathway-grid support-channel-grid">
     <article>
       <span>Телефон</span>
-      <h3>{SITE.supportPhone}</h3>
+      <h3>{SITE.supportDirectPhone}</h3>
       <p>Для аварий, вопросов по услуге, оплате и состоянию подключения.</p>
-      <a href={`tel:${SITE.supportPhone.replace(/\D/g, "")}`}>Позвонить</a>
+      <a href={getPhoneHref(SITE.supportDirectPhone)}>Позвонить</a>
     </article>
     <article>
       <span>Почта</span>
@@ -24,14 +27,22 @@ import { getSitePath, SITE } from "@config/site";
       <p>Для заявок, которые удобно описать письмом: адрес, договор, скриншот, история вопроса.</p>
       <a href={`mailto:${SITE.supportEmail}`}>Написать</a>
     </article>
-    <article>
-      <span>Мессенджеры</span>
-      <h3>MAX и VK</h3>
-      <p>Кнопки готовы под официальные ссылки Kubtel. До публикации URL должны подтвердить.</p>
-      <div class="button-row">
-        <a href={getSitePath("/contacts/#messengers")}>Открыть контакты</a>
-      </div>
-    </article>
+    {
+      chatLinks.length > 0 && (
+        <article>
+          <span>Мессенджеры</span>
+          <h3>Официальные чаты</h3>
+          <p>Выберите подтверждённый канал поддержки.</p>
+          <div class="button-row">
+            {chatLinks.map((chat) => (
+              <a href={chat.href} target="_blank" rel="noopener noreferrer">
+                {chat.label}
+              </a>
+            ))}
+          </div>
+        </article>
+      )
+    }
   </div>
   <div class="pathway-grid support-faq-grid">
     <article>

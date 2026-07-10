@@ -1,15 +1,14 @@
 import { describe, expect, it } from "vitest";
 import {
   calculateColocation,
-  calculateInternetOffice,
+  calculateTelephony,
   calculateVps,
   type BusinessPricingCatalog
 } from "@lib/business/calculators";
 
 const pricing: BusinessPricingCatalog = {
-  "internet.speed.300": { monthly: 3000, status: "confirmed" },
-  "internet.static_ip": { monthly: 250, status: "confirmed" },
-  "internet.router_setup": { oneTime: 1500, status: "needs_verification" },
+  "telephony.port": { monthly: 250, status: "needs_verification" },
+  "telephony.phone_number": { monthly: 100, status: "confirmed" },
   "vps.cpu": { monthly: 400, status: "confirmed" },
   "vps.ram_gb": { monthly: 150, status: "confirmed" },
   "vps.ssd_gb": { monthly: 12, status: "confirmed" },
@@ -19,32 +18,16 @@ const pricing: BusinessPricingCatalog = {
 };
 
 describe("business calculators", () => {
-  it("calculates known monthly and one-time values while flagging unconfirmed items", () => {
-    const result = calculateInternetOffice(
-      {
-        speedMbps: 300,
-        staticIpCount: 2,
-        routerSetup: true
-      },
-      pricing
-    );
+  it("never includes needs_verification values in a public total", () => {
+    const result = calculateTelephony({ ports: 2, phoneNumbers: 1 }, pricing);
 
-    expect(result.monthly).toBe(3500);
-    expect(result.oneTime).toBe(1500);
+    expect(result.monthly).toBe(100);
     expect(result.requiredConsultation).toBe(true);
-    expect(result.unknownItems).toContain("internet.router_setup");
+    expect(result.unknownItems).toContain("telephony.port");
   });
 
   it("returns required consultation when a selected price is missing", () => {
-    const result = calculateVps(
-      {
-        vCpu: 2,
-        ramGb: 4,
-        ssdGb: 100,
-        backup: true
-      },
-      pricing
-    );
+    const result = calculateVps({ vCpu: 2, ramGb: 4, ssdGb: 100, backup: true }, pricing);
 
     expect(result.monthly).toBe(2600);
     expect(result.requiredConsultation).toBe(true);
@@ -53,11 +36,7 @@ describe("business calculators", () => {
 
   it("forces consultation for high colocation thresholds", () => {
     const result = calculateColocation(
-      {
-        rackUnits: 2,
-        powerWatts: 1200,
-        internetPort: "10g"
-      },
+      { rackUnits: 2, powerWatts: 1200, internetPort: "10g" },
       pricing
     );
 
