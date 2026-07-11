@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Кубтел Hotspot | Звонок для идентификации</title>
+    <link rel="stylesheet" href="hotspot.css" />
+  </head>
+  <body data-page="call">
+    <a class="skip-link" href="#main-content">К содержанию</a>
+    <main class="hotspot-shell" id="main-content" tabindex="-1">
+      <header class="hotspot-header" aria-label="Кубтел Hotspot">
+        <img
+          class="hotspot-logo"
+          src="assets/logo-wordmark.svg"
+          alt="Кубтел"
+          width="228"
+          height="116"
+        />
+        <button class="language-switch" type="button" data-language-toggle>ENG</button>
+      </header>
+
+      <section class="auth-panel" aria-labelledby="call-title">
+        <div data-announcement-slot></div>
+        <div class="auth-layout">
+          <div class="auth-main">
+            <div class="call-card">
+              <div class="status-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="img">
+                  <path
+                    d="M8.7 4.4 7 5.2c-.8.4-1.2 1.3-.9 2.1 1.6 4.7 5.3 8.4 10 10 .8.3 1.7-.1 2.1-.9l.8-1.7c.3-.7.1-1.5-.5-1.9l-2.1-1.4c-.5-.3-1.1-.3-1.6.1l-.9.7c-.3.2-.7.2-1-.1l-2.9-2.9c-.3-.3-.3-.7-.1-1l.7-.9c.4-.5.4-1.1.1-1.6L9.9 4.9c-.4-.6-1.2-.8-1.9-.5Z"
+                  />
+                </svg>
+              </div>
+              <div class="auth-copy compact">
+                <h1 id="call-title" data-i18n="call.title">
+                  Позвоните для завершения идентификации
+                </h1>
+                <p data-i18n="call.lead">
+                  Звонок бесплатный. После короткого сигнала вернитесь на эту страницу.
+                </p>
+              </div>
+              <a class="call-number" href="tel:+78005500527" aria-label="Позвонить 8 800 550 05 27">
+                8 (800) 550-05-27
+              </a>
+              <div class="button-row single">
+                <a class="button button-primary" href="connected.html" data-i18n="call.done"
+                  >Я позвонил, проверить подключение</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <aside class="promo-slot" data-ad-slot></aside>
+        </div>
+
+        <footer class="support-footer" aria-label="Справочная информация">
+          <p>
+            <span data-i18n="footer.helpPrefix"
+              >Если у Вас возникли вопросы, обращайтесь по телефонам:</span
+            >
+            <a href="tel:+78612001010">8 (861) 200-10-10</a>
+            <span data-i18n="footer.or">или</span>
+            <a href="tel:+78002221730">8 (800) 222-17-30</a>
+          </p>
+          <p>
+            <span data-i18n="footer.provider">Услуга предоставляется</span>
+            <a href="https://kubtel.ru/">ООО «Кубань-Телеком»</a>
+          </p>
+          <p>
+            <span data-i18n="footer.consent"
+              >Проходя идентификацию, я даю согласие на обработку своих</span
+            >
+            <a href="https://kubtel.ru/documents/" data-i18n="footer.personalData"
+              >персональных данных</a
+            >
+          </p>
+        </footer>
+      </section>
+    </main>
+
+    <script src="config.js"></script>
+    <script src="hotspot.js"></script>
+  </body>
+</html>

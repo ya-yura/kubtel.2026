@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Кубтел Hotspot | Интернет подключен</title>
+    <link rel="stylesheet" href="hotspot.css" />
+  </head>
+  <body data-page="connected">
+    <a class="skip-link" href="#main-content">К содержанию</a>
+    <main class="hotspot-shell" id="main-content" tabindex="-1">
+      <header class="hotspot-header" aria-label="Кубтел Hotspot">
+        <img
+          class="hotspot-logo"
+          src="assets/logo-wordmark.svg"
+          alt="Кубтел"
+          width="228"
+          height="116"
+        />
+        <button class="language-switch" type="button" data-language-toggle>ENG</button>
+      </header>
+
+      <section class="auth-panel" aria-labelledby="connected-title">
+        <div data-announcement-slot></div>
+        <div class="auth-layout">
+          <div class="auth-main">
+            <div class="success-card">
+              <div class="status-icon success" aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="img">
+                  <path d="M10.1 15.1 6.8 11.8l-1.7 1.7 5 5L20.2 8.4l-1.7-1.7-8.4 8.4Z" />
+                </svg>
+              </div>
+              <div class="auth-copy compact">
+                <h1 id="connected-title" data-i18n="connected.title">Интернет подключен</h1>
+                <p data-i18n="connected.lead">
+                  Идентификация завершена. Можно закрыть страницу или перейти дальше.
+                </p>
+              </div>
+              <div class="button-row single">
+                <a
+                  class="button button-primary"
+                  href="https://kubtel.ru/"
+                  data-redirect-link
+                  data-i18n="connected.submit"
+                >
+                  Перейти на сайт Кубтел
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <aside class="promo-slot" data-ad-slot></aside>
+        </div>
+
+        <footer class="support-footer" aria-label="Справочная информация">
+          <p>
+            <span data-i18n="footer.helpPrefix"
+              >Если у Вас возникли вопросы, обращайтесь по телефонам:</span
+            >
+            <a href="tel:+78612001010">8 (861) 200-10-10</a>
+            <span data-i18n="footer.or">или</span>
+            <a href="tel:+78002221730">8 (800) 222-17-30</a>
+          </p>
+          <p>
+            <span data-i18n="footer.provider">Услуга предоставляется</span>
+            <a href="https://kubtel.ru/">ООО «Кубань-Телеком»</a>
+          </p>
+          <p>
+            <span data-i18n="footer.consent"
+              >Проходя идентификацию, я даю согласие на обработку своих</span
+            >
+            <a href="https://kubtel.ru/documents/" data-i18n="footer.personalData"
+              >персональных данных</a
+            >
+          </p>
+        </footer>
+      </section>
+    </main>
+
+    <script src="config.js"></script>
+    <script src="hotspot.js"></script>
+  </body>
+</html>

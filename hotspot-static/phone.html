@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Кубтел Hotspot | Ввод телефона</title>
+    <link rel="stylesheet" href="hotspot.css" />
+  </head>
+  <body data-page="phone">
+    <a class="skip-link" href="#main-content">К содержанию</a>
+    <main class="hotspot-shell" id="main-content" tabindex="-1">
+      <header class="hotspot-header" aria-label="Кубтел Hotspot">
+        <img
+          class="hotspot-logo"
+          src="assets/logo-wordmark.svg"
+          alt="Кубтел"
+          width="228"
+          height="116"
+        />
+        <button class="language-switch" type="button" data-language-toggle>ENG</button>
+      </header>
+
+      <section class="auth-panel" aria-labelledby="phone-title">
+        <div data-announcement-slot></div>
+        <div class="auth-layout">
+          <form
+            class="auth-main auth-form"
+            action="call.html"
+            method="get"
+            data-hotspot-form
+            data-next="call.html"
+          >
+            <div class="auth-copy compact">
+              <h1 id="phone-title" data-i18n="phone.title">Введите номер телефона</h1>
+              <p data-i18n="phone.lead">
+                После ввода номера появится бесплатный номер для завершения идентификации.
+              </p>
+            </div>
+
+            <label class="field" for="phone-number">
+              <span data-i18n="phone.label">Ваш телефон</span>
+              <span class="phone-field">
+                <span class="phone-prefix">+7</span>
+                <input
+                  id="phone-number"
+                  name="phone"
+                  type="tel"
+                  inputmode="tel"
+                  autocomplete="tel"
+                  placeholder="999 123-45-67"
+                  required
+                  data-phone-input
+                  data-i18n-placeholder="phone.placeholder"
+                />
+              </span>
+              <small class="field-hint" data-i18n="phone.hint"
+                >Только российский номер, без SMS и платных звонков.</small
+              >
+            </label>
+
+            <p class="form-message" data-form-message role="status" aria-live="polite"></p>
+
+            <div class="button-row">
+              <a class="button button-ghost" href="index.html" data-i18n="common.back">Назад</a>
+              <button class="button button-primary" type="submit" data-i18n="phone.submit">
+                Продолжить
+              </button>
+            </div>
+          </form>
+
+          <aside class="promo-slot" data-ad-slot></aside>
+        </div>
+
+        <footer class="support-footer" aria-label="Справочная информация">
+          <p>
+            <span data-i18n="footer.helpPrefix"
+              >Если у Вас возникли вопросы, обращайтесь по телефонам:</span
+            >
+            <a href="tel:+78612001010">8 (861) 200-10-10</a>
+            <span data-i18n="footer.or">или</span>
+            <a href="tel:+78002221730">8 (800) 222-17-30</a>
+          </p>
+          <p>
+            <span data-i18n="footer.provider">Услуга предоставляется</span>
+            <a href="https://kubtel.ru/">ООО «Кубань-Телеком»</a>
+          </p>
+          <p>
+            <span data-i18n="footer.consent"
+              >Проходя идентификацию, я даю согласие на обработку своих</span
+            >
+            <a href="https://kubtel.ru/documents/" data-i18n="footer.personalData"
+              >персональных данных</a
+            >
+          </p>
+        </footer>
+      </section>
+    </main>
+
+    <script src="config.js"></script>
+    <script src="hotspot.js"></script>
+  </body>
+</html>

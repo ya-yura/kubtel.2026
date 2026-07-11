@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Кубтел Hotspot | Индивидуальный код</title>
+    <link rel="stylesheet" href="hotspot.css" />
+  </head>
+  <body data-page="voucher">
+    <a class="skip-link" href="#main-content">К содержанию</a>
+    <main class="hotspot-shell" id="main-content" tabindex="-1">
+      <header class="hotspot-header" aria-label="Кубтел Hotspot">
+        <img
+          class="hotspot-logo"
+          src="assets/logo-wordmark.svg"
+          alt="Кубтел"
+          width="228"
+          height="116"
+        />
+        <button class="language-switch" type="button" data-language-toggle>ENG</button>
+      </header>
+
+      <section class="auth-panel" aria-labelledby="voucher-title">
+        <div data-announcement-slot></div>
+        <div class="auth-layout">
+          <form
+            class="auth-main auth-form"
+            action="connected.html"
+            method="get"
+            data-hotspot-form
+            data-next="connected.html"
+          >
+            <div class="auth-copy compact">
+              <h1 id="voucher-title" data-i18n="voucher.title">Введите номер ваучера и код</h1>
+              <p data-i18n="voucher.lead">
+                Используйте данные, которые выдал администратор точки доступа.
+              </p>
+            </div>
+
+            <div class="field-grid">
+              <label class="field" for="voucher-number">
+                <span data-i18n="voucher.number">Номер ваучера</span>
+                <input
+                  id="voucher-number"
+                  name="voucher"
+                  type="text"
+                  inputmode="text"
+                  autocomplete="one-time-code"
+                  required
+                  data-code-input
+                />
+              </label>
+
+              <label class="field" for="voucher-code">
+                <span data-i18n="voucher.code">Код</span>
+                <input
+                  id="voucher-code"
+                  name="code"
+                  type="text"
+                  inputmode="text"
+                  autocomplete="one-time-code"
+                  required
+                  data-code-input
+                />
+              </label>
+            </div>
+
+            <p class="form-message" data-form-message role="status" aria-live="polite"></p>
+
+            <div class="button-row">
+              <a class="button button-ghost" href="index.html" data-i18n="common.back">Назад</a>
+              <button class="button button-primary" type="submit" data-i18n="voucher.submit">
+                Подключиться
+              </button>
+            </div>
+          </form>
+
+          <aside class="promo-slot" data-ad-slot></aside>
+        </div>
+
+        <footer class="support-footer" aria-label="Справочная информация">
+          <p>
+            <span data-i18n="footer.helpPrefix"
+              >Если у Вас возникли вопросы, обращайтесь по телефонам:</span
+            >
+            <a href="tel:+78612001010">8 (861) 200-10-10</a>
+            <span data-i18n="footer.or">или</span>
+            <a href="tel:+78002221730">8 (800) 222-17-30</a>
+          </p>
+          <p>
+            <span data-i18n="footer.provider">Услуга предоставляется</span>
+            <a href="https://kubtel.ru/">ООО «Кубань-Телеком»</a>
+          </p>
+          <p>
+            <span data-i18n="footer.consent"
+              >Проходя идентификацию, я даю согласие на обработку своих</span
+            >
+            <a href="https://kubtel.ru/documents/" data-i18n="footer.personalData"
+              >персональных данных</a
+            >
+          </p>
+        </footer>
+      </section>
+    </main>
+
+    <script src="config.js"></script>
+    <script src="hotspot.js"></script>
+  </body>
+</html>
