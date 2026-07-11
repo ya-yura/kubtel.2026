@@ -163,6 +163,7 @@ try {
   await assertDatacenterAccessLegacyRedirect();
   await checkHomeAudienceSwitch(client, sessionId);
   await checkPaymentRoutes(client, sessionId);
+  await checkContextualHeaderPhone(client, sessionId);
   await checkTariffCtaPath(client, sessionId);
   await checkMobilePath(client, sessionId);
   await checkMobileB2GRequest(client, sessionId);
@@ -202,12 +203,19 @@ async function removeTemporaryProfile(directory) {
       await rm(directory, { recursive: true, force: true, maxRetries: 3, retryDelay: 150 });
       return;
     } catch (error) {
-      if (!error || !["EBUSY", "EPERM"].includes(error.code) || attempt === 7) {
-        throw error;
+      if (!isTemporaryProfileCleanupError(error) || attempt === 7) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.warn(`Temporary Chrome profile was not removed: ${directory}`);
+        console.warn(message);
+        return;
       }
       await delay(250);
     }
   }
+}
+
+function isTemporaryProfileCleanupError(error) {
+  return Boolean(error && ["EBUSY", "EPERM", "ENOTEMPTY"].includes(error.code));
 }
 
 async function checkRoute(client, sessionId, path, expectedText) {
@@ -364,6 +372,36 @@ async function checkPaymentRoutes(client, sessionId) {
     "payment page does not emulate payment collection"
   );
   results.push("payment routes ok");
+}
+
+async function checkContextualHeaderPhone(client, sessionId) {
+  await setViewport(client, sessionId, desktopViewport());
+  await navigate(client, sessionId, "/");
+  await assertHeaderPhone(client, sessionId, "8 800 222-17-30", "tel:+78002221730");
+
+  await navigate(client, sessionId, "/business/");
+  await assertHeaderPhone(client, sessionId, "8 861 200-10-11", "tel:+78612001011");
+
+  await navigate(client, sessionId, "/business/b2g/");
+  await assertHeaderPhone(client, sessionId, "8 861 200-10-32", "tel:+78612001032");
+
+  await navigate(client, sessionId, "/business/request/?segment=b2g&service=b2g-consultation");
+  await assertHeaderPhone(client, sessionId, "8 861 200-10-32", "tel:+78612001032");
+
+  results.push("contextual header phone ok");
+}
+
+async function assertHeaderPhone(client, sessionId, expectedText, expectedHref) {
+  await waitForExpression(
+    client,
+    sessionId,
+    `(() => {
+      const link = document.querySelector(".header-phone");
+      return link?.innerText.trim() === ${JSON.stringify(expectedText)} &&
+        link?.getAttribute("href") === ${JSON.stringify(expectedHref)};
+    })()`,
+    `header phone should be ${expectedText}`
+  );
 }
 
 async function checkTariffCtaPath(client, sessionId) {

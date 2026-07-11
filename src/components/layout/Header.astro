@@ -1,11 +1,36 @@
 ---
 import { mainNavItems } from "@config/routes";
-import { getSitePath, SITE } from "@config/site";
+import { getPhoneHref, getSitePath, SITE } from "@config/site";
 
 const currentPath = Astro.url.pathname;
+const basePathPrefix = SITE.basePath === "/" ? "" : SITE.basePath.replace(/\/$/, "");
+const normalizedCurrentPath =
+  basePathPrefix && currentPath.startsWith(`${basePathPrefix}/`)
+    ? currentPath.slice(basePathPrefix.length)
+    : currentPath;
+const selectedSegment = Astro.url.searchParams.get("segment");
+const selectedService = Astro.url.searchParams.get("service");
+const isBusinessPath = normalizedCurrentPath.startsWith("/business/");
+const isBudgetBusinessPath =
+  normalizedCurrentPath.startsWith("/business/b2g/") ||
+  (normalizedCurrentPath.startsWith("/business/request/") &&
+    (selectedSegment === "b2g" ||
+      selectedSegment === "government" ||
+      selectedService === "b2g-consultation"));
+const headerPhone = isBudgetBusinessPath
+  ? SITE.budgetPhone
+  : isBusinessPath
+    ? SITE.businessPhone
+    : SITE.salesPhone;
+const phoneContext = JSON.stringify({
+  basePath: SITE.basePath,
+  salesPhone: SITE.salesPhone,
+  businessPhone: SITE.businessPhone,
+  budgetPhone: SITE.budgetPhone
+}).replace(/</g, "\\u003c");
 
 function isCurrentPath(href: string) {
-  return href === "/" ? currentPath === href : currentPath.startsWith(href);
+  return href === "/" ? normalizedCurrentPath === href : normalizedCurrentPath.startsWith(href);
 }
 ---
 
@@ -55,8 +80,8 @@ function isCurrentPath(href: string) {
       >
         Личный кабинет
       </a>
-      <a class="mobile-nav-phone" href={`tel:${SITE.salesPhone.replace(/\D/g, "")}`}>
-        {SITE.salesPhone}
+      <a class="mobile-nav-phone" href={getPhoneHref(headerPhone)} data-header-phone>
+        {headerPhone}
       </a>
       <button
         class="mobile-readability-toggle"
@@ -79,11 +104,59 @@ function isCurrentPath(href: string) {
   >
     A+
   </button>
-  <a class="header-phone" href={`tel:${SITE.salesPhone.replace(/\D/g, "")}`}>
-    {SITE.salesPhone}
+  <a class="header-phone" href={getPhoneHref(headerPhone)} data-header-phone>
+    {headerPhone}
   </a>
   <a class="header-account" href={SITE.accountUrl} target="_blank" rel="noopener noreferrer">
     Личный кабинет
   </a>
   <a class="header-action" href={getSitePath("/connect/#callback-request")}>Проверить адрес</a>
+  <script is:inline type="application/json" data-header-phone-config set:html={phoneContext} />
+  <script>
+    (() => {
+      const configNode = document.querySelector("[data-header-phone-config]");
+      const phoneLinks = document.querySelectorAll<HTMLAnchorElement>("[data-header-phone]");
+
+      if (!configNode || phoneLinks.length === 0) {
+        return;
+      }
+
+      const config = JSON.parse(configNode.textContent ?? "{}");
+      const normalizedPath = normalizePath(window.location.pathname, config.basePath);
+      const params = new URLSearchParams(window.location.search);
+      const isBusinessPath = normalizedPath.startsWith("/business/");
+      const isBudgetBusinessPath =
+        normalizedPath.startsWith("/business/b2g/") ||
+        (normalizedPath.startsWith("/business/request/") &&
+          (params.get("segment") === "b2g" ||
+            params.get("segment") === "government" ||
+            params.get("service") === "b2g-consultation"));
+      const phone = isBudgetBusinessPath
+        ? config.budgetPhone
+        : isBusinessPath
+          ? config.businessPhone
+          : config.salesPhone;
+
+      phoneLinks.forEach((link) => {
+        link.textContent = phone;
+        link.href = getPhoneHref(phone);
+      });
+
+      function normalizePath(pathname: string, basePath: string) {
+        const prefix = basePath && basePath !== "/" ? basePath.replace(/\/$/, "") : "";
+
+        return prefix && pathname.startsWith(`${prefix}/`)
+          ? pathname.slice(prefix.length)
+          : pathname;
+      }
+
+      function getPhoneHref(phone: string) {
+        const digits = String(phone).replace(/\D/g, "");
+        const normalizedDigits =
+          digits.length === 11 && digits.startsWith("8") ? `7${digits.slice(1)}` : digits;
+
+        return `tel:+${normalizedDigits}`;
+      }
+    })();
+  </script>
 </header>
