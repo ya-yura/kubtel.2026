@@ -104,6 +104,8 @@ const chrome = spawn(
   [
     "--headless=new",
     "--disable-gpu",
+    "--disable-breakpad",
+    "--disable-crash-reporter",
     "--no-first-run",
     "--no-default-browser-check",
     `--remote-debugging-port=${remoteDebuggingPort}`,
@@ -162,13 +164,13 @@ try {
   await checkHomeAudienceSwitch(client, sessionId);
   await checkPaymentRoutes(client, sessionId);
   await checkTariffCtaPath(client, sessionId);
-  await checkReadabilityToggle(client, sessionId);
   await checkMobilePath(client, sessionId);
   await checkMobileB2GRequest(client, sessionId);
   await checkBusinessInternetProfiles(client, sessionId);
   await checkBusinessCalculator(client, sessionId);
   await submitLeadForm(client, sessionId);
   await submitBusinessLeadForm(client, sessionId);
+  await checkReadabilityToggle(client, sessionId);
   if (screenshotDir) {
     await captureVisualSamples(client, sessionId, screenshotDir);
   }
@@ -191,7 +193,21 @@ try {
     await Promise.race([new Promise((resolve) => chrome.once("exit", resolve)), delay(1000)]);
   }
 
-  await rm(userDataDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+  await removeTemporaryProfile(userDataDir);
+}
+
+async function removeTemporaryProfile(directory) {
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    try {
+      await rm(directory, { recursive: true, force: true, maxRetries: 3, retryDelay: 150 });
+      return;
+    } catch (error) {
+      if (!error || !["EBUSY", "EPERM"].includes(error.code) || attempt === 7) {
+        throw error;
+      }
+      await delay(250);
+    }
+  }
 }
 
 async function checkRoute(client, sessionId, path, expectedText) {
@@ -473,8 +489,8 @@ async function checkReadabilityToggle(client, sessionId) {
   await assertExpression(
     client,
     sessionId,
-    `getComputedStyle(document.body).fontFamily.toLowerCase().includes("golos")`,
-    "readability mode uses a Cyrillic-readable font"
+    `getComputedStyle(document.body).fontFamily.toLowerCase().includes("andika")`,
+    "readability mode uses the Cyrillic-capable literacy font"
   );
   await assertExpression(
     client,
@@ -484,6 +500,64 @@ async function checkReadabilityToggle(client, sessionId) {
       return style.filter === "none" && style.color === "rgb(0, 0, 0)";
     })()`,
     "readability mode uses token-driven achromatic colors without CSS filters"
+  );
+  const readableContrastState = await evaluate(
+    client,
+    sessionId,
+    `(() => {
+      const selectors = [
+        ".business-hero-copy p",
+        ".business-routing-contacts a",
+        '.business-calculator-form input:not([type="checkbox"])'
+      ];
+      const parse = (value) => (value.match(/[\\d.]+/g) || []).slice(0, 3).map(Number);
+      const luminance = (value) => {
+        const channels = parse(value).map((channel) => {
+          const normalized = channel / 255;
+          return normalized <= 0.04045
+            ? normalized / 12.92
+            : ((normalized + 0.055) / 1.055) ** 2.4;
+        });
+        return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+      };
+      const background = (element) => {
+        let current = element;
+        while (current) {
+          const value = getComputedStyle(current).backgroundColor;
+          if (value && !value.endsWith(", 0)")) return value;
+          current = current.parentElement;
+        }
+        return "rgb(255, 255, 255)";
+      };
+      return selectors.map((selector) => {
+        const element = document.querySelector(selector);
+        if (!element) return { selector, ok: true, skipped: true };
+        const foreground = getComputedStyle(element).color;
+        const elementBackground = getComputedStyle(element).backgroundColor;
+        const surface = background(element);
+        const foregroundLuminance = luminance(foreground);
+        const backgroundLuminance = luminance(surface);
+        const ratio =
+          (Math.max(foregroundLuminance, backgroundLuminance) + 0.05) /
+          (Math.min(foregroundLuminance, backgroundLuminance) + 0.05);
+        return {
+          selector,
+          foreground,
+          elementBackground,
+          background: surface,
+          ratio,
+          matchesReadableControl: element.matches(
+            'body.is-readable .business-page input:not([type="checkbox"]):not([type="radio"])'
+          ),
+          parentClass: element.parentElement?.className ?? "",
+          ok: ratio >= 7
+        };
+      });
+    })()`
+  );
+  assert(
+    readableContrastState.every((item) => item.ok),
+    `readability mode keeps business text and form controls at AAA contrast: ${JSON.stringify(readableContrastState)}`
   );
   await assertExpression(
     client,

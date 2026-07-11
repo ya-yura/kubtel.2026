@@ -2672,6 +2672,7 @@ body.is-readable {
   color: var(--kb-color-text-primary);
   font-family: var(--kb-typography-body-family);
   font-size: var(--kb-typography-body-size);
+  font-variant-ligatures: no-common-ligatures;
   line-height: var(--kb-typography-body-line-height);
 }
 
@@ -2685,6 +2686,7 @@ body.is-readable :where(button, input, select, textarea) {
 body.is-readable :where(h1, h2, h3) {
   font-family: var(--kb-typography-heading-family);
   font-weight: var(--kb-typography-heading-weight);
+  letter-spacing: 0;
   line-height: var(--kb-typography-heading-line-height);
 }
 
@@ -2720,6 +2722,73 @@ body.is-readable :where(.eyebrow, .service-category, .data-status, .search-resul
 body.is-readable
   :where(.business-page::before, .promo-visual::after, .business-panel-image::after) {
   display: none;
+}
+
+body.is-readable main .business-page,
+body.is-readable
+  main
+  .business-page
+  :where(article, aside, form, [class*="panel"], [class*="card"]) {
+  background-image: none;
+}
+
+body.is-readable
+  .business-page
+  :where(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  background: var(--kb-color-surface-raised) !important;
+  border-color: var(--kb-color-border-strong) !important;
+  color: var(--kb-color-text-primary) !important;
+}
+
+body.is-readable .business-page .calculator-number-control {
+  background: var(--kb-color-surface-raised) !important;
+  border-color: var(--kb-color-border-strong) !important;
+}
+
+body.is-readable
+  main
+  .business-page
+  :where(
+    .business-hero-copy p,
+    .business-routing-contacts a,
+    .business-proof-strip span,
+    .b2g-extra-contact summary,
+    .preferred-contact-group > span,
+    .preferred-contact-group label,
+    .business-mini-list li,
+    .b2g-platform-list span,
+    .datacenter-access-grid label,
+    .datacenter-access-works,
+    .business-calculator-form label span,
+    .business-proof-list strong,
+    .business-proof-list small,
+    .form-group legend,
+    .business-request-form label,
+    .business-request-form label span,
+    .message-field,
+    .consent-line span
+  ) {
+  color: var(--kb-color-text-primary);
+}
+
+body.is-readable .promo-visual {
+  background: var(--kb-color-surface-raised);
+  border-color: var(--kb-color-border-strong);
+}
+
+body.is-readable .promo-visual img {
+  opacity: 0.12;
+}
+
+body.is-readable .promo-visual figcaption {
+  background: var(--kb-color-surface-raised);
+  border: var(--kb-stroke-strong) solid var(--kb-color-border-strong);
+  border-radius: var(--kb-shape-control-small);
+  padding: 0.75rem;
+}
+
+body.is-readable .promo-visual figcaption :where(span, strong) {
+  color: var(--kb-color-text-primary);
 }
 
 body.is-readable :where(.data-status, .proof, [aria-current="page"], [aria-pressed="true"]) {

@@ -1,7 +1,7 @@
 {
   "theme": {
     "name": "readable",
-    "selector": "body.is-readable, [data-theme=\"readable\"]",
+    "selector": "body.is-readable, [data-theme=\"readable\"], body.is-readable .business-page",
     "colorScheme": "light",
     "transform": "achromatic",
     "overrides": {
@@ -21,7 +21,7 @@
       "color.surface.soft": { "value": "{color.neutral.75}", "type": "color" },
       "color.surface.warm": { "value": "{color.neutral.50}", "type": "color" },
       "color.surface.inverse": { "value": "{color.neutral.1000}", "type": "color" },
-      "color.surface.inverseRaised": { "value": "{color.neutral.0}", "type": "color" },
+      "color.surface.inverseRaised": { "value": "{color.neutral.1000}", "type": "color" },
       "color.surface.inverseStrong": { "value": "{color.neutral.1000}", "type": "color" },
       "color.surface.inverseDeep": { "value": "{color.neutral.1000}", "type": "color" },
       "color.surface.businessCanvasStart": { "value": "{color.neutral.0}", "type": "color" },
@@ -32,6 +32,7 @@
       "color.surface.businessPanelStrong": { "value": "{color.neutral.0}", "type": "color" },
       "color.surface.businessGlass": { "value": "{color.neutral.0}", "type": "color" },
       "color.surface.businessGlassStrong": { "value": "{color.neutral.0}", "type": "color" },
+      "color.overlay.businessGlass": { "value": "{color.neutral.0}", "type": "color" },
       "color.border.default": { "value": "{color.neutral.300}", "type": "color" },
       "color.border.strong": { "value": "{color.neutral.1000}", "type": "color" },
       "color.border.hover": { "value": "{color.neutral.600}", "type": "color" },

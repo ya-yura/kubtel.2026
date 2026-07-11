@@ -391,7 +391,10 @@ export function renderCss(baseTokens, resolvedThemes) {
     lines.push(`  ${theme.selector} {`);
     lines.push(`    color-scheme: ${theme.colorScheme};`);
     for (const [tokenPath, token] of sortedEntries(tokens)) {
-      if (baseTokens[tokenPath]?.value === token.value) {
+      const differsFromAnotherTheme = resolvedThemes.some(
+        ({ tokens: otherTokens }) => otherTokens[tokenPath]?.value !== token.value
+      );
+      if (baseTokens[tokenPath]?.value === token.value && !differsFromAnotherTheme) {
         continue;
       }
       lines.push(`    --kb-${toCssName(tokenPath)}: ${token.value};`);

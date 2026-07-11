@@ -69,6 +69,9 @@ describe("design token system", () => {
 
     expect(result.css).toMatch(/\.business-page,\s*\[data-theme="business"\]/);
     expect(result.css).toMatch(/body\.is-readable,\s*\[data-theme="readable"\]/);
+    expect(result.css).toMatch(
+      /body\.is-readable \.business-page \{[\s\S]*?--kb-color-surface-raised:/
+    );
     expect(result.css).not.toMatch(/--(?:color-ink|color-graphite|max-page|header-height):/);
   });
 
@@ -83,6 +86,29 @@ describe("design token system", () => {
       .map(([tokenPath]) => tokenPath);
 
     expect(violations).toEqual([]);
+  });
+
+  it("keeps readable light and inverse surfaces at AAA text contrast", async () => {
+    const { loadCoreTokens, loadThemes, resolveTheme } = await loadTokenBuilder();
+    const { tokens, sources } = await loadCoreTokens();
+    const readable = getTheme(await loadThemes(), "readable");
+    const resolved = resolveTheme(tokens, readable, sources);
+
+    const pairs = [
+      ["color.text.primary", "color.surface.page"],
+      ["color.text.secondary", "color.surface.section"],
+      ["color.text.inverse", "color.surface.inverse"],
+      ["color.text.inverse", "color.surface.inverseRaised"],
+      ["color.text.onBusiness", "color.surface.businessPanel"],
+      ["color.text.primary", "color.overlay.businessGlass"]
+    ] as const;
+
+    for (const [foreground, background] of pairs) {
+      expect(
+        contrast(resolved[foreground].value, resolved[background].value),
+        `${foreground} on ${background}`
+      ).toBeGreaterThanOrEqual(7);
+    }
   });
 
   it("meets AA contrast for core text and primary actions", async () => {
