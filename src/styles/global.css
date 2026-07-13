@@ -1346,9 +1346,17 @@ input[type="radio"] {
   border-color: var(--kb-color-status-success-border);
 }
 
+.form-status.is-success strong {
+  color: var(--kb-color-status-success-text);
+}
+
 .form-status.is-error {
   background: var(--kb-color-status-danger-background);
   border-color: var(--kb-color-status-danger-border);
+}
+
+.form-status.is-error strong {
+  color: var(--kb-color-status-danger-text);
 }
 
 .form-group {

@@ -380,7 +380,7 @@ async function checkContextualHeaderPhone(client, sessionId) {
   await assertHeaderPhone(client, sessionId, "8 800 222-17-30", "tel:+78002221730");
 
   await navigate(client, sessionId, "/business/");
-  await assertHeaderPhone(client, sessionId, "8 861 200-10-11", "tel:+78612001011");
+  await assertHeaderPhone(client, sessionId, "8 861 200-10-60", "tel:+78612001060");
 
   await navigate(client, sessionId, "/business/b2g/");
   await assertHeaderPhone(client, sessionId, "8 861 200-10-32", "tel:+78612001032");
@@ -664,6 +664,26 @@ async function checkBusinessCalculator(client, sessionId) {
     })()`,
     "business calculator passes configuration without unapproved estimates"
   );
+  await navigate(client, sessionId, "/business/?calculator=colocation#business-calculators");
+  await waitForExpression(
+    client,
+    sessionId,
+    `(() => {
+      const panel = document.querySelector('[data-service-panel="colocation"].is-active');
+      const monthly = panel?.querySelector('[data-calculator-monthly]')?.innerText ?? "";
+      const oneTime = panel?.querySelector('[data-calculator-onetime]')?.innerText ?? "";
+      const power = panel?.querySelector('input[name="powerWatts"]');
+      const text = panel?.innerText ?? "";
+      return monthly.replace(/\\D/g, "").includes("11260") &&
+        oneTime.replace(/\\D/g, "").includes("1200") &&
+        power?.max === "10000" &&
+        text.includes("Интернет") &&
+        text.includes("1 Гбит/с (50 ТБ)") &&
+        text.includes("Первичное размещение оборудования") &&
+        !text.includes("Удалённые работы инженера");
+    })()`,
+    "colocation calculator uses approved prices and options"
+  );
   await assertExpression(
     client,
     sessionId,
@@ -709,13 +729,31 @@ async function checkBusinessInternetProfiles(client, sessionId) {
     `(() => {
       const hrefs = [...document.querySelectorAll('[data-service-panel="internet"] .office-profile-card a')]
         .map((link) => link.href);
+      const comments = hrefs.map((href) => new URL(href).searchParams.get("configurationSummary"));
       return hrefs.length === 3 &&
         hrefs.every((href) => href.includes("/business/request/")) &&
         hrefs.every((href) => href.includes("service=internet")) &&
         hrefs.every((href) => href.includes("officeProfile=")) &&
-        hrefs.every((href) => href.includes("configurationSummary="));
+        JSON.stringify(comments) === JSON.stringify([
+          "Малый офис 10-20 Мбит/с",
+          "Средний офис 30-50 Мбит/с",
+          "Крупный офис 70-100 Мбит/с"
+        ]);
     })()`,
     "internet profile CTA links pass selected profile into request"
+  );
+  const smallOfficeComment = "Малый офис 10-20 Мбит/с";
+  await navigate(
+    client,
+    sessionId,
+    `/business/request/?segment=legal&service=internet&officeProfile=small&configurationSummary=${encodeURIComponent(smallOfficeComment)}`
+  );
+  await assertExpression(
+    client,
+    sessionId,
+    `document.querySelector('textarea[name="configurationSummary"]')?.value === ${JSON.stringify(smallOfficeComment)} &&
+      document.querySelector('input[name="officeProfile"]')?.value === "small"`,
+    "internet profile is copied into the request comment"
   );
   results.push("business internet office profiles ok");
 }
@@ -830,6 +868,37 @@ async function submitBusinessLeadForm(client, sessionId) {
         : text.includes("B2B-заявка принята");
     })()`,
     `business lead form shows real server success or static-preview error: ${businessStatusText}`
+  );
+  await assertExpression(
+    client,
+    sessionId,
+    `(() => {
+      const status = document.querySelector(".form-status");
+      const title = status?.querySelector("strong");
+      if (!status || !title) return false;
+      const contrast = () => {
+        const parse = (color) => (color.match(/[\\d.]+/g) ?? []).slice(0, 3).map(Number);
+        const luminance = (color) => {
+          const channels = parse(color).map((channel) => {
+            const value = channel / 255;
+            return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+          });
+          return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+        };
+        const foreground = luminance(getComputedStyle(title).color);
+        const background = luminance(getComputedStyle(status).backgroundColor);
+        return (Math.max(foreground, background) + 0.05) /
+          (Math.min(foreground, background) + 0.05);
+      };
+      const originalClass = status.className;
+      status.className = "form-status is-success";
+      const successContrast = contrast();
+      status.className = "form-status is-error";
+      const errorContrast = contrast();
+      status.className = originalClass;
+      return successContrast >= 4.5 && errorContrast >= 4.5;
+    })()`,
+    "form status titles meet AA contrast in success and error states"
   );
   await assertExpression(
     client,

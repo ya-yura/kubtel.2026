@@ -38,19 +38,16 @@ export type VpsInput = {
   vCpu: number;
   ramGb: number;
   ssdGb?: number;
-  hddGb?: number;
   ipCount?: number;
   backup?: boolean;
-  ddosProtection?: boolean;
 };
 
 export type ColocationInput = {
   rackUnits: number;
   powerWatts: number;
   ipv4Count?: number;
-  internetPort: "100m" | "1g" | "10g";
+  internetPlan: "100m" | "1g-50tb" | "1g-unlimited";
   ipmi?: boolean;
-  remoteHands?: boolean;
 };
 
 export function calculateTelephony(
@@ -123,10 +120,8 @@ export function calculateVps(
   addRepeatedLine(accumulator, pricing["vps.cpu"], input.vCpu, "vps.cpu");
   addRepeatedLine(accumulator, pricing["vps.ram_gb"], input.ramGb, "vps.ram_gb");
   addRepeatedLine(accumulator, pricing["vps.ssd_gb"], input.ssdGb ?? 0, "vps.ssd_gb");
-  addRepeatedLine(accumulator, pricing["vps.hdd_gb"], input.hddGb ?? 0, "vps.hdd_gb");
   addRepeatedLine(accumulator, pricing["vps.ip"], input.ipCount ?? 0, "vps.ip");
   addOptionalLine(accumulator, pricing["vps.backup"], Boolean(input.backup), "vps.backup");
-  addOptionalLine(accumulator, pricing["vps.ddos"], Boolean(input.ddosProtection), "vps.ddos");
 
   return finalizeCalculation(accumulator, input, `VPS: ${input.vCpu} CPU, ${input.ramGb} ГБ RAM`);
 }
@@ -147,25 +142,16 @@ export function calculateColocation(
   addRepeatedLine(accumulator, pricing["colocation.ipv4"], input.ipv4Count ?? 0, "colocation.ipv4");
   addLine(
     accumulator,
-    pricing[`colocation.port.${input.internetPort}`],
-    `colocation.port.${input.internetPort}`
+    pricing[`colocation.internet.${input.internetPlan}`],
+    `colocation.internet.${input.internetPlan}`
   );
   addOptionalLine(accumulator, pricing["colocation.ipmi"], Boolean(input.ipmi), "colocation.ipmi");
-  addOptionalLine(
-    accumulator,
-    pricing["colocation.remote_hands"],
-    Boolean(input.remoteHands),
-    "colocation.remote_hands"
-  );
-
-  if (input.powerWatts > 1000 || input.internetPort === "10g") {
-    accumulator.requiredConsultation = true;
-  }
+  addLine(accumulator, pricing["colocation.initial_placement"], "colocation.initial_placement");
 
   return finalizeCalculation(
     accumulator,
     input,
-    `Colocation: ${input.rackUnits}U, ${input.powerWatts} Вт, порт ${input.internetPort}`
+    `Colocation: ${input.rackUnits}U, ${input.powerWatts} Вт, интернет ${input.internetPlan}`
   );
 }
 

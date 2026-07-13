@@ -176,7 +176,7 @@ export const businessServices: BusinessService[] = [
     summary:
       "Виртуальный сервер для 1С, CRM, терминального доступа, телефонии и бизнес-приложений с подбором ресурсов.",
     businessBenefit:
-      "Компания запускает серверные сервисы без покупки железа и масштабирует CPU, RAM, диски и backup под задачу.",
+      "Компания запускает серверные сервисы без покупки железа и масштабирует CPU, RAM, SSD и backup под задачу.",
     proofPoints: [
       { label: "Тест", value: "до 10\u00a0дней", status: "confirmed" },
       { label: "Данные", value: "в\u00a0РФ", status: "confirmed" },
@@ -185,7 +185,7 @@ export const businessServices: BusinessService[] = [
     ctaLabel: "Подключить",
     priority: "P1",
     audience: ["IT", "1С", "CRM", "терминальный доступ"],
-    options: ["OS", "CPU", "RAM", "HDD/SSD", "IP", "backup"],
+    options: ["OS", "CPU", "RAM", "SSD", "IP", "backup"],
     calculatorFields: ["OS", "CPU", "RAM", "диск", "backup"],
     relatedServices: ["vdi", "colocation"],
     seoTitle: "Аренда VPS в\u00a0Краснодаре",
@@ -231,8 +231,8 @@ export const businessServices: BusinessService[] = [
     ctaLabel: "Подключить",
     priority: "P0",
     audience: ["IT-команды", "владельцы серверов", "операторы"],
-    options: ["юниты", "питание", "порты", "IPv4/IPv6", "IPMI"],
-    calculatorFields: ["U", "питание", "порты", "IP", "удалённые руки"],
+    options: ["юниты", "питание", "интернет", "IPv4/IPv6", "IPMI/ILO/iDRAC"],
+    calculatorFields: ["U", "питание", "интернет", "IP", "удалённый доступ"],
     relatedServices: ["datacenter-access", "operators"],
     seoTitle: "Colocation и размещение сервера в\u00a0Краснодаре",
     seoDescription:

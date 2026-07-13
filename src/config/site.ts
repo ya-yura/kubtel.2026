@@ -54,7 +54,7 @@ export const SITE = {
   supportEmail: "support@kubtel.ru",
   email: "kubtel@kubtel.ru",
   businessEmail: "kubtel@kubtel.ru",
-  businessPhone: "8 861 200-10-11",
+  businessPhone: "8 861 200-10-60",
   budgetEmail: "tender@kubtel.ru",
   budgetPhone: "8 861 200-10-32",
   officeAddress: "г. Краснодар, ул. им. Володи Головатого, 585",

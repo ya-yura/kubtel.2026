@@ -67,7 +67,7 @@ const internetOfficeProfiles = [
     seats: "2-5 рабочих мест",
     speed: "10-20 Мбит/с",
     summary: "Для небольшой команды, базовой телефонии, почты, мессенджеров и рабочих сервисов.",
-    configuration: "Малый офис: 2-5 рабочих мест, ориентир скорости 10-20 Мбит/с."
+    configuration: "Малый офис 10-20 Мбит/с"
   },
   {
     slug: "medium",
@@ -75,7 +75,7 @@ const internetOfficeProfiles = [
     seats: "10-15 рабочих мест",
     speed: "30-50 Мбит/с",
     summary: "Для офиса с общими файлами, CRM, видеозвонками и несколькими активными сервисами.",
-    configuration: "Средний офис: 10-15 рабочих мест, ориентир скорости 30-50 Мбит/с."
+    configuration: "Средний офис 30-50 Мбит/с"
   },
   {
     slug: "large",
@@ -83,7 +83,7 @@ const internetOfficeProfiles = [
     seats: "20 и более рабочих мест",
     speed: "70-100 Мбит/с",
     summary: "Для большого офиса, активных видеоконференций, облачных систем и резервирования.",
-    configuration: "Крупный офис: 20 и более рабочих мест, ориентир скорости 70-100 Мбит/с."
+    configuration: "Крупный офис 70-100 Мбит/с"
   }
 ];
 
@@ -156,7 +156,7 @@ const serviceTabs: ServiceTab[] = [
     title: "Размещение",
     badge: "Калькулятор",
     summary: "Размещение серверного оборудования в ЦОД Kubtel с питанием и связностью.",
-    options: ["юниты", "питание", "порт", "IPv4", "IPMI", "удалённые работы"],
+    options: ["юниты", "питание", "интернет", "IPv4", "удалённый доступ"],
     config: businessCalculatorConfigs.colocation
   },
   {
@@ -172,8 +172,8 @@ const serviceTabs: ServiceTab[] = [
     title: "Виртуальный сервер",
     navTitle: "VPS",
     badge: "Калькулятор",
-    summary: "CPU, RAM, диски, IP-адреса и резервное копирование.",
-    options: ["CPU", "RAM", "SSD/HDD", "IPv4", "резервное копирование", "DDoS-защита"],
+    summary: "CPU, RAM, SSD, IP-адреса и резервное копирование.",
+    options: ["CPU", "RAM", "SSD", "IPv4", "резервное копирование"],
     config: businessCalculatorConfigs.vps
   },
   {

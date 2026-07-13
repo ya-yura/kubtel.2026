@@ -301,6 +301,10 @@ const payload = JSON.stringify({
     };
 
     for (const line of config.lines) {
+      if (line.kind === "fixed") {
+        addLine(result, pricing[line.key], line.label, 1, 1);
+      }
+
       if (line.kind === "repeated") {
         const rawQuantity = Number(values[line.quantityField] || 0);
         const quantity = line.quantityStep
@@ -337,14 +341,6 @@ const payload = JSON.stringify({
           quantity
         );
       }
-    }
-
-    if (
-      config.type === "colocation" &&
-      (Number(values.powerWatts || 0) > 1000 || values.internetPort === "10g")
-    ) {
-      result.requiredConsultation = true;
-      pushUnknown(result, "инженерная проверка питания или 10G-порта");
     }
 
     return result;
@@ -411,7 +407,13 @@ const payload = JSON.stringify({
       return `VPS: ${values.vCpu} CPU, ${values.ramGb}\u00a0ГБ RAM`;
     }
 
-    return `Размещение: ${values.rackUnits}U, ${values.powerWatts}\u00a0Вт, порт ${values.internetPort}`;
+    const internetLabels: Record<string, string> = {
+      "100m": "100 Мбит/с",
+      "1g-50tb": "1 Гбит/с (50 ТБ)",
+      "1g-unlimited": "1 Гбит/с (безлимит)"
+    };
+    const internetPlan = internetLabels[String(values.internetPlan)] ?? values.internetPlan;
+    return `Размещение: ${values.rackUnits}U, ${values.powerWatts}\u00a0Вт, интернет ${internetPlan}`;
   }
 
   function buildConfigurationText(summary: string, result: any) {

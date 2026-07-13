@@ -32,6 +32,11 @@ export type CalculatorField =
 
 export type CalculatorLine =
   | {
+      kind: "fixed";
+      key: string;
+      label: string;
+    }
+  | {
       kind: "repeated";
       key: string;
       quantityField: string;
@@ -88,8 +93,8 @@ const individualPrice = (unitLabel: string) => ({
 
 /**
  * Public calculator prices are intentionally restricted to commercially confirmed values.
- * The official Kubtel page confirms that monthly e-mail detailing is free. All other values
- * remain an individual calculation until Kubtel supplies an approved commercial matrix.
+ * Telephony e-mail detailing and the approved colocation matrix are published below; options
+ * without an approved price remain an individual calculation.
  */
 export const businessCalculatorPricing: BusinessPricingCatalog = {
   "telephony.port": individualPrice("за SIP-порт"),
@@ -113,19 +118,41 @@ export const businessCalculatorPricing: BusinessPricingCatalog = {
   "vps.cpu": individualPrice("за vCPU"),
   "vps.ram_gb": individualPrice("за 1 ГБ RAM"),
   "vps.ssd_gb": individualPrice("за 1 ГБ SSD"),
-  "vps.hdd_gb": individualPrice("за 1 ГБ HDD"),
   "vps.ip": individualPrice("за IPv4-адрес"),
   "vps.backup": individualPrice("за резервное копирование"),
-  "vps.ddos": individualPrice("по параметрам защиты"),
 
-  "colocation.unit": individualPrice("за 1U"),
-  "colocation.power_100w": individualPrice("за каждые 100 Вт"),
-  "colocation.ipv4": individualPrice("за IPv4-адрес"),
-  "colocation.port.100m": individualPrice("за порт 100 Мбит/с"),
-  "colocation.port.1g": individualPrice("за порт 1 Гбит/с"),
-  "colocation.port.10g": individualPrice("за порт 10 Гбит/с"),
-  "colocation.ipmi": individualPrice("за IPMI-доступ"),
-  "colocation.remote_hands": individualPrice("за удалённые работы инженера")
+  "colocation.unit": { monthly: 600, status: "confirmed", unitLabel: "за 1U" },
+  "colocation.power_100w": {
+    monthly: 1000,
+    status: "confirmed",
+    unitLabel: "за каждые 100 Вт"
+  },
+  "colocation.ipv4": { monthly: 530, status: "confirmed", unitLabel: "за IPv4-адрес" },
+  "colocation.internet.100m": {
+    monthly: 3000,
+    status: "confirmed",
+    unitLabel: "100 Мбит/с"
+  },
+  "colocation.internet.1g-50tb": {
+    monthly: 5000,
+    status: "confirmed",
+    unitLabel: "1 Гбит/с, 50 ТБ"
+  },
+  "colocation.internet.1g-unlimited": {
+    monthly: 25000,
+    status: "confirmed",
+    unitLabel: "1 Гбит/с, безлимит"
+  },
+  "colocation.ipmi": {
+    monthly: 530,
+    status: "confirmed",
+    unitLabel: "удалённый доступ"
+  },
+  "colocation.initial_placement": {
+    oneTime: 1200,
+    status: "confirmed",
+    unitLabel: "размещение оборудования"
+  }
 };
 
 export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculatorConfig> = {
@@ -327,7 +354,7 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
     type: "vps",
     serviceSlug: "vps",
     title: "Виртуальный сервер",
-    lead: "Подберите CPU, RAM, диски, IP и резервное копирование. Конфигурация целиком передаётся в заявку на индивидуальный расчёт.",
+    lead: "Подберите CPU, RAM, SSD, IP и резервное копирование. Конфигурация целиком передаётся в заявку на индивидуальный расчёт.",
     submitLabel: "Оставить заявку",
     fields: [
       {
@@ -363,16 +390,6 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
       },
       {
         kind: "number",
-        name: "hddGb",
-        label: "HDD",
-        min: 0,
-        max: 20000,
-        step: 100,
-        value: 0,
-        suffix: "ГБ"
-      },
-      {
-        kind: "number",
         name: "ipCount",
         label: "IPv4",
         min: 0,
@@ -385,30 +402,21 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         name: "backup",
         label: "Резервное копирование",
         checked: true
-      },
-      {
-        kind: "checkbox",
-        name: "ddosProtection",
-        label: "DDoS-защита",
-        checked: false,
-        help: "Параметры защиты подбираются по профилю трафика."
       }
     ],
     lines: [
       { kind: "repeated", key: "vps.cpu", quantityField: "vCpu", label: "vCPU" },
       { kind: "repeated", key: "vps.ram_gb", quantityField: "ramGb", label: "RAM" },
       { kind: "repeated", key: "vps.ssd_gb", quantityField: "ssdGb", label: "SSD" },
-      { kind: "repeated", key: "vps.hdd_gb", quantityField: "hddGb", label: "HDD" },
       { kind: "repeated", key: "vps.ip", quantityField: "ipCount", label: "IPv4" },
-      { kind: "optional", key: "vps.backup", enabledField: "backup", label: "Backup" },
-      { kind: "optional", key: "vps.ddos", enabledField: "ddosProtection", label: "DDoS-защита" }
+      { kind: "optional", key: "vps.backup", enabledField: "backup", label: "Backup" }
     ]
   },
   colocation: {
     type: "colocation",
     serviceSlug: "colocation",
     title: "Размещение оборудования",
-    lead: "Укажите юниты, питание, порт, IPv4, IPMI и удалённые работы. Инженер подтвердит совместимость и индивидуальную стоимость.",
+    lead: "Укажите юниты, питание, интернет, IPv4 и удалённый доступ. Калькулятор покажет ежемесячную стоимость и разовый платёж за первичное размещение.",
     submitLabel: "Оставить заявку",
     fields: [
       {
@@ -426,10 +434,11 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         name: "powerWatts",
         label: "Питание",
         min: 100,
-        max: 5000,
-        step: 50,
+        max: 10000,
+        step: 100,
         value: 400,
-        suffix: "Вт"
+        suffix: "Вт",
+        help: "Стоимость начисляется за каждые начатые 100 Вт."
       },
       {
         kind: "number",
@@ -442,22 +451,21 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
       },
       {
         kind: "select",
-        name: "internetPort",
-        label: "Порт",
-        value: "1g",
+        name: "internetPlan",
+        label: "Интернет",
+        value: "1g-50tb",
         options: [
           { value: "100m", label: "100 Мбит/с" },
-          { value: "1g", label: "1 Гбит/с" },
-          { value: "10g", label: "10 Гбит/с" }
+          { value: "1g-50tb", label: "1 Гбит/с (50 ТБ)" },
+          { value: "1g-unlimited", label: "1 Гбит/с (безлимит)" }
         ],
-        help: "10 Гбит/с и питание свыше 1 кВт требуют инженерной проверки."
+        help: "Выберите подходящую скорость и включённый объём трафика."
       },
-      { kind: "checkbox", name: "ipmi", label: "IPMI", checked: true },
       {
         kind: "checkbox",
-        name: "remoteHands",
-        label: "Удалённые работы инженера",
-        checked: false
+        name: "ipmi",
+        label: "Удалённый доступ (IPMI/ILO/iDRAC)",
+        checked: true
       }
     ],
     lines: [
@@ -477,24 +485,32 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
       },
       {
         kind: "select",
-        keyPrefix: "colocation.port.",
-        selectField: "internetPort",
-        labelPrefix: "Порт",
-        valueLabels: { "100m": "100 Мбит/с", "1g": "1 Гбит/с", "10g": "10 Гбит/с" }
+        keyPrefix: "colocation.internet.",
+        selectField: "internetPlan",
+        labelPrefix: "Интернет",
+        valueLabels: {
+          "100m": "100 Мбит/с",
+          "1g-50tb": "1 Гбит/с (50 ТБ)",
+          "1g-unlimited": "1 Гбит/с (безлимит)"
+        }
       },
-      { kind: "optional", key: "colocation.ipmi", enabledField: "ipmi", label: "IPMI" },
       {
         kind: "optional",
-        key: "colocation.remote_hands",
-        enabledField: "remoteHands",
-        label: "Удалённые работы инженера"
+        key: "colocation.ipmi",
+        enabledField: "ipmi",
+        label: "Удалённый доступ (IPMI/ILO/iDRAC)"
+      },
+      {
+        kind: "fixed",
+        key: "colocation.initial_placement",
+        label: "Первичное размещение оборудования"
       }
     ],
     glossary: [
       { term: "Юнит", description: "единица высоты оборудования в серверной стойке." },
       {
-        term: "IPMI",
-        description: "интерфейс удалённого управления сервером независимо от основной ОС."
+        term: "IPMI/ILO/iDRAC",
+        description: "интерфейсы удалённого управления сервером независимо от основной ОС."
       }
     ]
   }
