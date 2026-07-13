@@ -332,6 +332,22 @@ const actionError = actionResult?.error;
     const b2gExtra = form.querySelector<HTMLDetailsElement>("[data-b2g-extra-contact]");
     const addressInput = form.querySelector<HTMLInputElement>("[data-request-address]");
 
+    for (const fieldName of [
+      "officeProfile",
+      "configurationSummary",
+      "monthlyEstimate",
+      "oneTimeEstimate"
+    ]) {
+      const requestedValue = params.get(fieldName);
+      const field = form.querySelector<HTMLInputElement | HTMLTextAreaElement>(
+        `[name="${fieldName}"]`
+      );
+
+      if (requestedValue !== null && field) {
+        field.value = requestedValue;
+      }
+    }
+
     if (requestedService && serviceSelect) {
       serviceSelect.value = requestedService;
     }

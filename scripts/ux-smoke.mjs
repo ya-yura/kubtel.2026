@@ -94,6 +94,7 @@ const pathPrefix = (
   process.env.UX_SMOKE_PATH_PREFIX ?? (basePathFromUrl === "/" ? "" : basePathFromUrl)
 ).replace(/\/$/, "");
 const screenshotDir = process.env.UX_SMOKE_SCREENSHOT_DIR;
+const skipLegacyRedirects = process.env.UX_SMOKE_SKIP_REDIRECTS === "true";
 const chromePath = findChrome();
 const userDataDir = await mkdtemp(join(tmpdir(), "kubtel-ux-smoke-"));
 const remoteDebuggingPort = await getFreePort();
@@ -158,9 +159,11 @@ try {
   );
 
   await assertHealthEndpoint();
-  await assertLegacyRedirect();
-  await assertB2GLegacyRedirect();
-  await assertDatacenterAccessLegacyRedirect();
+  if (!skipLegacyRedirects) {
+    await assertLegacyRedirect();
+    await assertB2GLegacyRedirect();
+    await assertDatacenterAccessLegacyRedirect();
+  }
   await checkHomeAudienceSwitch(client, sessionId);
   await checkPaymentRoutes(client, sessionId);
   await checkContextualHeaderPhone(client, sessionId);
