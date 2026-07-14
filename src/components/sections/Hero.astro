@@ -1,6 +1,6 @@
 ---
 import PromoImage from "@components/ui/PromoImage.astro";
-import { getSitePath } from "@config/site";
+import { getPhoneHref, getSitePath, SITE } from "@config/site";
 import { promoVisuals } from "@lib/visuals";
 ---
 
@@ -51,18 +51,45 @@ import { promoVisuals } from "@lib/visuals";
   </div>
   <div class="hero-visual-stack">
     <PromoImage visual={promoVisuals.home} class="is-hero" loading="eager" fetchpriority="high" />
-    <div class="hero-panel" aria-label="Ключевые преимущества">
-      <div>
-        <span class="metric">1</span>
-        <p>номер телефона нужен, чтобы начать разговор о&nbsp;подключении</p>
+    <div class="hero-panel" aria-labelledby="hero-panel-title">
+      <div class="hero-panel__intro">
+        <span class="hero-panel__eyebrow">Понятный старт</span>
+        <h2 id="hero-panel-title">Подключение без квеста</h2>
+        <p>
+          Не нужно заранее разбираться в тарифах. Достаточно оставить телефон — остальное уточним
+          вместе.
+        </p>
       </div>
-      <div>
-        <span class="metric">0</span>
-        <p>скрытых платежей и&nbsp;игр со&nbsp;скоростью в&nbsp;обещании Kubtel</p>
-      </div>
-      <div>
-        <span class="metric">люди</span>
-        <p>местная команда вместо длинной цепочки переключений</p>
+      <ol class="hero-panel__steps">
+        <li>
+          <span class="hero-step-number">1</span>
+          <div>
+            <strong>Оставьте телефон</strong>
+            <p>Перезвоним и выслушаем, что нужно именно вам.</p>
+          </div>
+        </li>
+        <li>
+          <span class="hero-step-number">2</span>
+          <div>
+            <strong>Проверим адрес</strong>
+            <p>Уточним техническую возможность и доступные варианты.</p>
+          </div>
+        </li>
+        <li>
+          <span class="hero-step-number">3</span>
+          <div>
+            <strong>Вы решите спокойно</strong>
+            <p>Сравните условия и выберите подходящий вариант без давления.</p>
+          </div>
+        </li>
+      </ol>
+      <div class="hero-panel__footer">
+        <a class="hero-panel__action" href={getSitePath("/connect/#callback-request")}
+          >Проверить адрес</a
+        >
+        <a class="hero-panel__phone" href={getPhoneHref(SITE.salesPhone)}>
+          Или позвонить: {SITE.salesPhone}
+        </a>
       </div>
     </div>
   </div>
