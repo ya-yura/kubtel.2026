@@ -3,7 +3,7 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import { getSitePath } from "@config/site";
 import { sitemapRoutes } from "@config/routes";
 import { getFaqItems, getServices, getTariffs } from "@lib/content";
-import { businessSegments, businessServices } from "@lib/business/content";
+import { businessSegments, businessServices, getBusinessSegmentPath } from "@lib/business/content";
 import { formatRubles } from "@lib/format";
 
 type SearchItem = {
@@ -84,8 +84,13 @@ const businessServiceItems: SearchItem[] = businessServices.map((service) => ({
 
 const businessSegmentItems: SearchItem[] = businessSegments.map((segment) => ({
   title: segment.title,
-  href: `/business/${segment.slug}/`,
-  category: "Для бизнеса",
+  href: getBusinessSegmentPath(segment.slug),
+  category:
+    segment.slug === "b2g"
+      ? "Для государства"
+      : segment.slug === "operators"
+        ? "Для операторов"
+        : "Для бизнеса",
   summary: segment.summary,
   keywords: [segment.title, segment.summary, segment.pain, segment.trigger, ...segment.fields]
 }));

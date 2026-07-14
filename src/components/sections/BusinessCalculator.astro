@@ -7,11 +7,12 @@ import {
 
 type Props = {
   config: BusinessCalculatorConfig;
+  requestPath?: string;
 };
 
-const { config } = Astro.props;
+const { config, requestPath: requestPathProp } = Astro.props;
 const calculatorId = `business-calculator-${config.type}`;
-const requestPath = getSitePath("/business/request/");
+const requestPath = getSitePath(requestPathProp ?? "/business/request/");
 const payload = JSON.stringify({
   config,
   pricing: businessCalculatorPricing,
@@ -211,7 +212,10 @@ const payload = JSON.stringify({
       const values = readValues(calculatorForm);
       const result = calculate(config, pricing, values);
       const summary = buildSummary(config.type, values);
-      const isIndividual = result.unknownItems.length > 0 || result.requiredConsultation;
+      const hasQuoteItems = result.unknownItems.length > 0;
+      const showKnownTotals = Boolean(config.showKnownTotalsWithQuoteItems);
+      const isIndividual = result.forceIndividual || (hasQuoteItems && !showKnownTotals);
+      const canPublishEstimate = !result.forceIndividual && (!hasQuoteItems || showKnownTotals);
 
       summaryValue.textContent = summary;
       monthlyValue.textContent = isIndividual
@@ -244,26 +248,28 @@ const payload = JSON.stringify({
       );
 
       if (noteNode) {
-        noteNode.textContent =
-          result.unknownItems.length > 0 || result.requiredConsultation
-            ? `Индивидуальный расчёт: ${result.unknownItems.join(", ")}.`
+        noteNode.textContent = result.forceIndividual
+          ? `Персональный расчёт: ${result.unknownItems.join(", ")}.`
+          : hasQuoteItems
+            ? `${showKnownTotals ? "По запросу" : "Индивидуальный расчёт"}: ${result.unknownItems.join(", ")}.`
             : "Расчёт можно передать в\u00a0заявку вместе с выбранной конфигурацией.";
       }
 
       const params = new URLSearchParams({
         service: config.serviceSlug,
-        configurationSummary: buildConfigurationText(summary, result)
+        configurationSummary: buildConfigurationText(summary, result, showKnownTotals)
       });
 
-      if (!isIndividual && result.hasMonthly) {
+      if (canPublishEstimate && result.hasMonthly) {
         params.set("monthlyEstimate", String(result.monthly));
       }
 
-      if (!isIndividual && result.hasOneTime) {
+      if (canPublishEstimate && result.hasOneTime) {
         params.set("oneTimeEstimate", String(result.oneTime));
       }
 
-      submitLink.href = `${requestPath}?${params.toString()}`;
+      const separator = requestPath.includes("?") ? "&" : "?";
+      submitLink.href = `${requestPath}${separator}${params.toString()}`;
     }
   });
 
@@ -297,6 +303,7 @@ const payload = JSON.stringify({
       hasOneTime: false,
       unknownItems: [] as string[],
       requiredConsultation: false,
+      forceIndividual: false,
       lines: [] as Array<{ label: string; value: string; unit?: string }>
     };
 
@@ -307,6 +314,13 @@ const payload = JSON.stringify({
 
       if (line.kind === "repeated") {
         const rawQuantity = Number(values[line.quantityField] || 0);
+        const individualLimit = getIndividualLimit(config, line.quantityField, rawQuantity);
+
+        if (individualLimit !== null) {
+          addPersonalCalculationLine(result, line.label, rawQuantity, individualLimit);
+          continue;
+        }
+
         const quantity = line.quantityStep
           ? Math.ceil(rawQuantity / line.quantityStep)
           : rawQuantity;
@@ -333,6 +347,18 @@ const payload = JSON.stringify({
         const value = String(values[line.selectField] ?? "");
         const valueLabel = line.valueLabels?.[value] ?? value;
         const quantity = Number(values[line.quantityField] || 0);
+        const individualLimit = getIndividualLimit(config, line.quantityField, quantity);
+
+        if (individualLimit !== null) {
+          addPersonalCalculationLine(
+            result,
+            `${line.labelPrefix}: ${valueLabel}`,
+            quantity,
+            individualLimit
+          );
+          continue;
+        }
+
         addLine(
           result,
           pricing[`${line.keyPrefix}${value}`],
@@ -346,6 +372,31 @@ const payload = JSON.stringify({
     return result;
   }
 
+  function getIndividualLimit(config: any, fieldName: string, quantity: number) {
+    const field = config.fields.find(
+      (item: any) => item.kind === "number" && item.name === fieldName
+    );
+
+    return typeof field?.individualAbove === "number" && quantity > field.individualAbove
+      ? field.individualAbove
+      : null;
+  }
+
+  function addPersonalCalculationLine(
+    result: any,
+    label: string,
+    rawQuantity: number,
+    limit: number
+  ) {
+    result.requiredConsultation = true;
+    result.forceIndividual = true;
+    pushUnknown(result, `${label}: более ${limit} шт.`);
+    result.lines.push({
+      label: `${label} × ${rawQuantity}`,
+      value: "персональный расчёт"
+    });
+  }
+
   function addLine(result: any, price: any, label: string, quantity: number, rawQuantity: number) {
     if (quantity <= 0) {
       return;
@@ -354,7 +405,7 @@ const payload = JSON.stringify({
     if (!price || price.status !== "confirmed") {
       result.requiredConsultation = true;
       pushUnknown(result, label);
-      result.lines.push({ label: `${label} × ${rawQuantity}`, value: "индивидуально" });
+      result.lines.push({ label: `${label} × ${rawQuantity}`, value: "по запросу" });
       return;
     }
 
@@ -400,7 +451,13 @@ const payload = JSON.stringify({
     }
 
     if (type === "cctv") {
-      return `Видеонаблюдение: ${values.camerasCount} камер, архив ${values.archiveDays}\u00a0дней`;
+      const summaryParts = [
+        `${values.camerasCount} камер`,
+        `архив ${values.archiveDays}\u00a0дней`,
+        Number(values.hardwareCount || 0) > 0 ? `камер к поставке: ${values.hardwareCount}` : "",
+        values.installNeed ? "нужен монтаж" : ""
+      ].filter(Boolean);
+      return `Видеонаблюдение: ${summaryParts.join(", ")}`;
     }
 
     if (type === "vps") {
@@ -416,13 +473,20 @@ const payload = JSON.stringify({
     return `Размещение: ${values.rackUnits}U, ${values.powerWatts}\u00a0Вт, интернет ${internetPlan}`;
   }
 
-  function buildConfigurationText(summary: string, result: any) {
-    const isIndividual = result.unknownItems.length > 0 || result.requiredConsultation;
+  function buildConfigurationText(summary: string, result: any, showKnownTotals: boolean) {
+    const hasQuoteItems = result.unknownItems.length > 0;
+    const canPublishEstimate = !result.forceIndividual && (!hasQuoteItems || showKnownTotals);
     const totals = [
-      isIndividual ? "индивидуальный расчёт" : "",
-      !isIndividual && result.hasMonthly ? `ежемесячно ${formatRubles(result.monthly)}` : "",
-      !isIndividual && result.hasOneTime ? `разово ${formatRubles(result.oneTime)}` : "",
-      result.unknownItems.length > 0 ? `состав: ${result.unknownItems.join(", ")}` : ""
+      result.forceIndividual
+        ? "персональный расчёт"
+        : hasQuoteItems
+          ? showKnownTotals
+            ? "часть позиций по запросу"
+            : "индивидуальный расчёт"
+          : "",
+      canPublishEstimate && result.hasMonthly ? `ежемесячно ${formatRubles(result.monthly)}` : "",
+      canPublishEstimate && result.hasOneTime ? `разово ${formatRubles(result.oneTime)}` : "",
+      hasQuoteItems ? `по запросу: ${result.unknownItems.join(", ")}` : ""
     ].filter(Boolean);
 
     return `${summary}. ${totals.join("; ")}.`;

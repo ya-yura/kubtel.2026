@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  calculateCctv,
   calculateColocation,
   calculateTelephony,
   calculateVps,
@@ -9,6 +10,11 @@ import {
 const pricing: BusinessPricingCatalog = {
   "telephony.port": { monthly: 250, status: "needs_verification" },
   "telephony.phone_number": { monthly: 100, status: "confirmed" },
+  "cctv.archive.7": { monthly: 600, status: "confirmed" },
+  "cctv.archive.14": { monthly: 800, status: "confirmed" },
+  "cctv.archive.30": { monthly: 1000, status: "confirmed" },
+  "cctv.camera": { status: "unknown" },
+  "cctv.install": { status: "unknown" },
   "vps.cpu": { monthly: 400, status: "confirmed" },
   "vps.ram_gb": { monthly: 150, status: "confirmed" },
   "vps.ssd_gb": { monthly: 12, status: "confirmed" },
@@ -35,6 +41,37 @@ describe("business calculators", () => {
     expect(result.monthly).toBe(2600);
     expect(result.requiredConsultation).toBe(true);
     expect(result.unknownItems).toContain("vps.backup");
+  });
+
+  it.each([
+    { camerasCount: 3, archiveDays: 7 as const, expected: 1800 },
+    { camerasCount: 4, archiveDays: 14 as const, expected: 3200 },
+    { camerasCount: 2, archiveDays: 30 as const, expected: 2000 }
+  ])("calculates CCTV archive for $camerasCount cameras and $archiveDays days", (input) => {
+    const result = calculateCctv(input, pricing);
+
+    expect(result.monthly).toBe(input.expected);
+    expect(result.requiredConsultation).toBe(false);
+  });
+
+  it("switches CCTV configurations above 30 cameras to a personal calculation", () => {
+    const result = calculateCctv({ camerasCount: 31, archiveDays: 7 }, pricing);
+
+    expect(result.monthly).toBeNull();
+    expect(result.requiredConsultation).toBe(true);
+    expect(result.unknownItems).toContain("cctv.more_than_30");
+  });
+
+  it("keeps quote-only CCTV items and their quantities in the request summary", () => {
+    const result = calculateCctv(
+      { camerasCount: 2, archiveDays: 7, hardwareCount: 3, installNeed: true },
+      pricing
+    );
+
+    expect(result.monthly).toBe(1200);
+    expect(result.unknownItems).toEqual(expect.arrayContaining(["cctv.camera", "cctv.install"]));
+    expect(result.summary).toContain("камер к поставке: 3");
+    expect(result.summary).toContain("нужен монтаж");
   });
 
   it("calculates all approved colocation monthly and one-time prices", () => {

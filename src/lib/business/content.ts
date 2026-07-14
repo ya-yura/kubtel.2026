@@ -322,12 +322,43 @@ export const businessProofStrip: BusinessProof[] = [
   { label: "Команда", value: "связь и инфраструктура в одном контуре", status: "confirmed" }
 ];
 
+/**
+ * Public segment names are deliberately short and consistent with the audience router.
+ * Legacy slugs stay supported so existing links and indexed pages keep working.
+ */
+export const businessSegmentRouteSlugs = {
+  smb: "b2b",
+  operators: "b2o",
+  b2g: "b2g"
+} as const;
+
+export type BusinessSegmentRouteSlug =
+  (typeof businessSegmentRouteSlugs)[keyof typeof businessSegmentRouteSlugs];
+
+export function getBusinessSegmentRouteSlug(slug: string): BusinessSegmentRouteSlug {
+  if (slug === "smb" || slug === "b2b") {
+    return "b2b";
+  }
+
+  if (slug === "operators" || slug === "b2o") {
+    return "b2o";
+  }
+
+  return "b2g";
+}
+
+export function getBusinessSegmentPath(slug: string): string {
+  return `/business/${getBusinessSegmentRouteSlug(slug)}/`;
+}
+
 export function getBusinessService(slug: string): BusinessService | undefined {
   return businessServices.find((service) => service.slug === slug);
 }
 
 export function getBusinessSegment(slug: string): BusinessSegment | undefined {
-  return businessSegments.find((segment) => segment.slug === slug);
+  const canonicalSlug = slug === "b2b" ? "smb" : slug === "b2o" ? "operators" : slug;
+
+  return businessSegments.find((segment) => segment.slug === canonicalSlug);
 }
 
 export function getRelatedBusinessServices(slugs: string[]): BusinessService[] {

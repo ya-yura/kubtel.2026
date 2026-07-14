@@ -10,7 +10,12 @@ export const prerender = false;
 
 const selectedService = Astro.url.searchParams.get("service") ?? "";
 const rawSelectedSegment = Astro.url.searchParams.get("segment") ?? "";
-const selectedSegment = rawSelectedSegment === "government" ? "b2g" : rawSelectedSegment;
+const selectedSegment =
+  rawSelectedSegment === "government"
+    ? "b2g"
+    : rawSelectedSegment === "operators"
+      ? "b2o"
+      : rawSelectedSegment;
 const selectedConfiguration = Astro.url.searchParams.get("configurationSummary") ?? "";
 const selectedOfficeProfile = Astro.url.searchParams.get("officeProfile") ?? "";
 const selectedMonthlyEstimate = Astro.url.searchParams.get("monthlyEstimate") ?? "";
@@ -27,20 +32,32 @@ const b2gConsultationOption = {
   slug: "b2g-consultation",
   title: "Закупка или B2G-консультация"
 };
-const selectedInquiry = [...inquiryOptions, b2gConsultationOption].find(
+const b2oConsultationOption = {
+  slug: "operators",
+  title: "Партнёрство или связность для оператора"
+};
+const selectedInquiry = [...inquiryOptions, b2gConsultationOption, b2oConsultationOption].find(
   (option) => option.slug === selectedService
 );
 const contextTitle = service?.title ?? selectedInquiry?.title ?? segment?.title ?? "Ваше обращение";
 const isBudgetRequest = selectedSegment === "b2g" || selectedService === "b2g-consultation";
+const isOperatorRequest =
+  selectedSegment === "b2o" || selectedSegment === "operators" || selectedService === "operators";
 const pageTitle = isBudgetRequest
   ? "Обращение для бюджетной организации"
-  : "Обращение для юридического лица";
+  : isOperatorRequest
+    ? "Обращение для оператора связи"
+    : "Обращение для юридического лица";
 const introText = isBudgetRequest
   ? "Оставьте заявку на подключение, запрос документов, обратный звонок или задайте любой другой вопрос. Обращение получит сектор по работе с бюджетными организациями."
-  : "Юридические лица оплачивают услуги по безналичному расчёту. Здесь можно оставить заявку на подключение, запросить документы, оплату или акт сверки, заказать звонок и задать любой другой вопрос.";
+  : isOperatorRequest
+    ? "Опишите площадку, требуемую ёмкость, связность или партнёрскую задачу. Обращение получит команда по работе с операторами и инфраструктурными партнёрами."
+    : "Юридические лица оплачивают услуги по безналичному расчёту. Здесь можно оставить заявку на подключение, запросить документы, оплату или акт сверки, заказать звонок и задать любой другой вопрос.";
 const summaryText = isBudgetRequest
   ? `Заявка будет направлена на ${SITE.budgetEmail}. Для прямой связи используйте только контакты бюджетного сектора.`
-  : `Заявка будет направлена на ${SITE.businessEmail}. Для прямой связи используйте контакты отдела по работе с юридическими лицами.`;
+  : isOperatorRequest
+    ? `Заявка будет направлена на ${SITE.businessEmail}. Для прямой связи используйте контакты команды по работе с операторами.`
+    : `Заявка будет направлена на ${SITE.businessEmail}. Для прямой связи используйте контакты отдела по работе с юридическими лицами.`;
 const formStartedAt = Date.now().toString();
 const recipientEmail = isBudgetRequest ? SITE.budgetEmail : SITE.businessEmail;
 const phoneDisplay = isBudgetRequest ? SITE.budgetPhone : SITE.businessPhone;
@@ -64,14 +81,20 @@ const actionError = actionResult?.error;
     <section class="business-request-hero section-pad">
       <div>
         <p class="eyebrow" data-request-eyebrow>
-          {isBudgetRequest ? "Бюджетный сектор" : "Юрлица"}
+          {isBudgetRequest ? "Бюджетный сектор" : isOperatorRequest ? "B2O" : "B2B"}
         </p>
         <h1 data-request-title>{pageTitle}</h1>
         <p data-request-intro>{introText}</p>
       </div>
       <aside class="business-callout request-contact-callout">
         <span data-request-contact-label>
-          {isBudgetRequest ? "Контакты бюджетного сектора" : "Контакты для юридических лиц"}
+          {
+            isBudgetRequest
+              ? "Контакты бюджетного сектора"
+              : isOperatorRequest
+                ? "Контакты для операторов"
+                : "Контакты для бизнеса"
+          }
         </span>
         <a href={phoneHref} data-request-phone>{phoneDisplay}</a>
         <a href={`mailto:${recipientEmail}`} data-request-email>{recipientEmail}</a>
@@ -216,11 +239,13 @@ const actionError = actionResult?.error;
                 <option value="">Выберите тему</option>
                 <optgroup label="Тип обращения">
                   {
-                    [...inquiryOptions, b2gConsultationOption].map((item) => (
-                      <option value={item.slug} selected={item.slug === selectedService}>
-                        {item.title}
-                      </option>
-                    ))
+                    [...inquiryOptions, b2gConsultationOption, b2oConsultationOption].map(
+                      (item) => (
+                        <option value={item.slug} selected={item.slug === selectedService}>
+                          {item.title}
+                        </option>
+                      )
+                    )
                   }
                 </optgroup>
                 <optgroup label="Конкретная услуга">
@@ -303,6 +328,10 @@ const actionError = actionResult?.error;
     requestedSegment === "b2g" ||
     requestedSegment === "government" ||
     requestedService === "b2g-consultation";
+  const isB2ORequest =
+    requestedSegment === "b2o" ||
+    requestedSegment === "operators" ||
+    requestedService === "operators";
 
   if (businessForm) {
     applyBusinessRequestContext(businessForm, requestParams, isB2GRequest);
@@ -397,7 +426,32 @@ const actionError = actionResult?.error;
       return;
     }
 
-    setText("[data-request-eyebrow]", "Юрлица");
+    if (isB2ORequest) {
+      if (b2gExtra) {
+        b2gExtra.hidden = true;
+        b2gExtra.open = false;
+      }
+
+      if (requestedSegment && segmentInput) {
+        segmentInput.value = "b2o";
+      }
+
+      setText("[data-request-eyebrow]", "B2O");
+      setText("[data-request-title]", "Обращение для оператора связи");
+      setText(
+        "[data-request-intro]",
+        "Опишите площадку, требуемую ёмкость, связность или партнёрскую задачу. Обращение получит команда по работе с операторами и инфраструктурными партнёрами."
+      );
+      setText("[data-request-contact-label]", "Контакты для операторов");
+      setText(
+        "[data-request-summary]",
+        "Заявка будет направлена на kubtel@kubtel.ru. Для прямой связи используйте контакты команды по работе с операторами."
+      );
+      setContactLinks("8 861 200-10-60", "kubtel@kubtel.ru");
+      return;
+    }
+
+    setText("[data-request-eyebrow]", "B2B");
     if (b2gExtra) {
       b2gExtra.hidden = true;
       b2gExtra.open = false;
@@ -407,7 +461,7 @@ const actionError = actionResult?.error;
       "[data-request-intro]",
       "Юридические лица оплачивают услуги по безналичному расчёту. Здесь можно оставить заявку на подключение, запросить документы, оплату или акт сверки, заказать звонок и задать любой другой вопрос."
     );
-    setText("[data-request-contact-label]", "Контакты для юридических лиц");
+    setText("[data-request-contact-label]", "Контакты для бизнеса");
     setText(
       "[data-request-summary]",
       "Заявка будет направлена на kubtel@kubtel.ru. Для прямой связи используйте контакты отдела по работе с юридическими лицами."

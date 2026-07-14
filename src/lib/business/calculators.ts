@@ -28,7 +28,7 @@ export type TelephonyInput = {
 
 export type CctvInput = {
   camerasCount: number;
-  archiveDays: 3 | 7 | 14 | 30;
+  archiveDays: 7 | 14 | 30;
   hardwareCount?: number;
   installNeed?: boolean;
   annualPayment?: boolean;
@@ -95,20 +95,28 @@ export function calculateCctv(
 ): BusinessCalculationResult<CctvInput> {
   const accumulator = createAccumulator();
 
-  addRepeatedLine(
-    accumulator,
-    pricing[`cctv.archive.${input.archiveDays}`],
-    input.camerasCount,
-    `cctv.archive.${input.archiveDays}`
-  );
+  if (input.camerasCount <= 30) {
+    addRepeatedLine(
+      accumulator,
+      pricing[`cctv.archive.${input.archiveDays}`],
+      input.camerasCount,
+      `cctv.archive.${input.archiveDays}`
+    );
+  } else {
+    accumulator.unknownItems.add("cctv.more_than_30");
+    accumulator.requiredConsultation = true;
+  }
   addRepeatedLine(accumulator, pricing["cctv.camera"], input.hardwareCount ?? 0, "cctv.camera");
   addOptionalLine(accumulator, pricing["cctv.install"], Boolean(input.installNeed), "cctv.install");
 
-  return finalizeCalculation(
-    accumulator,
-    input,
-    `Видеонаблюдение: ${input.camerasCount} камер, архив ${input.archiveDays} дней`
-  );
+  const summaryParts = [
+    `${input.camerasCount} камер`,
+    `архив ${input.archiveDays} дней`,
+    (input.hardwareCount ?? 0) > 0 ? `камер к поставке: ${input.hardwareCount}` : "",
+    input.installNeed ? "нужен монтаж" : ""
+  ].filter(Boolean);
+
+  return finalizeCalculation(accumulator, input, `Видеонаблюдение: ${summaryParts.join(", ")}`);
 }
 
 export function calculateVps(

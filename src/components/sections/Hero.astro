@@ -6,23 +6,33 @@ import { promoVisuals } from "@lib/visuals";
 
 <section class="hero section-pad">
   <div class="hero-copy">
-    <p class="eyebrow">Краснодар, квартиры, ЖК и&nbsp;частный сектор</p>
+    <p class="eyebrow">Краснодар, квартиры, организации и&nbsp;операторы связи</p>
     <h1>Домашний интернет, где трубку берёт человек</h1>
     <p class="hero-lead">
       Kubtel выбирают, когда важны понятные условия, живой контакт и&nbsp;аккуратное подключение.
-      Можно самому посмотреть тарифы, оплатить услуги или обратиться в поддержку, а заявку на
-      подключение оставить тогда, когда нужен разговор со специалистом.
+      Физлицам можно сразу перейти к домашним тарифам, а представителям организаций — выбрать
+      отдельный маршрут с нужными услугами, расчётом и заявкой.
     </p>
-    <div class="audience-switch" aria-label="Выберите направление">
+    <div class="audience-switch" aria-label="Выберите тип клиента">
       <a class="audience-card is-active" href={getSitePath("/connect/#callback-request")}>
-        <span>Для дома</span>
-        <strong>Надёжный интернет домой</strong>
+        <span>Физическое лицо</span>
+        <strong>Для дома</strong>
         <small>Тарифы, проверка адреса и&nbsp;понятные условия без скрытых платежей.</small>
       </a>
-      <a class="audience-card" href={getSitePath("/business/")}>
+      <a class="audience-card" href={getSitePath("/business/b2b/")}>
         <span>Для бизнеса</span>
-        <strong>Связь без простоя</strong>
-        <small>Интернет, Hot-spot, телефония, камеры, VPS и&nbsp;размещение.</small>
+        <strong>B2B — компании и предприниматели</strong>
+        <small>Интернет, телефония, камеры, Wi‑Fi и&nbsp;инфраструктура для рабочих задач.</small>
+      </a>
+      <a class="audience-card" href={getSitePath("/business/b2g/")}>
+        <span>Для государства</span>
+        <strong>B2G — госорганизации</strong>
+        <small>Связь, закупочные процедуры, документы и&nbsp;прямой контакт сектора B2G.</small>
+      </a>
+      <a class="audience-card" href={getSitePath("/business/b2o/")}>
+        <span>Для операторов</span>
+        <strong>B2O — операторы связи</strong>
+        <small>ЦОД, размещение, связность, cross-connect и&nbsp;партнёрские условия.</small>
       </a>
       <a class="audience-login" href="#subscriber-tools">Личный кабинет абонента</a>
     </div>

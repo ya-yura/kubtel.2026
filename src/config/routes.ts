@@ -86,6 +86,26 @@ export const sitemapRoutes: SitemapRoute[] = [
     lastModified
   },
   {
+    path: "/business/b2b/",
+    label: "B2B",
+    title: "B2B: связь для бизнеса",
+    description:
+      "Интернет, телефония, видеонаблюдение, гостевой Wi‑Fi и инфраструктура Kubtel для компаний и предпринимателей.",
+    changeFrequency: "weekly",
+    priority: 0.9,
+    lastModified
+  },
+  {
+    path: "/business/b2o/",
+    label: "B2O",
+    title: "B2O: услуги для операторов связи",
+    description:
+      "ЦОД, colocation, связность, cross-connect и партнёрские условия Kubtel для операторов связи.",
+    changeFrequency: "monthly",
+    priority: 0.86,
+    lastModified
+  },
+  {
     path: "/devices/",
     label: "Устройства",
     title: "Устройства для подключения",

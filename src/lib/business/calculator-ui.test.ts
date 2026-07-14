@@ -82,6 +82,35 @@ describe("business calculator UI config", () => {
     expect(colocation.fields.some((field) => field.name === "remoteHands")).toBe(false);
   });
 
+  it("uses approved CCTV archive prices and quote-only extras", () => {
+    expect(businessCalculatorPricing).toMatchObject({
+      "cctv.archive.7": { monthly: 600, status: "confirmed" },
+      "cctv.archive.14": { monthly: 800, status: "confirmed" },
+      "cctv.archive.30": { monthly: 1000, status: "confirmed" }
+    });
+    expect(businessCalculatorPricing).not.toHaveProperty("cctv.archive.3");
+
+    const cctv = businessCalculatorConfigs.cctv;
+    const cameras = cctv.fields.find((field) => field.name === "camerasCount");
+    const archive = cctv.fields.find((field) => field.name === "archiveDays");
+    const hardware = cctv.fields.find((field) => field.name === "hardwareCount");
+    const install = cctv.fields.find((field) => field.name === "installNeed");
+
+    expect(cctv.showKnownTotalsWithQuoteItems).toBe(true);
+    expect(cameras).toMatchObject({ kind: "number", min: 1, individualAbove: 30 });
+    expect(archive).toMatchObject({
+      kind: "select",
+      value: "7",
+      options: [
+        { value: "7", label: "7 дней" },
+        { value: "14", label: "14 дней" },
+        { value: "30", label: "30 дней" }
+      ]
+    });
+    expect(hardware).toMatchObject({ kind: "number", value: 0 });
+    expect(install).toMatchObject({ kind: "checkbox", checked: false });
+  });
+
   it("offers VPS with SSD only and without DDoS protection", () => {
     const vps = businessCalculatorConfigs.vps;
     const fieldNames = vps.fields.map((field) => field.name);

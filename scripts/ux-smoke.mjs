@@ -687,6 +687,98 @@ async function checkBusinessCalculator(client, sessionId) {
     })()`,
     "colocation calculator uses approved prices and options"
   );
+  await navigate(client, sessionId, "/business/?calculator=cctv#business-calculators");
+  await waitForExpression(
+    client,
+    sessionId,
+    `(() => {
+      const panel = document.querySelector('[data-service-panel="cctv"].is-active');
+      const monthly = panel?.querySelector('[data-calculator-monthly]')?.innerText ?? "";
+      const text = panel?.innerText ?? "";
+      return monthly.replace(/\\D/g, "").includes("4800") &&
+        text.includes("Архив: 7 дней") &&
+        !text.includes("3 дня");
+    })()`,
+    "CCTV calculator uses the approved default archive price"
+  );
+  await evaluate(
+    client,
+    sessionId,
+    `(() => {
+      const panel = document.querySelector('[data-service-panel="cctv"]');
+      const cameras = panel?.querySelector('input[name="camerasCount"]');
+      const archive = panel?.querySelector('select[name="archiveDays"]');
+      const hardware = panel?.querySelector('input[name="hardwareCount"]');
+      const install = panel?.querySelector('input[name="installNeed"]');
+      if (!cameras || !archive || !hardware || !install) return false;
+      cameras.value = "2";
+      archive.value = "14";
+      hardware.value = "3";
+      install.checked = true;
+      cameras.dispatchEvent(new Event("input", { bubbles: true }));
+      archive.dispatchEvent(new Event("change", { bubbles: true }));
+      hardware.dispatchEvent(new Event("input", { bubbles: true }));
+      install.dispatchEvent(new Event("change", { bubbles: true }));
+      return true;
+    })()`
+  );
+  await waitForExpression(
+    client,
+    sessionId,
+    `(() => {
+      const panel = document.querySelector('[data-service-panel="cctv"]');
+      const monthly = panel?.querySelector('[data-calculator-monthly]')?.innerText ?? "";
+      const lines = panel?.querySelector('[data-calculator-lines]')?.innerText ?? "";
+      const href = panel?.querySelector('[data-calculator-cta]')?.href ?? "";
+      const params = new URL(href).searchParams;
+      const summary = params.get("configurationSummary") ?? "";
+      return monthly.replace(/\\D/g, "").includes("1600") &&
+        lines.includes("Камеры к поставке × 3") &&
+        lines.includes("по запросу") &&
+        summary.includes("камер к поставке: 3") &&
+        summary.includes("нужен монтаж") &&
+        params.get("monthlyEstimate") === "1600";
+    })()`,
+    "CCTV quote-only items preserve the known total and request quantities"
+  );
+  await evaluate(
+    client,
+    sessionId,
+    `(() => {
+      const cameras = document.querySelector('[data-service-panel="cctv"] input[name="camerasCount"]');
+      if (!cameras) return false;
+      cameras.value = "31";
+      cameras.dispatchEvent(new Event("input", { bubbles: true }));
+      return true;
+    })()`
+  );
+  await waitForExpression(
+    client,
+    sessionId,
+    `document.querySelector('[data-service-panel="cctv"] [data-calculator-monthly]')?.innerText.includes("Индивидуальный расчёт") === true`,
+    "CCTV configurations above 30 cameras switch to personal calculation"
+  );
+  await navigate(client, sessionId, "/business/?calculator=wifi-auth#business-calculators");
+  await assertExpression(
+    client,
+    sessionId,
+    `(() => {
+      const cards = [...document.querySelectorAll('[data-service-panel="wifi-auth"] .hotspot-plan-grid article')];
+      const prices = cards.map((card) =>
+        (card.querySelector(".hotspot-plan-price")?.innerText ?? "").replace(/\\D/g, "")
+      );
+      const estimates = cards.map((card) =>
+        new URL(card.querySelector("a")?.href ?? location.href).searchParams.get("monthlyEstimate")
+      );
+      const standardText = cards[1]?.innerText ?? "";
+      return cards.length === 3 &&
+        JSON.stringify(prices) === JSON.stringify(["1500", "2000", "3000"]) &&
+        JSON.stringify(estimates) === JSON.stringify(["1500", "2000", "3000"]) &&
+        standardText.includes("100 SMS") &&
+        !standardText.includes("200 SMS");
+    })()`,
+    "Hot-spot cards show approved prices and the 100 SMS Standard package"
+  );
   await assertExpression(
     client,
     sessionId,

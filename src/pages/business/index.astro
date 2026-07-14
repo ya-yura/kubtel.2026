@@ -6,7 +6,13 @@ import {
   businessCalculatorConfigs,
   type BusinessCalculatorConfig
 } from "@lib/business/calculator-ui";
-import { businessProofStrip, businessSegments, businessServices } from "@lib/business/content";
+import {
+  businessProofStrip,
+  businessSegments,
+  businessServices,
+  getBusinessSegmentPath
+} from "@lib/business/content";
+import { formatRubles } from "@lib/format";
 import type { JsonLdObject } from "@lib/seo/schema";
 import "@styles/business-page.css";
 
@@ -105,6 +111,7 @@ const telephonyAgencyTariffsUrl = "https://kubtel.ru/files/file/tariffs-megafon.
 const hotspotPlans = [
   {
     title: "Базовый",
+    monthlyPrice: 1500,
     features: [
       "авторизация по звонку без лимита",
       "брендированная стартовая страница",
@@ -114,15 +121,17 @@ const hotspotPlans = [
   },
   {
     title: "Стандарт",
+    monthlyPrice: 2000,
     features: [
       "возможности базового тарифа",
-      "пакет 200 SMS для авторизации",
+      "пакет 100 SMS для авторизации",
       "перенаправление после авторизации",
       "управление трафиком"
     ]
   },
   {
     title: "Премиум",
+    monthlyPrice: 3000,
     features: [
       "возможности стандартного тарифа",
       "авторизация по ваучеру",
@@ -274,55 +283,87 @@ const pageSchema: JsonLdObject = {
       aria-labelledby="organization-routes-title"
     >
       <div class="section-heading">
-        <p class="eyebrow">Два отдельных маршрута</p>
+        <p class="eyebrow">Три отдельных маршрута</p>
         <h2 id="organization-routes-title">Выберите тип организации</h2>
         <p>
-          Заявка сразу попадёт нужным специалистам. Для юридических лиц и бюджетных организаций
-          действуют разные адреса и телефоны.
+          Заявка сразу попадёт нужным специалистам. Для бизнеса, государства и операторов связи
+          действуют свои услуги, условия и контакты.
         </p>
       </div>
 
       <div class="business-routing-grid">
-        <article class="business-routing-card is-legal" aria-labelledby="legal-route-title">
+        <article class="business-routing-card is-legal" aria-labelledby="b2b-route-title">
           <div class="business-routing-card__header">
             <span class="business-routing-number" aria-hidden="true">01</span>
             <div>
-              <p class="eyebrow">Безналичный расчёт</p>
-              <h3 id="legal-route-title">Для юридических лиц</h3>
+              <p class="eyebrow">B2B</p>
+              <h3 id="b2b-route-title">Для бизнеса</h3>
             </div>
           </div>
           <p class="business-routing-hint">
-            Юридические лица оплачивают услуги по безналичному расчёту. По всем вопросам
-            (подключение, документы, оплата, акт сверки и т.д.) обращайтесь сюда.
+            Интернет, телефония, видеонаблюдение, гостевой Wi‑Fi, VPS и размещение для офисов,
+            магазинов, кафе, клиник и складов.
           </p>
-          <div class="business-routing-contacts" aria-label="Контакты для юридических лиц">
+          <div class="business-routing-contacts" aria-label="Контакты для бизнеса">
             <a href={`mailto:${SITE.businessEmail}`}>{SITE.businessEmail}</a>
             <a href={businessPhoneHref}>{SITE.businessPhone}</a>
           </div>
-          <a class="card-action" href={getSitePath(legalRequestPath)}>
-            Оставить заявку для юрлица
-          </a>
+          <div class="business-routing-actions">
+            <a class="card-action" href={getSitePath("/business/b2b/")}>Открыть раздел B2B</a>
+            <a class="business-link" href={getSitePath(legalRequestPath)}>Сразу оставить заявку</a>
+          </div>
         </article>
 
-        <article class="business-routing-card is-budget" aria-labelledby="budget-route-title">
+        <article class="business-routing-card is-budget" aria-labelledby="b2g-route-title">
           <div class="business-routing-card__header">
             <span class="business-routing-number" aria-hidden="true">02</span>
             <div>
-              <p class="eyebrow">Отдельный сектор</p>
-              <h3 id="budget-route-title">Для бюджетных организаций</h3>
+              <p class="eyebrow">B2G</p>
+              <h3 id="b2g-route-title">Для государства</h3>
             </div>
           </div>
           <p class="business-routing-hint">
-            Если вы бюджетная организация — отправляйте заявку на подключение, запрос документов или
-            любой другой вопрос на {SITE.budgetEmail} или звоните по телефону {SITE.budgetPhone}.
+            Связь для федеральных и муниципальных учреждений: закупки по 44‑ФЗ и 223‑ФЗ, документы,
+            телефония, интернет и резервирование.
           </p>
-          <div class="business-routing-contacts" aria-label="Контакты для бюджетных организаций">
+          <div
+            class="business-routing-contacts"
+            aria-label="Контакты для государственных заказчиков"
+          >
             <a href={`mailto:${SITE.budgetEmail}`}>{SITE.budgetEmail}</a>
             <a href={budgetPhoneHref}>{SITE.budgetPhone}</a>
           </div>
-          <a class="card-action" href={getSitePath(budgetRequestPath)}>
-            Оставить заявку для бюджетной организации
-          </a>
+          <div class="business-routing-actions">
+            <a class="card-action" href={getSitePath("/business/b2g/")}>Открыть раздел B2G</a>
+            <a class="business-link" href={getSitePath(budgetRequestPath)}>Сразу оставить заявку</a>
+          </div>
+        </article>
+
+        <article class="business-routing-card is-operator" aria-labelledby="b2o-route-title">
+          <div class="business-routing-card__header">
+            <span class="business-routing-number" aria-hidden="true">03</span>
+            <div>
+              <p class="eyebrow">B2O</p>
+              <h3 id="b2o-route-title">Для операторов связи</h3>
+            </div>
+          </div>
+          <p class="business-routing-hint">
+            Региональная связность, ЦОД, colocation, cross‑connect, порты и партнёрские условия для
+            операторов и инфраструктурных команд.
+          </p>
+          <div class="business-routing-contacts" aria-label="Контакты для операторов связи">
+            <a href={`mailto:${SITE.businessEmail}`}>{SITE.businessEmail}</a>
+            <a href={businessPhoneHref}>{SITE.businessPhone}</a>
+          </div>
+          <div class="business-routing-actions">
+            <a class="card-action" href={getSitePath("/business/b2o/")}>Открыть раздел B2O</a>
+            <a
+              class="business-link"
+              href={getSitePath(`${requestPath}?segment=b2o&service=operators`)}
+            >
+              Запросить условия
+            </a>
+          </div>
         </article>
       </div>
     </section>
@@ -477,15 +518,16 @@ const pageSchema: JsonLdObject = {
                       <div class="section-heading is-tight">
                         <p class="eyebrow">Подтверждённый состав</p>
                         <h3>Тарифы Hot-spot</h3>
-                        <p>
-                          Цена подбирается индивидуально: официальный источник подтверждает состав
-                          тарифов, но не публикует актуальные значения.
-                        </p>
+                        <p>Выберите подходящий состав и стоимость тарифа в месяц.</p>
                       </div>
                       <div class="hotspot-plan-grid">
                         {hotspotPlans.map((plan) => (
                           <article>
                             <h3>{plan.title}</h3>
+                            <p class="hotspot-plan-price">
+                              <strong>{formatRubles(plan.monthlyPrice)}</strong>
+                              <span>в месяц</span>
+                            </p>
                             <ul class="business-mini-list">
                               {plan.features.map((feature) => (
                                 <li>{feature}</li>
@@ -494,7 +536,7 @@ const pageSchema: JsonLdObject = {
                             <a
                               class="card-action"
                               href={getSitePath(
-                                `${requestPath}?segment=legal&service=wifi-auth&configurationSummary=${encodeURIComponent(`Hot-spot, тариф ${plan.title}. Индивидуальный расчёт.`)}`
+                                `${requestPath}?segment=legal&service=wifi-auth&monthlyEstimate=${plan.monthlyPrice}&configurationSummary=${encodeURIComponent(`Hot-spot, тариф ${plan.title} — ${formatRubles(plan.monthlyPrice)} в месяц.`)}`
                               )}
                             >
                               Оставить заявку
@@ -646,7 +688,10 @@ const pageSchema: JsonLdObject = {
       <div class="business-segment-grid">
         {
           businessSegments.map((segment) => (
-            <a class="business-segment-card" href={getSitePath(`/business/${segment.slug}/`)}>
+            <a
+              class="business-segment-card"
+              href={getSitePath(getBusinessSegmentPath(segment.slug))}
+            >
               <h3>{segment.title}</h3>
               <p>{segment.summary}</p>
               <strong>{segment.trigger}</strong>

@@ -199,6 +199,10 @@
   --route-accent: 69, 153, 216;
 }
 
+.business-routing-card.is-operator {
+  --route-accent: 119, 188, 113;
+}
+
 .business-routing-card__header {
   align-items: center;
   display: grid;
@@ -260,6 +264,103 @@
 .business-routing-card .card-action {
   justify-self: stretch;
   text-align: center;
+}
+
+.business-routing-actions {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.business-routing-actions .business-link {
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+}
+
+.business-segment-switcher-section {
+  padding-bottom: 1.25rem;
+  padding-top: 1.25rem;
+}
+
+.business-segment-switcher {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.business-segment-switcher__item {
+  background: var(--kb-color-overlay-white-subtle);
+  border: 1px solid var(--kb-business-border-default);
+  border-radius: var(--kb-shape-card);
+  display: grid;
+  gap: 0.22rem;
+  padding: 0.8rem 0.9rem;
+  transition:
+    background-color var(--kb-motion-duration-fast) var(--kb-motion-easing-standard),
+    border-color var(--kb-motion-duration-fast) var(--kb-motion-easing-standard),
+    transform var(--kb-motion-duration-fast) var(--kb-motion-easing-standard);
+}
+
+.business-segment-switcher__item:hover,
+.business-segment-switcher__item.is-active {
+  background: var(--kb-color-overlay-accent12);
+  border-color: var(--kb-color-overlay-accent46);
+  transform: translateY(-1px);
+}
+
+.business-segment-switcher__item span {
+  color: var(--kb-business-accent-primary);
+  font-size: 0.75rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.business-segment-switcher__item strong {
+  color: var(--kb-business-text-primary);
+  font-size: 1rem;
+}
+
+.business-segment-switcher__item small {
+  color: var(--kb-business-text-secondary);
+  font-size: 0.82rem;
+}
+
+.business-segment-workspace {
+  border-bottom: 1px solid var(--kb-color-overlay-white-soft);
+}
+
+.business-segment-service-grid {
+  margin-bottom: 1rem;
+}
+
+.business-segment-utility-grid {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.business-segment-utility-grid .business-detail-card {
+  align-content: start;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.business-segment-utility-grid .business-detail-card h3,
+.business-segment-utility-grid .business-detail-card p {
+  margin-bottom: 0;
+}
+
+.business-segment-utility-grid .business-link,
+.business-segment-utility-grid .card-action {
+  justify-self: start;
+  margin-top: auto;
+  text-align: center;
+}
+
+.business-segment-contact-links {
+  align-items: start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
 }
 
 .business-service-workspace,
@@ -451,6 +552,24 @@
 
 .hotspot-plan-grid p {
   margin-bottom: 0;
+}
+
+.hotspot-plan-grid .hotspot-plan-price {
+  align-items: baseline;
+  display: flex;
+  gap: 0.45rem;
+}
+
+.hotspot-plan-price strong {
+  color: var(--kb-business-text-primary);
+  font-family: var(--kb-typography-display-family);
+  font-size: 1.65rem;
+  line-height: 1;
+}
+
+.hotspot-plan-price span {
+  color: var(--kb-business-text-secondary);
+  font-size: 0.86rem;
 }
 
 .hotspot-plan-grid.is-single {
@@ -1383,6 +1502,14 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .business-segment-switcher {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .business-segment-utility-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .business-routing-card {
     padding: 1.35rem;
   }
@@ -1458,6 +1585,10 @@
 }
 
 @media (min-width: 980px) {
+  .business-routing-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .business-service-tabs {
     align-items: start;
     grid-template-columns: minmax(220px, 0.28fr) minmax(0, 1fr);

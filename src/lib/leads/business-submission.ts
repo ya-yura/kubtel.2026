@@ -188,7 +188,7 @@ function getRouting(
     };
   }
 
-  if (serviceInterest === "operators") {
+  if (segment === "b2o" || segment === "operators" || serviceInterest === "operators") {
     return {
       pipeline: "operators",
       department: "partner_sales",

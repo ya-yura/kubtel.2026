@@ -11,6 +11,7 @@ export type CalculatorField =
       max: number;
       step: number;
       value: number;
+      individualAbove?: number;
       suffix?: string;
       help?: string;
     }
@@ -78,6 +79,7 @@ export type BusinessCalculatorConfig = {
   submitLabel: string;
   fields: CalculatorField[];
   lines: CalculatorLine[];
+  showKnownTotalsWithQuoteItems?: boolean;
   sourceNote?: string;
   sourceUrl?: string;
   sourceLabel?: string;
@@ -108,12 +110,23 @@ export const businessCalculatorPricing: BusinessPricingCatalog = {
     unitLabel: "ежемесячная детализация по электронной почте"
   },
 
-  "cctv.archive.3": individualPrice("за камеру с архивом 3 дня"),
-  "cctv.archive.7": individualPrice("за камеру с архивом 7 дней"),
-  "cctv.archive.14": individualPrice("за камеру с архивом 14 дней"),
-  "cctv.archive.30": individualPrice("за камеру с архивом 30 дней"),
-  "cctv.camera": individualPrice("за камеру"),
-  "cctv.install": individualPrice("за монтаж точки"),
+  "cctv.archive.7": {
+    monthly: 600,
+    status: "confirmed",
+    unitLabel: "за камеру с архивом 7 дней"
+  },
+  "cctv.archive.14": {
+    monthly: 800,
+    status: "confirmed",
+    unitLabel: "за камеру с архивом 14 дней"
+  },
+  "cctv.archive.30": {
+    monthly: 1000,
+    status: "confirmed",
+    unitLabel: "за камеру с архивом 30 дней"
+  },
+  "cctv.camera": individualPrice("камеры к поставке"),
+  "cctv.install": individualPrice("монтаж камер"),
 
   "vps.cpu": individualPrice("за vCPU"),
   "vps.ram_gb": individualPrice("за 1 ГБ RAM"),
@@ -288,8 +301,9 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
     type: "cctv",
     serviceSlug: "cctv",
     title: "Видеонаблюдение",
-    lead: "Соберите конфигурацию камер, облачного архива, оборудования и монтажа. Стоимость рассчитывается индивидуально до утверждения коммерческой матрицы.",
+    lead: "Рассчитайте хранение записей для 1–30 камер. Камеры к поставке и монтаж добавляются в заявку по запросу, а конфигурации свыше 30 камер рассчитываются персонально.",
     submitLabel: "Оставить заявку",
+    showKnownTotalsWithQuoteItems: true,
     fields: [
       {
         kind: "number",
@@ -299,7 +313,8 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         max: 128,
         step: 1,
         value: 8,
-        help: "Количество точек наблюдения на объекте."
+        individualAbove: 30,
+        help: "От 1 до 30 камер рассчитываются автоматически, свыше — персонально."
       },
       {
         kind: "select",
@@ -307,7 +322,6 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         label: "Архив",
         value: "7",
         options: [
-          { value: "3", label: "3 дня" },
           { value: "7", label: "7 дней" },
           { value: "14", label: "14 дней" },
           { value: "30", label: "30 дней" }
@@ -321,15 +335,15 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         min: 0,
         max: 128,
         step: 1,
-        value: 8,
-        help: "Если совместимое оборудование уже есть, укажите 0."
+        value: 0,
+        help: "Стоимость камер рассчитывается по запросу. Если оборудование уже есть, укажите 0."
       },
       {
         kind: "checkbox",
         name: "installNeed",
         label: "Нужен монтаж",
-        checked: true,
-        help: "Объём работ определяется после осмотра объекта."
+        checked: false,
+        help: "Стоимость монтажа рассчитывается по запросу после осмотра объекта."
       }
     ],
     lines: [
@@ -339,7 +353,7 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
         selectField: "archiveDays",
         quantityField: "camerasCount",
         labelPrefix: "Архив",
-        valueLabels: { "3": "3 дня", "7": "7 дней", "14": "14 дней", "30": "30 дней" }
+        valueLabels: { "7": "7 дней", "14": "14 дней", "30": "30 дней" }
       },
       {
         kind: "repeated",

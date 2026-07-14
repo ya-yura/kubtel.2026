@@ -41,14 +41,17 @@ const pageSchema = [buildInternetServiceSchema(tariffs, "/"), buildFaqSchema(faq
   />
   <section class="section-pad homepage-b2g-callout" aria-label="Работа с организациями">
     <div>
-      <span class="service-category">B2B и B2G</span>
-      <h2>
-        КУБАНЬ-ТЕЛЕКОМ работает с юридическими лицами и государственными заказчиками по 44-ФЗ и
-        223-ФЗ
-      </h2>
+      <span class="service-category">B2B · B2G · B2O</span>
+      <h2>Для каждой организации — свой маршрут, услуги и контакт</h2>
+      <p>
+        Выберите направление на первом экране или сразу перейдите в нужный раздел: бизнес,
+        государственный заказчик или оператор связи.
+      </p>
     </div>
     <div class="button-row">
-      <a class="card-action" href={getSitePath("/business/b2g/")}>Перейти в B2G</a>
+      <a class="card-action" href={getSitePath("/business/b2b/")}>B2B</a>
+      <a class="business-link" href={getSitePath("/business/b2g/")}>B2G</a>
+      <a class="business-link" href={getSitePath("/business/b2o/")}>B2O</a>
       <a
         class="business-link"
         href={`tel:+${SITE.budgetPhone.replace(/\D/g, "").replace(/^8/, "7")}`}
