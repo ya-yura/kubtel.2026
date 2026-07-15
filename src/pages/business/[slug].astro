@@ -23,6 +23,8 @@ type PageEntry =
   | { kind: "service"; entry: BusinessService }
   | { kind: "segment"; entry: BusinessSegment; pathSlug: string };
 
+export const prerender = true;
+
 export function getStaticPaths() {
   return [
     ...businessServices
@@ -58,13 +60,22 @@ const routeSlug = isService
   ? entry.slug
   : pageEntry.pathSlug || getBusinessSegmentRouteSlug(entry.slug);
 const canonicalPath = `/business/${routeSlug}/`;
+const isGovernmentSegment = !isService && entry.slug === "b2g";
 const relatedServices = isService
   ? getRelatedBusinessServices(entry.relatedServices)
-  : getRelatedBusinessServices(entry.serviceSlugs);
+  : isGovernmentSegment
+    ? []
+    : getRelatedBusinessServices(entry.serviceSlugs);
 const calculatorConfig = isService ? getBusinessCalculatorConfig(entry.slug) : undefined;
-const visual = getBusinessVisual(entry.slug);
-const isGovernmentSegment = !isService && entry.slug === "b2g";
-const segmentServices = !isService ? getRelatedBusinessServices(entry.serviceSlugs) : [];
+const visual = isGovernmentSegment
+  ? {
+      ...getBusinessVisual("datacenter-access"),
+      label: "Сектор B2G",
+      caption: "Каналы, резервирование и расчёт по задаче государственного учреждения."
+    }
+  : getBusinessVisual(entry.slug);
+const segmentServices =
+  !isService && !isGovernmentSegment ? getRelatedBusinessServices(entry.serviceSlugs) : [];
 const segmentCalculatorService = segmentServices.find((service) =>
   getBusinessCalculatorConfig(service.slug)
 );
@@ -156,7 +167,7 @@ const segmentRouteItems = [
     slug: "b2b",
     label: "B2B",
     title: "Для бизнеса",
-    summary: "Офисы, магазины и точки обслуживания",
+    summary: "Интернет, телефония и решения для бизнеса",
     href: getBusinessSegmentPath("b2b")
   },
   {
@@ -183,6 +194,12 @@ function getSegmentServiceHref(service: BusinessService): string {
 
 function getSegmentServiceCta(service: BusinessService): string {
   return getBusinessCalculatorConfig(service.slug) ? "Открыть калькулятор" : service.ctaLabel;
+}
+
+function getB2GScenarioHref(title: string, text: string): string {
+  return `/business/request/?segment=b2g&service=b2g-consultation&configurationSummary=${encodeURIComponent(
+    `${title}: ${text}`
+  )}`;
 }
 
 function getBusinessEntryHref(slug: string) {
@@ -377,77 +394,88 @@ const pageSchema: JsonLdObject = isService
             </nav>
           </section>
 
-          <section class="section-pad business-segment-workspace" id="segment-services">
-            <div class="section-heading">
-              <p class="eyebrow">Маршрут {routeSlug.toUpperCase()}</p>
-              <h2>Услуги, расчёт и заявка в одном разделе</h2>
-              <p>
-                Начните с нужной услуги, откройте параметры и передайте готовую конфигурацию
-                менеджеру. Если точный состав пока неизвестен, оставьте короткую заявку — поможем
-                собрать решение.
-              </p>
-            </div>
-
-            <div class="business-card-grid business-segment-service-grid">
-              {segmentServices.map((service) => (
-                <article class="business-card">
-                  <span class="service-category">{service.category}</span>
-                  <h3>{service.title}</h3>
-                  <p>{service.summary}</p>
-                  <ul class="business-mini-list">
-                    {service.options.slice(0, 4).map((option) => (
-                      <li>{option}</li>
-                    ))}
-                  </ul>
-                  <a class="card-action" href={getSitePath(getSegmentServiceHref(service))}>
-                    {getSegmentServiceCta(service)}
-                  </a>
-                </article>
-              ))}
-            </div>
-
-            <div class="business-segment-utility-grid">
-              <article class="business-detail-card">
-                <p class="eyebrow">Тарифы и расчёт</p>
-                <h3>Состав под вашу задачу</h3>
-                <p>{segmentTariffLabel}.</p>
-                <a
-                  class="business-link"
-                  href={getSitePath(
-                    segmentCalculatorService
-                      ? getSegmentServiceHref(segmentCalculatorService)
-                      : segmentRequestPath
-                  )}
-                >
-                  {segmentCalculatorService ? "Перейти к быстрому расчёту" : "Запросить расчёт"}
-                </a>
-              </article>
-              <article class="business-detail-card">
-                <p class="eyebrow">Контакты</p>
-                <h3>Прямой канал для {routeSlug.toUpperCase()}</h3>
-                <p>Сообщите адрес, площадку или задачу — специалист продолжит с нужного места.</p>
-                <div class="business-segment-contact-links">
-                  <a class="business-phone-card" href={segmentContactHref}>
-                    {segmentContactPhone}
-                  </a>
-                  <a class="business-link" href={`mailto:${segmentContactEmail}`}>
-                    {segmentContactEmail}
-                  </a>
+          {!isGovernmentSegment && (
+            <>
+              <section class="section-pad business-segment-workspace" id="segment-services">
+                <div class="section-heading">
+                  <p class="eyebrow">Маршрут {routeSlug.toUpperCase()}</p>
+                  <h2>Услуги, расчёт и заявка в одном разделе</h2>
+                  <p>
+                    Начните с нужной услуги, откройте параметры и передайте готовую конфигурацию
+                    менеджеру. Если точный состав пока неизвестен, оставьте короткую заявку —
+                    поможем собрать решение.
+                  </p>
                 </div>
-              </article>
-              <article class="business-detail-card">
-                <p class="eyebrow">Заявка</p>
-                <h3>Ответ без лишней переадресации</h3>
-                <p>Форма уже знает выбранный сегмент и передаст обращение ответственному отделу.</p>
-                <a class="card-action" href={getSitePath(segmentRequestPath)}>
-                  Оставить заявку
-                </a>
-              </article>
-            </div>
-          </section>
 
-          {segmentCalculatorConfig && (
-            <BusinessCalculator config={segmentCalculatorConfig} requestPath={segmentRequestPath} />
+                <div class="business-card-grid business-segment-service-grid">
+                  {segmentServices.map((service) => (
+                    <article class="business-card">
+                      <span class="service-category">{service.category}</span>
+                      <h3>{service.title}</h3>
+                      <p>{service.summary}</p>
+                      <ul class="business-mini-list">
+                        {service.options.slice(0, 4).map((option) => (
+                          <li>{option}</li>
+                        ))}
+                      </ul>
+                      <a class="card-action" href={getSitePath(getSegmentServiceHref(service))}>
+                        {getSegmentServiceCta(service)}
+                      </a>
+                    </article>
+                  ))}
+                </div>
+
+                <div class="business-segment-utility-grid">
+                  <article class="business-detail-card">
+                    <p class="eyebrow">Тарифы и расчёт</p>
+                    <h3>Состав под вашу задачу</h3>
+                    <p>{segmentTariffLabel}.</p>
+                    <a
+                      class="business-link"
+                      href={getSitePath(
+                        segmentCalculatorService
+                          ? getSegmentServiceHref(segmentCalculatorService)
+                          : segmentRequestPath
+                      )}
+                    >
+                      {segmentCalculatorService ? "Перейти к быстрому расчёту" : "Запросить расчёт"}
+                    </a>
+                  </article>
+                  <article class="business-detail-card">
+                    <p class="eyebrow">Контакты</p>
+                    <h3>Прямой канал для {routeSlug.toUpperCase()}</h3>
+                    <p>
+                      Сообщите адрес, площадку или задачу — специалист продолжит с нужного места.
+                    </p>
+                    <div class="business-segment-contact-links">
+                      <a class="business-phone-card" href={segmentContactHref}>
+                        {segmentContactPhone}
+                      </a>
+                      <a class="business-link" href={`mailto:${segmentContactEmail}`}>
+                        {segmentContactEmail}
+                      </a>
+                    </div>
+                  </article>
+                  <article class="business-detail-card">
+                    <p class="eyebrow">Заявка</p>
+                    <h3>Ответ без лишней переадресации</h3>
+                    <p>
+                      Форма уже знает выбранный сегмент и передаст обращение ответственному отделу.
+                    </p>
+                    <a class="card-action" href={getSitePath(segmentRequestPath)}>
+                      Оставить заявку
+                    </a>
+                  </article>
+                </div>
+              </section>
+
+              {segmentCalculatorConfig && (
+                <BusinessCalculator
+                  config={segmentCalculatorConfig}
+                  requestPath={segmentRequestPath}
+                />
+              )}
+            </>
           )}
         </>
       )
@@ -507,6 +535,12 @@ const pageSchema: JsonLdObject = isService
                 <span class="service-category">B2G</span>
                 <h3>{scenario.title}</h3>
                 <p>{scenario.text}</p>
+                <a
+                  class="card-action"
+                  href={getSitePath(getB2GScenarioHref(scenario.title, scenario.text))}
+                >
+                  Обсудить задачу
+                </a>
               </article>
             ))}
           </div>
@@ -516,8 +550,8 @@ const pageSchema: JsonLdObject = isService
               <p class="eyebrow">Контакты сектора B2G</p>
               <h2>Связаться с сотрудником</h2>
               <p>
-                Можно написать на электронный адрес, позвонить напрямую или заказать обратный звонок
-                через стандартную форму заявки с согласием на обработку персональных данных.
+                Можно запросить расчёт по техническому заданию, написать на электронный адрес,
+                позвонить напрямую или заказать обратный звонок через форму заявки.
               </p>
             </div>
             <div class="b2g-contact-actions" aria-label="Способы связи с сектором B2G">
@@ -528,7 +562,7 @@ const pageSchema: JsonLdObject = isService
                 Позвонить {b2gPhoneDisplay}
               </a>
               <a class="business-link" href={getSitePath(b2gRequestPath)}>
-                Заказать обратный звонок
+                Запросить расчёт или звонок
               </a>
             </div>
           </div>
@@ -590,25 +624,27 @@ const pageSchema: JsonLdObject = isService
 
     {calculatorConfig && <BusinessCalculator config={calculatorConfig} />}
 
-    <section class="section-pad">
-      <div class="section-heading">
-        <p class="eyebrow">Связанные услуги</p>
-        <h2>Собрать решение без разрозненных заявок</h2>
-      </div>
-      <div class="business-card-grid">
-        {
-          relatedServices.map((service) => (
-            <article class="business-card">
-              <span class="service-category">{service.category}</span>
-              <h3>{service.title}</h3>
-              <p>{service.summary}</p>
-              <a class="card-action" href={getSitePath(getBusinessEntryHref(service.slug))}>
-                {service.ctaLabel}
-              </a>
-            </article>
-          ))
-        }
-      </div>
-    </section>
+    {
+      !isGovernmentSegment && (
+        <section class="section-pad">
+          <div class="section-heading">
+            <p class="eyebrow">Связанные услуги</p>
+            <h2>Собрать решение без разрозненных заявок</h2>
+          </div>
+          <div class="business-card-grid">
+            {relatedServices.map((service) => (
+              <article class="business-card">
+                <span class="service-category">{service.category}</span>
+                <h3>{service.title}</h3>
+                <p>{service.summary}</p>
+                <a class="card-action" href={getSitePath(getBusinessEntryHref(service.slug))}>
+                  {service.ctaLabel}
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+      )
+    }
   </div>
 </BaseLayout>
