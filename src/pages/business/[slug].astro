@@ -306,7 +306,30 @@ const pageSchema: JsonLdObject = isService
           <a class="business-link" href={getSitePath("/business/")}>Все бизнес-услуги</a>
         </div>
       </div>
-      <PromoImage visual={visual} class="is-page-intro" loading="eager" />
+      {
+        isGovernmentSegment ? (
+          <aside class="b2g-hero-contact" aria-label="Прямые контакты сектора B2G">
+            <div class="b2g-hero-contact__emblem">
+              <img src={getSitePath("/b2g-emblem.svg")} alt="" width="180" height="180" />
+            </div>
+            <div class="b2g-hero-contact__content">
+              <p class="eyebrow">Сектор B2G</p>
+              <h2>Прямой контакт для государственного заказчика</h2>
+              <p>Без переадресации: напишите или позвоните сотруднику сектора.</p>
+              <div class="b2g-hero-contact__actions">
+                <a class="card-action" href={b2gMailHref}>
+                  Написать на {b2gEmail}
+                </a>
+                <a class="business-phone-card" href={b2gPhoneHref}>
+                  Позвонить {b2gPhoneDisplay}
+                </a>
+              </div>
+            </div>
+          </aside>
+        ) : (
+          <PromoImage visual={visual} class="is-page-intro" loading="eager" />
+        )
+      }
     </section>
 
     {

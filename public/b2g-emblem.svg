@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-labelledby="title desc">
+  <title id="title">Геральдический знак сектора B2G</title>
+  <desc id="desc">Стилизованный двуглавый орёл в цветах Kubtel</desc>
+  <defs>
+    <linearGradient id="accent" x1="28" y1="32" x2="154" y2="151" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#d7569c" />
+      <stop offset="1" stop-color="#4599d8" />
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#accent)" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
+    <path d="M72 39 78 24l12 12 12-12 6 15" />
+    <path d="M62 43 57 31l12 6 8 9M118 43l5-12-12 6-8 9" />
+    <path d="M83 52c-16-16-37-20-58-8 12 6 24 16 33 28-13-3-26-1-38 7 17 10 34 13 53 7" />
+    <path d="M97 52c16-16 37-20 58-8-12 6-24 16-33 28 13-3 26-1 38 7-17 10-34 13-53 7" />
+    <path d="M83 56c-7-7-18-8-26-5M97 56c7-7 18-8 26-5" />
+    <path d="M82 54c-7-5-15-5-21-1M98 54c7-5 15-5 21-1" />
+    <path d="M90 48v58" />
+    <path d="M82 72c-9 13-10 29-3 42 5 9 5 18 1 27M98 72c9 13 10 29 3 42-5 9-5 18-1 27" />
+    <path d="m75 96-18 14M105 96l18 14" />
+    <path d="M90 101 68 113v23l22 15 22-15v-23Z" fill="url(#accent)" fill-opacity=".16" />
+    <path d="m68 121 22 10 22-10M90 113v35" />
+    <path d="M51 111 37 105M129 111l14-6" />
+    <path d="M43 102 32 96M137 102l11-6" />
+  </g>
+  <g fill="url(#accent)">
+    <circle cx="72" cy="55" r="6" />
+    <circle cx="108" cy="55" r="6" />
+    <path d="m64 58-13 3 11 5Z" />
+    <path d="m116 58 13 3-11 5Z" />
+  </g>
+</svg>
