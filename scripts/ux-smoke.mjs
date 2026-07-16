@@ -157,6 +157,7 @@ try {
     "/business/?calculator=telephony#business-calculators",
     "Внутризоновая связь"
   );
+  await checkResidentialServicePages(client, sessionId);
 
   await assertHealthEndpoint();
   if (!skipLegacyRedirects) {
@@ -237,6 +238,44 @@ async function checkRoute(client, sessionId, path, expectedText) {
     `${path} has no horizontal overflow on desktop`
   );
   results.push(`desktop route ok: ${path}`);
+}
+
+async function checkResidentialServicePages(client, sessionId) {
+  await setViewport(client, sessionId, desktopViewport());
+
+  for (const { path, marker } of [
+    { path: "/individual/tv/", marker: "Smart TV" },
+    { path: "/individual/internet/", marker: "Подходит для квартиры и частного дома" },
+    { path: "/individual/cctv/", marker: "Kubtel Watcher закрывает весь путь" }
+  ]) {
+    await navigate(client, sessionId, path);
+    await assertExpression(
+      client,
+      sessionId,
+      `(() => {
+        const panel = document.querySelector('[data-tab-panel-id="about"]');
+        return panel !== null && !panel.hidden && panel.innerText.includes(${JSON.stringify(marker)});
+      })()`,
+      `${path} shows the selected service content panel`
+    );
+  }
+
+  await navigate(client, sessionId, "/individual/tv/");
+  await evaluate(
+    client,
+    sessionId,
+    `document.querySelector('[data-content-tab="channels"]')?.click() === undefined`
+  );
+  await assertExpression(
+    client,
+    sessionId,
+    `(() => {
+      const panel = document.querySelector('[data-tab-panel-id="channels"]');
+      return panel !== null && !panel.hidden && panel.innerText.includes("БелРос");
+    })()`,
+    "TV channel tab reveals the channel list"
+  );
+  results.push("residential service tabs and TV channel list ok");
 }
 
 async function assertHealthEndpoint() {

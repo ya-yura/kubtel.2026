@@ -34,7 +34,9 @@ const { items, group, selected = items[0]?.id } = Astro.props;
     const group = tabList.dataset.contentTabs;
     if (!group) return;
     const panels = Array.from(
-      document.querySelectorAll<HTMLElement>(`[data-tab-panel-group="${group}"]`)
+      document.querySelectorAll<HTMLElement>(
+        `[data-tab-panel-group="${group}"] [data-tab-panel-id]`
+      )
     );
 
     const select = (id: string) => {
