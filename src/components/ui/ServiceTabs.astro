@@ -1,0 +1,57 @@
+---
+type TabItem = {
+  id: string;
+  label: string;
+};
+
+type Props = {
+  items: TabItem[];
+  group: string;
+  selected?: string;
+};
+
+const { items, group, selected = items[0]?.id } = Astro.props;
+---
+
+<div class="service-tabs" role="tablist" aria-label="Разделы услуги" data-content-tabs={group}>
+  {
+    items.map((item) => (
+      <button
+        type="button"
+        role="tab"
+        aria-selected={item.id === selected ? "true" : "false"}
+        aria-controls={`${group}-${item.id}`}
+        data-content-tab={item.id}
+      >
+        {item.label}
+      </button>
+    ))
+  }
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-content-tabs]").forEach((tabList) => {
+    const group = tabList.dataset.contentTabs;
+    if (!group) return;
+    const panels = Array.from(
+      document.querySelectorAll<HTMLElement>(`[data-tab-panel-group="${group}"]`)
+    );
+
+    const select = (id: string) => {
+      tabList.querySelectorAll<HTMLElement>("[data-content-tab]").forEach((tab) => {
+        tab.setAttribute("aria-selected", String(tab.dataset.contentTab === id));
+      });
+      panels.forEach((panel) => {
+        panel.hidden = panel.dataset.tabPanelId !== id;
+      });
+    };
+
+    tabList.querySelectorAll<HTMLButtonElement>("[data-content-tab]").forEach((tab) => {
+      tab.addEventListener("click", () => select(tab.dataset.contentTab ?? ""));
+    });
+
+    const selected =
+      tabList.querySelector<HTMLElement>('[aria-selected="true"]')?.dataset.contentTab;
+    if (selected) select(selected);
+  });
+</script>

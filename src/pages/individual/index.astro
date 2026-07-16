@@ -1,0 +1,68 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getSitePath } from "@config/site";
+
+const services = [
+  {
+    eyebrow: "Интернет",
+    title: "Домашний интернет",
+    text: "Скорость для квартиры или частного дома, роутер, статический IP и разовые работы — с расчётом до заявки.",
+    href: "/individual/internet/"
+  },
+  {
+    eyebrow: "Телевидение",
+    title: "Кубтел ТВ",
+    text: "177 каналов, поиск по списку, приложения для Smart TV и Android, приставка, START, PREMIER и оферты.",
+    href: "/individual/tv/"
+  },
+  {
+    eyebrow: "Видеонаблюдение",
+    title: "Kubtel Watcher",
+    text: "Онлайн-просмотр, архив 3/7/14/30 дней, камеры Dome и Bullet, приложения и публичная оферта.",
+    href: "/individual/cctv/"
+  }
+];
+---
+
+<BaseLayout
+  title="Услуги для физических лиц"
+  description="Интернет, телевидение и облачное видеонаблюдение Kubtel для физических лиц: описание, конфигуратор, приложения и документы."
+  canonicalPath="/individual/"
+>
+  <section class="page-intro section-pad compact-intro individual-hero">
+    <p class="eyebrow">Частным лицам</p>
+    <h1>Услуги и расчёт до заявки</h1>
+    <p>
+      Выберите интернет, ТВ или видеонаблюдение, соберите нужный вариант и только после этого
+      оставьте телефон. Цена и состав решения видны заранее.
+    </p>
+    <a class="card-action" href={getSitePath("/individual/configurator/#configurator")}
+      >Открыть конфигуратор</a
+    >
+  </section>
+  <section class="section-pad individual-service-grid" aria-label="Услуги для физических лиц">
+    {
+      services.map((service) => (
+        <a class="individual-service-card" href={getSitePath(service.href)}>
+          <span class="service-category">{service.eyebrow}</span>
+          <h2>{service.title}</h2>
+          <p>{service.text}</p>
+          <strong>
+            Смотреть услугу <span aria-hidden="true">→</span>
+          </strong>
+        </a>
+      ))
+    }
+  </section>
+  <section class="section-pad individual-principles">
+    <div>
+      <p class="eyebrow">Как это работает</p>
+      <h2>Сначала решение — потом контакты</h2>
+    </div>
+    <ol>
+      <li><strong>Выбираете</strong><span>услугу и параметры</span></li>
+      <li><strong>Видите</strong><span>абонентскую плату и разовые платежи</span></li>
+      <li><strong>Оставляете</strong><span>телефон только в финале</span></li>
+    </ol>
+  </section>
+</BaseLayout>

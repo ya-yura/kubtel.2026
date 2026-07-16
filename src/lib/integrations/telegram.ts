@@ -1,10 +1,15 @@
 import type { CareerApplicationSubmission } from "@lib/careers/submission";
 import type { DeliveryResult } from "@lib/integrations/types";
 import type { BusinessLeadSubmission } from "@lib/leads/business-submission";
+import type { ConfiguratorLeadSubmission } from "@lib/leads/configurator-submission";
 import type { LeadSubmission } from "@lib/leads/submission";
 
 export async function sendLeadToTelegram(
-  lead: LeadSubmission | BusinessLeadSubmission | CareerApplicationSubmission,
+  lead:
+    | LeadSubmission
+    | ConfiguratorLeadSubmission
+    | BusinessLeadSubmission
+    | CareerApplicationSubmission,
   env = process.env
 ): Promise<DeliveryResult> {
   const token = env.TELEGRAM_BOT_TOKEN;
@@ -53,7 +58,11 @@ export async function sendLeadToTelegram(
 }
 
 function formatTelegramLead(
-  lead: LeadSubmission | BusinessLeadSubmission | CareerApplicationSubmission
+  lead:
+    | LeadSubmission
+    | ConfiguratorLeadSubmission
+    | BusinessLeadSubmission
+    | CareerApplicationSubmission
 ): string {
   if (isCareerApplication(lead)) {
     return formatTelegramCareerApplication(lead);
@@ -61,6 +70,10 @@ function formatTelegramLead(
 
   if (isBusinessLead(lead)) {
     return formatTelegramBusinessLead(lead);
+  }
+
+  if (isConfiguratorLead(lead)) {
+    return formatTelegramConfiguratorLead(lead);
   }
 
   const optionList = lead.options.length > 0 ? lead.options.join(", ") : "без доп. опций";
@@ -79,15 +92,51 @@ function formatTelegramLead(
 }
 
 function isBusinessLead(
-  lead: LeadSubmission | BusinessLeadSubmission | CareerApplicationSubmission
+  lead:
+    | LeadSubmission
+    | ConfiguratorLeadSubmission
+    | BusinessLeadSubmission
+    | CareerApplicationSubmission
 ): lead is BusinessLeadSubmission {
   return "leadType" in lead && lead.leadType === "b2b";
 }
 
 function isCareerApplication(
-  lead: LeadSubmission | BusinessLeadSubmission | CareerApplicationSubmission
+  lead:
+    | LeadSubmission
+    | ConfiguratorLeadSubmission
+    | BusinessLeadSubmission
+    | CareerApplicationSubmission
 ): lead is CareerApplicationSubmission {
   return "applicationType" in lead && lead.applicationType === "career";
+}
+
+function isConfiguratorLead(
+  lead:
+    | LeadSubmission
+    | ConfiguratorLeadSubmission
+    | BusinessLeadSubmission
+    | CareerApplicationSubmission
+): lead is ConfiguratorLeadSubmission {
+  return "leadType" in lead && lead.leadType === "b2c-configurator";
+}
+
+function formatTelegramConfiguratorLead(lead: ConfiguratorLeadSubmission): string {
+  return [
+    `<b>Новая заявка из конфигуратора Kubtel</b>`,
+    `ID: <code>${escapeHtml(lead.id)}</code>`,
+    `Имя: ${escapeHtml(lead.customer.name)}`,
+    `Телефон: ${escapeHtml(lead.customer.phone)}`,
+    lead.customer.email ? `Email: ${escapeHtml(lead.customer.email)}` : null,
+    `Адрес: ${lead.address ? escapeHtml(lead.address) : "уточнить на звонке"}`,
+    `Услуга: ${escapeHtml(lead.service.title)}`,
+    `Конфигурация: ${escapeHtml(
+      lead.configuration.lines.map((line) => `${line.label}: ${line.valueLabel}`).join("; ")
+    )}`,
+    `Стоимость: ${lead.configuration.monthlyTotal} руб./мес. + ${lead.configuration.oneTimeTotal} руб. разово`
+  ]
+    .filter((line): line is string => Boolean(line))
+    .join("\n");
 }
 
 function formatTelegramBusinessLead(lead: BusinessLeadSubmission): string {

@@ -1,0 +1,39 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import ServiceConfigurator from "@components/sections/ServiceConfigurator.astro";
+import { getConfiguratorCatalog } from "@lib/content";
+import { handleConfiguratorFormPost } from "@lib/leads/form-handlers";
+
+const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
+export const prerender = false;
+
+const catalog = await getConfiguratorCatalog();
+const leadActionResult =
+  !isStaticPreview && Astro.request.method === "POST"
+    ? await handleConfiguratorFormPost(await Astro.request.formData(), Astro.request)
+    : undefined;
+const initialService = Astro.url.searchParams.get("service");
+---
+
+<BaseLayout
+  title="Конфигуратор услуг для физических лиц"
+  description="Выберите интернет, ТВ или видеонаблюдение, посмотрите стоимость услуг и оборудования, а затем оставьте заявку."
+  canonicalPath="/individual/configurator/"
+>
+  <section class="page-intro section-pad compact-intro">
+    <p class="eyebrow">Частным лицам</p>
+    <h1>Соберите свои услуги</h1>
+    <p>
+      Конфигуратор учитывает интернет, ТВ, видеонаблюдение, роутеры, приставки, камеры, архив и
+      дополнительные услуги. Новое поле добавляется в каталог услуги — интерфейс и расчёт остаются
+      общими.
+    </p>
+  </section>
+  <ServiceConfigurator
+    catalog={catalog}
+    initialService={initialService}
+    actionResult={leadActionResult}
+    staticPreview={isStaticPreview}
+    formAction={Astro.url.pathname}
+  />
+</BaseLayout>

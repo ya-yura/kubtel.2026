@@ -2,13 +2,13 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Hero from "@components/sections/Hero.astro";
 import FunnelOverview from "@components/sections/FunnelOverview.astro";
+import ServiceConfigurator from "@components/sections/ServiceConfigurator.astro";
 import TariffGrid from "@components/sections/TariffGrid.astro";
 import HumanScenarios from "@components/sections/HumanScenarios.astro";
 import ServiceCards from "@components/sections/ServiceCards.astro";
 import FaqList from "@components/sections/FaqList.astro";
-import AddressCheckPanel from "@components/sections/AddressCheckPanel.astro";
-import { getFaqItems, getServices, getTariffs } from "@lib/content";
-import { handleLeadFormPost } from "@lib/leads/form-handlers";
+import { getConfiguratorCatalog, getFaqItems, getServices, getTariffs } from "@lib/content";
+import { handleConfiguratorFormPost } from "@lib/leads/form-handlers";
 import { buildFaqSchema, buildInternetServiceSchema } from "@lib/seo/schema";
 import { getSitePath, SITE } from "@config/site";
 
@@ -17,10 +17,11 @@ export const prerender = false;
 
 const tariffs = await getTariffs();
 const services = await getServices();
+const configuratorCatalog = await getConfiguratorCatalog();
 const faqItems = await getFaqItems({ limit: 3 });
 const leadActionResult =
   !isStaticPreview && Astro.request.method === "POST"
-    ? await handleLeadFormPost(await Astro.request.formData(), Astro.request)
+    ? await handleConfiguratorFormPost(await Astro.request.formData(), Astro.request)
     : undefined;
 const pageSchema = [buildInternetServiceSchema(tariffs, "/"), buildFaqSchema(faqItems, "/")];
 ---
@@ -33,12 +34,6 @@ const pageSchema = [buildInternetServiceSchema(tariffs, "/"), buildFaqSchema(faq
 >
   <Hero />
   <TariffGrid tariffs={tariffs} />
-  <AddressCheckPanel
-    tariffs={tariffs}
-    actionResult={leadActionResult}
-    staticPreview={isStaticPreview}
-    formAction={Astro.url.pathname}
-  />
   <section class="section-pad homepage-b2g-callout" aria-label="Работа с организациями">
     <div>
       <span class="service-category">B2B · B2G · B2O</span>
@@ -161,5 +156,11 @@ const pageSchema = [buildInternetServiceSchema(tariffs, "/"), buildFaqSchema(faq
   <FunnelOverview />
   <HumanScenarios />
   <ServiceCards services={services} tariffs={tariffs} />
+  <ServiceConfigurator
+    catalog={configuratorCatalog}
+    actionResult={leadActionResult}
+    staticPreview={isStaticPreview}
+    formAction={Astro.url.pathname}
+  />
   <FaqList items={faqItems} />
 </BaseLayout>

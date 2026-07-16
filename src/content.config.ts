@@ -2,6 +2,7 @@ import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 import { tariffOptions } from "@models/domain";
+import { configuratorSchema } from "@lib/configurator/schema";
 
 const verificationStatus = z.enum(["confirmed", "needs_verification", "draft"]);
 const responsibleRole = z.enum(["commercial", "operations", "coverage", "content"]);
@@ -151,5 +152,9 @@ export const collections = {
   faq: faqCollection,
   coverage: coverageCollection,
   promos: promoCollection,
-  careers: careersCollection
+  careers: careersCollection,
+  configurator: defineCollection({
+    loader: glob({ pattern: "**/*.json", base: "./src/content/configurator" }),
+    schema: configuratorSchema
+  })
 };

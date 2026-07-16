@@ -1,4 +1,7 @@
 import { createCmsAdapter } from "@lib/cms";
+import { getCollection } from "astro:content";
+import { configuratorSchema } from "@lib/configurator/schema";
+import type { ConfiguratorCatalog } from "@models/configurator";
 import type { CoverageArea, FaqItem, JobVacancy, Promo, Service, Tariff } from "@models/domain";
 
 function bySortOrder(a: Tariff, b: Tariff): number {
@@ -21,6 +24,17 @@ export async function getFaqItems(options: { limit?: number } = {}): Promise<Faq
 
 export async function getServices(): Promise<Service[]> {
   return createCmsAdapter().getServices();
+}
+
+export async function getConfiguratorCatalog(): Promise<ConfiguratorCatalog> {
+  const entries = await getCollection("configurator");
+  const entry = entries[0];
+
+  if (!entry) {
+    throw new Error("Каталог конфигуратора не найден");
+  }
+
+  return configuratorSchema.parse(entry.data) as ConfiguratorCatalog;
 }
 
 export async function getCoverageAreas(): Promise<CoverageArea[]> {

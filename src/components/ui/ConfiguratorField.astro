@@ -1,0 +1,122 @@
+---
+import type { ConfiguratorField } from "@models/configurator";
+
+type Props = {
+  field: ConfiguratorField;
+  serviceId: string;
+};
+
+const { field, serviceId } = Astro.props;
+const fieldName = `${serviceId}-${field.id}`;
+const defaultChoice = field.choices?.find((choice) => {
+  if (typeof field.defaultValue === "string") return field.defaultValue === choice.id;
+  return choice.default;
+});
+const defaultValue =
+  typeof field.defaultValue === "string" || typeof field.defaultValue === "number"
+    ? field.defaultValue
+    : field.type === "counter"
+      ? (field.min ?? 0)
+      : "";
+const choiceInputType =
+  field.type === "radio" || (field.type === "checkbox" && !field.multiple) ? "radio" : "checkbox";
+---
+
+{
+  field.type === "select" ? (
+    <label class="config-field">
+      <span>{field.label}</span>
+      <select data-config-field data-field-id={field.id} data-field-type={field.type}>
+        {field.choices?.map((choice) => (
+          <option
+            value={choice.id}
+            selected={choice.id === (defaultChoice?.id ?? field.choices?.[0]?.id)}
+            data-label={choice.label}
+            data-monthly={choice.monthlyPrice}
+            data-once={choice.oneTimePrice}
+          >
+            {choice.label}
+          </option>
+        ))}
+      </select>
+      {field.help && <small>{field.help}</small>}
+    </label>
+  ) : field.type === "counter" ? (
+    <label class="config-field config-counter-field">
+      <span>{field.label}</span>
+      <div class="config-counter-control">
+        <button type="button" data-config-step="-1" aria-label={`Уменьшить: ${field.label}`}>
+          −
+        </button>
+        <input
+          type="number"
+          inputmode="numeric"
+          value={defaultValue}
+          min={field.min}
+          max={field.max}
+          step={field.step ?? 1}
+          data-config-field
+          data-field-id={field.id}
+          data-field-type={field.type}
+          data-monthly={field.monthlyPrice ?? 0}
+          data-once={field.oneTimePrice ?? 0}
+        />
+        <button type="button" data-config-step="1" aria-label={`Увеличить: ${field.label}`}>
+          +
+        </button>
+        {field.unit && <em>{field.unit}</em>}
+      </div>
+      {field.help && <small>{field.help}</small>}
+    </label>
+  ) : field.type === "checkbox" && !field.choices?.length ? (
+    <label class="config-choice config-choice-single">
+      <input
+        type="checkbox"
+        checked={field.defaultValue === true}
+        data-config-field
+        data-field-id={field.id}
+        data-field-type={field.type}
+        data-monthly={field.monthlyPrice ?? 0}
+        data-once={field.oneTimePrice ?? 0}
+      />
+      <span>
+        <strong>{field.label}</strong>
+        {field.help && <small>{field.help}</small>}
+      </span>
+    </label>
+  ) : (
+    <fieldset class="config-fieldset">
+      <legend>{field.label}</legend>
+      <div class="config-choice-grid">
+        {field.choices?.map((choice) => (
+          <label class="config-choice">
+            <input
+              type={choiceInputType}
+              name={fieldName}
+              value={choice.id}
+              checked={
+                Array.isArray(field.defaultValue)
+                  ? field.defaultValue.includes(choice.id)
+                  : typeof field.defaultValue === "string"
+                    ? field.defaultValue === choice.id
+                    : Boolean(choice.default)
+              }
+              data-config-field
+              data-field-id={field.id}
+              data-field-type={choiceInputType}
+              data-field-multiple={field.multiple ? "true" : undefined}
+              data-label={choice.label}
+              data-monthly={choice.monthlyPrice}
+              data-once={choice.oneTimePrice}
+            />
+            <span>
+              <strong>{choice.label}</strong>
+              {choice.description && <small>{choice.description}</small>}
+            </span>
+          </label>
+        ))}
+      </div>
+      {field.help && <small class="config-field-help">{field.help}</small>}
+    </fieldset>
+  )
+}

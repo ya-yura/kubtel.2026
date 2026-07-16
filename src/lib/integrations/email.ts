@@ -3,12 +3,42 @@ import type { CareerResumeAttachment } from "@lib/careers/resume";
 import type { CareerApplicationSubmission } from "@lib/careers/submission";
 import type { DeliveryResult } from "@lib/integrations/types";
 import type { BusinessLeadSubmission } from "@lib/leads/business-submission";
+import type { ConfiguratorLeadSubmission } from "@lib/leads/configurator-submission";
 import type { LeadSubmission } from "@lib/leads/submission";
 
 export async function sendLeadToEmail(
-  lead: LeadSubmission,
+  lead: LeadSubmission | ConfiguratorLeadSubmission,
   env = process.env
 ): Promise<DeliveryResult> {
+  if (isConfiguratorLead(lead)) {
+    return sendEmail(
+      {
+        to: env.SALES_EMAIL ?? "kubtel@kubtel.ru",
+        replyTo: lead.customer.email ?? undefined,
+        subject: `[${lead.id}] Конфигуратор: ${lead.service.title}`,
+        text: [
+          "Новая заявка из конфигуратора Kubtel",
+          `Номер: ${lead.id}`,
+          `Имя: ${lead.customer.name}`,
+          `Телефон: ${lead.customer.phone}`,
+          lead.customer.email ? `Email: ${lead.customer.email}` : null,
+          `Адрес: ${lead.address || "уточнить на звонке"}`,
+          `Услуга: ${lead.service.title}`,
+          ...lead.configuration.lines.map(
+            (line) =>
+              `${line.label}: ${line.valueLabel} — ${line.monthlyPrice} руб./мес., ${line.oneTimePrice} руб. разово`
+          ),
+          `Итого в месяц: ${lead.configuration.monthlyTotal} руб.`,
+          `Разовый платёж: ${lead.configuration.oneTimeTotal} руб.`,
+          `Источник: ${lead.sourcePath}`
+        ]
+          .filter((line): line is string => Boolean(line))
+          .join("\n")
+      },
+      env
+    );
+  }
+
   return sendEmail(
     {
       to: env.SALES_EMAIL ?? "kubtel@kubtel.ru",
@@ -26,6 +56,12 @@ export async function sendLeadToEmail(
     },
     env
   );
+}
+
+function isConfiguratorLead(
+  lead: LeadSubmission | ConfiguratorLeadSubmission
+): lead is ConfiguratorLeadSubmission {
+  return "leadType" in lead && lead.leadType === "b2c-configurator";
 }
 
 export async function sendCareerApplicationToEmail(

@@ -16,14 +16,14 @@ describe("lead form page contract", () => {
   it.each(pages)("%s renders the action result on demand", (filePath, routePath) => {
     const source = readProjectFile(filePath);
 
-    expect(source, `${routePath} must render the lead form`).toContain("<AddressCheckPanel");
+    expect(source, `${routePath} must render the lead form`).toContain("<ServiceConfigurator");
     expect(source, `${routePath} must be server-rendered by default`).toContain(
       "export const prerender = false"
     );
     expect(source, `${routePath} must handle POST submissions on demand`).toContain(
-      "handleLeadFormPost(await Astro.request.formData(), Astro.request)"
+      "handleConfiguratorFormPost(await Astro.request.formData(), Astro.request)"
     );
-    expect(source, `${routePath} must pass actionResult into AddressCheckPanel`).toContain(
+    expect(source, `${routePath} must pass actionResult into ServiceConfigurator`).toContain(
       "actionResult={leadActionResult}"
     );
   });

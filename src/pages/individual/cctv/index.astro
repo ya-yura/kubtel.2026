@@ -1,0 +1,119 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import AppLinks from "@components/sections/AppLinks.astro";
+import OfferLinks from "@components/sections/OfferLinks.astro";
+import ServiceConfigurator from "@components/sections/ServiceConfigurator.astro";
+import ServiceTabs from "@components/ui/ServiceTabs.astro";
+import { getConfiguratorCatalog } from "@lib/content";
+import { handleConfiguratorFormPost } from "@lib/leads/form-handlers";
+
+const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
+export const prerender = false;
+const catalog = await getConfiguratorCatalog();
+const leadActionResult =
+  !isStaticPreview && Astro.request.method === "POST"
+    ? await handleConfiguratorFormPost(await Astro.request.formData(), Astro.request)
+    : undefined;
+const selectedTab = Astro.url.searchParams.get("tab") ?? "about";
+---
+
+<BaseLayout
+  title="Облачное видеонаблюдение Kubtel Watcher"
+  description="Kubtel Watcher для дома и ТСЖ: онлайн-просмотр, архив, камеры Dome и Bullet, приложения, конфигуратор и публичная оферта."
+  canonicalPath="/individual/cctv/"
+>
+  <section class="service-hero section-pad cctv-service-hero">
+    <div>
+      <p class="eyebrow">Видеонаблюдение</p>
+      <h1>Облачное видеонаблюдение без локального сервера</h1>
+      <p>
+        Онлайн-просмотр, архив на нужный срок, камеры и приложения Kubtel Watcher — с расчётом перед
+        заявкой.
+      </p>
+      <a class="card-action" href="#cctv-connect">Подобрать видеонаблюдение</a>
+    </div>
+    <div class="service-hero-stat">
+      <strong>от 150 ₽</strong><span>в месяц за онлайн-просмотр</span>
+    </div>
+  </section>
+  <ServiceTabs
+    items={[
+      { id: "about", label: "Об услуге" },
+      { id: "connect", label: "Подключение" },
+      { id: "equipment", label: "Камеры" },
+      { id: "documents", label: "Приложения и оферта" }
+    ]}
+    group="cctv"
+    selected={selectedTab}
+  />
+  <div class="service-tab-panels" data-tab-panel-group="cctv">
+    <section id="cctv-about" data-tab-panel-id="about" class="section-pad service-content-panel">
+      <div class="section-heading">
+        <p class="eyebrow">Об услуге</p><h2>
+          Kubtel Watcher закрывает весь путь от камеры до архива
+        </h2><p>
+          Система доступна из любой точки с интернетом. Для хранения не нужен собственный
+          видеорегистратор, жёсткий диск или статический IP.
+        </p>
+      </div>
+      <div class="service-benefit-grid">
+        {
+          catalog.cctv.benefits.map((benefit) => (
+            <article>
+              <strong>{benefit}</strong>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+    <section id="cctv-connect" data-tab-panel-id="connect" class="service-tab-panel-content">
+      <ServiceConfigurator
+        catalog={catalog}
+        singleService="cctv"
+        actionResult={leadActionResult}
+        staticPreview={isStaticPreview}
+        formAction={Astro.url.pathname}
+      />
+      <section class="section-pad setup-steps">
+        <div class="section-heading">
+          <p class="eyebrow">Как подключить</p><h2>От выбора архива до работающей камеры</h2>
+        </div><ol>{catalog.cctv.setupSteps.map((step) => <li>{step}</li>)}</ol>
+      </section>
+    </section>
+    <section
+      id="cctv-equipment"
+      data-tab-panel-id="equipment"
+      class="section-pad service-content-panel"
+    >
+      <div class="section-heading">
+        <p class="eyebrow">Оборудование</p><h2>Камеры для разных точек наблюдения</h2>
+      </div><div class="camera-model-grid">
+        {
+          catalog.cctv.cameraModels.map((camera) => (
+            <article class="camera-model-card">
+              <>
+                <div>
+                  <>
+                    <span class="service-category">{camera.price} ₽</span>
+                    <h3>{camera.title}</h3>
+                  </>
+                </div>
+                <ul>
+                  {camera.specs.map((spec) => (
+                    <li>{spec}</li>
+                  ))}
+                </ul>
+              </>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+    <section id="cctv-documents" data-tab-panel-id="documents" class="section-pad resource-grid">
+      <AppLinks links={catalog.cctv.appLinks} title="Скачать Kubtel Watcher" /><OfferLinks
+        links={catalog.cctv.offers}
+        title="Публичная оферта Kubtel Watcher"
+      />
+    </section>
+  </div>
+</BaseLayout>

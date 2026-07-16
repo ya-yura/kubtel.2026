@@ -1,0 +1,102 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import AppLinks from "@components/sections/AppLinks.astro";
+import ChannelList from "@components/sections/ChannelList.astro";
+import OfferLinks from "@components/sections/OfferLinks.astro";
+import ServiceConfigurator from "@components/sections/ServiceConfigurator.astro";
+import ServiceTabs from "@components/ui/ServiceTabs.astro";
+import { getConfiguratorCatalog } from "@lib/content";
+import { handleConfiguratorFormPost } from "@lib/leads/form-handlers";
+
+const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
+export const prerender = false;
+const catalog = await getConfiguratorCatalog();
+const leadActionResult =
+  !isStaticPreview && Astro.request.method === "POST"
+    ? await handleConfiguratorFormPost(await Astro.request.formData(), Astro.request)
+    : undefined;
+const selectedTab = Astro.url.searchParams.get("tab") ?? "about";
+---
+
+<BaseLayout
+  title="Кубтел ТВ — 177 каналов и приложения"
+  description="Кубтел ТВ: 177 каналов, поиск по списку, приложения для Smart TV и Android, приставка, дополнительные пакеты и оферты."
+  canonicalPath="/individual/tv/"
+>
+  <section class="service-hero section-pad tv-service-hero">
+    <div>
+      <p class="eyebrow">Телевидение</p>
+      <h1>Кубтел ТВ — всё нужное для просмотра в одном месте</h1>
+      <p>
+        177 каналов, архив и приложения на разных устройствах. Сначала выберите вариант, потом
+        оставьте контакты.
+      </p>
+      <a class="card-action" href="#tv-connect">Подобрать ТВ</a>
+    </div>
+    <div class="service-hero-stat"><strong>177</strong><span>каналов в базовом пакете</span></div>
+  </section>
+  <ServiceTabs
+    items={[
+      { id: "about", label: "Об услуге" },
+      { id: "connect", label: "Подключение" },
+      { id: "channels", label: "Список каналов" },
+      { id: "documents", label: "Приложения и оферты" }
+    ]}
+    group="tv"
+    selected={selectedTab}
+  />
+  <div class="service-tab-panels" data-tab-panel-group="tv">
+    <section id="tv-about" data-tab-panel-id="about" class="section-pad service-content-panel">
+      <div class="section-heading">
+        <p class="eyebrow">Об услуге</p><h2>
+          Фильмы, сериалы, мультфильмы и ТВ-каналы на разных устройствах
+        </h2><p>
+          Одна учётная запись поддерживает просмотр на нескольких устройствах. Если интернет Kubtel
+          уже есть, менеджер добавит ТВ к текущей услуге.
+        </p>
+      </div>
+      <div class="service-benefit-grid">
+        <article>
+          <strong>Smart TV</strong><p>Samsung, LG и Android TV — приложение или приставка.</p>
+        </article>
+        <article>
+          <strong>START и PREMIER</strong><p>
+            Ссылки на условия кинотеатров находятся рядом с подключением.
+          </p>
+        </article>
+        <article>
+          <strong>Time Shift</strong><p>
+            В приложении можно выбрать прошедшую передачу и посмотреть её позже.
+          </p>
+        </article>
+      </div>
+    </section>
+    <section id="tv-connect" data-tab-panel-id="connect" class="service-tab-panel-content">
+      <ServiceConfigurator
+        catalog={catalog}
+        singleService="tv"
+        actionResult={leadActionResult}
+        staticPreview={isStaticPreview}
+        formAction={Astro.url.pathname}
+      />
+      <section class="section-pad setup-steps">
+        <div class="section-heading">
+          <p class="eyebrow">Как смотреть</p><h2>Подключение за три понятных шага</h2>
+        </div><ol>{catalog.tv.setupSteps.map((step) => <li>{step}</li>)}</ol><div
+          class="supported-devices"
+        >
+          {catalog.tv.supportedDevices.map((device) => <span>{device}</span>)}
+        </div>
+      </section>
+    </section>
+    <section id="tv-channels" data-tab-panel-id="channels" class="service-tab-panel-content">
+      <ChannelList groups={catalog.tv.channelGroups} channelCount={catalog.tv.channelCount} />
+    </section>
+    <section id="tv-documents" data-tab-panel-id="documents" class="section-pad resource-grid">
+      <AppLinks links={catalog.tv.appLinks} /><OfferLinks
+        links={catalog.tv.offers}
+        title="Оферты и условия Кубтел ТВ"
+      />
+    </section>
+  </div>
+</BaseLayout>

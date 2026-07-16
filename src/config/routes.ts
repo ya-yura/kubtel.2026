@@ -18,6 +18,8 @@ export type RouteMetadata = SitemapRoute;
 const lastModified = "2026-05-08";
 
 export const mainNavItems: NavItem[] = [
+  { href: "/individual/configurator/", label: "Услуги" },
+  { href: "/individual/tv/", label: "ТВ" },
   { href: "/tariffs/", label: "Тарифы" },
   { href: "/connect/", label: "Подключение" },
   { href: "/payment/", label: "Оплата" },
@@ -31,6 +33,10 @@ export const mainNavItems: NavItem[] = [
 ];
 
 export const footerNavItems: NavItem[] = [
+  { href: "/individual/", label: "Частным лицам" },
+  { href: "/individual/configurator/", label: "Конфигуратор услуг" },
+  { href: "/individual/tv/", label: "Телевидение" },
+  { href: "/individual/cctv/", label: "Видеонаблюдение" },
   { href: "/tariffs/", label: "Тарифы" },
   { href: "/payment/", label: "Оплата" },
   { href: "/devices/", label: "Устройства" },
@@ -53,6 +59,56 @@ export const sitemapRoutes: SitemapRoute[] = [
       "Kubtel помогает выбрать домашний интернет, проверить подключение, оплатить услуги и обратиться в поддержку.",
     changeFrequency: "weekly",
     priority: 1,
+    lastModified
+  },
+  {
+    path: "/individual/",
+    label: "Частным лицам",
+    title: "Услуги Kubtel для физических лиц",
+    description:
+      "Домашний интернет, Кубтел ТВ и облачное видеонаблюдение: описание услуг и расчёт до заявки.",
+    changeFrequency: "weekly",
+    priority: 0.94,
+    lastModified
+  },
+  {
+    path: "/individual/configurator/",
+    label: "Конфигуратор услуг",
+    title: "Конфигуратор услуг для физических лиц",
+    description:
+      "Выберите интернет, ТВ или видеонаблюдение, добавьте оборудование и дополнительные услуги, затем оставьте контакты.",
+    changeFrequency: "weekly",
+    priority: 0.96,
+    lastModified
+  },
+  {
+    path: "/individual/internet/",
+    label: "Интернет для дома",
+    title: "Домашний интернет Kubtel",
+    description:
+      "Тарифы домашнего интернета Kubtel для квартиры и частного дома, роутер, статический IP и условия подключения.",
+    changeFrequency: "weekly",
+    priority: 0.88,
+    lastModified
+  },
+  {
+    path: "/individual/tv/",
+    label: "Телевидение",
+    title: "Кубтел ТВ — 177 каналов и приложения",
+    description:
+      "Кубтел ТВ: список каналов, приложения, приставка, дополнительные пакеты, оферты и подключение.",
+    changeFrequency: "weekly",
+    priority: 0.92,
+    lastModified
+  },
+  {
+    path: "/individual/cctv/",
+    label: "Видеонаблюдение",
+    title: "Облачное видеонаблюдение Kubtel Watcher",
+    description:
+      "Онлайн-просмотр, архив, камеры, приложения и публичная оферта Kubtel Watcher для физических лиц.",
+    changeFrequency: "weekly",
+    priority: 0.88,
     lastModified
   },
   {

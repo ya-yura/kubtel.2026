@@ -5,9 +5,14 @@ import type { CareerApplicationSubmission } from "@lib/careers/submission";
 import type { DeliveryResult } from "@lib/integrations/types";
 import type { LeadSubmission } from "@lib/leads/submission";
 import type { BusinessLeadSubmission } from "@lib/leads/business-submission";
+import type { ConfiguratorLeadSubmission } from "@lib/leads/configurator-submission";
 import type { CareerResumeAttachment } from "@lib/careers/resume";
 
-type OutboxLead = LeadSubmission | BusinessLeadSubmission | CareerApplicationSubmission;
+type OutboxLead =
+  | LeadSubmission
+  | ConfiguratorLeadSubmission
+  | BusinessLeadSubmission
+  | CareerApplicationSubmission;
 
 type LeadOutboxRecord = {
   lead: OutboxLead;

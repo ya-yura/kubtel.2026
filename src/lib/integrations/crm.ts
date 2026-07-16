@@ -2,10 +2,15 @@ import { createHmac } from "node:crypto";
 import type { CareerApplicationSubmission } from "@lib/careers/submission";
 import type { DeliveryResult } from "@lib/integrations/types";
 import type { BusinessLeadSubmission } from "@lib/leads/business-submission";
+import type { ConfiguratorLeadSubmission } from "@lib/leads/configurator-submission";
 import type { LeadSubmission } from "@lib/leads/submission";
 
 export async function sendLeadToCrm(
-  lead: LeadSubmission | BusinessLeadSubmission | CareerApplicationSubmission,
+  lead:
+    | LeadSubmission
+    | ConfiguratorLeadSubmission
+    | BusinessLeadSubmission
+    | CareerApplicationSubmission,
   env = process.env
 ): Promise<DeliveryResult> {
   const webhookUrl = env.CRM_WEBHOOK_URL;
@@ -62,7 +67,11 @@ export async function sendLeadToCrm(
 }
 
 function buildCrmPayload(
-  lead: LeadSubmission | BusinessLeadSubmission | CareerApplicationSubmission
+  lead:
+    | LeadSubmission
+    | ConfiguratorLeadSubmission
+    | BusinessLeadSubmission
+    | CareerApplicationSubmission
 ) {
   if (isCareerApplication(lead)) {
     return {
@@ -78,7 +87,11 @@ function buildCrmPayload(
 }
 
 function isCareerApplication(
-  lead: LeadSubmission | BusinessLeadSubmission | CareerApplicationSubmission
+  lead:
+    | LeadSubmission
+    | ConfiguratorLeadSubmission
+    | BusinessLeadSubmission
+    | CareerApplicationSubmission
 ): lead is CareerApplicationSubmission {
   return "applicationType" in lead && lead.applicationType === "career";
 }

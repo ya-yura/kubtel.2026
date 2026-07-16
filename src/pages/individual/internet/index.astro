@@ -1,0 +1,83 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import OfferLinks from "@components/sections/OfferLinks.astro";
+import ServiceConfigurator from "@components/sections/ServiceConfigurator.astro";
+import ServiceTabs from "@components/ui/ServiceTabs.astro";
+import { getConfiguratorCatalog } from "@lib/content";
+import { handleConfiguratorFormPost } from "@lib/leads/form-handlers";
+
+const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
+export const prerender = false;
+const catalog = await getConfiguratorCatalog();
+const leadActionResult =
+  !isStaticPreview && Astro.request.method === "POST"
+    ? await handleConfiguratorFormPost(await Astro.request.formData(), Astro.request)
+    : undefined;
+const selectedTab = Astro.url.searchParams.get("tab") ?? "about";
+---
+
+<BaseLayout
+  title="Домашний интернет Kubtel"
+  description="Домашний интернет Kubtel для квартиры и частного дома: тарифы, роутер, статический IP, условия и конфигуратор."
+  canonicalPath="/individual/internet/"
+>
+  <section class="service-hero section-pad">
+    <div>
+      <p class="eyebrow">Интернет для дома</p>
+      <h1>Интернет, который можно собрать под себя</h1>
+      <p>
+        Скорость, подключение в частный дом, роутер, статический IP и выездные работы — в одном
+        расчёте.
+      </p>
+      <a class="card-action" href="#internet-connect">Подобрать подключение</a>
+    </div>
+    <div class="service-hero-stat"><strong>100–300</strong><span>Мбит/с в тарифах</span></div>
+  </section>
+  <ServiceTabs
+    items={[
+      { id: "about", label: "Об услуге" },
+      { id: "connect", label: "Подключение" },
+      { id: "documents", label: "Документы" }
+    ]}
+    group="internet"
+    selected={selectedTab}
+  />
+  <div class="service-tab-panels" data-tab-panel-group="internet">
+    <section
+      id="internet-about"
+      data-tab-panel-id="about"
+      class="section-pad service-content-panel"
+    >
+      <div class="section-heading">
+        <p class="eyebrow">Об услуге</p><h2>Подходит для квартиры и частного дома</h2><p>
+          Выберите тариф по скорости, а дополнительные поля добавьте только при необходимости.
+        </p>
+      </div>
+      <div class="service-benefit-grid">
+        {
+          catalog.internet.benefits.map((benefit) => (
+            <article>
+              <strong>{benefit}</strong>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+    <section id="internet-connect" data-tab-panel-id="connect" class="service-tab-panel-content">
+      <ServiceConfigurator
+        catalog={catalog}
+        singleService="internet"
+        actionResult={leadActionResult}
+        staticPreview={isStaticPreview}
+        formAction={Astro.url.pathname}
+      />
+    </section>
+    <section
+      id="internet-documents"
+      data-tab-panel-id="documents"
+      class="section-pad service-content-panel"
+    >
+      <OfferLinks links={catalog.internet.offers} title="Условия оказания услуг связи" />
+    </section>
+  </div>
+</BaseLayout>

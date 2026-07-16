@@ -15,7 +15,12 @@ import {
   CareerApplicationError,
   type CareerApplicationActionResult
 } from "@lib/careers/submission";
-import { getCoverageAreas, getJobVacancies, getTariffs } from "@lib/content";
+import {
+  getConfiguratorCatalog,
+  getCoverageAreas,
+  getJobVacancies,
+  getTariffs
+} from "@lib/content";
 import { sendLeadToCrm } from "@lib/integrations/crm";
 import {
   sendBusinessLeadToEmail,
@@ -33,6 +38,16 @@ import {
   buildBusinessLeadSubmission,
   type BusinessLeadActionResult
 } from "@lib/leads/business-submission";
+import {
+  hasHoneypotValue as hasConfiguratorHoneypotValue,
+  isSuspiciousSubmitSpeed as isSuspiciousConfiguratorSubmitSpeed,
+  configuratorFormSchema
+} from "@lib/leads/configurator-schema";
+import {
+  buildConfiguratorSubmission,
+  ConfiguratorValidationError,
+  type ConfiguratorLeadActionResult
+} from "@lib/leads/configurator-submission";
 import { saveLeadToOutbox } from "@lib/leads/outbox";
 import { hasHoneypotValue, isSuspiciousSubmitSpeed, leadFormSchema } from "@lib/leads/schema";
 import {
@@ -163,6 +178,111 @@ export async function handleLeadFormPost(
     };
   } catch (error) {
     if (error instanceof LeadSubmissionError) {
+      return createFormError(error.message, 400);
+    }
+
+    throw error;
+  }
+}
+
+export async function handleConfiguratorFormPost(
+  formData: FormData,
+  request: Request
+): Promise<LeadFormState<ConfiguratorLeadActionResult>> {
+  const parsed = configuratorFormSchema.safeParse(formDataToConfiguratorInput(formData));
+
+  if (!parsed.success) {
+    return createFormError(parsed.error.issues[0]?.message ?? "Проверьте поля формы.", 400);
+  }
+
+  const input = parsed.data;
+
+  if (hasConfiguratorHoneypotValue(input) || isSuspiciousConfiguratorSubmitSpeed(input)) {
+    await trackServerEvent({
+      name: "configurator_lead_spam_blocked",
+      sourcePath: input.sourcePath
+    });
+
+    return createFormError(
+      "Заявку не удалось отправить. Обновите страницу и попробуйте ещё раз.",
+      400
+    );
+  }
+
+  const clientKey = hashRateLimitKey(`${getClientIp(request.headers)}:${input.phone}:configurator`);
+  const rateLimit = checkRateLimit(clientKey);
+
+  if (!rateLimit.allowed) {
+    return createFormError(
+      `Слишком много отправок подряд. Попробуйте ещё раз примерно через ${Math.ceil(
+        rateLimit.retryAfterSeconds / 60
+      )}\u00a0мин.`,
+      429
+    );
+  }
+
+  try {
+    const catalog = await getConfiguratorCatalog();
+    const lead = buildConfiguratorSubmission({
+      input,
+      catalog,
+      userAgent: request.headers.get("user-agent")
+    });
+    const delivery = await Promise.all([
+      sendLeadToCrm(lead),
+      sendLeadToTelegram(lead),
+      sendLeadToEmail(lead)
+    ]);
+    const shouldSaveToOutbox =
+      delivery.some((result) => result.status === "failed") ||
+      delivery.every((result) => result.status === "skipped");
+    const outboxResult = shouldSaveToOutbox
+      ? await saveLeadToOutbox(lead, delivery)
+      : createSkippedOutboxResult();
+    const allDelivery = [...delivery, outboxResult];
+
+    if (!allDelivery.some((result) => result.status === "sent")) {
+      await trackServerEvent({
+        name: "configurator_lead_delivery_failed",
+        leadId: lead.id,
+        serviceInterest: lead.service.id,
+        sourcePath: lead.sourcePath,
+        delivery: summarizeDelivery(allDelivery)
+      });
+
+      return createFormError(
+        "Заявку не удалось надёжно сохранить или отправить. Пожалуйста, попробуйте ещё раз.",
+        500
+      );
+    }
+
+    await trackServerEvent({
+      name: "configurator_lead_submitted",
+      leadId: lead.id,
+      serviceInterest: lead.service.id,
+      sourcePath: lead.sourcePath,
+      delivery: summarizeDelivery(allDelivery)
+    });
+
+    const deliveryMode = delivery.some((result) => result.status === "sent") ? "sent" : "reserved";
+
+    return {
+      status: 200,
+      data: {
+        success: true,
+        leadId: lead.id,
+        message:
+          deliveryMode === "sent"
+            ? "Заявка принята и отправлена в отдел продаж."
+            : "Заявка принята и сохранена в серверный резерв до настройки CRM или Telegram.",
+        serviceTitle: lead.service.title,
+        monthlyTotal: lead.configuration.monthlyTotal,
+        oneTimeTotal: lead.configuration.oneTimeTotal,
+        deliveryMode
+      }
+    };
+  } catch (error) {
+    if (error instanceof ConfiguratorValidationError) {
       return createFormError(error.message, 400);
     }
 
@@ -412,6 +532,10 @@ function formDataToLeadInput(formData: FormData): Record<string, unknown> {
     address: [city && city !== "manual" ? city : "", address].filter(Boolean).join(", "),
     options: formData.getAll("options").map(formValueToString).filter(Boolean)
   };
+}
+
+function formDataToConfiguratorInput(formData: FormData): Record<string, unknown> {
+  return formDataToRecord(formData);
 }
 
 function formDataToBusinessLeadInput(formData: FormData): Record<string, unknown> {

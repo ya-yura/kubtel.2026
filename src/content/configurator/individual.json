@@ -1,0 +1,743 @@
+{
+  "title": "Конфигуратор услуг для физических лиц",
+  "slug": "individual",
+  "updatedAt": "2026-07-16",
+  "sourceNote": "Цены, состав каналов, ссылки на приложения и документы перенесены с действующих страниц kubtel.ru/individual/configurator/, /individual/tv/ и /individual/cctv/. Новые поля добавляются в массив fields без изменений компонента.",
+  "services": [
+    {
+      "id": "internet",
+      "tabLabel": "Интернет",
+      "title": "Домашний интернет",
+      "description": "Выберите скорость и сценарий подключения. Для частного дома можно добавить подключение по PON, роутер — купить или взять в аренду.",
+      "eyebrow": "Доступ в сеть Интернет",
+      "notes": [
+        "Тарифы 100, 200 и 300 Мбит/с доступны для квартиры и частного дома.",
+        "Проверка адреса и окончательные условия подключения выполняются менеджером после заявки."
+      ],
+      "fields": [
+        {
+          "id": "internet-plan",
+          "label": "Тариф интернета",
+          "type": "select",
+          "required": true,
+          "defaultValue": "internet-100",
+          "choices": [
+            {
+              "id": "internet-100",
+              "label": "Интернет 100",
+              "monthlyPrice": 500,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "internet-100-house",
+              "label": "Интернет 100 (частный дом)",
+              "monthlyPrice": 890,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "internet-100-tv",
+              "label": "Интернет 100 + ТВ",
+              "monthlyPrice": 600,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "internet-100-tv-house",
+              "label": "Интернет 100 + ТВ (частный дом)",
+              "monthlyPrice": 990,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "internet-100-cinema",
+              "label": "Интернет 100 + ТВ + Кино",
+              "monthlyPrice": 800,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "internet-100-cinema-house",
+              "label": "Интернет 100 + ТВ + Кино (частный дом)",
+              "monthlyPrice": 1200,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "internet-200",
+              "label": "Интернет 200",
+              "monthlyPrice": 600,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "internet-200-house",
+              "label": "Интернет 200 (частный дом)",
+              "monthlyPrice": 990,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "internet-200-tv",
+              "label": "Интернет 200 + ТВ",
+              "monthlyPrice": 700,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "internet-200-tv-house",
+              "label": "Интернет 200 + ТВ (частный дом)",
+              "monthlyPrice": 1100,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "internet-200-cinema",
+              "label": "Интернет 200 + ТВ + Кино",
+              "monthlyPrice": 900,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "internet-200-cinema-house",
+              "label": "Интернет 200 + ТВ + Кино (частный дом)",
+              "monthlyPrice": 1300,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "internet-300",
+              "label": "Интернет 300",
+              "monthlyPrice": 700,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "internet-300-house",
+              "label": "Интернет 300 (частный дом)",
+              "monthlyPrice": 1200,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "internet-300-tv",
+              "label": "Интернет 300 + ТВ",
+              "monthlyPrice": 800,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "internet-300-tv-house",
+              "label": "Интернет 300 + ТВ (частный дом)",
+              "monthlyPrice": 1300,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "internet-300-cinema",
+              "label": "Интернет 300 + ТВ + Кино",
+              "monthlyPrice": 1000,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "internet-300-cinema-house",
+              "label": "Интернет 300 + ТВ + Кино (частный дом)",
+              "monthlyPrice": 1500,
+              "oneTimePrice": 0
+            }
+          ]
+        },
+        {
+          "id": "house-connection",
+          "label": "Подключение в частный дом",
+          "type": "checkbox",
+          "help": "PON-комплект: розетки, оптический патч-корд, ONU и расходные материалы.",
+          "monthlyPrice": 0,
+          "oneTimePrice": 4990
+        },
+        {
+          "id": "internet-router",
+          "label": "Роутер",
+          "type": "radio",
+          "required": true,
+          "defaultValue": "router-none",
+          "choices": [
+            { "id": "router-none", "label": "Свой роутер", "monthlyPrice": 0, "oneTimePrice": 0 },
+            {
+              "id": "router-rent",
+              "label": "Аренда роутера",
+              "description": "Добавляется ежемесячно",
+              "monthlyPrice": 150,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "router-snr-md2",
+              "label": "Маршрутизатор SNR MD2 — купить",
+              "monthlyPrice": 0,
+              "oneTimePrice": 2300
+            },
+            {
+              "id": "router-snr-advance",
+              "label": "Wi-Fi роутер SNR ADVANCE AC22 — купить",
+              "monthlyPrice": 0,
+              "oneTimePrice": 4000
+            }
+          ]
+        },
+        {
+          "id": "static-ip",
+          "label": "Статический IP",
+          "type": "counter",
+          "unit": "шт.",
+          "min": 0,
+          "max": 10,
+          "defaultValue": 0,
+          "monthlyPrice": 300,
+          "oneTimePrice": 0
+        },
+        {
+          "id": "field-work",
+          "label": "Выездные работы",
+          "type": "checkbox",
+          "help": "Разовая услуга по действующему прайсу.",
+          "monthlyPrice": 0,
+          "oneTimePrice": 500
+        }
+      ]
+    },
+    {
+      "id": "tv",
+      "tabLabel": "Телевидение",
+      "title": "Интерактивное ТВ",
+      "description": "Базовый пакет из 177 каналов, дополнительные пакеты, кинотеатры START и PREMIER, просмотр на нескольких устройствах и приставка.",
+      "eyebrow": "Интерактивное ТВ",
+      "notes": [
+        "Одна учётная запись доступна на 3–5 устройствах в зависимости от условия подключения.",
+        "Если интернет Kubtel уже подключён, укажите номер договора в комментарии к заявке."
+      ],
+      "fields": [
+        {
+          "id": "tv-plan",
+          "label": "Тариф ТВ",
+          "type": "select",
+          "required": true,
+          "defaultValue": "tv-basic",
+          "choices": [
+            {
+              "id": "tv-basic",
+              "label": "Базовый пакет — 177 каналов",
+              "monthlyPrice": 189,
+              "oneTimePrice": 0
+            },
+            { "id": "tv-mix", "label": "Микс HD", "monthlyPrice": 289, "oneTimePrice": 0 }
+          ]
+        },
+        {
+          "id": "tv-addons",
+          "label": "Дополнительные пакеты",
+          "type": "checkbox",
+          "multiple": true,
+          "choices": [
+            { "id": "tv-cinema", "label": "Настрой кино", "monthlyPrice": 319, "oneTimePrice": 0 },
+            {
+              "id": "tv-premier-sport",
+              "label": "Матч! Премьер",
+              "monthlyPrice": 299,
+              "oneTimePrice": 0
+            },
+            { "id": "tv-football", "label": "Матч! Футбол", "monthlyPrice": 380, "oneTimePrice": 0 }
+          ]
+        },
+        {
+          "id": "tv-device",
+          "label": "Устройство для ТВ",
+          "type": "radio",
+          "required": true,
+          "defaultValue": "tv-device-own",
+          "choices": [
+            {
+              "id": "tv-device-own",
+              "label": "Smart TV или своя приставка",
+              "monthlyPrice": 0,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "tv-device-rent",
+              "label": "Аренда ТВ-приставки",
+              "description": "Добавляется к заявке как отдельное поле услуги",
+              "monthlyPrice": 150,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "tv-device-buy",
+              "label": "ТВ-приставка 4K IPTV Vermax UHD300X — купить",
+              "monthlyPrice": 0,
+              "oneTimePrice": 4000
+            }
+          ]
+        },
+        {
+          "id": "tv-devices",
+          "label": "Количество устройств просмотра",
+          "type": "counter",
+          "unit": "устр.",
+          "min": 3,
+          "max": 5,
+          "defaultValue": 3,
+          "monthlyPrice": 0,
+          "oneTimePrice": 0
+        }
+      ]
+    },
+    {
+      "id": "cctv",
+      "tabLabel": "Видеонаблюдение",
+      "title": "Kubtel Watcher",
+      "description": "Облачное видеонаблюдение с онлайн-просмотром, архивом, веб-клиентом и приложениями. Не нужен локальный видеорегистратор или сервер.",
+      "eyebrow": "Облачное видеонаблюдение",
+      "notes": [
+        "Онлайн-просмотр начинается от 150 рублей в месяц.",
+        "При оплате услуги на год действует скидка 10% — менеджер подтвердит условия в заявке."
+      ],
+      "fields": [
+        {
+          "id": "cctv-access",
+          "label": "Режим просмотра",
+          "type": "radio",
+          "required": true,
+          "defaultValue": "cctv-online",
+          "choices": [
+            {
+              "id": "cctv-online",
+              "label": "Онлайн-просмотр без записи",
+              "monthlyPrice": 150,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "cctv-archive",
+              "label": "Онлайн-просмотр и архив",
+              "monthlyPrice": 150,
+              "oneTimePrice": 0
+            }
+          ]
+        },
+        {
+          "id": "cctv-cameras",
+          "label": "Количество записываемых камер",
+          "type": "counter",
+          "unit": "кам.",
+          "min": 1,
+          "max": 40,
+          "defaultValue": 1,
+          "monthlyPrice": 0,
+          "oneTimePrice": 0
+        },
+        {
+          "id": "cctv-archive",
+          "label": "Срок хранения записей",
+          "type": "select",
+          "required": true,
+          "defaultValue": "archive-none",
+          "choices": [
+            { "id": "archive-none", "label": "Без архива", "monthlyPrice": 0, "oneTimePrice": 0 },
+            { "id": "archive-3", "label": "Архив 3 дня", "monthlyPrice": 300, "oneTimePrice": 0 },
+            { "id": "archive-7", "label": "Архив 7 дней", "monthlyPrice": 500, "oneTimePrice": 0 },
+            {
+              "id": "archive-14",
+              "label": "Архив 14 дней",
+              "monthlyPrice": 600,
+              "oneTimePrice": 0
+            },
+            { "id": "archive-30", "label": "Архив 30 дней", "monthlyPrice": 800, "oneTimePrice": 0 }
+          ]
+        },
+        {
+          "id": "cctv-dome",
+          "label": "Камеры Kubtel.Dome",
+          "type": "counter",
+          "unit": "шт.",
+          "min": 0,
+          "max": 10,
+          "defaultValue": 0,
+          "oneTimePrice": 6500,
+          "monthlyPrice": 0
+        },
+        {
+          "id": "cctv-bullet",
+          "label": "Камеры Kubtel.Bullet",
+          "type": "counter",
+          "unit": "шт.",
+          "min": 0,
+          "max": 10,
+          "defaultValue": 0,
+          "oneTimePrice": 6500,
+          "monthlyPrice": 0
+        }
+      ]
+    }
+  ],
+  "tv": {
+    "channelCount": 177,
+    "channelGroups": [
+      {
+        "id": "information",
+        "title": "Информационные",
+        "channels": [
+          "БелРос",
+          "РБК",
+          "Красная линия",
+          "Известия",
+          "360",
+          "360 Новости",
+          "Мир 24",
+          "Беларусь 24",
+          "Первый канал",
+          "Первый канал HD",
+          "Россия 1",
+          "Россия 1 HD",
+          "НТВ",
+          "НТВ HD",
+          "Пятый канал",
+          "Пятый канал HD",
+          "Россия 24",
+          "ОТР",
+          "ОТР HD",
+          "ТВ Центр",
+          "Мир",
+          "Мир HD",
+          "Кубань 24",
+          "Краснодар Онлайн",
+          "8 Канал",
+          "Вместе РФ"
+        ]
+      },
+      {
+        "id": "entertainment",
+        "title": "Развлекательные",
+        "channels": [
+          "Точка ТВ",
+          "Авто 24",
+          "Охота и рыбалка",
+          "Пёс и Ко",
+          "2x2",
+          "Ювелирочка",
+          "7ТВ",
+          "Охотник и рыболов HD",
+          "Телекафе",
+          "Лапки LIVE",
+          "НТВ Стиль",
+          "Живи активно",
+          "Sumiko",
+          "Home 4К",
+          "Русский экстрим",
+          "Сарафан",
+          "Патриот",
+          "Рен ТВ",
+          "Рен ТВ HD",
+          "СТС",
+          "СТС HD",
+          "Домашний",
+          "Домашний HD",
+          "ТВ3",
+          "ТВ3 HD",
+          "Пятница",
+          "Пятница HD",
+          "Звезда",
+          "ТНТ",
+          "ТНТ HD",
+          "Ю ТВ",
+          "Че",
+          "ТНТ4",
+          "Суббота",
+          "Драйв",
+          "Ювелирочка",
+          "Shopping Live"
+        ]
+      },
+      {
+        "id": "kids",
+        "title": "Детские",
+        "channels": [
+          "Уникум",
+          "Смайлик ТВ",
+          "Детский Мир",
+          "О!",
+          "Рыжий",
+          "Мультиландия",
+          "FamilyJam HD",
+          "Baby Time",
+          "Солнце",
+          "Киномульт",
+          "Мульт",
+          "Мультимузыка",
+          "Ani",
+          "Карусель",
+          "В гостях у сказки"
+        ]
+      },
+      {
+        "id": "movies",
+        "title": "Кино и сериалы",
+        "channels": [
+          "Еврокино",
+          "Иллюзион+",
+          "Русский иллюзион",
+          "Наш Кинопоказ",
+          "Феникс+ кино",
+          "Сапфир",
+          "СТС Love",
+          "Кинеко",
+          "Киноман",
+          "TV1000",
+          "TV1000 Action",
+          "TV1000 Русское кино",
+          "Блокбастер",
+          "Хит",
+          "Победа",
+          "Дом Кино Премиум HD",
+          "KinoJam 1 HD",
+          "KinoJam 2 HD",
+          "DetectiveJam HD",
+          "НТВ Хит",
+          "НТВ Сериал",
+          "Дом кино",
+          "Синема",
+          "Мосфильм. Золотая коллекция",
+          "FAN",
+          "Русский Роман",
+          "Русский бестселлер",
+          "Русский детектив",
+          "Т 24",
+          "Комедия",
+          "НСТВ",
+          "Start World",
+          "Start Air",
+          "TV1000 Novella",
+          "Ретро ТВ",
+          "Индийское кино",
+          "Киносерия",
+          "Кинокомедия",
+          "Киномикс",
+          "Киноужас",
+          "Bollywood"
+        ]
+      },
+      {
+        "id": "educational",
+        "title": "Познавательные",
+        "channels": [
+          "Зоопарк",
+          "Психология 21",
+          "RTG",
+          "Оружие",
+          "Бобёр",
+          "TERRA",
+          "Точка отрыва",
+          "Загородный",
+          "Телепутешествия",
+          "Зоо ТВ",
+          "Da Vinci",
+          "viju Nature",
+          "viju Explore",
+          "viju History",
+          "Поехали",
+          "Ключ ТВ",
+          "Время: далекое и близкое",
+          "НТВ Право",
+          "RTG Int",
+          "Живая природа",
+          "Глазами туриста",
+          "Глазами туриста 4К",
+          "Моя Планета",
+          "Живая Планета",
+          "История",
+          "В мире животных",
+          "Россия К",
+          "Спас",
+          "Усадьба",
+          "The Explorers",
+          "FoodTime"
+        ]
+      },
+      {
+        "id": "sport",
+        "title": "Спорт",
+        "channels": [
+          "Мяч",
+          "Хоккей",
+          "Спорт",
+          "Волейбол",
+          "Футбол",
+          "viju Sport",
+          "FightClub",
+          "Матч ТВ",
+          "Матч ТВ HD",
+          "МАТЧ! Страна HD",
+          "Матч! Игра HD",
+          "Матч! Боец HD",
+          "МАТЧ! Арена HD",
+          "Мир Баскетбола"
+        ]
+      },
+      {
+        "id": "music",
+        "title": "Музыка",
+        "channels": [
+          "RuTV",
+          "FON MUSIC",
+          "Bridge TV Hits",
+          "Bridge TV",
+          "Bridge TV Русский хит",
+          "Europa plus TV HD",
+          "Bridge TV Classic",
+          "Музыка Первого",
+          "Муз ТВ"
+        ]
+      },
+      {
+        "id": "adult",
+        "title": "Для взрослых",
+        "channels": ["Temptation TV HD", "Red Lips HD", "Brazzers TV", "Русская ночь"]
+      }
+    ],
+    "appLinks": [
+      {
+        "label": "RuStore",
+        "platform": "Android",
+        "href": "https://www.rustore.ru/catalog/app/im.micro.dimm.tv.stb.kubtel",
+        "external": true
+      },
+      {
+        "label": "Google Play",
+        "platform": "Android",
+        "href": "https://play.google.com/store/apps/details?id=im.micro.dimm.tv.stb.kubtel",
+        "external": true
+      },
+      {
+        "label": "GetApps",
+        "platform": "Xiaomi",
+        "href": "https://global.app.mi.com/details?lo=RU&la=ru_RU&id=im.micro.dimm.tv.stb.kubtel",
+        "external": true
+      },
+      {
+        "label": "Приложение для телевизоров и приставок (.apk)",
+        "platform": "Android TV",
+        "href": "https://kubtel.ru/files/KubtelTV.apk",
+        "external": true
+      },
+      {
+        "label": "Приложение для мобильных устройств (.apk)",
+        "platform": "Android",
+        "href": "https://kubtel.ru/files/KubtelTVmobile.apk",
+        "external": true
+      }
+    ],
+    "offers": [
+      {
+        "label": "Публичная оферта — доступ к цифровому контенту",
+        "href": "https://kubtel.ru/files/file/tv_offer.pdf"
+      },
+      {
+        "label": "Условия оказания услуг телевизионных каналов",
+        "href": "https://kubtel.ru/files/file/Условия оказания услуг связи.doc"
+      },
+      {
+        "label": "Образец договора на оказание услуг связи",
+        "href": "https://kubtel.ru/files/file/Kubtel_dogovor-blank.pdf"
+      },
+      { "label": "Условия START", "href": "https://start.ru/legal/terms_of_use" },
+      { "label": "Условия PREMIER", "href": "https://premier.one/ligal/agreement" }
+    ],
+    "setupSteps": [
+      "Скачайте приложение Кубтел ТВ на телевизор, приставку или мобильное устройство.",
+      "Введите в приложении логин и пароль, которые выдаёт Кубтел.",
+      "Для управления пакетами и оплатой используйте личный кабинет с теми же данными."
+    ],
+    "supportedDevices": [
+      "Samsung Smart TV",
+      "LG Smart TV",
+      "ТВ-приставка",
+      "Android TV",
+      "Android-смартфон"
+    ]
+  },
+  "cctv": {
+    "appLinks": [
+      {
+        "label": "Google Play",
+        "platform": "Android",
+        "href": "https://play.google.com/store/apps/details?id=com.flussonic.watcher.kubtel",
+        "external": true
+      },
+      {
+        "label": "RuStore",
+        "platform": "Android",
+        "href": "https://www.rustore.ru/catalog/app/com.flussonic.watcher.kubtel",
+        "external": true
+      },
+      {
+        "label": "GetApps",
+        "platform": "Xiaomi",
+        "href": "https://global.app.mi.com/details?id=com.flussonic.watcher.kubtel&la=ru_RU&lo=RU",
+        "external": true
+      },
+      {
+        "label": "Kubtel Watcher (.apk)",
+        "platform": "Android",
+        "href": "https://kubtel.ru/files/KubtelWatcher.apk",
+        "external": true
+      }
+    ],
+    "offers": [
+      {
+        "label": "Публичный договор оферты Kubtel Watcher",
+        "href": "https://kubtel.ru/files/file/kubtel_cctv_agreement.pdf"
+      }
+    ],
+    "benefits": [
+      "Записи хранятся в облаке — не нужен отдельный видеорегистратор или сервер.",
+      "Камеры и архив доступны из любой точки, где есть интернет.",
+      "Не требуется статический IP и самостоятельное обслуживание сервера."
+    ],
+    "setupSteps": [
+      "Выберите режим просмотра, количество камер и глубину архива.",
+      "Для многоквартирного дома проведите собрание собственников и оформите решение протоколом.",
+      "Оставьте заявку — специалист подтвердит монтаж, оборудование и договорные условия."
+    ],
+    "cameraModels": [
+      {
+        "id": "dome",
+        "title": "Kubtel.Dome v2",
+        "price": 6500,
+        "specs": [
+          "1920×1080 FullHD",
+          "ИК-подсветка 20–30 м",
+          "PoE, 12 VDC ± 10%",
+          "Оповещения о движении и потере сигнала"
+        ]
+      },
+      {
+        "id": "bullet",
+        "title": "Kubtel.Bullet v2",
+        "price": 6500,
+        "specs": [
+          "1920×1080 FullHD",
+          "ИК-подсветка 20–30 м",
+          "PoE, 12 VDC ± 10%",
+          "День/ночь и расписание"
+        ]
+      }
+    ]
+  },
+  "internet": {
+    "offers": [
+      {
+        "label": "Условия оказания услуг связи",
+        "href": "https://kubtel.ru/individual/termsofuse"
+      },
+      {
+        "label": "Условия оказания услуг связи (DOC)",
+        "href": "https://kubtel.ru/files/file/Условия оказания услуг связи.doc"
+      },
+      {
+        "label": "Образец договора на оказание услуг связи",
+        "href": "https://kubtel.ru/files/file/Kubtel_dogovor-blank.pdf"
+      }
+    ],
+    "benefits": [
+      "Тариф можно подобрать под квартиру или частный дом.",
+      "Интернет, ТВ, роутер и дополнительные услуги считаются в одном сценарии.",
+      "Стоимость видна до отправки телефона менеджеру."
+    ],
+    "connectionSteps": [
+      "Выберите скорость и дополнительные услуги.",
+      "Укажите адрес, чтобы специалист проверил возможность подключения.",
+      "После расчёта оставьте телефон — адрес и детали уточняются уже в разговоре."
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+---
+import type { OfferLink } from "@models/configurator";
+
+type Props = {
+  links: OfferLink[];
+  title?: string;
+};
+
+const { links, title = "Оферты и документы" } = Astro.props;
+---
+
+<section class="resource-panel offer-links-panel" aria-label={title}>
+  <div class="resource-panel-head">
+    <p class="eyebrow">Документы</p>
+    <h2>{title}</h2>
+    <p>Официальные условия остаются доступны рядом с подключением и ссылками на приложения.</p>
+  </div>
+  <ul class="resource-link-list">
+    {
+      links.map((link) => (
+        <li>
+          <a href={link.href} target="_blank" rel="noopener noreferrer">
+            {link.label}
+            <span aria-hidden="true">↗</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>

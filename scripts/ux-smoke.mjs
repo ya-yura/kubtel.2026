@@ -415,7 +415,7 @@ async function checkTariffCtaPath(client, sessionId) {
     client,
     sessionId,
     `(() => {
-      const link = document.querySelector('a[href*="/connect/?tariff="]');
+      const link = document.querySelector('a[href*="/individual/configurator/?service=internet"]');
       if (!link) return false;
       link.click();
       return true;
@@ -426,14 +426,14 @@ async function checkTariffCtaPath(client, sessionId) {
   await assertExpression(
     client,
     sessionId,
-    `location.pathname === ${JSON.stringify(routePath("/connect/"))} && location.search.includes("tariff=")`,
-    "tariff CTA opened connect page with tariff query"
+    `location.pathname === ${JSON.stringify(routePath("/individual/configurator/"))} && location.search.includes("service=internet")`,
+    "tariff CTA opened the residential configurator"
   );
   await assertExpression(
     client,
     sessionId,
-    `document.querySelector('#address-check') !== null`,
-    "connect page contains address form after tariff CTA"
+    `document.querySelector('[data-service-configurator]') !== null`,
+    "configurator page contains the service calculator after tariff CTA"
   );
   results.push("tariff CTA path ok");
 }
@@ -862,7 +862,10 @@ async function submitLeadForm(client, sessionId) {
     client,
     sessionId,
     `(() => {
-      const form = document.querySelector("#lead-form");
+      const openButton = document.querySelector("[data-open-configurator-lead]");
+      if (!openButton) return "missing-configurator";
+      openButton.click();
+      const form = document.querySelector("[data-configurator-lead-form]");
       if (!form) return "missing-form";
       const suffix = String(Date.now()).slice(-4);
       form.querySelector('input[name="formStartedAt"]').value = String(Date.now() - 5000);
@@ -886,12 +889,12 @@ async function submitLeadForm(client, sessionId) {
     client,
     sessionId,
     `(() => {
-      const form = document.querySelector("#lead-form");
+      const form = document.querySelector("[data-configurator-lead-form]");
       const text = document.querySelector(".form-status")?.innerText ?? "";
       const isStaticPreview = form?.closest("[data-static-preview='true']") !== null;
       if (text.includes("Демо-заявка")) return false;
       return isStaticPreview
-        ? text.includes("Заявка не отправлена с этого адреса")
+        ? text.includes("предпросмотра")
         : text.includes("Заявка принята");
     })()`,
     "lead form shows real server success or static-preview error"
@@ -900,12 +903,12 @@ async function submitLeadForm(client, sessionId) {
     client,
     sessionId,
     `(() => {
-      const form = document.querySelector("#lead-form");
+      const form = document.querySelector("[data-configurator-lead-form]");
       const text = document.querySelector(".form-status")?.innerText ?? "";
       const isStaticPreview = form?.closest("[data-static-preview='true']") !== null;
       return isStaticPreview
-        ? text.includes("8 800 222-17-30") || text.includes("kubtel@kubtel.ru")
-        : text.includes("KBT-");
+        ? text.includes("Выбранный расчёт")
+        : text.includes("KBC-");
     })()`,
     "lead form confirms production lead id or direct static-preview contact"
   );

@@ -1,0 +1,509 @@
+---
+import { SITE } from "@config/site";
+import { formatRubles } from "@lib/format";
+import { calculateConfiguratorPrice } from "@lib/configurator/calculator";
+import ConfiguratorField from "@components/ui/ConfiguratorField.astro";
+import type {
+  ConfiguratorCatalog,
+  ConfiguratorFieldValue,
+  ConfiguratorService
+} from "@models/configurator";
+import type { ConfiguratorLeadActionResult } from "@lib/leads/configurator-submission";
+
+type ActionResultLike = {
+  data?: ConfiguratorLeadActionResult;
+  error?: { message?: string };
+};
+
+type Props = {
+  catalog: ConfiguratorCatalog;
+  initialService?: string | null;
+  singleService?: string | null;
+  actionResult?: ActionResultLike;
+  staticPreview?: boolean;
+  formAction?: string;
+};
+
+const {
+  catalog,
+  initialService = null,
+  singleService = null,
+  actionResult,
+  staticPreview = false,
+  formAction = Astro.url.pathname
+} = Astro.props;
+
+const services = singleService
+  ? catalog.services.filter((service) => service.id === singleService)
+  : catalog.services;
+const defaultService = services.find((service) => service.id === initialService) ?? services[0];
+const actionData = actionResult?.data;
+const actionError = actionResult?.error;
+const formStartedAt = Date.now().toString();
+const defaultValues = defaultService ? getDefaultValues(defaultService) : {};
+const defaultPricing = defaultService
+  ? calculateConfiguratorPrice(catalog, defaultService.id, defaultValues)
+  : null;
+
+function getDefaultValues(service: ConfiguratorService): Record<string, ConfiguratorFieldValue> {
+  return Object.fromEntries(
+    service.fields.map((field) => {
+      if (field.type === "counter") {
+        return [field.id, field.defaultValue ?? field.min ?? 0];
+      }
+
+      if (field.type === "checkbox" && !field.choices?.length) {
+        return [field.id, field.defaultValue === true];
+      }
+
+      if (field.multiple) {
+        return [
+          field.id,
+          field.choices?.filter((choice) => choice.default).map((choice) => choice.id) ?? []
+        ];
+      }
+
+      return [
+        field.id,
+        field.defaultValue ??
+          field.choices?.find((choice) => choice.default)?.id ??
+          field.choices?.[0]?.id ??
+          ""
+      ];
+    })
+  );
+}
+---
+
+<section
+  class="service-configurator section-pad"
+  id="configurator"
+  data-service-configurator
+  data-static-preview={staticPreview ? "true" : undefined}
+  data-initial-service={defaultService?.id}
+>
+  <div class="configurator-heading">
+    <div>
+      <p class="eyebrow">Подобрать решение</p>
+      <h2>{catalog.title}</h2>
+      <p>
+        Сначала выберите услуги и увидите ориентир по стоимости. Телефон нужен только в конце —
+        когда уже понятно, что именно подключать.
+      </p>
+    </div>
+    <div class="configurator-promise">
+      <strong>Расчёт перед звонком</strong>
+      <span>Услуги, оборудование и разовые платежи собраны в одном месте.</span>
+    </div>
+  </div>
+
+  {
+    !singleService && (
+      <div class="configurator-service-tabs" role="tablist" aria-label="Выберите услугу">
+        {services.map((service) => (
+          <button
+            type="button"
+            role="tab"
+            aria-selected={service.id === defaultService?.id ? "true" : "false"}
+            data-config-service-tab={service.id}
+          >
+            <span>{service.eyebrow}</span>
+            <strong>{service.tabLabel}</strong>
+          </button>
+        ))}
+      </div>
+    )
+  }
+
+  <div class="configurator-workspace">
+    <div class="configurator-service-panels">
+      {
+        services.map((service) => (
+          <div
+            class="configurator-service-panel"
+            data-config-service-panel={service.id}
+            hidden={service.id !== defaultService?.id}
+          >
+            <div class="configurator-service-intro">
+              <p class="eyebrow">{service.eyebrow}</p>
+              <h3>{service.title}</h3>
+              <p>{service.description}</p>
+            </div>
+            <div class="config-fields">
+              {service.fields.map((field) => (
+                <ConfiguratorField field={field} serviceId={service.id} />
+              ))}
+            </div>
+            <ul class="config-notes">
+              {service.notes.map((note) => (
+                <li>{note}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <aside class="configurator-summary" aria-label="Расчёт стоимости">
+      <p class="eyebrow">Ваш расчёт</p>
+      <h3 data-config-service-title>{defaultService?.title}</h3>
+      <div class="config-total-block">
+        <span>Абонентская плата</span>
+        <strong
+          ><span data-config-monthly>{formatRubles(defaultPricing?.monthlyTotal ?? 0)}</span> ₽<small
+            >/мес.</small
+          ></strong
+        >
+      </div>
+      <div class="config-total-block is-one-time">
+        <span>Единовременный платёж</span>
+        <strong
+          ><span data-config-once>{formatRubles(defaultPricing?.oneTimeTotal ?? 0)}</span> ₽</strong
+        >
+      </div>
+      <ul class="config-summary-lines" data-config-summary-lines>
+        {
+          defaultPricing?.lines.map((line) => (
+            <li>
+              <span>{line.label}</span>
+              <strong>
+                {line.valueLabel}
+                {line.monthlyPrice ? ` · ${formatRubles(line.monthlyPrice)} ₽/мес.` : ""}
+                {line.oneTimePrice ? ` · ${formatRubles(line.oneTimePrice)} ₽ разово` : ""}
+              </strong>
+            </li>
+          ))
+        }
+      </ul>
+      <button type="button" class="card-action" data-open-configurator-lead>
+        Оставить заявку по расчёту
+      </button>
+      <p class="config-summary-note">Цены и возможность подключения подтверждаются по адресу.</p>
+    </aside>
+  </div>
+
+  <form
+    class="configurator-lead-form"
+    id="configurator-lead-form"
+    method="post"
+    action={staticPreview ? "#configurator" : formAction}
+    data-configurator-lead-form
+    hidden={!actionData && !actionError}
+  >
+    <div class="configurator-form-heading">
+      <p class="eyebrow">Финальный шаг</p>
+      <h3>Оставьте контакты после расчёта</h3>
+      <p>
+        Менеджер увидит выбранные услуги и свяжется с вами, чтобы проверить адрес и подтвердить
+        условия.
+      </p>
+    </div>
+    {
+      actionData && (
+        <div
+          class="form-status is-success"
+          id="configurator-lead-status"
+          role="status"
+          tabindex="-1"
+        >
+          <strong>{actionData.message}</strong>
+          <span>Номер заявки: {actionData.leadId}</span>
+          <span>
+            {actionData.serviceTitle}: {formatRubles(actionData.monthlyTotal)} ₽/мес. +{" "}
+            {formatRubles(actionData.oneTimeTotal)} ₽ разово.
+          </span>
+        </div>
+      )
+    }
+    {
+      actionError && (
+        <div class="form-status is-error" id="configurator-lead-status" role="alert" tabindex="-1">
+          <strong>Заявка не отправлена</strong>
+          <span>{actionError.message ?? "Проверьте телефон и согласие на обработку данных."}</span>
+        </div>
+      )
+    }
+    <input type="hidden" name="service" data-config-service-input value={defaultService?.id} />
+    <input type="hidden" name="configuration" data-config-configuration-input />
+    <input type="hidden" name="formStartedAt" value={formStartedAt} />
+    <input type="hidden" name="sourcePath" value={Astro.url.pathname} />
+    <label class="visually-hidden">
+      <span>Оставьте это поле пустым</span>
+      <input name="website" type="text" tabindex="-1" autocomplete="off" />
+    </label>
+    <div class="configurator-contact-grid">
+      <label>
+        <span>Телефон для связи</span>
+        <input
+          name="phone"
+          type="tel"
+          autocomplete="tel"
+          inputmode="tel"
+          placeholder="+7"
+          required
+        />
+      </label>
+      <label>
+        <span>Имя, если удобно</span>
+        <input name="name" type="text" autocomplete="name" placeholder="Как к вам обращаться" />
+      </label>
+      <label>
+        <span>Email, если нужен ответ письмом</span>
+        <input name="email" type="email" autocomplete="email" placeholder="name@example.com" />
+      </label>
+      <label>
+        <span>Адрес или населённый пункт</span>
+        <input
+          name="address"
+          type="text"
+          autocomplete="street-address"
+          placeholder="Улица, дом, квартира"
+        />
+      </label>
+    </div>
+    <label class="consent-check">
+      <input name="consent" type="checkbox" value="true" required />
+      <span>
+        Согласен на обработку персональных данных и ознакомлен с
+        <a href={SITE.privacyUrl} target="_blank" rel="noopener noreferrer">политикой ПД</a>.
+      </span>
+    </label>
+    <div class="configurator-form-actions">
+      <button type="submit">Отправить заявку</button>
+      <button type="button" class="text-button" data-close-configurator-lead
+        >Вернуться к расчёту</button
+      >
+    </div>
+    <p class="form-note">
+      Телефон появляется только после того, как вы выбрали услуги и увидели стоимость.
+    </p>
+  </form>
+  <script
+    type="application/json"
+    data-config-catalog
+    is:inline
+    set:html={JSON.stringify(catalog)}
+  />
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-service-configurator]").forEach((root) => {
+    const catalogNode = root.querySelector<HTMLScriptElement>("[data-config-catalog]");
+    const catalog = catalogNode?.textContent ? JSON.parse(catalogNode.textContent) : null;
+    const serviceTabs = Array.from(
+      root.querySelectorAll<HTMLButtonElement>("[data-config-service-tab]")
+    );
+    const servicePanels = Array.from(
+      root.querySelectorAll<HTMLElement>("[data-config-service-panel]")
+    );
+    const monthlyNode = root.querySelector<HTMLElement>("[data-config-monthly]");
+    const onceNode = root.querySelector<HTMLElement>("[data-config-once]");
+    const titleNode = root.querySelector<HTMLElement>("[data-config-service-title]");
+    const lineList = root.querySelector<HTMLElement>("[data-config-summary-lines]");
+    const serviceInput = root.querySelector<HTMLInputElement>("[data-config-service-input]");
+    const configurationInput = root.querySelector<HTMLInputElement>(
+      "[data-config-configuration-input]"
+    );
+    const leadForm = root.querySelector<HTMLFormElement>("[data-configurator-lead-form]");
+    let activeService =
+      root.dataset.initialService ?? servicePanels[0]?.dataset.configServicePanel ?? "";
+
+    const money = (value: number) => new Intl.NumberFormat("ru-RU").format(value);
+
+    const getFields = (panel: HTMLElement) => {
+      const values: Record<string, string | number | boolean | string[]> = {};
+      const fields = Array.from(
+        panel.querySelectorAll<HTMLInputElement | HTMLSelectElement>("[data-config-field]")
+      );
+      const grouped = new Map<string, Array<HTMLInputElement | HTMLSelectElement>>();
+
+      fields.forEach((field) => {
+        const fieldId = field.dataset.fieldId ?? "";
+        const items = grouped.get(fieldId) ?? [];
+        items.push(field);
+        grouped.set(fieldId, items);
+      });
+
+      grouped.forEach((items, fieldId) => {
+        const first = items[0];
+        const type = first.dataset.fieldType;
+
+        if (type === "counter") {
+          values[fieldId] = Number((first as HTMLInputElement).value || 0);
+          return;
+        }
+
+        if (type === "checkbox") {
+          const checked = items.filter((item) => (item as HTMLInputElement).checked);
+          values[fieldId] =
+            first.dataset.fieldMultiple === "true"
+              ? checked.map((item) => (item as HTMLInputElement).value)
+              : Boolean(checked[0]);
+          return;
+        }
+
+        if (type === "radio") {
+          values[fieldId] =
+            (
+              items.find((item) => (item as HTMLInputElement).checked) as
+                | HTMLInputElement
+                | undefined
+            )?.value ?? "";
+          return;
+        }
+
+        values[fieldId] = (first as HTMLSelectElement).value;
+      });
+
+      return values;
+    };
+
+    const calculate = () => {
+      const panel = servicePanels.find((item) => item.dataset.configServicePanel === activeService);
+      if (!panel || !catalog) return;
+      const service = catalog.services.find((item: any) => item.id === activeService);
+      if (!service) return;
+      const fields = getFields(panel);
+      const lines: Array<{ label: string; valueLabel: string; monthly: number; once: number }> = [];
+
+      service.fields.forEach((field: any) => {
+        const value = fields[field.id];
+        if (field.type === "counter") {
+          const count = Number(value ?? 0);
+          if (count > 0) {
+            lines.push({
+              label: field.label,
+              valueLabel: `${count}${field.unit ? ` ${field.unit}` : ""}`,
+              monthly: count * (field.monthlyPrice ?? 0),
+              once: count * (field.oneTimePrice ?? 0)
+            });
+          }
+          return;
+        }
+
+        if (field.type === "checkbox" && !field.choices?.length) {
+          if (value === true) {
+            lines.push({
+              label: field.label,
+              valueLabel: "Да",
+              monthly: field.monthlyPrice ?? 0,
+              once: field.oneTimePrice ?? 0
+            });
+          }
+          return;
+        }
+
+        const ids = (field.multiple ? (Array.isArray(value) ? value : []) : [value]).filter(
+          (id): id is string => typeof id === "string" && Boolean(id)
+        );
+        ids.forEach((id) => {
+          const choice = field.choices?.find((item: any) => item.id === id);
+          if (choice) {
+            lines.push({
+              label: field.label,
+              valueLabel: choice.label,
+              monthly: choice.monthlyPrice,
+              once: choice.oneTimePrice
+            });
+          }
+        });
+      });
+
+      const monthly = lines.reduce((total, line) => total + line.monthly, 0);
+      const once = lines.reduce((total, line) => total + line.once, 0);
+      if (monthlyNode) monthlyNode.textContent = money(monthly);
+      if (onceNode) onceNode.textContent = money(once);
+      if (titleNode) titleNode.textContent = service.title;
+      if (lineList) {
+        lineList.replaceChildren(
+          ...lines.map((line) => {
+            const item = document.createElement("li");
+            const label = document.createElement("span");
+            const value = document.createElement("strong");
+            label.textContent = line.label;
+            value.textContent = `${line.valueLabel}${line.monthly ? ` · ${money(line.monthly)} ₽/мес.` : ""}${line.once ? ` · ${money(line.once)} ₽ разово` : ""}`;
+            item.append(label, value);
+            return item;
+          })
+        );
+        if (lines.length === 0) {
+          const item = document.createElement("li");
+          item.textContent = "Выберите параметры — состав появится здесь.";
+          lineList.append(item);
+        }
+      }
+      if (serviceInput) serviceInput.value = activeService;
+      if (configurationInput)
+        configurationInput.value = JSON.stringify({ serviceId: activeService, fields });
+    };
+
+    const selectService = (serviceId: string) => {
+      activeService = serviceId;
+      serviceTabs.forEach((tab) =>
+        tab.setAttribute("aria-selected", String(tab.dataset.configServiceTab === serviceId))
+      );
+      servicePanels.forEach((panel) => {
+        panel.hidden = panel.dataset.configServicePanel !== serviceId;
+      });
+      calculate();
+    };
+
+    serviceTabs.forEach((tab) =>
+      tab.addEventListener("click", () => selectService(tab.dataset.configServiceTab ?? ""))
+    );
+    root
+      .querySelectorAll<HTMLInputElement | HTMLSelectElement>("[data-config-field]")
+      .forEach((field) => {
+        field.addEventListener("input", calculate);
+        field.addEventListener("change", calculate);
+      });
+    root.querySelectorAll<HTMLButtonElement>("[data-config-step]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const input = button.parentElement?.querySelector<HTMLInputElement>(
+          "input[data-config-field]"
+        );
+        if (!input) return;
+        const step = Number(button.dataset.configStep ?? 1);
+        const next = Math.min(
+          Number(input.max || Infinity),
+          Math.max(Number(input.min || 0), Number(input.value || 0) + step)
+        );
+        input.value = String(next);
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+    });
+
+    root
+      .querySelector<HTMLButtonElement>("[data-open-configurator-lead]")
+      ?.addEventListener("click", () => {
+        calculate();
+        if (leadForm) {
+          leadForm.hidden = false;
+          leadForm.querySelector<HTMLInputElement>('input[name="phone"]')?.focus();
+        }
+      });
+    root
+      .querySelector<HTMLButtonElement>("[data-close-configurator-lead]")
+      ?.addEventListener("click", () => {
+        if (leadForm) leadForm.hidden = true;
+      });
+    leadForm?.addEventListener("submit", (event) => {
+      calculate();
+      if (root.dataset.staticPreview !== "true" || !leadForm.checkValidity()) return;
+      event.preventDefault();
+      const status = document.createElement("div");
+      status.className = "form-status is-success";
+      status.setAttribute("role", "status");
+      status.textContent =
+        "В режиме предпросмотра заявка не отправляется. Выбранный расчёт сохранён в форме.";
+      leadForm.prepend(status);
+    });
+
+    if (leadForm && !leadForm.hidden) {
+      leadForm
+        .querySelector<HTMLElement>('[role="status"], [role="alert"]')
+        ?.focus({ preventScroll: true });
+    }
+    selectService(activeService);
+  });
+</script>

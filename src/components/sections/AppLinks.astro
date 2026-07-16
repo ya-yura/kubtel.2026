@@ -1,0 +1,32 @@
+---
+import type { AppLink } from "@models/configurator";
+
+type Props = {
+  links: AppLink[];
+  title?: string;
+};
+
+const { links, title = "Скачать приложение" } = Astro.props;
+---
+
+<section class="resource-panel app-links-panel" aria-label={title}>
+  <div class="resource-panel-head">
+    <p class="eyebrow">Приложения</p>
+    <h2>{title}</h2>
+  </div>
+  <div class="resource-link-grid">
+    {
+      links.map((link) => (
+        <a
+          class="resource-link"
+          href={link.href}
+          target={link.external === false ? undefined : "_blank"}
+          rel={link.external === false ? undefined : "noopener noreferrer"}
+        >
+          <span>{link.platform}</span>
+          <strong>{link.label}</strong>
+        </a>
+      ))
+    }
+  </div>
+</section>

@@ -1,0 +1,117 @@
+---
+import type { ChannelGroup } from "@models/configurator";
+
+type Props = {
+  groups: ChannelGroup[];
+  channelCount: number;
+};
+
+const { groups, channelCount } = Astro.props;
+---
+
+<section class="channel-panel" id="channels" data-channel-list>
+  <div class="section-heading">
+    <p class="eyebrow">Телевидение</p>
+    <h2>Каналы базового пакета ({channelCount})</h2>
+    <p>
+      Один общий список без искусственного деления на пакеты. Найдите канал по названию или
+      категории.
+    </p>
+  </div>
+  <div class="channel-tools">
+    <label class="channel-search">
+      <span>Поиск по каналам</span>
+      <input type="search" placeholder="Например, Матч или кино" data-channel-search />
+    </label>
+    <div class="channel-filters" role="group" aria-label="Фильтр каналов">
+      <button type="button" class="is-active" data-channel-filter="all">Все каналы</button>
+      {
+        groups.map((group) => (
+          <button type="button" data-channel-filter={group.id}>
+            {group.title}
+          </button>
+        ))
+      }
+    </div>
+  </div>
+  <p class="channel-result" data-channel-result aria-live="polite">Показаны все каналы</p>
+  <div class="channel-groups">
+    {
+      groups.map((group) => (
+        <section class="channel-group" data-channel-group={group.id}>
+          <div class="channel-group-head">
+            <h3>{group.title}</h3>
+            <span>{group.channels.length}</span>
+          </div>
+          <ul>
+            {group.channels.map((channel) => (
+              <li
+                data-channel
+                data-channel-category={group.id}
+                data-channel-name={channel.toLocaleLowerCase("ru-RU")}
+              >
+                {channel}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+  <p class="channel-empty" data-channel-empty hidden>
+    Ничего не найдено. Попробуйте другой запрос.
+  </p>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-channel-list]").forEach((root) => {
+    const search = root.querySelector<HTMLInputElement>("[data-channel-search]");
+    const result = root.querySelector<HTMLElement>("[data-channel-result]");
+    const empty = root.querySelector<HTMLElement>("[data-channel-empty]");
+    let activeCategory = "all";
+
+    const update = () => {
+      const query = (search?.value ?? "").trim().toLocaleLowerCase("ru-RU");
+      let visibleCount = 0;
+
+      root.querySelectorAll<HTMLElement>("[data-channel]").forEach((channel) => {
+        const matchesCategory =
+          activeCategory === "all" || channel.dataset.channelCategory === activeCategory;
+        const matchesQuery = !query || (channel.dataset.channelName ?? "").includes(query);
+        const isVisible = matchesCategory && matchesQuery;
+        channel.hidden = !isVisible;
+        visibleCount += isVisible ? 1 : 0;
+      });
+
+      root.querySelectorAll<HTMLElement>("[data-channel-group]").forEach((group) => {
+        group.hidden = group.querySelectorAll("[data-channel]:not([hidden])").length === 0;
+      });
+
+      if (result) {
+        result.textContent = query
+          ? `Найдено каналов: ${visibleCount}`
+          : activeCategory === "all"
+            ? "Показаны все каналы"
+            : `Категория: ${root.querySelector(`[data-channel-filter="${activeCategory}"]`)?.textContent ?? "выбрана"}`;
+      }
+
+      if (empty) {
+        empty.hidden = visibleCount > 0;
+      }
+    };
+
+    search?.addEventListener("input", update);
+    root.querySelectorAll<HTMLButtonElement>("[data-channel-filter]").forEach((button) => {
+      button.addEventListener("click", () => {
+        activeCategory = button.dataset.channelFilter ?? "all";
+        root
+          .querySelectorAll("[data-channel-filter]")
+          .forEach((item) => item.classList.remove("is-active"));
+        button.classList.add("is-active");
+        update();
+      });
+    });
+
+    update();
+  });
+</script>
