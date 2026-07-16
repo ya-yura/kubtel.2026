@@ -275,6 +275,17 @@ async function checkResidentialServicePages(client, sessionId) {
     })()`,
     "TV channel tab reveals the channel list"
   );
+
+  await setViewport(client, sessionId, mobileViewport());
+  for (const path of ["/individual/tv/", "/individual/internet/", "/individual/cctv/"]) {
+    await navigate(client, sessionId, path);
+    await assertExpression(
+      client,
+      sessionId,
+      "document.documentElement.scrollWidth <= window.innerWidth",
+      `${path} has no horizontal overflow on mobile`
+    );
+  }
   results.push("residential service tabs and TV channel list ok");
 }
 

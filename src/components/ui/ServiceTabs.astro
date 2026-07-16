@@ -13,7 +13,12 @@ type Props = {
 const { items, group, selected = items[0]?.id } = Astro.props;
 ---
 
-<div class="service-tabs" role="tablist" aria-label="Разделы услуги" data-content-tabs={group}>
+<div
+  class="ds-tabs service-tabs"
+  role="tablist"
+  aria-label="Разделы услуги"
+  data-content-tabs={group}
+>
   {
     items.map((item) => (
       <button

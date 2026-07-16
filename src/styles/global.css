@@ -3419,33 +3419,49 @@ body.is-readable :focus-visible {
 }
 
 .service-tabs {
-  background: var(--kb-component-card-background);
-  border-bottom: 1px solid var(--kb-component-card-border);
-  display: flex;
-  gap: 0.35rem;
+  border: 1px solid var(--kb-component-card-border);
+  box-shadow: var(--kb-elevation-raised);
+  flex-wrap: nowrap;
+  margin: 0 auto;
+  max-width: var(--kb-layout-content-max-width);
   overflow-x: auto;
-  padding: 0.6rem max(1rem, calc((100vw - var(--kb-layout-content-max-width)) / 2));
-  scrollbar-width: thin;
+  position: sticky;
+  top: var(--kb-component-header-height);
+  z-index: var(--kb-layer-sticky);
 }
 
 .service-tabs button,
 .configurator-service-tabs button,
 .channel-filters button {
   background: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--kb-shape-pill);
+  border: var(--kb-stroke-default) solid transparent;
+  border-radius: var(--kb-shape-control-small);
+  box-shadow: none;
   color: var(--kb-color-text-secondary);
   cursor: pointer;
   font: inherit;
   font-weight: 800;
   min-height: 42px;
   padding: 0.65rem 0.9rem;
+  transform: none;
   white-space: nowrap;
 }
 
 .service-tabs button:hover,
-.service-tabs button:focus-visible,
-.service-tabs button[aria-selected="true"],
+.service-tabs button:focus-visible {
+  background: var(--kb-component-tabs-hover-background);
+  box-shadow: none;
+  transform: none;
+}
+
+.service-tabs button[aria-selected="true"] {
+  background: var(--kb-component-tabs-selected-background);
+  border: var(--kb-stroke-strong) solid var(--kb-component-tabs-selected-border);
+  color: var(--kb-component-tabs-selected-text);
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
 .configurator-service-tabs button:hover,
 .configurator-service-tabs button:focus-visible,
 .configurator-service-tabs button[aria-selected="true"],
