@@ -182,15 +182,17 @@ function getDefaultValues(
       <div class="config-total-block">
         <span>Абонентская плата</span>
         <strong
-          ><span data-config-monthly>{formatRubles(defaultPricing?.monthlyTotal ?? 0)}</span> ₽<small
-            >/мес.</small
-          ></strong
+          ><span class="config-total-value" data-config-monthly
+            >{formatRubles(defaultPricing?.monthlyTotal ?? 0)}</span
+          ><span class="config-currency">₽</span><small>/мес.</small></strong
         >
       </div>
       <div class="config-total-block is-one-time">
         <span>Единовременный платёж</span>
         <strong
-          ><span data-config-once>{formatRubles(defaultPricing?.oneTimeTotal ?? 0)}</span> ₽</strong
+          ><span class="config-total-value" data-config-once
+            >{formatRubles(defaultPricing?.oneTimeTotal ?? 0)}</span
+          ><span class="config-currency">₽</span></strong
         >
       </div>
       <ul class="config-summary-lines" data-config-summary-lines>
@@ -557,3 +559,19 @@ function getDefaultValues(
     selectService(activeService);
   });
 </script>
+
+<style>
+  .config-total-block strong .config-total-value {
+    color: inherit;
+    font-size: inherit;
+  }
+
+  .config-total-block strong .config-currency {
+    color: inherit;
+    font-family: var(--kb-typography-body-family);
+    font-size: 0.68em;
+    font-weight: 800;
+    margin-left: 0.16em;
+    vertical-align: 0.12em;
+  }
+</style>

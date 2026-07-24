@@ -68,4 +68,9 @@ const { items, group, selected = items[0]?.id } = Astro.props;
   .service-tabs {
     margin: var(--kb-spacing-3) auto;
   }
+
+  .service-tabs button,
+  .service-tabs button[aria-selected="true"] {
+    text-decoration: none;
+  }
 </style>
