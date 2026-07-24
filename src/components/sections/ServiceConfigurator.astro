@@ -26,6 +26,15 @@ type Props = {
   staticPreview?: boolean;
   formAction?: string;
   initialValues?: Record<string, ConfiguratorFieldValue>;
+  configuratorEyebrow?: string;
+  configuratorTitle?: string;
+  configuratorDescription?: string;
+  promiseTitle?: string;
+  promiseDescription?: string;
+  summaryNote?: string;
+  leadTitle?: string;
+  leadDescription?: string;
+  leadCta?: string;
 };
 
 const {
@@ -35,7 +44,16 @@ const {
   actionResult,
   staticPreview = false,
   formAction = Astro.url.pathname,
-  initialValues = {}
+  initialValues = {},
+  configuratorEyebrow = "Подобрать решение",
+  configuratorTitle = catalog.title,
+  configuratorDescription = "Сначала выберите услуги и увидите ориентир по стоимости. Телефон нужен только в конце — когда уже понятно, что именно подключать.",
+  promiseTitle = "Расчёт перед звонком",
+  promiseDescription = "Услуги, оборудование и разовые платежи собраны в одном месте.",
+  summaryNote = "Цены и возможность подключения подтверждаются по адресу.",
+  leadTitle = "Оставьте контакты после расчёта",
+  leadDescription = "Менеджер увидит выбранные услуги и свяжется с вами, чтобы проверить адрес и подтвердить условия.",
+  leadCta = "Оставить заявку по расчёту"
 } = Astro.props;
 
 const services = singleService
@@ -96,16 +114,13 @@ function getDefaultValues(
 >
   <div class="configurator-heading">
     <div>
-      <p class="eyebrow">Подобрать решение</p>
-      <h2>{catalog.title}</h2>
-      <p>
-        Сначала выберите услуги и увидите ориентир по стоимости. Телефон нужен только в конце —
-        когда уже понятно, что именно подключать.
-      </p>
+      <p class="eyebrow">{configuratorEyebrow}</p>
+      <h2>{configuratorTitle}</h2>
+      <p>{configuratorDescription}</p>
     </div>
     <div class="configurator-promise">
-      <strong>Расчёт перед звонком</strong>
-      <span>Услуги, оборудование и разовые платежи собраны в одном месте.</span>
+      <strong>{promiseTitle}</strong>
+      <span>{promiseDescription}</span>
     </div>
   </div>
 
@@ -192,10 +207,8 @@ function getDefaultValues(
           ))
         }
       </ul>
-      <button type="button" class="card-action" data-open-configurator-lead>
-        Оставить заявку по расчёту
-      </button>
-      <p class="config-summary-note">Цены и возможность подключения подтверждаются по адресу.</p>
+      <button type="button" class="card-action" data-open-configurator-lead>{leadCta}</button>
+      <p class="config-summary-note">{summaryNote}</p>
     </aside>
   </div>
 
@@ -209,11 +222,8 @@ function getDefaultValues(
   >
     <div class="configurator-form-heading">
       <p class="eyebrow">Финальный шаг</p>
-      <h3>Оставьте контакты после расчёта</h3>
-      <p>
-        Менеджер увидит выбранные услуги и свяжется с вами, чтобы проверить адрес и подтвердить
-        условия.
-      </p>
+      <h3>{leadTitle}</h3>
+      <p>{leadDescription}</p>
     </div>
     {
       actionData && (

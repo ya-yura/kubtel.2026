@@ -62,3 +62,10 @@ const { items, group, selected = items[0]?.id } = Astro.props;
     if (selected) select(selected);
   });
 </script>
+
+<style>
+  /* Keep the hero separator and the tab-card boundary visually independent. */
+  .service-tabs {
+    margin: var(--kb-spacing-3) auto;
+  }
+</style>
