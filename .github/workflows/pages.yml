@@ -37,7 +37,7 @@ jobs:
           token: ${{ secrets.PAGES_ADMIN_TOKEN || github.token }}
 
       - name: Install dependencies
-        run: npm ci --no-audit --no-fund
+        run: npm ci --no-audit --no-fund --legacy-peer-deps
 
       - name: Validate
         run: npm run format:check && npm test && npm run launch:check
