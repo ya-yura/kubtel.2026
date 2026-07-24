@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { HOMEPAGE_CONFIG, seasonalDecorationCatalog } from "@config/homepage";
 import ActionLink from "@components/ui/ActionLink.astro";
 import Button from "@components/ui/Button.astro";
 import FormField from "@components/ui/FormField.astro";
@@ -183,6 +184,49 @@ const tabs = [
       </article>
     </div>
   </section>
+
+  <section class="section-pad ds-section" id="homepage-options">
+    <SectionHeading
+      eyebrow="Homepage options"
+      title="Первый экран без жёсткой привязки к графике"
+      description="Hero и сезонный декор включаются конфигурацией, а не перестройкой компонентов. Контентные маршруты и URL при этом не меняются."
+    />
+    <div class="ds-option-grid">
+      <article class="ds-option-card">
+        <div class="ds-option-card__head">
+          <span class="ds-option-indicator is-on" aria-hidden="true"></span>
+          <strong>Графический hero</strong>
+          <code>{HOMEPAGE_CONFIG.hero.mode}</code>
+        </div>
+        <p>Композиция сохраняет быстрые действия физлица и без визуального блока.</p>
+        <div class="ds-hero-variant" data-hero-variant="enabled">
+          <span>Опциональный слот</span><strong>Графика может быть включена</strong>
+        </div>
+      </article>
+      <article class="ds-option-card">
+        <div class="ds-option-card__head">
+          <span class="ds-option-indicator is-auto" aria-hidden="true"></span>
+          <strong>Праздничный декор</strong>
+          <code>{HOMEPAGE_CONFIG.seasonalDecorations.mode}</code>
+        </div>
+        <p>
+          Режим auto и включённый режим выбирают небольшой декоративный акцент только по календарю.
+        </p>
+        <div class="ds-seasonal-samples" aria-label="Календарь праздничных тем">
+          {
+            seasonalDecorationCatalog.map((item) => (
+              <span data-seasonal-sample={item.id}>{item.label.replace("Режим ", "")}</span>
+            ))
+          }
+        </div>
+      </article>
+    </div>
+    <div class="ds-config-note">
+      <strong>Контракт конфигурации</strong>
+      <code>PUBLIC_HOME_HERO_MODE=on|off</code>
+      <code>PUBLIC_SEASONAL_DECORATIONS_MODE=auto|on|off</code>
+    </div>
+  </section>
 </BaseLayout>
 
 <style>
@@ -298,5 +342,92 @@ const tabs = [
     background: var(--kb-color-surface-page);
     border-color: var(--kb-color-border-strong);
     color: var(--kb-color-text-primary);
+  }
+
+  .ds-option-grid,
+  .ds-seasonal-samples {
+    display: grid;
+    gap: var(--kb-composition-card-grid-gap);
+  }
+
+  .ds-option-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  }
+
+  .ds-option-card,
+  .ds-config-note {
+    background: var(--kb-component-card-background);
+    border: var(--kb-stroke-default) solid var(--kb-component-card-border);
+    border-radius: var(--kb-component-card-radius);
+    display: grid;
+    gap: var(--kb-layout-grid-gap-compact);
+    padding: var(--kb-component-card-padding);
+  }
+
+  .ds-option-card p {
+    margin-bottom: 0;
+  }
+
+  .ds-option-card__head {
+    align-items: center;
+    display: flex;
+    gap: 0.55rem;
+  }
+
+  .ds-option-card__head code {
+    color: var(--kb-color-text-secondary);
+    margin-left: auto;
+  }
+
+  .ds-option-indicator {
+    background: var(--kb-color-status-success-text);
+    border-radius: var(--kb-shape-pill);
+    height: 0.7rem;
+    width: 0.7rem;
+  }
+
+  .ds-option-indicator.is-auto {
+    background: var(--kb-color-action-primary-background);
+  }
+
+  .ds-hero-variant {
+    background: var(--kb-component-homepage-hero-background);
+    border: 1px solid var(--kb-component-homepage-hero-border);
+    border-radius: var(--kb-component-homepage-hero-radius);
+    display: grid;
+    gap: 0.2rem;
+    min-height: 7rem;
+    padding: 1rem;
+  }
+
+  .ds-hero-variant span,
+  .ds-seasonal-samples span {
+    color: var(--kb-color-action-primary-background-active);
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .ds-seasonal-samples {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ds-seasonal-samples span {
+    background: var(--kb-color-surface-soft);
+    border-radius: var(--kb-shape-card);
+    padding: 0.65rem;
+  }
+
+  .ds-config-note {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem 0.8rem;
+  }
+
+  .ds-config-note code {
+    background: var(--kb-color-surface-section);
+    border-radius: var(--kb-shape-control-small);
+    padding: 0.45rem 0.6rem;
   }
 </style>

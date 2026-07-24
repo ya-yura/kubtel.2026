@@ -20,64 +20,79 @@ const optionLabels: Record<TariffOption, string> = {
 <section class="section-pad comparison-section" id="tariff-compare">
   <div class="section-heading">
     <p class="eyebrow">Сравнение</p>
-    <h2>Тарифы можно сравнить ещё до&nbsp;звонка менеджеру</h2>
-    <p>Цена, скорость и&nbsp;сценарий стоят рядом. Так разговор получается короче и&nbsp;точнее.</p>
+    <h2>Сравните тарифы и условия</h2>
+    <p>
+      Скорость, стоимость и состав — на одной странице. Если останутся вопросы, всё спокойно обсудим
+      с человеком.
+    </p>
   </div>
-  <div class="comparison-scroll" tabindex="0" aria-label="Таблица сравнения тарифов">
-    <table class="comparison-table">
-      <thead>
-        <tr>
-          <th scope="col">Тариф</th>
-          <th scope="col">Скорость</th>
-          <th scope="col">Цена</th>
-          <th scope="col">Лучше всего</th>
-          <th scope="col">Опции</th>
-          <th scope="col">Подключение</th>
-          <th scope="col">Шаг</th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          tariffs.map((tariff) => {
-            const price = calculateMonthlyPrice(tariff);
-            const options = tariff.availableOptions
-              .map((option) => optionLabels[option as TariffOption])
-              .join(", ");
-            const connectionPrice =
-              tariff.commercialReview.connectionStatus !== "confirmed" ||
-              tariff.connectionPrice === null
-                ? "уточним на\u00a0звонке"
-                : formatRubles(tariff.connectionPrice);
-            const speed =
-              tariff.commercialReview.speedStatus === "confirmed"
-                ? `${tariff.speedDownload} Мбит/с`
-                : "уточним по адресу";
-            const monthly =
-              tariff.commercialReview.priceStatus === "confirmed"
-                ? `${formatRubles(price.total)}/мес.`
-                : "уточним по адресу";
+  <div class="tariff-comparison-grid" aria-label="Тарифы для сравнения">
+    {
+      tariffs.map((tariff) => {
+        const price = calculateMonthlyPrice(tariff);
+        const speedIsKnown = tariff.commercialReview.speedStatus === "confirmed";
+        const priceIsKnown = tariff.commercialReview.priceStatus === "confirmed";
+        const connectionIsKnown =
+          tariff.commercialReview.connectionStatus === "confirmed" &&
+          tariff.connectionPrice !== null;
 
-            return (
-              <tr>
-                <th scope="row">
-                  <strong>{tariff.title}</strong>
-                  {tariff.isFeatured && <span>Рекомендуем</span>}
-                </th>
-                <td>{speed}</td>
-                <td>{monthly}</td>
-                <td>{tariff.bestFor.slice(0, 3).join(", ")}</td>
-                <td>{options}</td>
-                <td>{connectionPrice}</td>
-                <td>
-                  <a href={getSitePath(`/individual/configurator/?service=internet#configurator`)}>
-                    Выбрать
-                  </a>
-                </td>
-              </tr>
-            );
-          })
-        }
-      </tbody>
-    </table>
+        return (
+          <article
+            class:list={[
+              "tariff-comparison-card",
+              { "tariff-comparison-card--featured": tariff.isFeatured }
+            ]}
+          >
+            <header class="tariff-comparison-card__header">
+              {tariff.isFeatured && <span class="tariff-comparison-card__badge">Рекомендуем</span>}
+              <h3>{tariff.title}</h3>
+              <p>{tariff.bestFor.slice(0, 2).join(" · ")}</p>
+            </header>
+
+            <div class="tariff-comparison-card__price">
+              <span>Абонентская плата</span>
+              <strong class:list={{ "is-pending": !priceIsKnown }}>
+                {priceIsKnown ? `${formatRubles(price.total)}/мес.` : "По адресу"}
+              </strong>
+            </div>
+
+            <dl class="tariff-comparison-card__facts">
+              <div>
+                <dt>Скорость</dt>
+                <dd class:list={{ "is-pending": !speedIsKnown }}>
+                  {speedIsKnown ? `${tariff.speedDownload} Мбит/с` : "Уточним по адресу"}
+                </dd>
+              </div>
+              <div>
+                <dt>В составе</dt>
+                <dd class="tariff-comparison-card__options">
+                  {tariff.availableOptions.map((option) => (
+                    <span>{optionLabels[option as TariffOption]}</span>
+                  ))}
+                </dd>
+              </div>
+              <div>
+                <dt>Подключение</dt>
+                <dd class:list={{ "is-pending": !connectionIsKnown }}>
+                  {connectionIsKnown
+                    ? formatRubles(tariff.connectionPrice ?? 0)
+                    : "Уточним на звонке"}
+                </dd>
+              </div>
+            </dl>
+
+            <footer class="tariff-comparison-card__footer">
+              <a
+                class="card-action"
+                href={getSitePath(`/individual/configurator/?service=internet#configurator`)}
+                aria-label={`Выбрать тариф ${tariff.title}`}
+              >
+                Выбрать тариф
+              </a>
+            </footer>
+          </article>
+        );
+      })
+    }
   </div>
 </section>

@@ -1,0 +1,136 @@
+---
+import { getSeasonalDecoration, HOMEPAGE_CONFIG } from "@config/homepage";
+import { getSitePath } from "@config/site";
+
+const decoration = getSeasonalDecoration();
+const seasonalMode = HOMEPAGE_CONFIG.seasonalDecorations.mode;
+const seasonalAssetBase = getSitePath("/assets/seasonal");
+const imageSrc = decoration ? getSitePath(`/assets/seasonal/${decoration.id}.png`) : undefined;
+---
+
+{
+  seasonalMode !== "off" && (
+    <div
+      class="seasonal-decorations"
+      data-seasonal-mode={seasonalMode}
+      data-seasonal-theme={decoration?.id ?? ""}
+      data-seasonal-asset-base={seasonalAssetBase}
+      aria-hidden="true"
+      title={decoration?.label ?? "Сезонный декор"}
+      hidden={!decoration}
+    >
+      <div class="seasonal-decorations__header-art">
+        <img
+          class="seasonal-decorations__photo"
+          src={imageSrc}
+          data-seasonal-photo
+          alt=""
+          decoding="async"
+        />
+      </div>
+    </div>
+  )
+}
+
+<script>
+  (() => {
+    type DateParts = { year: number; month: number; day: number };
+
+    const root = document.querySelector<HTMLElement>(".seasonal-decorations");
+    const photo = root?.querySelector<HTMLImageElement>("[data-seasonal-photo]");
+
+    if (!root || root.dataset.seasonalMode === "off") {
+      return;
+    }
+
+    const getMoscowDate = (): DateParts => {
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        day: "2-digit",
+        month: "2-digit",
+        timeZone: "Europe/Moscow",
+        year: "numeric"
+      })
+        .formatToParts(new Date())
+        .reduce<Record<string, number>>((result, part) => {
+          if (part.type !== "literal") {
+            result[part.type] = Number(part.value);
+          }
+          return result;
+        }, {});
+
+      return { year: parts.year, month: parts.month, day: parts.day };
+    };
+
+    const shiftDate = (date: DateParts, days: number): DateParts => {
+      const shifted = new Date(Date.UTC(date.year, date.month - 1, date.day + days));
+      return {
+        year: shifted.getUTCFullYear(),
+        month: shifted.getUTCMonth() + 1,
+        day: shifted.getUTCDate()
+      };
+    };
+
+    const dayNumber = (date: DateParts) => Date.UTC(date.year, date.month - 1, date.day) / 86400000;
+
+    const orthodoxEaster = (year: number): DateParts => {
+      const a = year % 4;
+      const b = year % 7;
+      const c = year % 19;
+      const d = (19 * c + 15) % 30;
+      const e = (2 * a + 4 * b - d + 34) % 7;
+      const month = Math.floor((d + e + 114) / 31);
+      const day = ((d + e + 114) % 31) + 1;
+      const gregorian = new Date(Date.UTC(year, month - 1, day + 13));
+
+      return {
+        year: gregorian.getUTCFullYear(),
+        month: gregorian.getUTCMonth() + 1,
+        day: gregorian.getUTCDate()
+      };
+    };
+
+    const getAutomaticTheme = (date: DateParts) => {
+      if ((date.month === 12 && date.day >= 20) || (date.month === 1 && date.day <= 10)) {
+        return "new-year";
+      }
+
+      if (date.month === 2 && date.day >= 20 && date.day <= 25) return "defender";
+      if (date.month === 3 && date.day >= 1 && date.day <= 10) return "womens-day";
+      if (date.month === 5 && date.day >= 1 && date.day <= 10) return "victory-day";
+      if ((date.month === 8 && date.day >= 25) || (date.month === 9 && date.day <= 7)) {
+        return "knowledge-day";
+      }
+
+      const easter = orthodoxEaster(date.year);
+      const current = dayNumber(date);
+      if (
+        current >= dayNumber(shiftDate(easter, -5)) &&
+        current <= dayNumber(shiftDate(easter, 7))
+      ) {
+        return "easter";
+      }
+
+      return "";
+    };
+
+    const applyTheme = () => {
+      const theme = getAutomaticTheme(getMoscowDate());
+      root.dataset.seasonalTheme = theme;
+      root.hidden = !theme;
+
+      if (photo && root.dataset.seasonalAssetBase) {
+        if (theme) {
+          photo.src = `${root.dataset.seasonalAssetBase}/${theme}.png`;
+        } else {
+          photo.removeAttribute("src");
+        }
+      }
+    };
+
+    applyTheme();
+    window.setInterval(applyTheme, 15 * 60 * 1000);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) applyTheme();
+    });
+  })();
+</script>

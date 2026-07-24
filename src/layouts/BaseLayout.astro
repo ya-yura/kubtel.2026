@@ -62,7 +62,9 @@ const quietStickySections = [
   "/careers/",
   "/design-system/"
 ];
-const hasStickyCta = !quietStickySections.some((path) => Astro.url.pathname.startsWith(path));
+const hasStickyCta =
+  normalizedCanonicalPath !== "/" &&
+  !quietStickySections.some((path) => Astro.url.pathname.startsWith(path));
 ---
 
 <!doctype html>
@@ -103,7 +105,12 @@ const hasStickyCta = !quietStickySections.some((path) => Astro.url.pathname.star
     }
     <title>{pageTitle}</title>
   </head>
-  <body class:list={{ "has-sticky-cta": hasStickyCta }}>
+  <body
+    class:list={{
+      "has-sticky-cta": hasStickyCta,
+      "is-homepage": normalizedCanonicalPath === "/"
+    }}
+  >
     <a class="skip-link" href="#main-content">К основному содержимому</a>
     <Header />
     <main id="main-content" tabindex="-1">
@@ -113,6 +120,38 @@ const hasStickyCta = !quietStickySections.some((path) => Astro.url.pathname.star
     <Footer />
     <script is:inline>
       (() => {
+        const shortWordPattern =
+          /(^|[\s([{«„—–-])((?:а|и|но|да|же|бы|ли|в|во|к|ко|с|со|у|о|об|от|из|за|на|по|до|без|для|над|под|при|не|ни))\s+(?=[\p{L}\p{N}])/giu;
+        const ignoredTags = new Set([
+          "CODE",
+          "INPUT",
+          "NOSCRIPT",
+          "PRE",
+          "SCRIPT",
+          "SELECT",
+          "STYLE",
+          "TEXTAREA"
+        ]);
+        const textWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        const textNodes = [];
+        let currentNode;
+
+        while ((currentNode = textWalker.nextNode())) {
+          const parent = currentNode.parentElement;
+          if (
+            !parent ||
+            ignoredTags.has(parent.tagName) ||
+            parent.closest("[contenteditable='true']")
+          ) {
+            continue;
+          }
+          textNodes.push(currentNode);
+        }
+
+        textNodes.forEach((node) => {
+          node.nodeValue = node.nodeValue?.replace(shortWordPattern, "$1$2\u00a0") ?? "";
+        });
+
         const storageKey = "kubtel-readable-mode";
         const readableClass = "is-readable";
         const toggles = [...document.querySelectorAll("[data-readability-toggle]")];

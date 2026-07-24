@@ -191,7 +191,7 @@
     },
     "lineHeight": {
       "tight": { "value": "1.06", "type": "lineHeight" },
-      "heading": { "value": "1.18", "type": "lineHeight" },
+      "heading": { "value": "1.24", "type": "lineHeight" },
       "body": { "value": "1.62", "type": "lineHeight" },
       "readable": { "value": "1.7", "type": "lineHeight" }
     },
@@ -281,10 +281,11 @@
   "z": {
     "base": { "value": "0", "type": "number" },
     "content": { "value": "1", "type": "number" },
+    "seasonal": { "value": "50", "type": "number" },
     "raised": { "value": "2", "type": "number" },
     "header": { "value": "20", "type": "number" },
     "sticky": { "value": "30", "type": "number" },
-    "menu": { "value": "40", "type": "number" },
+    "menu": { "value": "60", "type": "number" },
     "skipLink": { "value": "100", "type": "number" }
   },
   "container": {

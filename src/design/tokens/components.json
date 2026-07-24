@@ -219,6 +219,19 @@
       "panelBackground": { "value": "{color.surface.inverse}", "type": "color" },
       "panelText": { "value": "{color.text.inverse}", "type": "color" }
     },
+    "homepageHero": {
+      "background": { "value": "{color.surface.section}", "type": "color" },
+      "border": { "value": "{color.border.default}", "type": "color" },
+      "radius": { "value": "{shape.panel}", "type": "borderRadius" }
+    },
+    "configurator": {
+      "background": { "value": "{color.surface.page}", "type": "color" }
+    },
+    "seasonalDecorations": {
+      "layer": { "value": "{layer.seasonal}", "type": "number" },
+      "opacity": { "value": "0.3", "type": "opacity" },
+      "mutedOpacity": { "value": "0.16", "type": "opacity" }
+    },
     "sectionHeading": {
       "titleColor": { "value": "{color.text.primary}", "type": "color" },
       "bodyColor": { "value": "{color.text.secondary}", "type": "color" },

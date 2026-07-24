@@ -206,8 +206,7 @@
 .business-routing-card__header {
   align-items: center;
   display: grid;
-  gap: 0.9rem;
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .business-routing-card__header .eyebrow,
@@ -218,21 +217,6 @@
 
 .business-routing-card__header h3 {
   font-size: 1.45rem;
-}
-
-.business-routing-number {
-  align-items: center;
-  background: rgb(var(--route-accent) / 0.16);
-  border: 1px solid rgb(var(--route-accent) / 0.4);
-  border-radius: var(--kb-shape-pill);
-  color: rgb(var(--route-accent));
-  display: inline-flex;
-  font-family: var(--kb-typography-display-family);
-  font-size: 0.88rem;
-  font-weight: 900;
-  height: 2.75rem;
-  justify-content: center;
-  width: 2.75rem;
 }
 
 .business-routing-hint {

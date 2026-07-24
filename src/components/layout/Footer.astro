@@ -1,6 +1,40 @@
 ---
-import { footerNavItems } from "@config/routes";
 import { getSitePath, SITE } from "@config/site";
+
+const footerGroups = [
+  {
+    title: "Частным лицам",
+    href: "/individual/",
+    links: [
+      { href: "/payment/", label: "Оплата" },
+      { href: "/devices/", label: "Устройства" }
+    ]
+  },
+  {
+    title: "Бизнесу",
+    href: "/business/",
+    links: [
+      { href: "/business/request/", label: "Заявка для бизнеса" },
+      { href: "/individual/configurator/", label: "Конфигуратор услуг" }
+    ]
+  },
+  {
+    title: "Компания",
+    links: [
+      { href: "/news/", label: "Новости" },
+      { href: "/careers/", label: "Вакансии" },
+      { href: "/contacts/", label: "Контакты" }
+    ]
+  },
+  {
+    title: "Помощь",
+    links: [
+      { href: "/search/", label: "Поиск" },
+      { href: "/support/", label: "Поддержка" },
+      { href: "/documents/", label: "Документы" }
+    ]
+  }
+];
 ---
 
 <footer class="site-footer">
@@ -14,9 +48,25 @@ import { getSitePath, SITE } from "@config/site";
         height="58"
       />
     </a>
-    <p>{SITE.shortDescription}</p>
   </div>
   <nav aria-label="Нижняя навигация">
-    {footerNavItems.map((item) => <a href={getSitePath(item.href)}>{item.label}</a>)}
+    <div class="site-footer__groups">
+      {
+        footerGroups.map((group) => (
+          <section class="site-footer__group">
+            <h2>
+              {group.href ? <a href={getSitePath(group.href)}>{group.title}</a> : group.title}
+            </h2>
+            <ul>
+              {group.links.map((item) => (
+                <li>
+                  <a href={getSitePath(item.href)}>{item.label}</a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
   </nav>
 </footer>

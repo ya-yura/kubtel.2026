@@ -291,6 +291,7 @@
   },
   "layer": {
     "content": { "value": "{z.content}", "type": "number" },
+    "seasonal": { "value": "{z.seasonal}", "type": "number" },
     "raised": { "value": "{z.raised}", "type": "number" },
     "header": { "value": "{z.header}", "type": "number" },
     "sticky": { "value": "{z.sticky}", "type": "number" },

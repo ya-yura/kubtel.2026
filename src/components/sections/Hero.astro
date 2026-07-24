@@ -1,96 +1,98 @@
 ---
 import PromoImage from "@components/ui/PromoImage.astro";
+import SeasonalDecorations from "@components/layout/SeasonalDecorations.astro";
+import { HOMEPAGE_CONFIG, isFeatureEnabled } from "@config/homepage";
 import { getPhoneHref, getSitePath, SITE } from "@config/site";
 import { promoVisuals } from "@lib/visuals";
+
+const showHeroVisual = isFeatureEnabled(HOMEPAGE_CONFIG.hero.mode);
 ---
 
-<section class="hero section-pad">
-  <div class="hero-copy">
-    <p class="eyebrow">Краснодар, квартиры, организации и&nbsp;операторы связи</p>
-    <h1>Домашний интернет, где трубку берёт человек</h1>
-    <p class="hero-lead">
-      Kubtel выбирают, когда важны понятные условия, живой контакт и&nbsp;аккуратное подключение.
-      Физлицам можно сразу перейти к домашним тарифам, а представителям организаций — выбрать
-      отдельный маршрут с нужными услугами, расчётом и заявкой.
-    </p>
-    <div class="audience-switch" aria-label="Выберите тип клиента">
-      <a class="audience-card is-active" href={getSitePath("/connect/#callback-request")}>
-        <span>Физическое лицо</span>
-        <strong>Для дома</strong>
-        <small>Тарифы, проверка адреса и&nbsp;понятные условия без скрытых платежей.</small>
-      </a>
-      <a class="audience-card" href={getSitePath("/business/b2b/")}>
-        <span>Для бизнеса</span>
-        <strong>B2B — компании и предприниматели</strong>
-        <small>Интернет, телефония, камеры, Wi‑Fi и&nbsp;инфраструктура для рабочих задач.</small>
-      </a>
-      <a class="audience-card" href={getSitePath("/business/b2g/")}>
-        <span>Для государства</span>
-        <strong>B2G — госорганизации</strong>
-        <small>Связь, закупочные процедуры, документы и&nbsp;прямой контакт сектора B2G.</small>
-      </a>
-      <a class="audience-card" href={getSitePath("/business/b2o/")}>
-        <span>Для операторов</span>
-        <strong>B2O — операторы связи</strong>
-        <small>ЦОД, размещение, связность, cross-connect и&nbsp;партнёрские условия.</small>
-      </a>
-      <a class="audience-login" href="#subscriber-tools">Личный кабинет абонента</a>
+<section
+  class:list={[
+    "homepage-hero",
+    "section-pad",
+    { "homepage-hero--with-visual": showHeroVisual, "homepage-hero--compact": !showHeroVisual }
+  ]}
+  aria-labelledby="homepage-hero-title"
+>
+  <div class="homepage-hero__content">
+    <div class="homepage-hero__intro">
+      <p class="eyebrow">Kubtel · Краснодар</p>
+      <h1 id="homepage-hero-title">Связь по-человечески</h1>
+      <p class="homepage-hero__lead">
+        Без ботов и&nbsp;бесконечных переключений. Расскажите, что нужно, — мы вникнем
+        и&nbsp;поможем решить вопрос для дома или бизнеса.
+      </p>
     </div>
-    <form
-      class="address-inline"
-      action={getSitePath("/connect/#callback-request")}
-      method="get"
-      aria-label="Быстрая заявка на обратный звонок"
-    >
-      <label>
-        <span>Телефон для звонка</span>
-        <input name="phone" type="tel" inputmode="tel" placeholder="+7" autocomplete="tel" />
-      </label>
-      <button type="submit">Уточнить подключение</button>
-    </form>
-  </div>
-  <div class="hero-visual-stack">
-    <PromoImage visual={promoVisuals.home} class="is-hero" loading="eager" fetchpriority="high" />
-    <div class="hero-panel" aria-labelledby="hero-panel-title">
-      <div class="hero-panel__intro">
-        <span class="hero-panel__eyebrow">Понятный старт</span>
-        <h2 id="hero-panel-title">Подключение без квеста</h2>
-        <p>
-          Не нужно заранее разбираться в тарифах. Достаточно оставить телефон — остальное уточним
-          вместе.
-        </p>
-      </div>
-      <ol class="hero-panel__steps">
-        <li>
-          <span class="hero-step-number">1</span>
-          <div>
-            <strong>Оставьте телефон</strong>
-            <p>Перезвоним и выслушаем, что нужно именно вам.</p>
-          </div>
-        </li>
-        <li>
-          <span class="hero-step-number">2</span>
-          <div>
-            <strong>Проверим адрес</strong>
-            <p>Уточним техническую возможность и доступные варианты.</p>
-          </div>
-        </li>
-        <li>
-          <span class="hero-step-number">3</span>
-          <div>
-            <strong>Вы решите спокойно</strong>
-            <p>Сравните условия и выберите подходящий вариант без давления.</p>
-          </div>
-        </li>
-      </ol>
-      <div class="hero-panel__footer">
-        <a class="hero-panel__action" href={getSitePath("/connect/#callback-request")}
-          >Проверить адрес</a
+
+    <div class="homepage-audience" aria-label="Выберите аудиторию">
+      <a
+        class="homepage-audience__choice homepage-audience__choice--individual"
+        href={getSitePath("/individual/")}
+      >
+        <span class="homepage-audience__kicker">Физлица</span>
+        <strong>Для дома</strong>
+        <span>Интернет, ТВ и видеонаблюдение</span>
+        <span class="homepage-audience__arrow" aria-hidden="true">↗</span>
+      </a>
+      <a
+        class="homepage-audience__choice homepage-audience__choice--business"
+        href={getSitePath("/business/")}
+      >
+        <span class="homepage-audience__kicker">Организации</span>
+        <strong>Для бизнеса и&nbsp;государства</strong>
+        <span>Связь, инфраструктура и&nbsp;персональный маршрут</span>
+        <span class="homepage-audience__arrow" aria-hidden="true">↗</span>
+      </a>
+    </div>
+
+    <div class="homepage-quick-actions" aria-label="Быстрые действия физлица">
+      <div class="homepage-quick-actions__grid">
+        <a
+          class="homepage-quick-action homepage-quick-action--primary"
+          href={SITE.paymentUrl}
+          target="_blank"
+          rel="noopener noreferrer"
         >
-        <a class="hero-panel__phone" href={getPhoneHref(SITE.salesPhone)}>
-          Или позвонить: {SITE.salesPhone}
+          <strong>Оплатить услуги</strong>
+          <span>Быстрый переход к оплате</span>
+        </a>
+        <a
+          class="homepage-quick-action"
+          href={SITE.accountUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <strong>Личный кабинет</strong>
+          <span>Баланс, услуги и договор</span>
+        </a>
+        <a class="homepage-quick-action" href={getSitePath("/tariffs/")}>
+          <strong>Выбрать тариф</strong>
+          <span>Сравнить скорость и условия</span>
         </a>
       </div>
     </div>
+
+    <a class="homepage-phone" href={getPhoneHref(SITE.salesPhone)}>
+      <span>Не нашли нужное?</span>
+      <strong>{SITE.salesPhone}</strong>
+      <span>Позвонить человеку</span>
+    </a>
   </div>
+
+  <SeasonalDecorations />
+
+  {
+    showHeroVisual && (
+      <div class="homepage-hero__visual" aria-label="Графический hero-блок">
+        <PromoImage
+          visual={promoVisuals.home}
+          class="is-hero"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    )
+  }
 </section>

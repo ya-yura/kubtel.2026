@@ -8,25 +8,15 @@ import { getPhoneHref, getSitePath, SITE } from "@config/site";
   description="Оплата Kubtel для физических лиц и ИП, безналичный расчёт для юридических лиц и отдельный контакт бюджетного сектора."
   canonicalPath="/payment/"
 >
-  <section class="section-pad compact-intro">
-    <p class="eyebrow">Оплата</p>
-    <h1>Выберите способ по типу абонента</h1>
-    <p>
-      Онлайн-платёж доступен физическим лицам и ИП. Юридические лица работают по безналичному
-      расчёту, а бюджетные организации обращаются в отдельный сектор.
-    </p>
-  </section>
-
-  <section class="section-pad service-hub" aria-label="Маршруты оплаты">
-    <article class="service-hub-primary">
-      <span class="service-category">Физические лица и ИП</span>
-      <h2>Онлайн-оплата на действующем сайте Kubtel</h2>
-      <p>
-        Официальный платёжный сценарий поддерживает СБП, банковские карты и ЮMoney. Платёж
-        выполняется на сайте Kubtel; эта страница не имитирует обработку и не показывает ложный
-        результат.
+  <section class="section-pad payment-hero" aria-labelledby="payment-title">
+    <div class="payment-hero__copy">
+      <p class="eyebrow">Оплата без лишних шагов</p>
+      <h1 id="payment-title">Оплачивайте услуги так, как удобно</h1>
+      <p class="payment-hero__lead">
+        Для&nbsp;физлиц и&nbsp;ИП — онлайн. Для&nbsp;организаций — счёт и&nbsp;документы. Если
+        что-то не&nbsp;получится, подключится человек и&nbsp;поможет разобраться.
       </p>
-      <div class="button-row">
+      <div class="button-row payment-hero__actions">
         <a class="card-action" href={SITE.paymentUrl} target="_blank" rel="noopener noreferrer">
           Перейти к онлайн-оплате
         </a>
@@ -39,44 +29,79 @@ import { getPhoneHref, getSitePath, SITE } from "@config/site";
           Квитанция, реквизиты и возврат
         </a>
       </div>
-    </article>
-
-    <article class="service-hub-card">
-      <span>Юридические лица</span>
-      <strong>Безналичный расчёт и документы</strong>
-      <p>
-        Запросите счёт, акт сверки или комплект платёжных документов у отдела по работе с
-        юридическими лицами.
+      <p class="payment-hero__note">
+        <span aria-hidden="true"></span>
+        Платёж проходит на официальной странице Kubtel.
       </p>
-      <div class="button-row">
-        <a
-          class="card-action"
-          href={getSitePath("/business/request/?segment=legal&service=documents-payment")}
-        >
-          Запросить документы
-        </a>
-        <a class="business-link" href={`mailto:${SITE.businessEmail}`}>{SITE.businessEmail}</a>
-      </div>
-    </article>
+    </div>
 
-    <article class="service-hub-card">
-      <span>Бюджетные организации</span>
-      <strong>Отдельный сектор B2G</strong>
-      <p>Вопросы закупки, договора и документов направляются только специалистам B2G.</p>
-      <div class="button-row">
-        <a class="card-action" href={getSitePath("/business/request/?segment=b2g")}>
-          Обратиться в B2G
-        </a>
-        <a class="business-link" href={getPhoneHref(SITE.budgetPhone)}>{SITE.budgetPhone}</a>
-        <a class="business-link" href={`mailto:${SITE.budgetEmail}`}>{SITE.budgetEmail}</a>
-      </div>
-    </article>
+    <aside class="payment-hero__panel" aria-label="Что доступно для онлайн-оплаты">
+      <p class="eyebrow">Физлица и ИП</p>
+      <h2>СБП, карты и ЮMoney</h2>
+      <p>Выберите удобный способ на защищённой странице оплаты Kubtel.</p>
+      <dl class="payment-method-list">
+        <div>
+          <dt>Нужны под рукой</dt>
+          <dd>Лицевой счёт</dd>
+        </div>
+        <div>
+          <dt>Если возник вопрос</dt>
+          <dd>{SITE.supportPhone}</dd>
+        </div>
+      </dl>
+    </aside>
+  </section>
 
-    <article class="service-hub-card">
-      <span>Помощь с платежом</span>
-      <strong>{SITE.supportDirectPhone}</strong>
-      <p>Для вопроса по уже выполненному платежу подготовьте лицевой счёт и данные операции.</p>
-      <a class="card-action" href={getPhoneHref(SITE.supportDirectPhone)}>Позвонить</a>
-    </article>
+  <section class="section-pad payment-routes" aria-labelledby="payment-routes-title">
+    <div class="section-heading">
+      <p class="eyebrow">Другие сценарии</p>
+      <h2 id="payment-routes-title">Для организаций и вопросов по платежу</h2>
+      <p>
+        Выберите свой маршрут — нужный сотрудник получит обращение сразу, без лишних переадресаций.
+      </p>
+    </div>
+
+    <div class="payment-route-grid">
+      <article class="payment-route-card">
+        <p class="eyebrow">Юридическим лицам</p>
+        <h3>Счёт, акт сверки и платёжные документы</h3>
+        <p>Запросите документы у отдела по работе с юридическими лицами.</p>
+        <div class="payment-route-card__actions">
+          <a
+            class="card-action"
+            href={getSitePath("/business/request/?segment=legal&service=documents-payment")}
+          >
+            Запросить документы
+          </a>
+          <a class="business-link" href={`mailto:${SITE.businessEmail}`}>{SITE.businessEmail}</a>
+        </div>
+      </article>
+
+      <article class="payment-route-card">
+        <p class="eyebrow">Бюджетным организациям</p>
+        <h3>Закупка и документы — в секторе B2G</h3>
+        <p>Задачи по закупкам, договорам и документам сразу попадут специалистам B2G.</p>
+        <div class="payment-route-card__actions">
+          <a class="card-action" href={getSitePath("/business/request/?segment=b2g")}>
+            Обратиться в B2G
+          </a>
+          <a class="business-link" href={getPhoneHref(SITE.budgetPhone)}>{SITE.budgetPhone}</a>
+        </div>
+      </article>
+
+      <article class="payment-route-card payment-route-card--support">
+        <p class="eyebrow">Платёж уже прошёл?</p>
+        <h3>Поможем разобраться по операции</h3>
+        <p>
+          Подготовьте лицевой счёт и данные платежа — сотрудник быстро найдёт нужную информацию.
+        </p>
+        <div class="payment-route-card__actions">
+          <a class="card-action" href={getPhoneHref(SITE.supportDirectPhone)}>Позвонить</a>
+          <a class="business-link" href={getPhoneHref(SITE.supportDirectPhone)}>
+            {SITE.supportDirectPhone}
+          </a>
+        </div>
+      </article>
+    </div>
   </section>
 </BaseLayout>

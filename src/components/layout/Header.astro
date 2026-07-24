@@ -56,6 +56,9 @@ function isCurrentPath(href: string) {
       ))
     }
   </nav>
+  <a class="header-phone" href={getPhoneHref(headerPhone)} data-header-phone>
+    {headerPhone}
+  </a>
   <details class="mobile-nav">
     <summary aria-label="Открыть основное меню">
       <span class="nav-toggle-lines" aria-hidden="true"></span>
@@ -104,9 +107,6 @@ function isCurrentPath(href: string) {
   >
     A+
   </button>
-  <a class="header-phone" href={getPhoneHref(headerPhone)} data-header-phone>
-    {headerPhone}
-  </a>
   <a class="header-account" href={SITE.accountUrl} target="_blank" rel="noopener noreferrer">
     Личный кабинет
   </a>

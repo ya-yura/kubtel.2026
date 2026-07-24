@@ -1,0 +1,211 @@
+{"kind":"deck","id":"pr/zigybi","name":"Deck"}
+{"kind":"layout","layoutId":"1cb55874-0610-4167-ac29-e47ec8c59f0b","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"5185bc50-d250-4065-893e-b07e49d89b0f","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/tgitxb","slide":1,"title":"КУБАНЬ-ТЕЛЕКОМ","textShapes":8}
+{"kind":"shape","id":"sh/wje94fat","slide":1,"bbox":[0,0,22,720]}
+{"kind":"textbox","id":"sh/vi58va98","slide":1,"text":"КУБАНЬ-ТЕЛЕКОМ","textPreview":"КУБАНЬ-ТЕЛЕКОМ","textChars":14,"textLines":1,"bbox":[64,78,400,28]}
+{"kind":"textbox","id":"sh/ahwr2psn","slide":1,"text":"Сайт как система\nподключений","textPreview":"Сайт как система | подключений","textChars":28,"textLines":2,"bbox":[64,150,760,190]}
+{"kind":"textbox","id":"sh/9gnqtkr2","slide":1,"text":"Факты Метрики → рабочие гипотезы → решения для B2C, B2B, B2O, телефонии и ТВ","textPreview":"Факты Метрики → рабочие гипотезы → решения для B2C, B2B, B2O, телефонии и ТВ","textChars":76,"textLines":1,"bbox":[64,365,760,70]}
+{"kind":"shape","id":"sh/8fe90fax","slide":1,"bbox":[875,146,280,280]}
+{"kind":"textbox","id":"sh/nel8ra9c","slide":1,"text":"Цель встречи","textPreview":"Цель встречи","textChars":12,"textLines":1,"bbox":[908,184,210,26]}
+{"kind":"textbox","id":"sh/mdcry5sr","slide":1,"text":"Согласовать\nпервый контур\nсквозной воронки","textPreview":"Согласовать | первый контур | сквозной воронки","textChars":42,"textLines":3,"bbox":[908,228,210,118]}
+{"kind":"textbox","id":"sh/tc7a54rm","slide":1,"text":"21.07.2025–20.07.2026","textPreview":"21.07.2025–20.07.2026","textChars":21,"textLines":1,"bbox":[64,610,430,24]}
+{"kind":"textbox","id":"sh/sby9wzq1","slide":1,"text":"Совещание руководителей","textPreview":"Совещание руководителей","textChars":23,"textLines":1,"bbox":[64,642,430,24]}
+{"kind":"textbox","id":"sh/2hove1kv","slide":1,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[1172,642,44,22]}
+{"kind":"notes","id":"nt/tgitxb","slide":1,"text":""}
+{"kind":"slide","id":"sl/wwag5h","slide":2,"title":"Трафик есть. Главный резерв — последняя миля до лида","textShapes":15}
+{"kind":"textbox","id":"sh/bmxcfi50","slide":2,"text":"Трафик есть. Главный резерв — последняя миля до лида","textPreview":"Трафик есть. Главный резерв — последняя миля до лида","textChars":52,"textLines":1,"bbox":[64,44,1152,58]}
+{"kind":"textbox","id":"sh/wn6tonml","slide":2,"text":"Вопрос не в том, как привести ещё людей, а в том, как довести текущий спрос до подключения.","textPreview":"Вопрос не в том, как привести ещё людей, а в том, как довести текущий спрос до подключения.","textChars":91,"textLines":1,"bbox":[64,105,1152,34]}
+{"kind":"shape","id":"sh/xofuhsn6","slide":2,"bbox":[64,165,1152,120]}
+{"kind":"textbox","id":"sh/mx4bid4j","slide":2,"text":"Ключевой вывод","textPreview":"Ключевой вывод","textChars":14,"textLines":1,"bbox":[92,187,200,24]}
+{"kind":"textbox","id":"sh/nydcbi5o","slide":2,"text":"Сайт уже работает как канал спроса, но Метрика пока плохо отличает интерес от реального подключения.","textPreview":"Сайт уже работает как канал спроса, но Метрика пока плохо отличает интерес от реального подключения.","textChars":100,"textLines":1,"bbox":[92,220,1040,38]}
+{"kind":"shape","id":"sh/oz6tknm9","slide":2,"bbox":[64,330,260,160]}
+{"kind":"shape","id":"sh/90fudsnu","slide":2,"bbox":[64,330,8,160]}
+{"kind":"textbox","id":"sh/et4bet47","slide":2,"text":"57 135","textPreview":"57 135","textChars":6,"textLines":1,"bbox":[88,360,220,68]}
+{"kind":"textbox","id":"sh/zuds7y5s","slide":2,"text":"визитов за год","textPreview":"визитов за год","textChars":14,"textLines":1,"bbox":[88,432,220,28]}
+{"kind":"shape","id":"sh/z6hcz61g","slide":2,"bbox":[352,330,260,160]}
+{"kind":"shape","id":"sh/y58b6lkb","slide":2,"bbox":[352,330,8,160]}
+{"kind":"textbox","id":"sh/l8ju1gjm","slide":2,"text":"56,3%","textPreview":"56,3%","textChars":5,"textLines":1,"bbox":[376,360,220,68]}
+{"kind":"textbox","id":"sh/k7at8b21","slide":2,"text":"из поиска","textPreview":"из поиска","textChars":9,"textLines":1,"bbox":[376,432,220,28]}
+{"kind":"shape","id":"sh/7a1c3q1s","slide":2,"bbox":[640,330,260,160]}
+{"kind":"shape","id":"sh/m9sbalk7","slide":2,"bbox":[640,330,8,160]}
+{"kind":"textbox","id":"sh/9cju50jy","slide":2,"text":"2 347","textPreview":"2 347","textChars":5,"textLines":1,"bbox":[664,360,220,68]}
+{"kind":"textbox","id":"sh/8batcv2d","slide":2,"text":"кликов по телефону","textPreview":"кликов по телефону","textChars":18,"textLines":1,"bbox":[664,432,220,28]}
+{"kind":"shape","id":"sh/nexsrmlo","slide":2,"bbox":[928,330,260,160]}
+{"kind":"shape","id":"sh/2doby1k3","slide":2,"bbox":[928,330,8,160]}
+{"kind":"textbox","id":"sh/69wf6p4r","slide":2,"text":"39","textPreview":"39","textChars":2,"textLines":1,"bbox":[952,360,220,68]}
+{"kind":"textbox","id":"sh/ra5wzulw","slide":2,"text":"отправок контактных данных","textPreview":"отправок контактных данных","textChars":26,"textLines":1,"bbox":[952,432,220,28]}
+{"kind":"textbox","id":"sh/svex8zmh","slide":2,"text":"Решение на встрече: утвердить владельца сквозной воронки и первый тест, который измеряется квалифицированным лидом, а не кликом.","textPreview":"Решение на встрече: утвердить владельца сквозной воронки и первый тест, который измеряется квалифицированным лидом, а не кликом.","textChars":128,"textLines":1,"bbox":[64,545,1110,54]}
+{"kind":"shape","id":"sh/twne1432","slide":2,"bbox":[64,676,1152,1]}
+{"kind":"textbox","id":"sh/i5cf2p4f","slide":2,"text":"Яндекс.Метрика · счётчик 32522125 · 21.07.2025–20.07.2026","textPreview":"Яндекс.Метрика · счётчик 32522125 · 21.07.2025–20.07.2026","textChars":57,"textLines":1,"bbox":[64,685,950,18]}
+{"kind":"textbox","id":"sh/j65wvul0","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1172,681,44,22]}
+{"kind":"notes","id":"nt/wwag5h","slide":2,"text":""}
+{"kind":"slide","id":"sl/1gf0wc","slide":3,"title":"SEO и прямой трафик — спрос уже сформирован","textShapes":9}
+{"kind":"textbox","id":"sh/a5ofi90f","slide":3,"text":"SEO и прямой трафик — спрос уже сформирован","textPreview":"SEO и прямой трафик — спрос уже сформирован","textChars":43,"textLines":1,"bbox":[64,44,1152,58]}
+{"kind":"textbox","id":"sh/x8fydojq","slide":3,"text":"56,33% визитов приходят из поиска; ещё 28,23% — напрямую.","textPreview":"56,33% визитов приходят из поиска; ещё 28,23% — напрямую.","textChars":57,"textLines":1,"bbox":[64,105,1152,34]}
+{"kind":"shape","id":"sh/n2dg7u1o","slide":3,"bbox":[740,160,476,420]}
+{"kind":"shape","id":"sh/m14fep03","slide":3,"bbox":[772,194,222,28]}
+{"kind":"textbox","id":"sh/94fy94ju","slide":3,"text":"ИМПЛИКАЦИЯ ДЛЯ РЕДИЗАЙНА","textPreview":"ИМПЛИКАЦИЯ ДЛЯ РЕДИЗАЙНА","textChars":24,"textLines":1,"bbox":[782,198,202,20]}
+{"kind":"textbox","id":"sh/o36xgzi9","slide":3,"text":"Сохраняем спрос\nдо того, как улучшаем дизайн","textPreview":"Сохраняем спрос | до того, как улучшаем дизайн","textChars":44,"textLines":2,"bbox":[772,244,390,78]}
+{"kind":"shape","id":"sh/7yhgjyh8","slide":3,"bbox":[772,362,8,8]}
+{"kind":"textbox","id":"sh/6x8fqt0n","slide":3,"text":"не менять без плана URL, заголовки и посадочные страницы","textPreview":"не менять без плана URL, заголовки и посадочные страницы","textChars":56,"textLines":1,"bbox":[792,355,360,42]}
+{"kind":"shape","id":"sh/072tkza1","slide":3,"bbox":[772,422,8,8]}
+{"kind":"textbox","id":"sh/l8bat4rm","slide":3,"text":"разметить рекламу, соцсети, мессенджеры и QR-коды","textPreview":"разметить рекламу, соцсети, мессенджеры и QR-коды","textChars":49,"textLines":1,"bbox":[792,415,360,42]}
+{"kind":"shape","id":"sh/y5kbipsv","slide":3,"bbox":[772,482,8,8]}
+{"kind":"textbox","id":"sh/z6tsru9g","slide":3,"text":"отдельно измерять новых клиентов и действующих абонентов","textPreview":"отдельно измерять новых клиентов и действующих абонентов","textChars":56,"textLines":1,"bbox":[792,475,360,42]}
+{"kind":"shape","id":"sh/c32tgfa5","slide":3,"bbox":[64,676,1152,1]}
+{"kind":"textbox","id":"sh/d4bapkrq","slide":3,"text":"Источник: Яндекс.Метрика · отчёт «Источники, сводка» · визиты 57 135","textPreview":"Источник: Яндекс.Метрика · отчёт «Источники, сводка» · визиты 57 135","textChars":68,"textLines":1,"bbox":[64,685,950,18]}
+{"kind":"textbox","id":"sh/qhkbepsz","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1172,681,44,22]}
+{"kind":"chart","id":"ch/s7epw3al","slide":3,"name":"","chartType":"bar","bbox":[64,160,625,420]}
+{"kind":"notes","id":"nt/1gf0wc","slide":3,"text":""}
+{"kind":"slide","id":"sl/7cywzw","slide":4,"title":"В последнем шаге воронки виден разрыв","textShapes":14}
+{"kind":"textbox","id":"sh/tg7mlwzy","slide":4,"text":"В последнем шаге воронки виден разрыв","textPreview":"В последнем шаге воронки виден разрыв","textChars":37,"textLines":1,"bbox":[64,44,1152,58]}
+{"kind":"textbox","id":"sh/6tg3qhg7","slide":4,"text":"Это одновременно гипотеза про UX и сигнал проверить корректность целей.","textPreview":"Это одновременно гипотеза про UX и сигнал проверить корректность целей.","textChars":71,"textLines":1,"bbox":[64,105,1152,34]}
+{"kind":"textbox","id":"sh/7ep4jmhs","slide":4,"text":"События Метрики","textPreview":"События Метрики","textChars":15,"textLines":1,"bbox":[64,170,260,26]}
+{"kind":"shape","id":"sh/gji5wryp","slide":4,"bbox":[372,298,60,4]}
+{"kind":"shape","id":"sh/hkrmpwzu","slide":4,"bbox":[428,290,20,20]}
+{"kind":"shape","id":"sh/uhgnu1gj","slide":4,"bbox":[778,298,60,4]}
+{"kind":"shape","id":"sh/fi94n6h4","slide":4,"bbox":[834,290,20,20]}
+{"kind":"shape","id":"sh/4ni50byl","slide":4,"bbox":[64,226,300,230]}
+{"kind":"shape","id":"sh/pormtgz6","slide":4,"bbox":[64,226,300,10]}
+{"kind":"textbox","id":"sh/xw7m5wny","slide":4,"text":"1 687","textPreview":"1 687","textChars":5,"textLines":1,"bbox":[92,276,244,70]}
+{"kind":"textbox","id":"sh/wvy5wb6d","slide":4,"text":"заполнений контактных данных","textPreview":"заполнений контактных данных","textChars":28,"textLines":1,"bbox":[92,360,244,62]}
+{"kind":"shape","id":"sh/bup4365s","slide":4,"bbox":[470,226,300,230]}
+{"kind":"shape","id":"sh/atgnu1o7","slide":4,"bbox":[470,226,300,10]}
+{"kind":"textbox","id":"sh/50rm9gnu","slide":4,"text":"39","textPreview":"39","textChars":2,"textLines":1,"bbox":[498,276,244,70]}
+{"kind":"textbox","id":"sh/kzi50b6p","slide":4,"text":"отправок контактных данных","textPreview":"отправок контактных данных","textChars":26,"textLines":1,"bbox":[498,360,244,62]}
+{"kind":"textbox","id":"sh/jy947654","slide":4,"text":"≈2,3% от заполнений","textPreview":"≈2,3% от заполнений","textChars":19,"textLines":1,"bbox":[498,423,244,22]}
+{"kind":"shape","id":"sh/ixgny1oj","slide":4,"bbox":[876,226,300,230]}
+{"kind":"shape","id":"sh/14nmxcnq","slide":4,"bbox":[876,226,300,10]}
+{"kind":"textbox","id":"sh/03elor65","slide":4,"text":"2 347","textPreview":"2 347","textChars":5,"textLines":1,"bbox":[904,276,244,70]}
+{"kind":"textbox","id":"sh/cj2d0bid","slide":4,"text":"кликов по телефону","textPreview":"кликов по телефону","textChars":18,"textLines":1,"bbox":[904,360,244,62]}
+{"kind":"shape","id":"sh/dkbetgzy","slide":4,"bbox":[64,505,1112,95]}
+{"kind":"textbox","id":"sh/qh0vyl07","slide":4,"text":"Как читать этот факт","textPreview":"Как читать этот факт","textChars":20,"textLines":1,"bbox":[88,526,190,24]}
+{"kind":"textbox","id":"sh/ritwr6hs","slide":4,"text":"39 — это целевые визиты автоцели, а не подтверждённые лиды. Сначала связываем Метрику с CRM и проверяем форму на мобильных, затем меняем интерфейс.","textPreview":"39 — это целевые визиты автоцели, а не подтверждённые лиды. Сначала связываем Метрику с CRM и проверяем форму на мобильных, затем меняем ...","textChars":147,"textLines":1,"bbox":[284,522,845,46]}
+{"kind":"shape","id":"sh/0n2d4vi9","slide":4,"bbox":[64,676,1152,1]}
+{"kind":"textbox","id":"sh/1obex0zu","slide":4,"text":"Источник: автоцели Метрики · «заполнил контактные данные», «отправил контактные данные», «клик по номеру телефона»","textPreview":"Источник: автоцели Метрики · «заполнил контактные данные», «отправил контактные данные», «клик по номеру телефона»","textChars":114,"textLines":1,"bbox":[64,685,950,18]}
+{"kind":"textbox","id":"sh/elkv2l0j","slide":4,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1172,681,44,22]}
+{"kind":"notes","id":"nt/7cywzw","slide":4,"text":""}
+{"kind":"slide","id":"sl/z3suja","slide":5,"title":"Главная — центр спроса; продуктовые страницы — место выбора","textShapes":33}
+{"kind":"textbox","id":"sh/4zu5ofyh","slide":5,"text":"Главная — центр спроса; продуктовые страницы — место выбора","textPreview":"Главная — центр спроса; продуктовые страницы — место выбора","textChars":59,"textLines":1,"bbox":[64,44,1152,58]}
+{"kind":"textbox","id":"sh/3yl4fahw","slide":5,"text":"Значит, сайт нужно строить вокруг разных пользовательских задач, а не одной общей формы.","textPreview":"Значит, сайт нужно строить вокруг разных пользовательских задач, а не одной общей формы.","textChars":88,"textLines":1,"bbox":[64,105,1152,34]}
+{"kind":"textbox","id":"sh/ixcnm5gb","slide":5,"text":"Страница","textPreview":"Страница","textChars":8,"textLines":1,"bbox":[64,162,300,24]}
+{"kind":"textbox","id":"sh/donml4fy","slide":5,"text":"Просмотры","textPreview":"Просмотры","textChars":9,"textLines":1,"bbox":[440,162,150,24]}
+{"kind":"textbox","id":"sh/sne5szyd","slide":5,"text":"Входы","textPreview":"Входы","textChars":5,"textLines":1,"bbox":[620,162,150,24]}
+{"kind":"textbox","id":"sh/rm54juxs","slide":5,"text":"Что проверить","textPreview":"Что проверить","textChars":13,"textLines":1,"bbox":[820,162,310,24]}
+{"kind":"shape","id":"sh/qlwnqpg7","slide":5,"bbox":[64,195,1112,1]}
+{"kind":"shape","id":"sh/1s76p4fu","slide":5,"bbox":[64,215,10,30]}
+{"kind":"textbox","id":"sh/0re5wzy9","slide":5,"text":"Главная","textPreview":"Главная","textChars":7,"textLines":1,"bbox":[86,208,340,40]}
+{"kind":"textbox","id":"sh/a5c3mls3","slide":5,"text":"53,5 тыс.","textPreview":"53,5 тыс.","textChars":9,"textLines":1,"bbox":[440,208,150,40]}
+{"kind":"textbox","id":"sh/bql4fq9o","slide":5,"text":"38,9 тыс.","textPreview":"38,9 тыс.","textChars":9,"textLines":1,"bbox":[620,208,150,40]}
+{"kind":"textbox","id":"sh/wrulovat","slide":5,"text":"главный CTA","textPreview":"главный CTA","textChars":11,"textLines":1,"bbox":[820,208,310,40]}
+{"kind":"shape","id":"sh/xs3mhgre","slide":5,"bbox":[64,258,1112,1]}
+{"kind":"shape","id":"sh/ytcnql8z","slide":5,"bbox":[64,272,10,30]}
+{"kind":"textbox","id":"sh/jul4jq9k","slide":5,"text":"Тарифы","textPreview":"Тарифы","textChars":6,"textLines":1,"bbox":[86,265,340,40]}
+{"kind":"textbox","id":"sh/kvu5svq5","slide":5,"text":"6 924","textPreview":"6 924","textChars":5,"textLines":1,"bbox":[440,265,150,40]}
+{"kind":"textbox","id":"sh/lwnml0rq","slide":5,"text":"2 004","textPreview":"2 004","textChars":5,"textLines":1,"bbox":[620,265,150,40]}
+{"kind":"textbox","id":"sh/exs3e1sv","slide":5,"text":"выбор тарифа","textPreview":"выбор тарифа","textChars":12,"textLines":1,"bbox":[820,265,310,40]}
+{"kind":"shape","id":"sh/zy14769g","slide":5,"bbox":[64,315,1112,1]}
+{"kind":"shape","id":"sh/32x0f2p8","slide":5,"bbox":[64,329,10,30]}
+{"kind":"textbox","id":"sh/i1ojmx8n","slide":5,"text":"Конфигуратор","textPreview":"Конфигуратор","textChars":12,"textLines":1,"bbox":[86,322,340,40]}
+{"kind":"textbox","id":"sh/54fihc7y","slide":5,"text":"6 386","textPreview":"6 386","textChars":5,"textLines":1,"bbox":[440,322,150,40]}
+{"kind":"textbox","id":"sh/4361o7qd","slide":5,"text":"1 142","textPreview":"1 142","textChars":5,"textLines":1,"bbox":[620,322,150,40]}
+{"kind":"textbox","id":"sh/vex0bipw","slide":5,"text":"проверка адреса","textPreview":"проверка адреса","textChars":15,"textLines":1,"bbox":[820,322,310,40]}
+{"kind":"shape","id":"sh/ud4jid8b","slide":5,"bbox":[64,372,1112,1]}
+{"kind":"shape","id":"sh/h0fids72","slide":5,"bbox":[64,386,10,30]}
+{"kind":"textbox","id":"sh/gf61knqh","slide":5,"text":"Контакты","textPreview":"Контакты","textChars":8,"textLines":1,"bbox":[86,379,340,40]}
+{"kind":"textbox","id":"sh/fahknmpg","slide":5,"text":"5 018","textPreview":"5 018","textChars":5,"textLines":1,"bbox":[440,379,150,40]}
+{"kind":"textbox","id":"sh/e98juh8v","slide":5,"text":"2 135","textPreview":"2 135","textChars":5,"textLines":1,"bbox":[620,379,150,40]}
+{"kind":"textbox","id":"sh/wf2x8j6d","slide":5,"text":"маршрут абонента","textPreview":"маршрут абонента","textChars":16,"textLines":1,"bbox":[820,379,310,40]}
+{"kind":"shape","id":"sh/xgbyhoni","slide":5,"bbox":[64,429,1112,1]}
+{"kind":"shape","id":"sh/ad0f69o7","slide":5,"bbox":[64,443,10,30]}
+{"kind":"textbox","id":"sh/betgfe5s","slide":5,"text":"Малый бизнес / Wi‑Fi","textPreview":"Малый бизнес / Wi‑Fi","textChars":20,"textLines":1,"bbox":[86,436,340,40]}
+{"kind":"textbox","id":"sh/kj2hcj69","slide":5,"text":"3 804","textPreview":"3 804","textChars":5,"textLines":1,"bbox":[440,436,150,40]}
+{"kind":"textbox","id":"sh/lkbylonu","slide":5,"text":"2 887","textPreview":"2 887","textChars":5,"textLines":1,"bbox":[620,436,150,40]}
+{"kind":"textbox","id":"sh/yhkfa9o3","slide":5,"text":"B2B/B2O оффер","textPreview":"B2B/B2O оффер","textChars":13,"textLines":1,"bbox":[820,436,310,40]}
+{"kind":"shape","id":"sh/jitgje5o","slide":5,"bbox":[64,486,1112,1]}
+{"kind":"shape","id":"sh/87mhg365","slide":5,"bbox":[64,500,10,30]}
+{"kind":"textbox","id":"sh/t8vyp8nq","slide":5,"text":"Оплата","textPreview":"Оплата","textChars":6,"textLines":1,"bbox":[86,493,340,40]}
+{"kind":"textbox","id":"sh/t43q94nu","slide":5,"text":"2 847","textPreview":"2 847","textChars":5,"textLines":1,"bbox":[440,493,150,40]}
+{"kind":"textbox","id":"sh/s3upgz69","slide":5,"text":"1 036","textPreview":"1 036","textChars":5,"textLines":1,"bbox":[620,493,150,40]}
+{"kind":"textbox","id":"sh/72187u5o","slide":5,"text":"сервисный сценарий","textPreview":"сервисный сценарий","textChars":18,"textLines":1,"bbox":[820,493,310,40]}
+{"kind":"shape","id":"sh/6hs7epo3","slide":5,"bbox":[64,543,1112,1]}
+{"kind":"shape","id":"sh/5gjq5kny","slide":5,"bbox":[64,570,1112,58]}
+{"kind":"textbox","id":"sh/kfapcf6d","slide":5,"text":"92% визитов с автоцелью «отправка формы» начинались на главной — продуктовые страницы нужно проверить отдельно.","textPreview":"92% визитов с автоцелью «отправка формы» начинались на главной — продуктовые страницы нужно проверить отдельно.","textChars":111,"textLines":1,"bbox":[86,588,1060,24]}
+{"kind":"shape","id":"sh/je183a5s","slide":5,"bbox":[64,676,1152,1]}
+{"kind":"textbox","id":"sh/ids7a5o7","slide":5,"text":"Источник: обзор Метрики и отчёт автоцели «отправка формы» · значения округлены как в интерфейсе","textPreview":"Источник: обзор Метрики и отчёт автоцели «отправка формы» · значения округлены как в интерфейсе","textChars":95,"textLines":1,"bbox":[64,685,950,18]}
+{"kind":"textbox","id":"sh/pcnqhon2","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1172,681,44,22]}
+{"kind":"notes","id":"nt/z3suja","slide":5,"text":""}
+{"kind":"slide","id":"sl/cnm19k","slide":6,"title":"Один сайт — несколько маршрутов по подразделениям","textShapes":17}
+{"kind":"textbox","id":"sh/7mhwr650","slide":6,"text":"Один сайт — несколько маршрутов по подразделениям","textPreview":"Один сайт — несколько маршрутов по подразделениям","textChars":49,"textLines":1,"bbox":[64,44,1152,58]}
+{"kind":"textbox","id":"sh/8nax0b6l","slide":6,"text":"Это не готовые решения, а проверяемые ставки на основе наблюдаемого поведения.","textPreview":"Это не готовые решения, а проверяемые ставки на основе наблюдаемого поведения.","textChars":78,"textLines":1,"bbox":[64,105,1152,34]}
+{"kind":"shape","id":"sh/tojetwn6","slide":6,"bbox":[64,165,530,160]}
+{"kind":"shape","id":"sh/upsf21or","slide":6,"bbox":[88,185,45,28]}
+{"kind":"textbox","id":"sh/vq1wv65w","slide":6,"text":"B2C","textPreview":"B2C","textChars":3,"textLines":1,"bbox":[98,189,25,20]}
+{"kind":"textbox","id":"sh/grax4b6h","slide":6,"text":"Адрес → тариф → подключение","textPreview":"Адрес → тариф → подключение","textChars":27,"textLines":1,"bbox":[88,229,482,30]}
+{"kind":"textbox","id":"sh/hsjexgn2","slide":6,"text":"Сделать проверку адреса первым действием; короткая форма и понятный следующий шаг.","textPreview":"Сделать проверку адреса первым действием; короткая форма и понятный следующий шаг.","textChars":82,"textLines":1,"bbox":[88,269,482,42]}
+{"kind":"shape","id":"sh/atovqho7","slide":6,"bbox":[686,165,530,160]}
+{"kind":"shape","id":"sh/buxwjm5s","slide":6,"bbox":[710,185,87,28]}
+{"kind":"textbox","id":"sh/fahg7utc","slide":6,"text":"B2B / B2O","textPreview":"B2B / B2O","textChars":9,"textLines":1,"bbox":[720,189,67,20]}
+{"kind":"textbox","id":"sh/epofypcr","slide":6,"text":"Отдельный оффер для бизнеса","textPreview":"Отдельный оффер для бизнеса","textChars":27,"textLines":1,"bbox":[710,229,482,30]}
+{"kind":"textbox","id":"sh/1czy94b2","slide":6,"text":"Развести массовые и корпоративные сценарии: скорость, SLA, статический IP, документы, контакт менеджера.","textPreview":"Развести массовые и корпоративные сценарии: скорость, SLA, статический IP, документы, контакт менеджера.","textChars":104,"textLines":1,"bbox":[710,269,482,42]}
+{"kind":"shape","id":"sh/gbqx0zuh","slide":6,"bbox":[64,360,530,160]}
+{"kind":"shape","id":"sh/rmxg3ut0","slide":6,"bbox":[88,380,87,28]}
+{"kind":"textbox","id":"sh/6lofupcf","slide":6,"text":"ТЕЛЕФОНИЯ","textPreview":"ТЕЛЕФОНИЯ","textChars":9,"textLines":1,"bbox":[98,384,67,20]}
+{"kind":"textbox","id":"sh/tofy5kb6","slide":6,"text":"Звонок — полноценная конверсия","textPreview":"Звонок — полноценная конверсия","textChars":30,"textLines":1,"bbox":[88,424,482,30]}
+{"kind":"textbox","id":"sh/sn6xwful","slide":6,"text":"Связать клик, дозвон и квалификацию; добавить обратный звонок там, где форма проваливается.","textPreview":"Связать клик, дозвон и квалификацию; добавить обратный звонок там, где форма проваливается.","textChars":91,"textLines":1,"bbox":[88,464,482,42]}
+{"kind":"shape","id":"sh/jixgzat4","slide":6,"bbox":[686,360,530,160]}
+{"kind":"shape","id":"sh/ih4fq5cj","slide":6,"bbox":[710,380,101,28]}
+{"kind":"textbox","id":"sh/md4z25wb","slide":6,"text":"ТЕЛЕВИДЕНИЕ","textPreview":"ТЕЛЕВИДЕНИЕ","textChars":11,"textLines":1,"bbox":[720,384,81,20]}
+{"kind":"textbox","id":"sh/7edgbaxw","slide":6,"text":"ТВ как понятный cross‑sell","textPreview":"ТВ как понятный cross‑sell","textChars":26,"textLines":1,"bbox":[710,424,482,30]}
+{"kind":"textbox","id":"sh/8fmh4feh","slide":6,"text":"Показывать ТВ в составе тарифов и конфигуратора, а не прятать отдельным разделом.","textPreview":"Показывать ТВ в составе тарифов и конфигуратора, а не прятать отдельным разделом.","textChars":81,"textLines":1,"bbox":[710,464,482,42]}
+{"kind":"textbox","id":"sh/9gvydkf2","slide":6,"text":"Общий принцип: каждое подразделение получает свой сценарий и свою бизнес-метрику, но все маршруты сходятся в едином учёте лида.","textPreview":"Общий принцип: каждое подразделение получает свой сценарий и свою бизнес-метрику, но все маршруты сходятся в едином учёте лида.","textChars":127,"textLines":1,"bbox":[64,573,1112,40]}
+{"kind":"shape","id":"sh/uh4z6pw7","slide":6,"bbox":[64,676,1152,1]}
+{"kind":"textbox","id":"sh/vidgfaxs","slide":6,"text":"Основание: структура посадочных страниц, клики по телефону, формы и смешанный сервисный/продуктовый трафик","textPreview":"Основание: структура посадочных страниц, клики по телефону, формы и смешанный сервисный/продуктовый трафик","textChars":106,"textLines":1,"bbox":[64,685,950,18]}
+{"kind":"textbox","id":"sh/wj6h8fed","slide":6,"text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1172,681,44,22]}
+{"kind":"notes","id":"nt/cnm19k","slide":6,"text":""}
+{"kind":"slide","id":"sl/3y8tn8","slide":7,"title":"Проверяем не клики, а квалифицированные подключения","textShapes":12}
+{"kind":"textbox","id":"sh/sf21kby9","slide":7,"text":"Проверяем не клики, а квалифицированные подключения","textPreview":"Проверяем не клики, а квалифицированные подключения","textChars":51,"textLines":1,"bbox":[64,44,1152,58]}
+{"kind":"textbox","id":"sh/7et0b6xo","slide":7,"text":"Предлагаемый контур на первые 30 дней после согласования.","textPreview":"Предлагаемый контур на первые 30 дней после согласования.","textChars":57,"textLines":1,"bbox":[64,105,1152,34]}
+{"kind":"shape","id":"sh/6dkji1gj","slide":7,"bbox":[64,180,330,300]}
+{"kind":"shape","id":"sh/5cbipwfy","slide":7,"bbox":[64,180,330,12]}
+{"kind":"textbox","id":"sh/kb21gbyd","slide":7,"text":"1. Зафиксировать","textPreview":"1. Зафиксировать","textChars":16,"textLines":1,"bbox":[88,216,282,30]}
+{"kind":"textbox","id":"sh/jat0n6xs","slide":7,"text":"form_view\nform_start\nfield_error\naddress_check\nform_success","textPreview":"form_view | form_start | field_error | address_check | form_success","textChars":59,"textLines":5,"bbox":[88,270,282,170]}
+{"kind":"shape","id":"sh/i9kje1g7","slide":7,"bbox":[406,336,24,4]}
+{"kind":"shape","id":"sh/x8rilwfm","slide":7,"bbox":[426,328,20,20]}
+{"kind":"shape","id":"sh/w7i1cry1","slide":7,"bbox":[440,180,330,300]}
+{"kind":"shape","id":"sh/eds7i547","slide":7,"bbox":[440,180,330,12]}
+{"kind":"textbox","id":"sh/fe18rals","slide":7,"text":"2. Связать","textPreview":"2. Связать","textChars":10,"textLines":1,"bbox":[464,216,282,30]}
+{"kind":"textbox","id":"sh/0fapkfmd","slide":7,"text":"Метрика → CRM\nlead_id\nисточник\nтариф\nстатус лида","textPreview":"Метрика → CRM | lead_id | источник | тариф | статус лида","textChars":48,"textLines":5,"bbox":[464,270,282,170]}
+{"kind":"shape","id":"sh/1gjqtk3y","slide":7,"bbox":[782,336,24,4]}
+{"kind":"shape","id":"sh/qp87e54b","slide":7,"bbox":[802,328,20,20]}
+{"kind":"shape","id":"sh/rqh8nalw","slide":7,"bbox":[816,180,330,300]}
+{"kind":"shape","id":"sh/srqpgvmh","slide":7,"bbox":[816,180,330,12]}
+{"kind":"textbox","id":"sh/dczqp03m","slide":7,"text":"3. Проверить","textPreview":"3. Проверить","textChars":12,"textLines":1,"bbox":[840,216,282,30]}
+{"kind":"textbox","id":"sh/il87al4z","slide":7,"text":"квалифицированный лид\nдозвон\nподключение\nвыручка\nстоимость лида","textPreview":"квалифицированный лид | дозвон | подключение | выручка | стоимость лида","textChars":63,"textLines":5,"bbox":[840,270,282,170]}
+{"kind":"shape","id":"sh/3mhojqlk","slide":7,"bbox":[64,530,1112,74]}
+{"kind":"textbox","id":"sh/7qd4rm1c","slide":7,"text":"Главная метрика: квалифицированные подключения / визиты","textPreview":"Главная метрика: квалифицированные подключения / визиты","textChars":55,"textLines":1,"bbox":[88,551,710,28]}
+{"kind":"textbox","id":"sh/mp4nihkr","slide":7,"text":"Защитные метрики: SEO-трафик · скорость ответа · нагрузка на поддержку","textPreview":"Защитные метрики: SEO-трафик · скорость ответа · нагрузка на поддержку","textChars":70,"textLines":1,"bbox":[794,554,350,24]}
+{"kind":"shape","id":"sh/9svmtwji","slide":7,"bbox":[64,676,1152,1]}
+{"kind":"textbox","id":"sh/8rm5kr2x","slide":7,"text":"Сейчас в Метрике видны автоцели; CRM, коллтрекинг и выручка в исследованной сессии не были доступны","textPreview":"Сейчас в Метрике видны автоцели; CRM, коллтрекинг и выручка в исследованной сессии не были доступны","textChars":99,"textLines":1,"bbox":[64,685,950,18]}
+{"kind":"textbox","id":"sh/vux4v61o","slide":7,"text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1172,681,44,22]}
+{"kind":"notes","id":"nt/3y8tn8","slide":7,"text":""}
+{"kind":"slide","id":"sl/px2o5x","slide":8,"title":"Что нужно решить сегодня","textShapes":13}
+{"kind":"textbox","id":"sh/wrmp43ip","slide":8,"text":"Что нужно решить сегодня","textPreview":"Что нужно решить сегодня","textChars":24,"textLines":1,"bbox":[64,72,850,60]}
+{"kind":"textbox","id":"sh/vqd8bih4","slide":8,"text":"Чтобы редизайн стал управляемым продуктовым экспериментом","textPreview":"Чтобы редизайн стал управляемым продуктовым экспериментом","textChars":57,"textLines":1,"bbox":[64,140,850,32]}
+{"kind":"textbox","id":"sh/ap472d0j","slide":8,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[64,235,70,50]}
+{"kind":"textbox","id":"sh/5wfqhsz6","slide":8,"text":"Назначить владельца","textPreview":"Назначить владельца","textChars":19,"textLines":1,"bbox":[164,235,380,32]}
+{"kind":"textbox","id":"sh/kvmp8nil","slide":8,"text":"один ответственный за путь от визита до подключения","textPreview":"один ответственный за путь от визита до подключения","textChars":51,"textLines":1,"bbox":[564,238,580,42]}
+{"kind":"shape","id":"sh/jud8fih0","slide":8,"bbox":[164,305,980,1]}
+{"kind":"textbox","id":"sh/it476d0v","slide":8,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[64,355,70,50]}
+{"kind":"textbox","id":"sh/tkfqlszi","slide":8,"text":"Утвердить маршруты","textPreview":"Утвердить маршруты","textChars":18,"textLines":1,"bbox":[164,355,380,32]}
+{"kind":"textbox","id":"sh/sj6pc7ix","slide":8,"text":"B2C · B2B/B2O · действующий абонент · ТВ/телефония","textPreview":"B2C · B2B/B2O · действующий абонент · ТВ/телефония","textChars":50,"textLines":1,"bbox":[564,358,580,42]}
+{"kind":"shape","id":"sh/q5gnutsv","slide":8,"bbox":[164,425,980,1]}
+{"kind":"textbox","id":"sh/b6p4nytg","slide":8,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[64,475,70,50]}
+{"kind":"textbox","id":"sh/c7y5w3al","slide":8,"text":"Запустить измерение","textPreview":"Запустить измерение","textChars":19,"textLines":1,"bbox":[164,475,380,32]}
+{"kind":"textbox","id":"sh/d87mp8b6","slide":8,"text":"события, CRM-связка и первый тест формы/звонка за 30 дней","textPreview":"события, CRM-связка и первый тест формы/звонка за 30 дней","textChars":57,"textLines":1,"bbox":[564,478,580,42]}
+{"kind":"shape","id":"sh/ytgnydsr","slide":8,"bbox":[164,545,980,1]}
+{"kind":"shape","id":"sh/zup4ritc","slide":8,"bbox":[64,600,800,42]}
+{"kind":"textbox","id":"sh/0vi503ax","slide":8,"text":"Метрика показывает спрос. CRM и телефония подтвердят ценность.","textPreview":"Метрика показывает спрос. CRM и телефония подтвердят ценность.","textChars":62,"textLines":1,"bbox":[88,610,750,22]}
+{"kind":"textbox","id":"sh/lwrmt8ri","slide":8,"text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1172,642,44,22]}
+{"kind":"notes","id":"nt/px2o5x","slide":8,"text":""}

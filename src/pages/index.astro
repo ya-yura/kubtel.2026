@@ -1,166 +1,34 @@
 ---
-import BaseLayout from "@layouts/BaseLayout.astro";
 import Hero from "@components/sections/Hero.astro";
-import FunnelOverview from "@components/sections/FunnelOverview.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
 import ServiceConfigurator from "@components/sections/ServiceConfigurator.astro";
-import TariffGrid from "@components/sections/TariffGrid.astro";
-import HumanScenarios from "@components/sections/HumanScenarios.astro";
-import ServiceCards from "@components/sections/ServiceCards.astro";
-import FaqList from "@components/sections/FaqList.astro";
-import { getConfiguratorCatalog, getFaqItems, getServices, getTariffs } from "@lib/content";
+import { getConfiguratorCatalog, getTariffs } from "@lib/content";
 import { handleConfiguratorFormPost } from "@lib/leads/form-handlers";
-import { buildFaqSchema, buildInternetServiceSchema } from "@lib/seo/schema";
-import { getSitePath, SITE } from "@config/site";
+import { buildInternetServiceSchema } from "@lib/seo/schema";
 
 const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
 export const prerender = false;
 
 const tariffs = await getTariffs();
-const services = await getServices();
 const configuratorCatalog = await getConfiguratorCatalog();
-const faqItems = await getFaqItems({ limit: 3 });
 const leadActionResult =
   !isStaticPreview && Astro.request.method === "POST"
     ? await handleConfiguratorFormPost(await Astro.request.formData(), Astro.request)
     : undefined;
-const pageSchema = [buildInternetServiceSchema(tariffs, "/"), buildFaqSchema(faqItems, "/")];
+const pageSchema = buildInternetServiceSchema(tariffs, "/");
 ---
 
 <BaseLayout
   title={"Интернет в\u00a0Краснодаре"}
-  description={"Kubtel: домашний интернет в\u00a0Краснодаре с живым обратным звонком, понятными условиями и местной командой без скрытых платежей."}
+  description={"Kubtel: домашний интернет, оплата, личный кабинет и тарифы для жителей Краснодара. Отдельный маршрут — для организаций."}
   canonicalPath="/"
   schema={pageSchema}
 >
   <Hero />
-  <TariffGrid tariffs={tariffs} />
-  <section class="section-pad homepage-b2g-callout" aria-label="Работа с организациями">
-    <div>
-      <span class="service-category">B2B · B2G · B2O</span>
-      <h2>Для каждой организации — свой маршрут, услуги и контакт</h2>
-      <p>
-        Выберите направление на первом экране или сразу перейдите в нужный раздел: бизнес,
-        государственный заказчик или оператор связи.
-      </p>
-    </div>
-    <div class="button-row">
-      <a class="card-action" href={getSitePath("/business/b2b/")}>B2B</a>
-      <a class="business-link" href={getSitePath("/business/b2g/")}>B2G</a>
-      <a class="business-link" href={getSitePath("/business/b2o/")}>B2O</a>
-      <a
-        class="business-link"
-        href={`tel:+${SITE.budgetPhone.replace(/\D/g, "").replace(/^8/, "7")}`}
-      >
-        {SITE.budgetPhone}
-      </a>
-    </div>
-  </section>
-  <section
-    class="section-pad subscriber-tools"
-    id="subscriber-tools"
-    aria-label="Личный кабинет и пополнение счёта"
-  >
-    <article class="subscriber-tool-card">
-      <h2>Личный кабинет Кубтел</h2>
-      <p>
-        Баланс, состояние услуг и данные договора доступны на защищённом сайте личного кабинета.
-      </p>
-      <div class="subscriber-tool-actions">
-        <a class="card-action" href={SITE.accountUrl} target="_blank" rel="noopener noreferrer">
-          Открыть личный кабинет
-        </a>
-      </div>
-    </article>
-
-    <article class="subscriber-tool-card payment-tool-card">
-      <h2>Онлайн-оплата для физлиц и ИП</h2>
-      <p>
-        Лицевой счёт и сумма вводятся только на действующей платёжной странице Kubtel. Юридические
-        лица запрашивают счёт и документы отдельно.
-      </p>
-      <div class="payment-methods" aria-label="Основные способы оплаты">
-        <span class="payment-method-icon is-kubtel" aria-label="Оплата Kubtel">
-          <svg viewBox="0 0 40 40" aria-hidden="true">
-            <path d="M8 5v30l12-7.5v-15L8 5Z"></path>
-            <path d="M20 5v30l12-7.5v-15L20 5Z"></path>
-          </svg>
-        </span>
-        <span class="payment-method-icon" aria-label="Банковская карта">
-          <svg viewBox="0 0 56 40" aria-hidden="true">
-            <rect x="5" y="10" width="46" height="25" rx="5"></rect>
-            <path d="M5 18h46"></path>
-            <path d="M15 28h7M27 28h10"></path>
-            <path d="M28 10 38 2l12 8"></path>
-          </svg>
-        </span>
-        <span class="payment-method-icon" aria-label="Быстрый платёж">
-          <svg viewBox="0 0 44 44" aria-hidden="true">
-            <path d="M34 12a16 16 0 1 0 4 10"></path>
-            <path d="m28 12 7 7 7-11"></path>
-            <path d="m14 23 6 6 12-14"></path>
-          </svg>
-        </span>
-        <span class="payment-method-text" aria-label="ЮMoney">Ю</span>
-      </div>
-      <div class="subscriber-tool-actions">
-        <a class="card-action" href={SITE.paymentUrl} target="_blank" rel="noopener noreferrer">
-          Перейти к оплате
-        </a>
-        <a href={getSitePath("/payment/")}>Все платёжные маршруты</a>
-      </div>
-    </article>
-  </section>
-  <section class="section-pad homepage-direct-contacts" aria-label="Прямые контакты Kubtel">
-    <div>
-      <span class="service-category">Прямой контакт</span>
-      <h2>Не обязательно оставлять форму</h2>
-      <p>Для технических вопросов позвоните или напишите напрямую в поддержку.</p>
-    </div>
-    <div class="button-row">
-      <a
-        class="card-action"
-        href={`tel:+${SITE.supportDirectPhone.replace(/\D/g, "").replace(/^8/, "7")}`}
-      >
-        {SITE.supportDirectPhone}
-      </a>
-      <a class="business-link" href={`mailto:${SITE.supportEmail}`}>{SITE.supportEmail}</a>
-      <a class="business-link" href={getSitePath("/contacts/")}>Все контакты</a>
-    </div>
-  </section>
-  <section class="section-pad service-hub" aria-label="Быстрые разделы для абонентов">
-    <article class="service-hub-primary">
-      <span class="service-category">Абонентам</span>
-      <h2>Оплата, документы и поддержка в один переход</h2>
-      <p>
-        Если услуга уже подключена, не нужно искать нужный раздел по всему сайту: оплатите услуги,
-        проверьте официальные сообщения, откройте документы или сразу свяжитесь с поддержкой.
-      </p>
-    </article>
-    <a class="service-hub-card" href={getSitePath("/payment/")}>
-      <span>Оплата</span>
-      <strong>Личный кабинет и способы оплаты</strong>
-    </a>
-    <a class="service-hub-card" href={getSitePath("/news/")}>
-      <span>Новости</span>
-      <strong>Изменения тарифов и уведомления</strong>
-    </a>
-    <a class="service-hub-card" href={getSitePath("/documents/")}>
-      <span>Документы</span>
-      <strong>Условия, реквизиты и политика ПДн</strong>
-    </a>
-    <a class="service-hub-card" href={`tel:${SITE.supportPhone.replace(/\D/g, "")}`}>
-      <span>Поддержка</span>
-      <strong>{SITE.supportPhone}</strong>
-    </a>
-  </section>
-  <FunnelOverview />
-  <HumanScenarios />
-  <ServiceCards services={services} tariffs={tariffs} />
   <ServiceConfigurator
     catalog={configuratorCatalog}
     actionResult={leadActionResult}
     staticPreview={isStaticPreview}
     formAction={Astro.url.pathname}
   />
-  <FaqList items={faqItems} />
 </BaseLayout>
