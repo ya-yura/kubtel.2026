@@ -7,15 +7,25 @@ type Props = {
 };
 
 const { groups, channelCount } = Astro.props;
+
+function getChannelInitials(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
+}
 ---
 
 <section class="channel-panel" id="channels" data-channel-list>
   <div class="section-heading">
     <p class="eyebrow">Телевидение</p>
-    <h2>Каналы базового пакета ({channelCount})</h2>
+    <h2>Каналы единого пакета ({channelCount})</h2>
     <p>
-      Один общий список без искусственного деления на пакеты. Найдите канал по названию или
-      категории.
+      Все доступные каналы собраны в одном пакете. Найдите канал по названию или категории, нажмите
+      на карточку и откройте его описание.
     </p>
   </div>
   <div class="channel-tools">
@@ -43,14 +53,36 @@ const { groups, channelCount } = Astro.props;
             <h3>{group.title}</h3>
             <span>{group.channels.length}</span>
           </div>
-          <ul>
+          <ul class="channel-grid">
             {group.channels.map((channel) => (
               <li
                 data-channel
                 data-channel-category={group.id}
-                data-channel-name={channel.toLocaleLowerCase("ru-RU")}
+                data-channel-name={channel.name.toLocaleLowerCase("ru-RU")}
               >
-                {channel}
+                <details class="channel-card">
+                  <summary class="channel-card-summary">
+                    <span class="channel-logo">
+                      {channel.logo ? (
+                        <img src={channel.logo} alt="" loading="lazy" decoding="async" />
+                      ) : (
+                        <span class="channel-logo-fallback" aria-hidden="true">
+                          {getChannelInitials(channel.name)}
+                        </span>
+                      )}
+                    </span>
+                    <span class="channel-card-copy">
+                      <strong>{channel.name}</strong>
+                      <small>Открыть описание</small>
+                    </span>
+                    <span class="channel-card-chevron" aria-hidden="true">
+                      ⌄
+                    </span>
+                  </summary>
+                  <div class="channel-card-description">
+                    <p>{channel.description || "Описание канала пока не опубликовано."}</p>
+                  </div>
+                </details>
               </li>
             ))}
           </ul>
@@ -115,3 +147,139 @@ const { groups, channelCount } = Astro.props;
     update();
   });
 </script>
+
+<style>
+  .channel-panel .channel-group ul.channel-grid {
+    display: grid;
+    gap: 0.65rem;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .channel-panel .channel-grid > li {
+    background: transparent;
+    border: 0;
+    min-width: 0;
+    padding: 0;
+  }
+
+  .channel-card {
+    background: var(--kb-component-card-background);
+    border: 1px solid var(--kb-component-card-border);
+    border-radius: var(--kb-shape-card);
+    box-shadow: none;
+    overflow: hidden;
+    transition:
+      border-color var(--kb-motion-duration-fast) var(--kb-motion-easing-standard),
+      box-shadow var(--kb-motion-duration-fast) var(--kb-motion-easing-standard);
+  }
+
+  .channel-card:hover,
+  .channel-card[open] {
+    border-color: var(--kb-color-overlay-accent42);
+    box-shadow: var(--kb-elevation-selected-subtle);
+  }
+
+  .channel-card-summary {
+    align-items: center;
+    cursor: pointer;
+    display: grid;
+    gap: 0.65rem;
+    grid-template-columns: 3.1rem minmax(0, 1fr) auto;
+    list-style: none;
+    min-height: 5.2rem;
+    padding: 0.7rem;
+  }
+
+  .channel-card-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .channel-logo {
+    align-items: center;
+    background: var(--kb-color-surface-soft);
+    border: 1px solid var(--kb-component-card-border);
+    border-radius: var(--kb-shape-control-small);
+    display: grid;
+    height: 3.1rem;
+    justify-items: center;
+    overflow: hidden;
+    width: 3.1rem;
+  }
+
+  .channel-logo img {
+    height: 100%;
+    object-fit: contain;
+    padding: 0.28rem;
+    width: 100%;
+  }
+
+  .channel-logo-fallback {
+    color: var(--kb-color-action-primary-background);
+    font-family: var(--kb-typography-display-family);
+    font-size: 0.72rem;
+    font-weight: 900;
+  }
+
+  .channel-card-copy {
+    display: grid;
+    gap: 0.18rem;
+    min-width: 0;
+  }
+
+  .channel-card-copy strong {
+    color: var(--kb-color-text-primary);
+    font-size: 0.9rem;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .channel-card-copy small {
+    color: var(--kb-color-text-secondary);
+    font-size: 0.72rem;
+  }
+
+  .channel-card-chevron {
+    color: var(--kb-color-text-secondary);
+    font-size: 1.25rem;
+    line-height: 1;
+    transition:
+      color var(--kb-motion-duration-fast) var(--kb-motion-easing-standard),
+      transform var(--kb-motion-duration-fast) var(--kb-motion-easing-standard);
+  }
+
+  .channel-card[open] .channel-card-chevron {
+    color: var(--kb-color-action-primary-background);
+    transform: rotate(180deg);
+  }
+
+  .channel-card-description {
+    border-top: 1px solid var(--kb-component-card-border);
+    padding: 0.75rem;
+  }
+
+  .channel-card-description p {
+    font-size: 0.82rem;
+    margin: 0;
+  }
+
+  @media (max-width: 719px) {
+    .channel-panel .channel-group ul.channel-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .channel-card-summary {
+      gap: 0.5rem;
+      grid-template-columns: 2.65rem minmax(0, 1fr) auto;
+      min-height: 4.8rem;
+      padding: 0.55rem;
+    }
+
+    .channel-logo {
+      height: 2.65rem;
+      width: 2.65rem;
+    }
+  }
+</style>

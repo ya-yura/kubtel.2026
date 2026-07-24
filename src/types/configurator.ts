@@ -1,4 +1,4 @@
-export type ConfiguratorServiceId = "internet" | "tv" | "cctv";
+export type ConfiguratorServiceId = "internet" | "cctv";
 
 export type ConfiguratorFieldType = "select" | "radio" | "checkbox" | "counter";
 
@@ -22,10 +22,17 @@ export type ConfiguratorField = {
   min?: number;
   max?: number;
   step?: number;
+  showWhen?: ConfiguratorVisibilityRule;
   defaultValue?: string | number | boolean | string[];
   monthlyPrice?: number;
   oneTimePrice?: number;
   choices?: ConfiguratorChoice[];
+};
+
+export type ConfiguratorVisibilityRule = {
+  fieldId: string;
+  equals?: string | number | boolean;
+  in?: Array<string | number | boolean>;
 };
 
 export type ConfiguratorService = {
@@ -41,7 +48,14 @@ export type ConfiguratorService = {
 export type ChannelGroup = {
   id: string;
   title: string;
-  channels: string[];
+  channels: Channel[];
+};
+
+export type Channel = {
+  id: string;
+  name: string;
+  logo?: string | null;
+  description?: string;
 };
 
 export type AppLink = {

@@ -20,6 +20,13 @@ const configuratorFieldSchema = z.object({
   min: z.number().int().nonnegative().optional(),
   max: z.number().int().positive().optional(),
   step: z.number().positive().optional(),
+  showWhen: z
+    .object({
+      fieldId: z.string().min(1),
+      equals: z.union([z.string(), z.number(), z.boolean()]).optional(),
+      in: z.array(z.union([z.string(), z.number(), z.boolean()])).optional()
+    })
+    .optional(),
   defaultValue: z.union([z.string(), z.number(), z.boolean(), z.array(z.string())]).optional(),
   monthlyPrice: z.number().nonnegative().optional(),
   oneTimePrice: z.number().nonnegative().optional(),
@@ -53,7 +60,7 @@ export const configuratorSchema = z.object({
   sourceNote: z.string(),
   services: z.array(
     z.object({
-      id: z.enum(["internet", "tv", "cctv"]),
+      id: z.enum(["internet", "cctv"]),
       tabLabel: z.string().min(1),
       title: z.string().min(1),
       description: z.string().min(1),
@@ -68,7 +75,14 @@ export const configuratorSchema = z.object({
       z.object({
         id: z.string().min(1),
         title: z.string().min(1),
-        channels: z.array(z.string().min(1))
+        channels: z.array(
+          z.object({
+            id: z.string().min(1),
+            name: z.string().min(1),
+            logo: z.string().min(1).nullable().optional(),
+            description: z.string().optional()
+          })
+        )
       })
     ),
     appLinks: z.array(appLinkSchema),

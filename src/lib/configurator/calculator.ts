@@ -35,6 +35,7 @@ export function calculateConfiguratorPrice(
   const service = getConfiguratorService(catalog, serviceId);
   const values = asValueRecord(rawValues);
   const lines = service.fields
+    .filter((field) => isConfiguratorFieldVisible(field, values))
     .map((field) => calculateFieldLine(field, values[field.id]))
     .filter((line): line is ConfiguratorPriceLine => line !== null);
 
@@ -44,6 +45,33 @@ export function calculateConfiguratorPrice(
     monthlyTotal: lines.reduce((total, line) => total + line.monthlyPrice, 0),
     oneTimeTotal: lines.reduce((total, line) => total + line.oneTimePrice, 0)
   };
+}
+
+export function isConfiguratorFieldVisible(
+  field: ConfiguratorField,
+  rawValues: Record<string, ConfiguratorFieldValue | undefined>
+): boolean {
+  const rule = field.showWhen;
+
+  if (!rule) {
+    return true;
+  }
+
+  const value = rawValues[rule.fieldId];
+
+  if (rule.equals !== undefined && value !== rule.equals) {
+    return false;
+  }
+
+  if (rule.in?.length) {
+    if (Array.isArray(value)) {
+      return value.some((item) => rule.in?.includes(item));
+    }
+
+    return rule.in.includes(value as string | number | boolean);
+  }
+
+  return true;
 }
 
 function calculateFieldLine(

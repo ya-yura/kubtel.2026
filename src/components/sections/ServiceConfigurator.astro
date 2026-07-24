@@ -1,7 +1,10 @@
 ---
 import { SITE } from "@config/site";
 import { formatRubles } from "@lib/format";
-import { calculateConfiguratorPrice } from "@lib/configurator/calculator";
+import {
+  calculateConfiguratorPrice,
+  isConfiguratorFieldVisible
+} from "@lib/configurator/calculator";
 import ConfiguratorField from "@components/ui/ConfiguratorField.astro";
 import type {
   ConfiguratorCatalog,
@@ -22,6 +25,7 @@ type Props = {
   actionResult?: ActionResultLike;
   staticPreview?: boolean;
   formAction?: string;
+  initialValues?: Record<string, ConfiguratorFieldValue>;
 };
 
 const {
@@ -30,7 +34,8 @@ const {
   singleService = null,
   actionResult,
   staticPreview = false,
-  formAction = Astro.url.pathname
+  formAction = Astro.url.pathname,
+  initialValues = {}
 } = Astro.props;
 
 const services = singleService
@@ -40,14 +45,21 @@ const defaultService = services.find((service) => service.id === initialService)
 const actionData = actionResult?.data;
 const actionError = actionResult?.error;
 const formStartedAt = Date.now().toString();
-const defaultValues = defaultService ? getDefaultValues(defaultService) : {};
+const defaultValues = defaultService ? getDefaultValues(defaultService, initialValues) : {};
 const defaultPricing = defaultService
   ? calculateConfiguratorPrice(catalog, defaultService.id, defaultValues)
   : null;
 
-function getDefaultValues(service: ConfiguratorService): Record<string, ConfiguratorFieldValue> {
+function getDefaultValues(
+  service: ConfiguratorService,
+  overrides: Record<string, ConfiguratorFieldValue>
+): Record<string, ConfiguratorFieldValue> {
   return Object.fromEntries(
     service.fields.map((field) => {
+      if (overrides[field.id] !== undefined) {
+        return [field.id, overrides[field.id]];
+      }
+
       if (field.type === "counter") {
         return [field.id, field.defaultValue ?? field.min ?? 0];
       }
@@ -131,7 +143,12 @@ function getDefaultValues(service: ConfiguratorService): Record<string, Configur
             </div>
             <div class="config-fields">
               {service.fields.map((field) => (
-                <ConfiguratorField field={field} serviceId={service.id} />
+                <ConfiguratorField
+                  field={field}
+                  serviceId={service.id}
+                  value={defaultValues[field.id]}
+                  visible={isConfiguratorFieldVisible(field, defaultValues)}
+                />
               ))}
             </div>
             <ul class="config-notes">
@@ -310,6 +327,27 @@ function getDefaultValues(service: ConfiguratorService): Record<string, Configur
 
     const money = (value: number) => new Intl.NumberFormat("ru-RU").format(value);
 
+    const matchesVisibilityRule = (field: any, values: Record<string, any>) => {
+      const rule = field.showWhen;
+      if (!rule) return true;
+      const value = values[rule.fieldId];
+      if (rule.equals !== undefined && value !== rule.equals) return false;
+      if (Array.isArray(rule.in) && rule.in.length > 0) {
+        return Array.isArray(value)
+          ? value.some((item) => rule.in.includes(item))
+          : rule.in.includes(value);
+      }
+      return true;
+    };
+
+    const updateFieldVisibility = (panel: HTMLElement, values: Record<string, any>) => {
+      panel.querySelectorAll<HTMLElement>("[data-config-show-when]").forEach((field) => {
+        const rule = field.dataset.configShowWhen;
+        if (!rule) return;
+        field.hidden = !matchesVisibilityRule({ showWhen: JSON.parse(rule) }, values);
+      });
+    };
+
     const getFields = (panel: HTMLElement) => {
       const values: Record<string, string | number | boolean | string[]> = {};
       const fields = Array.from(
@@ -364,9 +402,11 @@ function getDefaultValues(service: ConfiguratorService): Record<string, Configur
       const service = catalog.services.find((item: any) => item.id === activeService);
       if (!service) return;
       const fields = getFields(panel);
+      updateFieldVisibility(panel, fields);
       const lines: Array<{ label: string; valueLabel: string; monthly: number; once: number }> = [];
 
       service.fields.forEach((field: any) => {
+        if (!matchesVisibilityRule(field, fields)) return;
         const value = fields[field.id];
         if (field.type === "counter") {
           const count = Number(value ?? 0);

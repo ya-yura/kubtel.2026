@@ -1,48 +1,59 @@
 ---
-import type { ConfiguratorField } from "@models/configurator";
+import type { ConfiguratorField, ConfiguratorFieldValue } from "@models/configurator";
 
 type Props = {
   field: ConfiguratorField;
   serviceId: string;
+  value?: ConfiguratorFieldValue;
+  visible?: boolean;
 };
 
-const { field, serviceId } = Astro.props;
+const { field, serviceId, value, visible = true } = Astro.props;
 const fieldName = `${serviceId}-${field.id}`;
+const resolvedValue = value ?? field.defaultValue;
 const defaultChoice = field.choices?.find((choice) => {
-  if (typeof field.defaultValue === "string") return field.defaultValue === choice.id;
+  if (typeof resolvedValue === "string") return resolvedValue === choice.id;
+  if (Array.isArray(resolvedValue)) return resolvedValue.includes(choice.id);
   return choice.default;
 });
 const defaultValue =
-  typeof field.defaultValue === "string" || typeof field.defaultValue === "number"
-    ? field.defaultValue
+  typeof resolvedValue === "string" || typeof resolvedValue === "number"
+    ? resolvedValue
     : field.type === "counter"
       ? (field.min ?? 0)
       : "";
 const choiceInputType =
   field.type === "radio" || (field.type === "checkbox" && !field.multiple) ? "radio" : "checkbox";
+const showWhen = field.showWhen ? JSON.stringify(field.showWhen) : undefined;
 ---
 
 {
   field.type === "select" ? (
-    <label class="config-field">
+    <label class="config-field" data-config-show-when={showWhen} hidden={!visible}>
       <span>{field.label}</span>
-      <select data-config-field data-field-id={field.id} data-field-type={field.type}>
-        {field.choices?.map((choice) => (
-          <option
-            value={choice.id}
-            selected={choice.id === (defaultChoice?.id ?? field.choices?.[0]?.id)}
-            data-label={choice.label}
-            data-monthly={choice.monthlyPrice}
-            data-once={choice.oneTimePrice}
-          >
-            {choice.label}
-          </option>
-        ))}
-      </select>
+      <div class="config-select-control">
+        <select data-config-field data-field-id={field.id} data-field-type={field.type}>
+          {field.choices?.map((choice) => (
+            <option
+              value={choice.id}
+              selected={choice.id === (defaultChoice?.id ?? field.choices?.[0]?.id)}
+              data-label={choice.label}
+              data-monthly={choice.monthlyPrice}
+              data-once={choice.oneTimePrice}
+            >
+              {choice.label}
+            </option>
+          ))}
+        </select>
+      </div>
       {field.help && <small>{field.help}</small>}
     </label>
   ) : field.type === "counter" ? (
-    <label class="config-field config-counter-field">
+    <label
+      class="config-field config-counter-field"
+      data-config-show-when={showWhen}
+      hidden={!visible}
+    >
       <span>{field.label}</span>
       <div class="config-counter-control">
         <button type="button" data-config-step="-1" aria-label={`Уменьшить: ${field.label}`}>
@@ -69,10 +80,14 @@ const choiceInputType =
       {field.help && <small>{field.help}</small>}
     </label>
   ) : field.type === "checkbox" && !field.choices?.length ? (
-    <label class="config-choice config-choice-single">
+    <label
+      class="config-choice config-choice-single"
+      data-config-show-when={showWhen}
+      hidden={!visible}
+    >
       <input
         type="checkbox"
-        checked={field.defaultValue === true}
+        checked={resolvedValue === true}
         data-config-field
         data-field-id={field.id}
         data-field-type={field.type}
@@ -85,7 +100,7 @@ const choiceInputType =
       </span>
     </label>
   ) : (
-    <fieldset class="config-fieldset">
+    <fieldset class="config-fieldset" data-config-show-when={showWhen} hidden={!visible}>
       <legend>{field.label}</legend>
       <div class="config-choice-grid">
         {field.choices?.map((choice) => (
@@ -95,10 +110,10 @@ const choiceInputType =
               name={fieldName}
               value={choice.id}
               checked={
-                Array.isArray(field.defaultValue)
-                  ? field.defaultValue.includes(choice.id)
-                  : typeof field.defaultValue === "string"
-                    ? field.defaultValue === choice.id
+                Array.isArray(resolvedValue)
+                  ? resolvedValue.includes(choice.id)
+                  : typeof resolvedValue === "string"
+                    ? resolvedValue === choice.id
                     : Boolean(choice.default)
               }
               data-config-field

@@ -41,7 +41,7 @@ export const configuratorFormSchema = z.object({
     .refine((phone) => phonePattern.test(phone), "Укажите телефон в международном формате"),
   email: optionalEmailSchema.transform((value) => value || null),
   address: optionalTrimmedString(240),
-  service: z.enum(["internet", "tv", "cctv"]),
+  service: z.enum(["internet", "cctv"]),
   configuration: z.string().trim().min(2, "Конфигурация услуги не передана").max(12000),
   consent: consentSchema,
   website: honeypotSchema.default(""),

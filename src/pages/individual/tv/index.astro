@@ -15,12 +15,13 @@ const leadActionResult =
   !isStaticPreview && Astro.request.method === "POST"
     ? await handleConfiguratorFormPost(await Astro.request.formData(), Astro.request)
     : undefined;
-const selectedTab = Astro.url.searchParams.get("tab") ?? "about";
+const requestedTab = Astro.url.searchParams.get("tab") ?? "about";
+const selectedTab = requestedTab === "connect" ? "about" : requestedTab;
 ---
 
 <BaseLayout
   title="Кубтел ТВ — 177 каналов и приложения"
-  description="Кубтел ТВ: 177 каналов, поиск по списку, приложения для Smart TV и Android, приставка, дополнительные пакеты и оферты."
+  description="Кубтел ТВ: 177 каналов в одном пакете, поиск по списку, приложения для Smart TV и Android, приставка и оферты."
   canonicalPath="/individual/tv/"
 >
   <section class="service-hero section-pad tv-service-hero">
@@ -28,8 +29,8 @@ const selectedTab = Astro.url.searchParams.get("tab") ?? "about";
       <p class="eyebrow">Телевидение</p>
       <h1>Кубтел ТВ — всё нужное для просмотра в одном месте</h1>
       <p>
-        177 каналов, архив и приложения на разных устройствах. Сначала выберите вариант, потом
-        оставьте контакты.
+        177 каналов в одном пакете и приложения на разных устройствах. ТВ подключается вместе с
+        интернетом Kubtel — сначала выберите тариф, потом оставьте контакты.
       </p>
       <a class="card-action" href="#tv-connect">Подобрать ТВ</a>
     </div>
@@ -37,8 +38,7 @@ const selectedTab = Astro.url.searchParams.get("tab") ?? "about";
   </section>
   <ServiceTabs
     items={[
-      { id: "about", label: "Об услуге" },
-      { id: "connect", label: "Подключение" },
+      { id: "about", label: "Об услуге и подключение" },
       { id: "channels", label: "Список каналов" },
       { id: "documents", label: "Приложения и оферты" }
     ]}
@@ -51,8 +51,8 @@ const selectedTab = Astro.url.searchParams.get("tab") ?? "about";
         <p class="eyebrow">Об услуге</p><h2>
           Фильмы, сериалы, мультфильмы и ТВ-каналы на разных устройствах
         </h2><p>
-          Одна учётная запись поддерживает просмотр на нескольких устройствах. Если интернет Kubtel
-          уже есть, менеджер добавит ТВ к текущей услуге.
+          ТВ доступно только абонентам домашнего интернета Kubtel. Отдельно без нашего интернета
+          услугу не подключаем.
         </p>
       </div>
       <div class="service-benefit-grid">
@@ -60,34 +60,41 @@ const selectedTab = Astro.url.searchParams.get("tab") ?? "about";
           <strong>Smart TV</strong><p>Samsung, LG и Android TV — приложение или приставка.</p>
         </article>
         <article>
-          <strong>START и PREMIER</strong><p>
-            Ссылки на условия кинотеатров находятся рядом с подключением.
+          <strong>Единый пакет</strong><p>
+            Все доступные каналы собраны вместе — без деления на несколько ТВ-пакетов.
           </p>
         </article>
         <article>
-          <strong>Time Shift</strong><p>
-            В приложении можно выбрать прошедшую передачу и посмотреть её позже.
+          <strong>Приложения и оферты</strong><p>
+            Ссылки на приложения, приставки и обязательные условия подключения находятся в одном
+            разделе.
           </p>
         </article>
       </div>
-    </section>
-    <section id="tv-connect" data-tab-panel-id="connect" class="service-tab-panel-content">
-      <ServiceConfigurator
-        catalog={catalog}
-        singleService="tv"
-        actionResult={leadActionResult}
-        staticPreview={isStaticPreview}
-        formAction={Astro.url.pathname}
-      />
-      <section class="section-pad setup-steps">
-        <div class="section-heading">
-          <p class="eyebrow">Как смотреть</p><h2>Подключение за три понятных шага</h2>
-        </div><ol>{catalog.tv.setupSteps.map((step) => <li>{step}</li>)}</ol><div
-          class="supported-devices"
-        >
-          {catalog.tv.supportedDevices.map((device) => <span>{device}</span>)}
+      <div id="tv-connect" class="tv-connect-block">
+        <div class="section-pad service-inline-note">
+          <p class="eyebrow">ТВ вместе с интернетом</p>
+          <h2>Выберите тариф с ТВ — отдельного ТВ-калькулятора нет</h2>
+          <p>Стоимость интернета, ТВ и оборудования считается одной заявкой.</p>
         </div>
-      </section>
+        <ServiceConfigurator
+          catalog={catalog}
+          singleService="internet"
+          initialValues={{ "internet-plan": "internet-100-tv" }}
+          actionResult={leadActionResult}
+          staticPreview={isStaticPreview}
+          formAction={Astro.url.pathname}
+        />
+        <section class="section-pad setup-steps">
+          <div class="section-heading">
+            <p class="eyebrow">Как смотреть</p><h2>Подключение за три понятных шага</h2>
+          </div><ol>{catalog.tv.setupSteps.map((step) => <li>{step}</li>)}</ol><div
+            class="supported-devices"
+          >
+            {catalog.tv.supportedDevices.map((device) => <span>{device}</span>)}
+          </div>
+        </section>
+      </div>
     </section>
     <section id="tv-channels" data-tab-panel-id="channels" class="service-tab-panel-content">
       <ChannelList groups={catalog.tv.channelGroups} channelCount={catalog.tv.channelCount} />
