@@ -3,7 +3,6 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 const pages = [
-  ["src/pages/index.astro", "/"],
   ["src/pages/connect.astro", "/connect/"],
   ["src/pages/tariffs/index.astro", "/tariffs/"]
 ] as const;
@@ -26,5 +25,15 @@ describe("lead form page contract", () => {
     expect(source, `${routePath} must pass actionResult into ServiceConfigurator`).toContain(
       "actionResult={leadActionResult}"
     );
+  });
+});
+
+describe("homepage shell contract", () => {
+  it("keeps the homepage focused on navigation and first-screen actions", () => {
+    const source = readProjectFile("src/pages/index.astro");
+
+    expect(source).toContain("<Hero />");
+    expect(source).not.toContain("<ServiceConfigurator");
+    expect(source).not.toContain("handleConfiguratorFormPost");
   });
 });
