@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import BusinessCalculator from "@components/sections/BusinessCalculator.astro";
+import TelephonyCalculatorGroup from "@components/sections/TelephonyCalculatorGroup.astro";
 import { getAbsoluteUrl, getPhoneHref, getSitePath, SITE } from "@config/site";
 import {
   businessCalculatorConfigs,
@@ -154,19 +155,19 @@ const vdiPackages = [
 
 const serviceTabs: ServiceTab[] = [
   {
+    slug: "colocation",
+    title: "Размещение оборудования",
+    badge: "Калькулятор",
+    summary: "Разместить сервер в Краснодаре: ЦОД Kubtel, питание, связность и регламент доступа.",
+    options: ["юниты", "питание", "интернет", "IPv4", "удалённый доступ"],
+    config: businessCalculatorConfigs.colocation
+  },
+  {
     slug: "internet",
     title: "Интернет в офис",
     badge: "Профили",
     summary: "Корпоративный доступ в интернет для офиса, магазина, склада или точки обслуживания.",
     options: ["малый офис", "средний офис", "крупный офис"]
-  },
-  {
-    slug: "colocation",
-    title: "Размещение",
-    badge: "Калькулятор",
-    summary: "Размещение серверного оборудования в ЦОД Kubtel с питанием и связностью.",
-    options: ["юниты", "питание", "интернет", "IPv4", "удалённый доступ"],
-    config: businessCalculatorConfigs.colocation
   },
   {
     slug: "telephony",
@@ -244,26 +245,27 @@ const pageSchema: JsonLdObject = {
 ---
 
 <BaseLayout
-  title="Kubtel для бизнеса"
-  description="Услуги связи Kubtel для бизнеса: быстрое подключение офиса, калькуляторы, прямой контакт коммерческого отдела, доступ в ЦОД и оплата услуг."
+  title="Размещение оборудования и услуги связи для бизнеса | Kubtel"
+  description="ЦОД в Краснодаре и услуги связи Kubtel для бизнеса: размещение оборудования и сервера, питание, связность, калькуляторы и заявка на расчёт."
   canonicalPath="/business/"
   schema={pageSchema}
 >
   <div class="business-page">
     <section class="business-compact-hero section-pad">
       <div>
-        <p class="eyebrow">Подключить интернет без очереди</p>
-        <h1>Услуги связи для бизнеса</h1>
+        <p class="eyebrow">ЦОД в Краснодаре · связь для бизнеса</p>
+        <h1>Размещение оборудования и услуги связи</h1>
         <p>
-          Интернет, телефония, Hot-spot, видеонаблюдение, размещение оборудования и виртуальные
-          серверы. Сайт помогает быстро выбрать услугу, получить ориентир по расчёту и связаться с
-          менеджером без лишних кругов.
+          Нужно разместить сервер в Краснодаре? Начните с параметров ЦОД: юниты, питание, связность,
+          IPv4 и удалённый доступ. Рядом собраны интернет, телефония, видеонаблюдение и виртуальные
+          серверы — с расчётом и заявкой в одном маршруте.
         </p>
       </div>
       <div class="business-quick-actions" aria-label="Быстрые действия">
         <a class="card-action" href={getSitePath(`${legalRequestPath}&service=connection-request`)}>
           Оставить заявку
         </a>
+        <a class="business-link" href="#business-calculators">Разместить сервер в Краснодаре</a>
         <a class="business-link" href="#organization-routes">Выбрать отдел</a>
         <a class="business-link" href={getSitePath("/business/datacenter-access/")}>
           Заявка на посещение ЦОД
@@ -482,7 +484,7 @@ const pageSchema: JsonLdObject = {
                     </section>
                   ) : item.slug === "telephony" ? (
                     <>
-                      {item.config && <BusinessCalculator config={item.config} />}
+                      <TelephonyCalculatorGroup requestPath={legalRequestPath} />
                       <section class="hotspot-plan-panel telephony-agency-panel">
                         <div class="section-heading is-tight">
                           <p class="eyebrow">Агентская схема</p>
@@ -709,7 +711,7 @@ const pageSchema: JsonLdObject = {
 
     const requestedTab = normalizeServiceParam(params.get("calculator") ?? params.get("service"));
     activate(
-      tabs.some((tab) => tab.dataset.serviceTab === requestedTab) ? requestedTab : "internet"
+      tabs.some((tab) => tab.dataset.serviceTab === requestedTab) ? requestedTab : "colocation"
     );
 
     tabs.forEach((tab) => {

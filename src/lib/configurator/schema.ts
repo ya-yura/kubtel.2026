@@ -30,6 +30,9 @@ const configuratorFieldSchema = z.object({
   defaultValue: z.union([z.string(), z.number(), z.boolean(), z.array(z.string())]).optional(),
   monthlyPrice: z.number().nonnegative().optional(),
   oneTimePrice: z.number().nonnegative().optional(),
+  priceByFieldId: z.string().min(1).optional(),
+  monthlyPriceBy: z.record(z.string(), z.number().nonnegative()).optional(),
+  oneTimePriceBy: z.record(z.string(), z.number().nonnegative()).optional(),
   choices: z.array(configuratorChoiceSchema).optional()
 });
 

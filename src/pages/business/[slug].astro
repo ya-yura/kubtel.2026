@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import BusinessCalculator from "@components/sections/BusinessCalculator.astro";
+import TelephonyCalculatorGroup from "@components/sections/TelephonyCalculatorGroup.astro";
 import PromoImage from "@components/ui/PromoImage.astro";
 import { getAbsoluteUrl, getPhoneHref, getSitePath, SITE } from "@config/site";
 import { getBusinessCalculatorConfig } from "@lib/business/calculator-ui";
@@ -155,6 +156,23 @@ const telephonyGuides = [
   "Если нет готового ТЗ, опишите задачу обычными словами: новый офис, модернизация старой связи, колл-центр или снижение расходов на междугородную связь.",
   "В калькуляторе внешние линии названы как одновременные внешние разговоры, а SIP-порты - как сотрудники или устройства.",
   "Для сложных схем менеджер уточнит оборудование, населённый пункт, текущего оператора и требования к записи разговоров."
+];
+const colocationFaq = [
+  {
+    question: "Где разместить сервер в Краснодаре?",
+    answer:
+      "В ЦОД Kubtel можно разместить серверное оборудование в стойке с согласованными параметрами юнитов, питания, интернет-канала и доступа к площадке."
+  },
+  {
+    question: "Что входит в расчёт размещения оборудования?",
+    answer:
+      "Калькулятор учитывает юниты, мощность питания, интернет, IPv4 и удалённый доступ. Разовый платёж за первичное размещение показывается отдельно."
+  },
+  {
+    question: "Можно ли приехать к оборудованию?",
+    answer:
+      "Да, плановый визит оформляется отдельной заявкой с площадкой, датой, длительностью и описанием работ; обычно её подают не менее чем за 24 часа."
+  }
 ];
 const entryRequestPath = isGovernmentSegment
   ? b2gRequestPath
@@ -388,6 +406,56 @@ const pageSchema: JsonLdObject = isService
               ))}
             </ul>
           </article>
+        </section>
+      )
+    }
+
+    {
+      isService && entry.slug === "colocation" && (
+        <section class="section-pad colocation-seo-section" aria-labelledby="colocation-seo-title">
+          <div class="section-heading">
+            <p class="eyebrow">ЦОД в Краснодаре</p>
+            <h2 id="colocation-seo-title">Разместить сервер и оборудование в ЦОД Kubtel</h2>
+            <p>
+              Подберите объём стойки и параметры инфраструктуры онлайн. Если готовой конфигурации
+              недостаточно, передайте задачу инженеру: проверим оборудование, питание, связность и
+              регламент доступа до подтверждения заявки.
+            </p>
+          </div>
+          <div class="business-card-grid">
+            <article class="business-card">
+              <span class="service-category">Инфраструктура</span>
+              <h3>Серверная площадка</h3>
+              <p>Размещение оборудования в контролируемом ЦОД вместо офисной серверной.</p>
+            </article>
+            <article class="business-card">
+              <span class="service-category">Расчёт</span>
+              <h3>Понятная стоимость</h3>
+              <p>
+                Ежемесячная плата и первичное размещение разделены, а неизвестные позиции уходят в
+                индивидуальный расчёт.
+              </p>
+            </article>
+            <article class="business-card">
+              <span class="service-category">Доступ</span>
+              <h3>Регламентные визиты</h3>
+              <p>
+                Плановые работы оформляются отдельной заявкой с датой, длительностью и описанием
+                работ.
+              </p>
+              <a class="business-link" href={getSitePath("/business/datacenter-access/")}>
+                Оформить доступ в ЦОД
+              </a>
+            </article>
+          </div>
+          <div class="business-faq-grid" aria-label="Вопросы о размещении оборудования">
+            {colocationFaq.map((item) => (
+              <article>
+                <h3>{item.question}</h3>
+                <p>{item.answer}</p>
+              </article>
+            ))}
+          </div>
         </section>
       )
     }
@@ -645,7 +713,14 @@ const pageSchema: JsonLdObject = isService
       )
     }
 
-    {calculatorConfig && <BusinessCalculator config={calculatorConfig} />}
+    {
+      calculatorConfig &&
+        (entry.slug === "telephony" ? (
+          <TelephonyCalculatorGroup requestPath="/business/request/?segment=legal&service=telephony" />
+        ) : (
+          <BusinessCalculator config={calculatorConfig} />
+        ))
+    }
 
     {
       !isGovernmentSegment && (

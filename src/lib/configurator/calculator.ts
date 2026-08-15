@@ -36,7 +36,7 @@ export function calculateConfiguratorPrice(
   const values = asValueRecord(rawValues);
   const lines = service.fields
     .filter((field) => isConfiguratorFieldVisible(field, values))
-    .map((field) => calculateFieldLine(field, values[field.id]))
+    .map((field) => calculateFieldLine(field, values[field.id], values))
     .filter((line): line is ConfiguratorPriceLine => line !== null);
 
   return {
@@ -76,7 +76,8 @@ export function isConfiguratorFieldVisible(
 
 function calculateFieldLine(
   field: ConfiguratorField,
-  rawValue: ConfiguratorFieldValue | undefined
+  rawValue: ConfiguratorFieldValue | undefined,
+  values: Record<string, ConfiguratorFieldValue | undefined>
 ): ConfiguratorPriceLine | null {
   const value = rawValue ?? field.defaultValue;
 
@@ -113,8 +114,8 @@ function calculateFieldLine(
       label: field.label,
       value: true,
       valueLabel: "Да",
-      monthlyPrice: field.monthlyPrice ?? 0,
-      oneTimePrice: field.oneTimePrice ?? 0
+      monthlyPrice: getFieldPrice(field, "monthlyPrice", values),
+      oneTimePrice: getFieldPrice(field, "oneTimePrice", values)
     };
   }
 
@@ -147,6 +148,18 @@ function calculateFieldLine(
     monthlyPrice: selectedChoices.reduce((total, choice) => total + choice.monthlyPrice, 0),
     oneTimePrice: selectedChoices.reduce((total, choice) => total + choice.oneTimePrice, 0)
   };
+}
+
+function getFieldPrice(
+  field: ConfiguratorField,
+  priceType: "monthlyPrice" | "oneTimePrice",
+  values: Record<string, ConfiguratorFieldValue | undefined>
+): number {
+  const byValue = priceType === "monthlyPrice" ? field.monthlyPriceBy : field.oneTimePriceBy;
+  const dependencyValue = values[field.priceByFieldId ?? "internet-plan"];
+  const dependencyKey = typeof dependencyValue === "string" ? dependencyValue : "";
+
+  return byValue?.[dependencyKey] ?? field[priceType] ?? 0;
 }
 
 function parseCount(field: ConfiguratorField, value: ConfiguratorFieldValue | undefined): number {

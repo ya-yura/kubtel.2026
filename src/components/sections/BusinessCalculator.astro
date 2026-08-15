@@ -4,6 +4,7 @@ import {
   businessCalculatorPricing,
   type BusinessCalculatorConfig
 } from "@lib/business/calculator-ui";
+import { telephonyPricing } from "@lib/business/telephony-pricing";
 
 type Props = {
   config: BusinessCalculatorConfig;
@@ -11,11 +12,12 @@ type Props = {
 };
 
 const { config, requestPath: requestPathProp } = Astro.props;
-const calculatorId = `business-calculator-${config.type}`;
+const calculatorId = `business-calculator-${config.id ?? config.type}`;
 const requestPath = getSitePath(requestPathProp ?? "/business/request/");
 const payload = JSON.stringify({
   config,
   pricing: businessCalculatorPricing,
+  telephonyPricing,
   requestPath
 }).replace(/</g, "\\u003c");
 ---
@@ -210,8 +212,8 @@ const payload = JSON.stringify({
 
     function syncCalculator() {
       const values = readValues(calculatorForm);
-      const result = calculate(config, pricing, values);
-      const summary = buildSummary(config.type, values);
+      const result = calculate(config, pricing, values, payload.telephonyPricing);
+      const summary = buildSummary(config, values);
       const hasQuoteItems = result.unknownItems.length > 0;
       const showKnownTotals = Boolean(config.showKnownTotalsWithQuoteItems);
       const isIndividual = result.forceIndividual || (hasQuoteItems && !showKnownTotals);
@@ -295,7 +297,12 @@ const payload = JSON.stringify({
     return values;
   }
 
-  function calculate(config: any, pricing: Record<string, any>, values: Record<string, any>) {
+  function calculate(
+    config: any,
+    pricing: Record<string, any>,
+    values: Record<string, any>,
+    telephonyPricing: any
+  ) {
     const result = {
       monthly: 0,
       oneTime: 0,
@@ -308,6 +315,11 @@ const payload = JSON.stringify({
     };
 
     for (const line of config.lines) {
+      if (line.kind === "telephony") {
+        addTelephonyLine(result, line.label, config.telephonyVariant, values, telephonyPricing);
+        continue;
+      }
+
       if (line.kind === "fixed") {
         addLine(result, pricing[line.key], line.label, 1, 1);
       }
@@ -370,6 +382,126 @@ const payload = JSON.stringify({
     }
 
     return result;
+  }
+
+  function addTelephonyLine(
+    result: any,
+    label: string,
+    variant: string,
+    values: Record<string, any>,
+    pricing: any
+  ) {
+    const connectionType = values.connectionType === "analog" ? "analog" : "digital";
+    const tariff = values.tariff === "timed" ? "timed" : "unlimited";
+
+    if (variant === "basic") {
+      const monthly = pricing.ordinary.monthly[tariff];
+      const oneTime = pricing.ordinary.connectionOneTime[connectionType];
+      pushCalculatedLine(
+        result,
+        label,
+        monthly,
+        oneTime,
+        tariff === "timed" ? "местный трафик: 0,60 ₽/мин." : "местный трафик включён"
+      );
+      return;
+    }
+
+    if (variant === "multichannel") {
+      const ports = Number(values.ports || 0);
+      const monthly = ports * pricing.multichannel.portMonthly[connectionType][tariff];
+      const oneTime = calculateTelephonySetupCost(
+        pricing.multichannel.setup[connectionType],
+        ports
+      );
+      pushCalculatedLine(
+        result,
+        `${label}: ${ports} портов`,
+        monthly,
+        oneTime,
+        tariff === "timed" ? "местный трафик: 0,60 ₽/мин." : "местный трафик включён"
+      );
+      return;
+    }
+
+    if (variant === "pro") {
+      const phoneNumbers = Number(values.phoneNumbers || 0);
+      const externalLines = Number(values.externalLines || 0);
+      const extraNumbers = Math.max(phoneNumbers - externalLines, 0);
+      const monthly =
+        externalLines * pricing.pro.lineMonthly[tariff] +
+        extraNumbers * pricing.pro.extraNumberMonthly;
+      const oneTime =
+        pricing.pro.installation + Math.max(phoneNumbers, externalLines) * pricing.pro.portOneTime;
+      pushCalculatedLine(
+        result,
+        `${label}: ${phoneNumbers} номеров ТФОП, ${externalLines} линий`,
+        monthly,
+        oneTime,
+        tariff === "timed" ? "местный трафик: 0,60 ₽/мин." : "местный трафик включён"
+      );
+      return;
+    }
+
+    const ports = Number(values.ports || 0);
+    const phoneNumbers = Number(values.phoneNumbers || 0);
+    const externalLines = Number(values.externalLines || 0);
+    const extraNumbers = Math.max(phoneNumbers - externalLines, 0);
+    const monthly =
+      ports * pricing.virtualPbx.portMonthly[connectionType] +
+      externalLines * pricing.virtualPbx.externalLineMonthly[connectionType][tariff] +
+      (connectionType === "digital" ? extraNumbers * pricing.virtualPbx.extraNumberMonthly : 0);
+    const oneTime =
+      calculateTelephonySetupCost(pricing.virtualPbx.setup[connectionType], ports) +
+      Math.max(phoneNumbers - 1, 0) * pricing.virtualPbx.extraNumberOneTime +
+      Math.max(externalLines - 1, 0) * pricing.virtualPbx.extraExternalLineOneTime;
+    pushCalculatedLine(
+      result,
+      `${label}: ${ports} портов, ${phoneNumbers} номеров, ${externalLines} линий`,
+      monthly,
+      oneTime,
+      tariff === "timed" ? "местный трафик: 0,60 ₽/мин." : "местный трафик включён"
+    );
+  }
+
+  function calculateTelephonySetupCost(setup: any, ports: number) {
+    const additionalCosts = Array.from({ length: ports + 1 }, () => Number.POSITIVE_INFINITY);
+    additionalCosts[0] = 0;
+
+    for (let count = 1; count <= ports; count += 1) {
+      for (const option of setup.additional) {
+        if (count >= option.ports) {
+          additionalCosts[count] = Math.min(
+            additionalCosts[count],
+            additionalCosts[count - option.ports] + option.price
+          );
+        }
+      }
+    }
+
+    return Math.min(
+      ...setup.base.map((base: any) =>
+        ports <= base.ports ? base.price : base.price + additionalCosts[ports - base.ports]
+      )
+    );
+  }
+
+  function pushCalculatedLine(
+    result: any,
+    label: string,
+    monthly: number,
+    oneTime: number,
+    unit?: string
+  ) {
+    result.monthly += monthly;
+    result.oneTime += oneTime;
+    result.hasMonthly = true;
+    result.hasOneTime = true;
+    result.lines.push({
+      label,
+      value: `${formatRubles(monthly)}/мес. + ${formatRubles(oneTime)}`,
+      unit
+    });
   }
 
   function getIndividualLimit(config: any, fieldName: string, quantity: number) {
@@ -440,15 +572,8 @@ const payload = JSON.stringify({
     }
   }
 
-  function buildSummary(type: string, values: Record<string, any>) {
-    if (type === "telephony") {
-      const locationLabels: Record<string, string> = {
-        krasnodar: "Краснодар",
-        takhtamukay: "Тахтамукайский район",
-        manual: "нужна проверка населённого пункта"
-      };
-      return `Телефония: ${values.ports} сотрудников/устройств, ${values.phoneNumbers} номеров, ${locationLabels[String(values.location)] ?? values.location}`;
-    }
+  function buildSummary(config: any, values: Record<string, any>) {
+    const type = config.type;
 
     if (type === "cctv") {
       const summaryParts = [
@@ -458,6 +583,22 @@ const payload = JSON.stringify({
         values.installNeed ? "нужен монтаж" : ""
       ].filter(Boolean);
       return `Видеонаблюдение: ${summaryParts.join(", ")}`;
+    }
+
+    if (type === "telephony") {
+      if (config.telephonyVariant === "basic") {
+        return `Обычное подключение: ${values.connectionType === "analog" ? "аналоговое" : "цифровое"}, ${values.tariff === "timed" ? "повременный тариф" : "безлимитный тариф"}`;
+      }
+
+      if (config.telephonyVariant === "multichannel") {
+        return `Многоканальный телефон: ${values.ports} портов`;
+      }
+
+      if (config.telephonyVariant === "pro") {
+        return `Серия ПРО: ${values.phoneNumbers} номеров ТФОП, ${values.externalLines} соединительных линий`;
+      }
+
+      return `Виртуальная АТС: ${values.ports} портов, ${values.phoneNumbers} номеров, ${values.externalLines} внешних линий`;
     }
 
     if (type === "vps") {

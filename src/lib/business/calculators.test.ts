@@ -2,7 +2,11 @@ import { describe, expect, it } from "vitest";
 import {
   calculateCctv,
   calculateColocation,
+  calculateMultichannelTelephony,
+  calculateOrdinaryTelephony,
+  calculateProTelephony,
   calculateTelephony,
+  calculateVirtualPbxTelephony,
   calculateVps,
   type BusinessPricingCatalog
 } from "@lib/business/calculators";
@@ -33,6 +37,49 @@ describe("business calculators", () => {
     expect(result.monthly).toBe(100);
     expect(result.requiredConsultation).toBe(true);
     expect(result.unknownItems).toContain("telephony.port");
+  });
+
+  it("calculates ordinary telephony by connection type and tariff", () => {
+    const result = calculateOrdinaryTelephony({ connectionType: "digital", tariff: "unlimited" });
+
+    expect(result.monthly).toBe(555);
+    expect(result.oneTime).toBe(155);
+    expect(result.requiredConsultation).toBe(false);
+  });
+
+  it("calculates multichannel telephony for 2–30 ports", () => {
+    const result = calculateMultichannelTelephony({
+      connectionType: "analog",
+      tariff: "unlimited",
+      ports: 10
+    });
+
+    expect(result.monthly).toBe(7990);
+    expect(result.oneTime).toBe(17500);
+  });
+
+  it("calculates PRO monthly lines, extra numbers and installation", () => {
+    const result = calculateProTelephony({
+      tariff: "timed",
+      phoneNumbers: 4,
+      externalLines: 3
+    });
+
+    expect(result.monthly).toBe(565);
+    expect(result.oneTime).toBe(5620);
+  });
+
+  it("calculates virtual PBX ports, numbers, lines and setup", () => {
+    const result = calculateVirtualPbxTelephony({
+      connectionType: "digital",
+      tariff: "unlimited",
+      ports: 6,
+      phoneNumbers: 3,
+      externalLines: 2
+    });
+
+    expect(result.monthly).toBe(2140);
+    expect(result.oneTime).toBe(5465);
   });
 
   it("returns required consultation when a selected price is missing", () => {

@@ -1011,6 +1011,54 @@
   gap: 1rem;
 }
 
+.telephony-calculator-group {
+  display: grid;
+  gap: 1rem;
+}
+
+.telephony-calculator-tabs {
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.telephony-calculator-tabs button {
+  background: var(--kb-color-overlay-white04);
+  border: 1px solid var(--kb-business-border-default);
+  border-radius: var(--kb-shape-card);
+  color: var(--kb-business-text-secondary);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  min-height: 3.25rem;
+  padding: 0.75rem 0.9rem;
+  text-align: left;
+  transition:
+    background var(--kb-motion-duration-base) var(--kb-motion-easing-standard),
+    border-color var(--kb-motion-duration-base) var(--kb-motion-easing-standard),
+    color var(--kb-motion-duration-base) var(--kb-motion-easing-standard),
+    transform var(--kb-motion-duration-base) var(--kb-motion-easing-standard);
+}
+
+.telephony-calculator-tabs button:hover,
+.telephony-calculator-tabs button:focus-visible {
+  background: var(--kb-color-overlay-accent12);
+  border-color: var(--kb-color-overlay-accent48);
+  color: var(--kb-business-text-primary);
+  transform: translateY(-1px);
+}
+
+.telephony-calculator-tabs button[aria-selected="true"] {
+  background: var(--kb-color-action-primary-background);
+  border-color: var(--kb-color-action-primary-background);
+  box-shadow: var(--kb-elevation-accent-glow-strong);
+  color: var(--kb-color-action-primary-text);
+}
+
+.telephony-calculator-panels > [hidden] {
+  display: none;
+}
+
 .office-profile-panel {
   background:
     linear-gradient(135deg, var(--kb-color-overlay-white07), var(--kb-color-overlay-white02)),
@@ -1625,6 +1673,10 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .telephony-calculator-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .business-service-select {
     display: none;
   }
@@ -1668,6 +1720,10 @@
     overscroll-behavior: contain;
     position: sticky;
     top: 5.75rem;
+  }
+
+  .telephony-calculator-tabs {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .business-service-list .business-service-row {

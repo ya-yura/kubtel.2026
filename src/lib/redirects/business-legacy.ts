@@ -17,8 +17,7 @@ const legacyBusinessRedirects: Record<string, string> = {
   "/business/cctv/": "/business/?calculator=cctv#business-calculators",
   "/business/wifi-auth/": "/business/?calculator=wifi-auth#business-calculators",
   "/business/vps/": "/business/?calculator=vps#business-calculators",
-  "/business/vdi/": "/business/?calculator=vdi#business-calculators",
-  "/business/colocation/": "/business/?calculator=colocation#business-calculators"
+  "/business/vdi/": "/business/?calculator=vdi#business-calculators"
 };
 
 export function getLegacyBusinessRedirect(pathname: string): string | null {

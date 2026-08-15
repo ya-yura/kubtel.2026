@@ -740,6 +740,15 @@ summary:focus-visible {
   text-transform: uppercase;
 }
 
+.homepage-audience__compare {
+  color: var(--kb-color-action-primary-background-active) !important;
+  font-size: 0.84rem !important;
+  font-weight: 800;
+  margin-top: 0.12rem;
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
 .homepage-audience__arrow {
   align-items: center;
   background: var(--kb-color-overlay-accent10);

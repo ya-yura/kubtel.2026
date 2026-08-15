@@ -85,7 +85,8 @@ const selectedTab = requestedTab === "connect" ? "about" : requestedTab;
         <ServiceConfigurator
           catalog={catalog}
           singleService="internet"
-          initialValues={{ "internet-plan": "internet-100-tv" }}
+          initialValues={{ "internet-plan": "internet-100", "internet-tv": true }}
+          hideServicePanelTitle
           configuratorEyebrow="Тариф с ТВ"
           configuratorTitle="Домашний интернет + ТВ"
           configuratorDescription="Телевидение доступно абонентам домашнего интернета Kubtel. Выберите подходящий тариф и оборудование — контакты появятся только на последнем шаге."

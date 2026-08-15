@@ -29,69 +29,9 @@
               "oneTimePrice": 0
             },
             {
-              "id": "internet-100-house",
-              "label": "Интернет 100 (частный дом)",
-              "monthlyPrice": 890,
-              "oneTimePrice": 0
-            },
-            {
-              "id": "internet-100-tv",
-              "label": "Интернет 100 + ТВ",
-              "monthlyPrice": 600,
-              "oneTimePrice": 0
-            },
-            {
-              "id": "internet-100-tv-house",
-              "label": "Интернет 100 + ТВ (частный дом)",
-              "monthlyPrice": 990,
-              "oneTimePrice": 0
-            },
-            {
-              "id": "internet-100-cinema",
-              "label": "Интернет 100 + ТВ + Кино",
-              "monthlyPrice": 800,
-              "oneTimePrice": 0
-            },
-            {
-              "id": "internet-100-cinema-house",
-              "label": "Интернет 100 + ТВ + Кино (частный дом)",
-              "monthlyPrice": 1200,
-              "oneTimePrice": 0
-            },
-            {
               "id": "internet-200",
               "label": "Интернет 200",
               "monthlyPrice": 600,
-              "oneTimePrice": 0
-            },
-            {
-              "id": "internet-200-house",
-              "label": "Интернет 200 (частный дом)",
-              "monthlyPrice": 990,
-              "oneTimePrice": 0
-            },
-            {
-              "id": "internet-200-tv",
-              "label": "Интернет 200 + ТВ",
-              "monthlyPrice": 700,
-              "oneTimePrice": 0
-            },
-            {
-              "id": "internet-200-tv-house",
-              "label": "Интернет 200 + ТВ (частный дом)",
-              "monthlyPrice": 1100,
-              "oneTimePrice": 0
-            },
-            {
-              "id": "internet-200-cinema",
-              "label": "Интернет 200 + ТВ + Кино",
-              "monthlyPrice": 900,
-              "oneTimePrice": 0
-            },
-            {
-              "id": "internet-200-cinema-house",
-              "label": "Интернет 200 + ТВ + Кино (частный дом)",
-              "monthlyPrice": 1300,
               "oneTimePrice": 0
             },
             {
@@ -99,52 +39,59 @@
               "label": "Интернет 300",
               "monthlyPrice": 700,
               "oneTimePrice": 0
-            },
-            {
-              "id": "internet-300-house",
-              "label": "Интернет 300 (частный дом)",
-              "monthlyPrice": 1200,
-              "oneTimePrice": 0
-            },
-            {
-              "id": "internet-300-tv",
-              "label": "Интернет 300 + ТВ",
-              "monthlyPrice": 800,
-              "oneTimePrice": 0
-            },
-            {
-              "id": "internet-300-tv-house",
-              "label": "Интернет 300 + ТВ (частный дом)",
-              "monthlyPrice": 1300,
-              "oneTimePrice": 0
-            },
-            {
-              "id": "internet-300-cinema",
-              "label": "Интернет 300 + ТВ + Кино",
-              "monthlyPrice": 1000,
-              "oneTimePrice": 0
-            },
-            {
-              "id": "internet-300-cinema-house",
-              "label": "Интернет 300 + ТВ + Кино (частный дом)",
-              "monthlyPrice": 1500,
-              "oneTimePrice": 0
             }
           ]
         },
         {
           "id": "house-connection",
-          "label": "Подключение в частный дом",
+          "label": "Частный дом",
           "type": "checkbox",
-          "help": "PON-комплект: розетки, оптический патч-корд, ONU и расходные материалы.",
-          "monthlyPrice": 0,
+          "help": "Цена тарифа изменится для частного дома. Разовый PON-комплект включён в расчёт.",
+          "priceByFieldId": "internet-plan",
+          "monthlyPriceBy": {
+            "internet-100": 390,
+            "internet-200": 390,
+            "internet-300": 500
+          },
           "oneTimePrice": 4990
+        },
+        {
+          "id": "internet-tv",
+          "label": "Телевидение",
+          "type": "checkbox",
+          "help": "Добавить Кубтел ТВ к выбранному интернету.",
+          "monthlyPrice": 100,
+          "oneTimePrice": 0
+        },
+        {
+          "id": "tv-cinema",
+          "label": "Кино",
+          "type": "checkbox",
+          "showWhen": {
+            "fieldId": "internet-tv",
+            "equals": true
+          },
+          "help": "Дополнительный пакет к Кубтел ТВ.",
+          "monthlyPrice": 200,
+          "oneTimePrice": 0
+        },
+        {
+          "id": "internet-equipment",
+          "label": "Роутер и оборудование",
+          "type": "checkbox",
+          "help": "Добавить оборудование к выбранному тарифу.",
+          "monthlyPrice": 0,
+          "oneTimePrice": 0
         },
         {
           "id": "internet-router",
           "label": "Роутер",
           "type": "radio",
           "required": true,
+          "showWhen": {
+            "fieldId": "internet-equipment",
+            "equals": true
+          },
           "defaultValue": "router-none",
           "choices": [
             {
@@ -199,21 +146,8 @@
           "type": "checkbox",
           "multiple": true,
           "showWhen": {
-            "fieldId": "internet-plan",
-            "in": [
-              "internet-100-tv",
-              "internet-100-tv-house",
-              "internet-100-cinema",
-              "internet-100-cinema-house",
-              "internet-200-tv",
-              "internet-200-tv-house",
-              "internet-200-cinema",
-              "internet-200-cinema-house",
-              "internet-300-tv",
-              "internet-300-tv-house",
-              "internet-300-cinema",
-              "internet-300-cinema-house"
-            ]
+            "fieldId": "internet-tv",
+            "equals": true
           },
           "choices": [
             {
@@ -242,21 +176,8 @@
           "type": "radio",
           "required": true,
           "showWhen": {
-            "fieldId": "internet-plan",
-            "in": [
-              "internet-100-tv",
-              "internet-100-tv-house",
-              "internet-100-cinema",
-              "internet-100-cinema-house",
-              "internet-200-tv",
-              "internet-200-tv-house",
-              "internet-200-cinema",
-              "internet-200-cinema-house",
-              "internet-300-tv",
-              "internet-300-tv-house",
-              "internet-300-cinema",
-              "internet-300-cinema-house"
-            ]
+            "fieldId": "internet-tv",
+            "equals": true
           },
           "defaultValue": "tv-device-own",
           "choices": [
@@ -292,21 +213,8 @@
           "monthlyPrice": 0,
           "oneTimePrice": 0,
           "showWhen": {
-            "fieldId": "internet-plan",
-            "in": [
-              "internet-100-tv",
-              "internet-100-tv-house",
-              "internet-100-cinema",
-              "internet-100-cinema-house",
-              "internet-200-tv",
-              "internet-200-tv-house",
-              "internet-200-cinema",
-              "internet-200-cinema-house",
-              "internet-300-tv",
-              "internet-300-tv-house",
-              "internet-300-cinema",
-              "internet-300-cinema-house"
-            ]
+            "fieldId": "internet-tv",
+            "equals": true
           }
         }
       ]

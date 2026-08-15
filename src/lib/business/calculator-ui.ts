@@ -1,5 +1,7 @@
 import type { BusinessPricingCatalog } from "@lib/business/calculators";
 
+export type TelephonyVariant = "basic" | "multichannel" | "pro" | "virtual-pbx";
+
 export type CalculatorType = "telephony" | "cctv" | "vps" | "colocation";
 
 export type CalculatorField =
@@ -64,6 +66,10 @@ export type CalculatorLine =
       quantityField: string;
       labelPrefix: string;
       valueLabels?: Record<string, string>;
+    }
+  | {
+      kind: "telephony";
+      label: string;
     };
 
 export type CalculatorGlossaryItem = {
@@ -73,12 +79,14 @@ export type CalculatorGlossaryItem = {
 
 export type BusinessCalculatorConfig = {
   type: CalculatorType;
+  id?: string;
   serviceSlug: string;
   title: string;
   lead: string;
   submitLabel: string;
   fields: CalculatorField[];
   lines: CalculatorLine[];
+  telephonyVariant?: TelephonyVariant;
   showKnownTotalsWithQuoteItems?: boolean;
   sourceNote?: string;
   sourceUrl?: string;
@@ -530,6 +538,211 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
   }
 };
 
+const telephonySourceNote =
+  "Формулы и цены перенесены из заявки 213727 «Новая номенклатура». Платежи за местный трафик указаны отдельно и не входят в фиксированную абонентскую плату.";
+
+const telephonyGlossary: CalculatorGlossaryItem[] = [
+  {
+    term: "Порт",
+    description: "подключение телефона, устройства или сотрудника к телефонной схеме."
+  },
+  {
+    term: "Соединительная линия",
+    description: "один одновременный внешний разговор для серии ПРО."
+  },
+  {
+    term: "Внешняя линия",
+    description: "один одновременный внешний разговор в виртуальной АТС."
+  }
+];
+
+export const telephonyCalculatorConfigs: Record<TelephonyVariant, BusinessCalculatorConfig> = {
+  basic: {
+    id: "telephony-basic",
+    type: "telephony",
+    telephonyVariant: "basic",
+    serviceSlug: "telephony",
+    title: "Обычное подключение",
+    lead: "Выберите тип подключения и тариф. Абонентская плата и единовременный платёж посчитаются отдельно.",
+    submitLabel: "Оставить заявку",
+    sourceNote: telephonySourceNote,
+    fields: [
+      {
+        kind: "select",
+        name: "connectionType",
+        label: "Тип подключения",
+        value: "digital",
+        options: [
+          { value: "analog", label: "Аналоговое" },
+          { value: "digital", label: "Цифровое" }
+        ]
+      },
+      {
+        kind: "select",
+        name: "tariff",
+        label: "Тариф",
+        value: "unlimited",
+        options: [
+          { value: "unlimited", label: "Безлимитный Плюс" },
+          { value: "timed", label: "Повременный Плюс" }
+        ],
+        help: "Для повременного тарифа местные разговоры тарифицируются отдельно: 0,60 ₽/мин."
+      }
+    ],
+    lines: [{ kind: "telephony", label: "Обычное подключение" }],
+    glossary: telephonyGlossary
+  },
+  multichannel: {
+    id: "telephony-multichannel",
+    type: "telephony",
+    telephonyVariant: "multichannel",
+    serviceSlug: "telephony-multichannel",
+    title: "Многоканальный телефон",
+    lead: "Выберите тип подключения, тариф и количество портов — от 2 до 30.",
+    submitLabel: "Оставить заявку",
+    sourceNote: telephonySourceNote,
+    fields: [
+      {
+        kind: "select",
+        name: "connectionType",
+        label: "Тип подключения",
+        value: "digital",
+        options: [
+          { value: "analog", label: "Аналоговое" },
+          { value: "digital", label: "Цифровое" }
+        ]
+      },
+      {
+        kind: "select",
+        name: "tariff",
+        label: "Тариф",
+        value: "unlimited",
+        options: [
+          { value: "unlimited", label: "Безлимитный Многоканальный" },
+          { value: "timed", label: "Повременный Многоканальный" }
+        ],
+        help: "Для повременного тарифа местные разговоры тарифицируются отдельно: 0,60 ₽/мин."
+      },
+      {
+        kind: "number",
+        name: "ports",
+        label: "Количество портов",
+        min: 2,
+        max: 30,
+        step: 1,
+        value: 4
+      }
+    ],
+    lines: [{ kind: "telephony", label: "Многоканальный телефон" }],
+    glossary: telephonyGlossary
+  },
+  pro: {
+    id: "telephony-pro",
+    type: "telephony",
+    telephonyVariant: "pro",
+    serviceSlug: "telephony-pro",
+    title: "Подключение серии ПРО",
+    lead: "Выберите тариф, количество номеров ТФОП и соединительных линий — от 1 до 30.",
+    submitLabel: "Оставить заявку",
+    sourceNote: telephonySourceNote,
+    fields: [
+      {
+        kind: "select",
+        name: "tariff",
+        label: "Тариф",
+        value: "unlimited",
+        options: [
+          { value: "unlimited", label: "Безлимитный Про" },
+          { value: "timed", label: "Повременный Про" }
+        ],
+        help: "Для повременного тарифа местные разговоры тарифицируются отдельно: 0,60 ₽/мин."
+      },
+      {
+        kind: "number",
+        name: "phoneNumbers",
+        label: "Количество номеров ТФОП",
+        min: 1,
+        max: 30,
+        step: 1,
+        value: 1
+      },
+      {
+        kind: "number",
+        name: "externalLines",
+        label: "Количество соединительных линий",
+        min: 1,
+        max: 30,
+        step: 1,
+        value: 1
+      }
+    ],
+    lines: [{ kind: "telephony", label: "Серия ПРО" }],
+    glossary: telephonyGlossary
+  },
+  "virtual-pbx": {
+    id: "telephony-virtual-pbx",
+    type: "telephony",
+    telephonyVariant: "virtual-pbx",
+    serviceSlug: "telephony-virtual-pbx",
+    title: "Виртуальная АТС",
+    lead: "Соберите виртуальную АТС: тип подключения, тариф, порты, номера ТФОП и внешние линии.",
+    submitLabel: "Оставить заявку",
+    sourceNote: telephonySourceNote,
+    fields: [
+      {
+        kind: "select",
+        name: "connectionType",
+        label: "Тип подключения",
+        value: "digital",
+        options: [
+          { value: "analog", label: "Аналоговое" },
+          { value: "digital", label: "Цифровое" }
+        ]
+      },
+      {
+        kind: "select",
+        name: "tariff",
+        label: "Тариф",
+        value: "unlimited",
+        options: [
+          { value: "unlimited", label: "Безлимитный Виртуальный" },
+          { value: "timed", label: "Повременный Виртуальный" }
+        ],
+        help: "Для повременного тарифа местные разговоры тарифицируются отдельно: 0,60 ₽/мин."
+      },
+      {
+        kind: "number",
+        name: "ports",
+        label: "Количество портов",
+        min: 2,
+        max: 30,
+        step: 1,
+        value: 4
+      },
+      {
+        kind: "number",
+        name: "phoneNumbers",
+        label: "Количество номеров ТФОП",
+        min: 1,
+        max: 30,
+        step: 1,
+        value: 1
+      },
+      {
+        kind: "number",
+        name: "externalLines",
+        label: "Количество внешних линий",
+        min: 1,
+        max: 30,
+        step: 1,
+        value: 1
+      }
+    ],
+    lines: [{ kind: "telephony", label: "Виртуальная АТС" }],
+    glossary: telephonyGlossary
+  }
+};
+
 const serviceToCalculator: Partial<Record<string, CalculatorType>> = {
   telephony: "telephony",
   cctv: "cctv",
@@ -540,6 +753,10 @@ const serviceToCalculator: Partial<Record<string, CalculatorType>> = {
 export function getBusinessCalculatorConfig(
   serviceSlug: string
 ): BusinessCalculatorConfig | undefined {
+  if (serviceSlug === "telephony") {
+    return telephonyCalculatorConfigs.basic;
+  }
+
   const type = serviceToCalculator[serviceSlug];
 
   return type ? businessCalculatorConfigs[type] : undefined;

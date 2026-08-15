@@ -26,6 +26,9 @@ export type ConfiguratorField = {
   defaultValue?: string | number | boolean | string[];
   monthlyPrice?: number;
   oneTimePrice?: number;
+  priceByFieldId?: string;
+  monthlyPriceBy?: Record<string, number>;
+  oneTimePriceBy?: Record<string, number>;
   choices?: ConfiguratorChoice[];
 };
 

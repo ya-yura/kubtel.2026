@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   businessCalculatorConfigs,
   businessCalculatorPricing,
-  getBusinessCalculatorConfig
+  getBusinessCalculatorConfig,
+  telephonyCalculatorConfigs
 } from "@lib/business/calculator-ui";
 
 describe("business calculator UI config", () => {
@@ -40,6 +41,33 @@ describe("business calculator UI config", () => {
         }
       }
     }
+  });
+
+  it("exposes the four source-defined telephony scenarios", () => {
+    expect(Object.keys(telephonyCalculatorConfigs).sort()).toEqual([
+      "basic",
+      "multichannel",
+      "pro",
+      "virtual-pbx"
+    ]);
+    expect(getBusinessCalculatorConfig("telephony")).toBe(telephonyCalculatorConfigs.basic);
+
+    expect(telephonyCalculatorConfigs.multichannel.fields).toContainEqual(
+      expect.objectContaining({ name: "ports", min: 2, max: 30 })
+    );
+    expect(telephonyCalculatorConfigs.pro.fields).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: "phoneNumbers", min: 1, max: 30 }),
+        expect.objectContaining({ name: "externalLines", min: 1, max: 30 })
+      ])
+    );
+    expect(telephonyCalculatorConfigs["virtual-pbx"].fields).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: "ports", min: 2, max: 30 }),
+        expect.objectContaining({ name: "phoneNumbers", min: 1, max: 30 }),
+        expect.objectContaining({ name: "externalLines", min: 1, max: 30 })
+      ])
+    );
   });
 
   it("publishes unit prices only for confirmed values", () => {

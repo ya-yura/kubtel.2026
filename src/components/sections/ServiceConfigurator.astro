@@ -26,6 +26,7 @@ type Props = {
   staticPreview?: boolean;
   formAction?: string;
   initialValues?: Record<string, ConfiguratorFieldValue>;
+  hideServicePanelTitle?: boolean;
   configuratorEyebrow?: string;
   configuratorTitle?: string;
   configuratorDescription?: string;
@@ -45,6 +46,7 @@ const {
   staticPreview = false,
   formAction = Astro.url.pathname,
   initialValues = {},
+  hideServicePanelTitle = false,
   configuratorEyebrow = "Подобрать решение",
   configuratorTitle = catalog.title,
   configuratorDescription = "Сначала выберите услуги и увидите ориентир по стоимости. Телефон нужен только в конце — когда уже понятно, что именно подключать.",
@@ -152,8 +154,12 @@ function getDefaultValues(
             hidden={service.id !== defaultService?.id}
           >
             <div class="configurator-service-intro">
-              <p class="eyebrow">{service.eyebrow}</p>
-              <h3>{service.title}</h3>
+              {!hideServicePanelTitle && (
+                <>
+                  <p class="eyebrow">{service.eyebrow}</p>
+                  <h3>{service.title}</h3>
+                </>
+              )}
               <p>{service.description}</p>
             </div>
             <div class="config-fields">
@@ -438,8 +444,8 @@ function getDefaultValues(
             lines.push({
               label: field.label,
               valueLabel: "Да",
-              monthly: field.monthlyPrice ?? 0,
-              once: field.oneTimePrice ?? 0
+              monthly: getFieldPrice(field, "monthlyPrice", fields),
+              once: getFieldPrice(field, "oneTimePrice", fields)
             });
           }
           return;
@@ -488,6 +494,17 @@ function getDefaultValues(
       if (configurationInput)
         configurationInput.value = JSON.stringify({ serviceId: activeService, fields });
     };
+
+    function getFieldPrice(
+      field: any,
+      priceType: "monthlyPrice" | "oneTimePrice",
+      values: Record<string, any>
+    ) {
+      const priceBy = priceType === "monthlyPrice" ? field.monthlyPriceBy : field.oneTimePriceBy;
+      const dependencyValue = values[field.priceByFieldId ?? "internet-plan"];
+      const dependencyKey = typeof dependencyValue === "string" ? dependencyValue : "";
+      return priceBy?.[dependencyKey] ?? field[priceType] ?? 0;
+    }
 
     const selectService = (serviceId: string) => {
       activeService = serviceId;

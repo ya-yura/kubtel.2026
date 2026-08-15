@@ -24,6 +24,7 @@ describe("getLegacyBusinessRedirect", () => {
       "/business/?calculator=telephony#business-calculators"
     );
     expect(getLegacyBusinessRedirect("/business/government/")).toBe("/business/b2g/");
+    expect(getLegacyBusinessRedirect("/business/colocation/")).toBeNull();
   });
 
   it("does not redirect unrelated routes", () => {

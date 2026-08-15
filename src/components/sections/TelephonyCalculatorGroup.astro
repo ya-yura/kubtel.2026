@@ -1,0 +1,75 @@
+---
+import BusinessCalculator from "@components/sections/BusinessCalculator.astro";
+import { getSitePath } from "@config/site";
+import { telephonyCalculatorConfigs, type TelephonyVariant } from "@lib/business/calculator-ui";
+
+type Props = {
+  requestPath?: string;
+};
+
+const { requestPath = "/business/request/?segment=legal" } = Astro.props;
+const variants: Array<{ id: TelephonyVariant; label: string }> = [
+  { id: "basic", label: "Обычное подключение" },
+  { id: "multichannel", label: "Многоканальный телефон" },
+  { id: "pro", label: "Серия ПРО" },
+  { id: "virtual-pbx", label: "Виртуальная АТС" }
+];
+---
+
+<section class="section-pad telephony-calculator-group" data-telephony-calculator-group>
+  <div class="section-heading">
+    <p class="eyebrow">Калькуляторы телефонии</p>
+    <h2>Выберите сценарий подключения</h2>
+    <p>
+      В каждом сценарии свои параметры и формула: тип подключения, тариф, порты, номера и линии.
+      Абонентская плата и единовременный платёж показаны раздельно.
+    </p>
+  </div>
+
+  <div class="telephony-calculator-tabs" role="tablist" aria-label="Сценарий телефонии">
+    {
+      variants.map((variant, index) => (
+        <button
+          type="button"
+          role="tab"
+          aria-selected={index === 0 ? "true" : "false"}
+          data-telephony-tab={variant.id}
+        >
+          {variant.label}
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="telephony-calculator-panels">
+    {
+      variants.map((variant, index) => (
+        <div data-telephony-panel={variant.id} hidden={index !== 0}>
+          <BusinessCalculator
+            config={telephonyCalculatorConfigs[variant.id]}
+            requestPath={getSitePath(requestPath)}
+          />
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-telephony-calculator-group]").forEach((root) => {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-telephony-tab]"));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>("[data-telephony-panel]"));
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const id = tab.dataset.telephonyTab;
+        tabs.forEach((item) =>
+          item.setAttribute("aria-selected", String(item.dataset.telephonyTab === id))
+        );
+        panels.forEach((panel) => {
+          panel.hidden = panel.dataset.telephonyPanel !== id;
+        });
+      });
+    });
+  });
+</script>

@@ -105,6 +105,7 @@ HOST=127.0.0.1
 PORT=4321
 
 PUBLIC_SITE_URL=https://kubtel.ru
+PUBLIC_YANDEX_METRIKA_ID=32522125
 PUBLIC_BASE_PATH=/
 
 CMS_PROVIDER=local
@@ -141,6 +142,7 @@ CMS_FALLBACK_TO_LOCAL=true
 | Переменная | Назначение |
 | --- | --- |
 | `PUBLIC_SITE_URL` | боевой origin сайта, нужен для canonical, sitemap, robots и SEO |
+| `PUBLIC_YANDEX_METRIKA_ID` | идентификатор действующего счётчика Яндекс Метрики; подключается только на production-origin `kubtel.ru` |
 | `PUBLIC_BASE_PATH` | обычно `/`; менять только при публикации в подпапку |
 | `CMS_PROVIDER` | `local` или `strapi` |
 | `CMS_FALLBACK_TO_LOCAL` | если `true`, сайт может читать локальный контент при сбое Strapi |

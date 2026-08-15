@@ -1,3 +1,10 @@
+import {
+  telephonyPricing,
+  type TelephonyConnectionType,
+  type TelephonyTariff,
+  type TelephonyPricing
+} from "@lib/business/telephony-pricing";
+
 export type PriceStatus = "confirmed" | "needs_verification" | "unknown";
 
 export type PriceValue = {
@@ -24,6 +31,31 @@ export type TelephonyInput = {
   externalLines?: number;
   virtualPbx?: boolean;
   autoAttendant?: boolean;
+};
+
+export type OrdinaryTelephonyInput = {
+  connectionType: TelephonyConnectionType;
+  tariff: TelephonyTariff;
+};
+
+export type MultichannelTelephonyInput = {
+  connectionType: TelephonyConnectionType;
+  tariff: TelephonyTariff;
+  ports: number;
+};
+
+export type ProTelephonyInput = {
+  tariff: TelephonyTariff;
+  phoneNumbers: number;
+  externalLines: number;
+};
+
+export type VirtualPbxTelephonyInput = {
+  connectionType: TelephonyConnectionType;
+  tariff: TelephonyTariff;
+  ports: number;
+  phoneNumbers: number;
+  externalLines: number;
 };
 
 export type CctvInput = {
@@ -86,6 +118,77 @@ export function calculateTelephony(
     accumulator,
     input,
     `Телефония: ${input.ports} портов, ${input.phoneNumbers} номеров`
+  );
+}
+
+export function calculateOrdinaryTelephony(
+  input: OrdinaryTelephonyInput,
+  pricing: TelephonyPricing = telephonyPricing
+): BusinessCalculationResult<OrdinaryTelephonyInput> {
+  return completeTelephonyCalculation(
+    input,
+    pricing.ordinary.monthly[input.tariff],
+    pricing.ordinary.connectionOneTime[input.connectionType],
+    `Обычное подключение: ${getConnectionLabel(input.connectionType)}, ${getTariffLabel(input.tariff)}`
+  );
+}
+
+export function calculateMultichannelTelephony(
+  input: MultichannelTelephonyInput,
+  pricing: TelephonyPricing = telephonyPricing
+): BusinessCalculationResult<MultichannelTelephonyInput> {
+  const monthly =
+    input.ports * pricing.multichannel.portMonthly[input.connectionType][input.tariff];
+  const oneTime = calculateSetupCost(pricing.multichannel.setup[input.connectionType], input.ports);
+
+  return completeTelephonyCalculation(
+    input,
+    monthly,
+    oneTime,
+    `Многоканальный телефон: ${input.ports} портов, ${getConnectionLabel(input.connectionType)}, ${getTariffLabel(input.tariff)}`
+  );
+}
+
+export function calculateProTelephony(
+  input: ProTelephonyInput,
+  pricing: TelephonyPricing = telephonyPricing
+): BusinessCalculationResult<ProTelephonyInput> {
+  const extraNumbers = Math.max(input.phoneNumbers - input.externalLines, 0);
+  const monthly =
+    input.externalLines * pricing.pro.lineMonthly[input.tariff] +
+    extraNumbers * pricing.pro.extraNumberMonthly;
+  const oneTime =
+    pricing.pro.installation +
+    Math.max(input.phoneNumbers, input.externalLines) * pricing.pro.portOneTime;
+
+  return completeTelephonyCalculation(
+    input,
+    monthly,
+    oneTime,
+    `Серия ПРО: ${input.phoneNumbers} номеров ТФОП, ${input.externalLines} соединительных линий, ${getTariffLabel(input.tariff)}`
+  );
+}
+
+export function calculateVirtualPbxTelephony(
+  input: VirtualPbxTelephonyInput,
+  pricing: TelephonyPricing = telephonyPricing
+): BusinessCalculationResult<VirtualPbxTelephonyInput> {
+  const extraNumbers = Math.max(input.phoneNumbers - input.externalLines, 0);
+  const monthly =
+    input.ports * pricing.virtualPbx.portMonthly[input.connectionType] +
+    input.externalLines *
+      pricing.virtualPbx.externalLineMonthly[input.connectionType][input.tariff] +
+    (input.connectionType === "digital" ? extraNumbers * pricing.virtualPbx.extraNumberMonthly : 0);
+  const oneTime =
+    calculateSetupCost(pricing.virtualPbx.setup[input.connectionType], input.ports) +
+    Math.max(input.phoneNumbers - 1, 0) * pricing.virtualPbx.extraNumberOneTime +
+    Math.max(input.externalLines - 1, 0) * pricing.virtualPbx.extraExternalLineOneTime;
+
+  return completeTelephonyCalculation(
+    input,
+    monthly,
+    oneTime,
+    `Виртуальная АТС: ${input.ports} портов, ${input.phoneNumbers} номеров ТФОП, ${input.externalLines} внешних линий, ${getConnectionLabel(input.connectionType)}, ${getTariffLabel(input.tariff)}`
   );
 }
 
@@ -161,6 +264,63 @@ export function calculateColocation(
     input,
     `Colocation: ${input.rackUnits}U, ${input.powerWatts} Вт, интернет ${input.internetPlan}`
   );
+}
+
+function completeTelephonyCalculation<TDetails extends Record<string, unknown>>(
+  details: TDetails,
+  monthly: number,
+  oneTime: number,
+  summary: string
+): BusinessCalculationResult<TDetails> {
+  return {
+    monthly,
+    oneTime,
+    unknownItems: [],
+    requiredConsultation: false,
+    summary,
+    details
+  };
+}
+
+function calculateSetupCost(
+  setup: {
+    base: readonly { ports: number; price: number }[];
+    additional: readonly { ports: number; price: number }[];
+  },
+  ports: number
+): number {
+  const additionalCosts = Array.from({ length: ports + 1 }, () => Number.POSITIVE_INFINITY);
+  additionalCosts[0] = 0;
+
+  for (let count = 1; count <= ports; count += 1) {
+    for (const option of setup.additional) {
+      if (count >= option.ports) {
+        additionalCosts[count] = Math.min(
+          additionalCosts[count],
+          additionalCosts[count - option.ports] + option.price
+        );
+      }
+    }
+  }
+
+  return Math.min(
+    ...setup.base.map((base) => {
+      if (ports <= base.ports) {
+        return base.price;
+      }
+
+      const extraPorts = ports - base.ports;
+      return base.price + additionalCosts[extraPorts];
+    })
+  );
+}
+
+function getConnectionLabel(connectionType: TelephonyConnectionType): string {
+  return connectionType === "analog" ? "аналоговое подключение" : "цифровое подключение";
+}
+
+function getTariffLabel(tariff: TelephonyTariff): string {
+  return tariff === "unlimited" ? "безлимитный тариф" : "повременный тариф";
 }
 
 function createAccumulator(): {

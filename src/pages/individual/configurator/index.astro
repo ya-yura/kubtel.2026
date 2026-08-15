@@ -16,7 +16,7 @@ const leadActionResult =
 const requestedService = Astro.url.searchParams.get("service");
 const initialService = requestedService === "tv" ? "internet" : requestedService;
 const initialValues: Record<string, ConfiguratorFieldValue> =
-  requestedService === "tv" ? { "internet-plan": "internet-100-tv" } : {};
+  requestedService === "tv" ? { "internet-plan": "internet-100", "internet-tv": true } : {};
 ---
 
 <BaseLayout
