@@ -90,7 +90,7 @@ const selectedTab = Astro.url.searchParams.get("tab") ?? "about";
       </div><div class="camera-model-grid">
         {
           catalog.cctv.cameraModels.map((camera) => (
-            <article class="camera-model-card">
+            <article class="camera-model-card" id={`camera-${camera.id}`}>
               <>
                 <div>
                   <>

@@ -3746,6 +3746,7 @@ body.is-readable :focus-visible {
 }
 
 .individual-principles li span {
+  grid-column: 2;
   color: var(--kb-color-text-secondary);
 }
 
@@ -4272,6 +4273,14 @@ body.is-readable :focus-visible {
 .config-summary-note {
   color: var(--kb-color-text-secondary);
   font-size: 0.78rem;
+}
+
+.config-field-link {
+  color: var(--kb-color-action-primary-background);
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
 }
 
 .config-fieldset {

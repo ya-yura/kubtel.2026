@@ -18,6 +18,10 @@ export type ConfiguratorField = {
   required?: boolean;
   multiple?: boolean;
   help?: string;
+  helpLink?: {
+    label: string;
+    href: string;
+  };
   unit?: string;
   min?: number;
   max?: number;
@@ -27,6 +31,7 @@ export type ConfiguratorField = {
   monthlyPrice?: number;
   oneTimePrice?: number;
   priceByFieldId?: string;
+  priceByFieldIds?: string[];
   monthlyPriceBy?: Record<string, number>;
   oneTimePriceBy?: Record<string, number>;
   choices?: ConfiguratorChoice[];

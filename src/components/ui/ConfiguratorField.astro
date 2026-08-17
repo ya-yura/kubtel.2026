@@ -1,5 +1,6 @@
 ---
 import type { ConfiguratorField, ConfiguratorFieldValue } from "@models/configurator";
+import { getSitePath } from "@config/site";
 
 type Props = {
   field: ConfiguratorField;
@@ -25,6 +26,7 @@ const defaultValue =
 const choiceInputType =
   field.type === "radio" || (field.type === "checkbox" && !field.multiple) ? "radio" : "checkbox";
 const showWhen = field.showWhen ? JSON.stringify(field.showWhen) : undefined;
+const helpLinkHref = field.helpLink ? getSitePath(field.helpLink.href) : undefined;
 ---
 
 {
@@ -47,6 +49,11 @@ const showWhen = field.showWhen ? JSON.stringify(field.showWhen) : undefined;
         </select>
       </div>
       {field.help && <small>{field.help}</small>}
+      {field.helpLink && (
+        <a class="config-field-link" href={helpLinkHref}>
+          {field.helpLink.label} →
+        </a>
+      )}
     </label>
   ) : field.type === "counter" ? (
     <label
@@ -78,6 +85,11 @@ const showWhen = field.showWhen ? JSON.stringify(field.showWhen) : undefined;
         {field.unit && <em>{field.unit}</em>}
       </div>
       {field.help && <small>{field.help}</small>}
+      {field.helpLink && (
+        <a class="config-field-link" href={helpLinkHref}>
+          {field.helpLink.label} →
+        </a>
+      )}
     </label>
   ) : field.type === "checkbox" && !field.choices?.length ? (
     <label
@@ -97,6 +109,11 @@ const showWhen = field.showWhen ? JSON.stringify(field.showWhen) : undefined;
       <span>
         <strong>{field.label}</strong>
         {field.help && <small>{field.help}</small>}
+        {field.helpLink && (
+          <a class="config-field-link" href={helpLinkHref}>
+            {field.helpLink.label} →
+          </a>
+        )}
       </span>
     </label>
   ) : (
@@ -132,6 +149,11 @@ const showWhen = field.showWhen ? JSON.stringify(field.showWhen) : undefined;
         ))}
       </div>
       {field.help && <small class="config-field-help">{field.help}</small>}
+      {field.helpLink && (
+        <a class="config-field-link" href={helpLinkHref}>
+          {field.helpLink.label} →
+        </a>
+      )}
     </fieldset>
   )
 }

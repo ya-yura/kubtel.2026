@@ -39,6 +39,25 @@ const catalog: ConfiguratorCatalog = {
           oneTimePrice: 4990
         },
         {
+          id: "tv",
+          label: "Телевидение",
+          type: "checkbox",
+          monthlyPrice: 100,
+          oneTimePrice: 0
+        },
+        {
+          id: "cinema",
+          label: "Кино",
+          type: "checkbox",
+          priceByFieldIds: ["plan", "house"],
+          monthlyPriceBy: {
+            "base|false": 200,
+            "base|true": 210
+          },
+          monthlyPrice: 200,
+          oneTimePrice: 0
+        },
+        {
           id: "quantity",
           label: "Количество",
           type: "counter",
@@ -85,5 +104,23 @@ describe("calculateConfiguratorPrice", () => {
     expect(result.monthlyTotal).toBe(890);
     expect(result.oneTimeTotal).toBe(4990);
     expect(result.lines.map((line) => line.label)).toEqual(["План", "Частный дом"]);
+  });
+
+  it("supports prices that depend on a plan and a second option", () => {
+    const result = calculateConfiguratorPrice(catalog, "internet", {
+      plan: "base",
+      house: true,
+      tv: true,
+      cinema: true
+    });
+
+    expect(result.monthlyTotal).toBe(1200);
+    expect(result.oneTimeTotal).toBe(4990);
+    expect(result.lines.map((line) => line.label)).toEqual([
+      "План",
+      "Частный дом",
+      "Телевидение",
+      "Кино"
+    ]);
   });
 });

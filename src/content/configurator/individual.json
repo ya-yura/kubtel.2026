@@ -72,6 +72,15 @@
             "equals": true
           },
           "help": "Дополнительный пакет к Кубтел ТВ.",
+          "priceByFieldIds": ["internet-plan", "house-connection"],
+          "monthlyPriceBy": {
+            "internet-100|false": 200,
+            "internet-200|false": 200,
+            "internet-300|false": 200,
+            "internet-100|true": 210,
+            "internet-200|true": 210,
+            "internet-300|true": 200
+          },
           "monthlyPrice": 200,
           "oneTimePrice": 0
         },
@@ -108,12 +117,6 @@
               "oneTimePrice": 0
             },
             {
-              "id": "router-snr-md2",
-              "label": "Маршрутизатор SNR MD2 — купить",
-              "monthlyPrice": 0,
-              "oneTimePrice": 2300
-            },
-            {
               "id": "router-snr-advance",
               "label": "Wi-Fi роутер SNR ADVANCE AC22 — купить",
               "monthlyPrice": 0,
@@ -139,36 +142,6 @@
           "help": "Разовая услуга по действующему прайсу.",
           "monthlyPrice": 0,
           "oneTimePrice": 500
-        },
-        {
-          "id": "tv-addons",
-          "label": "Дополнительные услуги ТВ",
-          "type": "checkbox",
-          "multiple": true,
-          "showWhen": {
-            "fieldId": "internet-tv",
-            "equals": true
-          },
-          "choices": [
-            {
-              "id": "tv-cinema",
-              "label": "Настрой кино",
-              "monthlyPrice": 319,
-              "oneTimePrice": 0
-            },
-            {
-              "id": "tv-premier-sport",
-              "label": "Матч! Премьер",
-              "monthlyPrice": 299,
-              "oneTimePrice": 0
-            },
-            {
-              "id": "tv-football",
-              "label": "Матч! Футбол",
-              "monthlyPrice": 380,
-              "oneTimePrice": 0
-            }
-          ]
         },
         {
           "id": "tv-device",
@@ -208,14 +181,27 @@
           "type": "counter",
           "unit": "устр.",
           "min": 1,
-          "max": 3,
+          "max": 5,
           "defaultValue": 1,
+          "help": "До 3 устройств включено в базовую подписку. Для 4–5 устройств подключите расширение ниже.",
           "monthlyPrice": 0,
           "oneTimePrice": 0,
           "showWhen": {
             "fieldId": "internet-tv",
             "equals": true
           }
+        },
+        {
+          "id": "tv-extra-devices",
+          "label": "Расширение до 5 устройств",
+          "type": "checkbox",
+          "showWhen": {
+            "fieldId": "internet-tv",
+            "equals": true
+          },
+          "help": "Добавляет 4-е и 5-е устройство к базовой подписке.",
+          "monthlyPrice": 89,
+          "oneTimePrice": 0
         }
       ]
     },
@@ -309,6 +295,11 @@
           "min": 0,
           "max": 10,
           "defaultValue": 0,
+          "help": "Посмотрите характеристики модели перед добавлением в расчёт.",
+          "helpLink": {
+            "label": "Характеристики Kubtel.Dome",
+            "href": "/individual/cctv/?tab=equipment#camera-dome"
+          },
           "oneTimePrice": 6500,
           "monthlyPrice": 0
         },
@@ -320,6 +311,11 @@
           "min": 0,
           "max": 10,
           "defaultValue": 0,
+          "help": "Посмотрите характеристики модели перед добавлением в расчёт.",
+          "helpLink": {
+            "label": "Характеристики Kubtel.Bullet",
+            "href": "/individual/cctv/?tab=equipment#camera-bullet"
+          },
           "oneTimePrice": 6500,
           "monthlyPrice": 0
         }
@@ -1464,12 +1460,6 @@
         "platform": "Android TV",
         "href": "https://kubtel.ru/files/KubtelTV.apk",
         "external": true
-      },
-      {
-        "label": "Приложение для мобильных устройств (.apk)",
-        "platform": "Android",
-        "href": "https://kubtel.ru/files/KubtelTVmobile.apk",
-        "external": true
       }
     ],
     "offers": [
@@ -1499,13 +1489,7 @@
       "Оставьте заявку после расчёта: менеджер проверит техническую возможность по адресу и согласует условия подключения.",
       "После подключения установите приложение на совместимое устройство и войдите по данным, которые выдаёт Кубтел."
     ],
-    "supportedDevices": [
-      "Samsung Smart TV",
-      "LG Smart TV",
-      "ТВ-приставка",
-      "Android TV",
-      "Android-смартфон"
-    ]
+    "supportedDevices": ["Samsung Smart TV", "LG Smart TV", "ТВ-приставка", "Android TV"]
   },
   "cctv": {
     "appLinks": [

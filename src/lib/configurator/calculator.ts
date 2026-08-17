@@ -156,8 +156,22 @@ function getFieldPrice(
   values: Record<string, ConfiguratorFieldValue | undefined>
 ): number {
   const byValue = priceType === "monthlyPrice" ? field.monthlyPriceBy : field.oneTimePriceBy;
-  const dependencyValue = values[field.priceByFieldId ?? "internet-plan"];
-  const dependencyKey = typeof dependencyValue === "string" ? dependencyValue : "";
+  const dependencyFieldIds = field.priceByFieldIds ?? [field.priceByFieldId ?? "internet-plan"];
+  const dependencyKey = dependencyFieldIds
+    .map((fieldId) => {
+      const dependencyValue = values[fieldId];
+
+      if (dependencyValue === undefined && dependencyFieldIds.length > 1) {
+        return "false";
+      }
+
+      return typeof dependencyValue === "string" ||
+        typeof dependencyValue === "number" ||
+        typeof dependencyValue === "boolean"
+        ? String(dependencyValue)
+        : "";
+    })
+    .join("|");
 
   return byValue?.[dependencyKey] ?? field[priceType] ?? 0;
 }
