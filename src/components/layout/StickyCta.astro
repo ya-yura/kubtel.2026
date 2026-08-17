@@ -1,7 +1,11 @@
 ---
-import { getSitePath } from "@config/site";
+import { getSitePath, SITE } from "@config/site";
 
-const currentPath = Astro.url.pathname;
+const basePath = SITE.basePath === "/" ? "" : SITE.basePath.replace(/\/$/, "");
+const currentPath =
+  basePath && Astro.url.pathname.startsWith(`${basePath}/`)
+    ? Astro.url.pathname.slice(basePath.length)
+    : Astro.url.pathname;
 const isBusinessPath = currentPath.startsWith("/business/");
 const quietSections = [
   "/payment/",
