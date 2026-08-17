@@ -16,12 +16,10 @@ const quietSections = [
   "/design-system/"
 ];
 const shouldRender = !quietSections.some((path) => currentPath.startsWith(path));
-const label = isBusinessPath ? "Расчёт для бизнеса" : "Проверить подключение";
-const hint = isBusinessPath
-  ? "Передадим выбранную конфигурацию"
-  : "Адрес и условия уточним по заявке";
-const href = isBusinessPath ? "/business/request/" : "/connect/#callback-request";
-const actionLabel = isBusinessPath ? "Перейти" : "Проверить";
+const label = isBusinessPath ? "Оставить заявку" : "Проверить подключение";
+const hint = isBusinessPath ? "Заявка для бизнеса" : "Адрес и условия уточним по заявке";
+const href = isBusinessPath ? "/business/request/?segment=legal" : "/connect/#callback-request";
+const actionLabel = isBusinessPath ? "Оставить заявку" : "Проверить";
 ---
 
 {
