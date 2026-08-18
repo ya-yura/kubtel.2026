@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { SITE } from "@config/site";
+import PageIntro from "@components/ui/PageIntro.astro";
 import { getJobVacancies } from "@lib/content";
 import { handleCareerApplicationFormPost } from "@lib/leads/form-handlers";
 import type { JobEmploymentType } from "@models/domain";
@@ -34,16 +35,19 @@ const employmentLabels: Record<JobEmploymentType, string> = {
   canonicalPath="/careers/"
   pageType="CollectionPage"
 >
-  <section class="page-intro section-pad compact-intro">
-    <p class="eyebrow">Вакансии</p>
-    <h1>Работа в Kubtel</h1>
-    <p>
-      Открытые роли, условия и форма отклика с возможностью приложить ссылку или файл резюме.
-      Команда сможет связаться по телефону или e-mail.
-    </p>
-  </section>
+  <PageIntro
+    class="compact-intro"
+    eyebrow="Вакансии"
+    title="Работа в Kubtel"
+    description="Открытые роли, условия и форма отклика с возможностью приложить ссылку или файл резюме. Команда сможет связаться по телефону или e-mail."
+  />
 
-  <section class="section-pad career-invite narrative-section">
+  <section
+    class="section-pad career-invite narrative-section"
+    data-career-contact
+    data-contact-phone={SITE.businessPhone}
+    data-contact-email={SITE.businessEmail}
+  >
     <div>
       <h2>Приглашаем в команду</h2>
       <p>
@@ -251,6 +255,11 @@ const employmentLabels: Record<JobEmploymentType, string> = {
 
 <script>
   const careerForm = document.querySelector<HTMLFormElement>("[data-career-application-form]");
+  const careerContact = document.querySelector<HTMLElement>("[data-career-contact]");
+  const careerContacts = {
+    phone: careerContact?.dataset.contactPhone ?? "",
+    email: careerContact?.dataset.contactEmail ?? ""
+  };
   const vacancySelect = careerForm?.querySelector<HTMLSelectElement>('select[name="vacancySlug"]');
 
   document.querySelectorAll<HTMLElement>("[data-vacancy-choice]").forEach((link) => {
@@ -289,7 +298,10 @@ const employmentLabels: Record<JobEmploymentType, string> = {
     status.replaceChildren(
       createCareerStatusLine("strong", "Отклик не отправлен с этого адреса."),
       createCareerStatusLine("span", `${name}: ${vacancyTitle}.`),
-      createCareerStatusLine("span", "Напишите на kubtel@kubtel.ru или позвоните 8 861 200-10-60.")
+      createCareerStatusLine(
+        "span",
+        "Напишите на " + careerContacts.email + " или позвоните " + careerContacts.phone + "."
+      )
     );
 
     if (!existingStatus) {

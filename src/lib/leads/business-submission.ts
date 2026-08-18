@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { SITE } from "@config/site";
 import {
   scoreBusinessLead,
   type BusinessLeadPriority,
@@ -46,7 +47,7 @@ export type BusinessLeadSubmission = {
   routing: {
     pipeline: "b2b" | "b2g" | "operators" | "datacenter";
     department: "business_sales" | "b2g" | "partner_sales" | "noc";
-    recipientEmail: "kubtel@kubtel.ru" | "tender@kubtel.ru";
+    recipientEmail: typeof SITE.businessEmail | typeof SITE.budgetEmail;
     priority: BusinessLeadPriority;
     slaResponseMinutes: number;
   };
@@ -182,7 +183,7 @@ function getRouting(
     return {
       pipeline: "b2g",
       department: "b2g",
-      recipientEmail: "tender@kubtel.ru",
+      recipientEmail: SITE.budgetEmail,
       priority: "urgent",
       slaResponseMinutes: 30
     };
@@ -192,7 +193,7 @@ function getRouting(
     return {
       pipeline: "operators",
       department: "partner_sales",
-      recipientEmail: "kubtel@kubtel.ru",
+      recipientEmail: SITE.businessEmail,
       priority,
       slaResponseMinutes: priority === "urgent" ? 30 : 120
     };
@@ -202,7 +203,7 @@ function getRouting(
     return {
       pipeline: "datacenter",
       department: "business_sales",
-      recipientEmail: "kubtel@kubtel.ru",
+      recipientEmail: SITE.businessEmail,
       priority,
       slaResponseMinutes: priority === "urgent" ? 30 : 120
     };
@@ -211,7 +212,7 @@ function getRouting(
   return {
     pipeline: "b2b",
     department: "business_sales",
-    recipientEmail: "kubtel@kubtel.ru",
+    recipientEmail: SITE.businessEmail,
     priority,
     slaResponseMinutes: priority === "urgent" ? 30 : 180
   };

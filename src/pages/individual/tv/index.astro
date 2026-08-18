@@ -5,12 +5,12 @@ import ChannelList from "@components/sections/ChannelList.astro";
 import OfferLinks from "@components/sections/OfferLinks.astro";
 import ServiceConfigurator from "@components/sections/ServiceConfigurator.astro";
 import ServiceTabs from "@components/ui/ServiceTabs.astro";
-import { getConfiguratorCatalog } from "@lib/content";
+import { getConfiguratorCatalog, getTariffs } from "@lib/content";
 import { handleConfiguratorFormPost } from "@lib/leads/form-handlers";
 
 const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
 export const prerender = false;
-const catalog = await getConfiguratorCatalog();
+const [catalog, tariffs] = await Promise.all([getConfiguratorCatalog(), getTariffs()]);
 const leadActionResult =
   !isStaticPreview && Astro.request.method === "POST"
     ? await handleConfiguratorFormPost(await Astro.request.formData(), Astro.request)
@@ -84,6 +84,7 @@ const selectedTab = requestedTab === "connect" ? "about" : requestedTab;
         </div>
         <ServiceConfigurator
           catalog={catalog}
+          tariffs={tariffs}
           singleService="internet"
           initialValues={{ "internet-plan": "internet-100", "internet-tv": true }}
           hideServicePanelTitle

@@ -1,14 +1,17 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import ServiceConfigurator from "@components/sections/ServiceConfigurator.astro";
-import { getConfiguratorCatalog } from "@lib/content";
+import PageIntro from "@components/ui/PageIntro.astro";
+import { individualTvConfiguratorLink } from "@config/ui";
+import { getConfiguratorCatalog, getTariffs } from "@lib/content";
 import { handleConfiguratorFormPost } from "@lib/leads/form-handlers";
+import { buildInternetServiceSchema, buildOfferCatalogSchema } from "@lib/seo/schema";
 import type { ConfiguratorFieldValue } from "@models/configurator";
 
 const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
 export const prerender = false;
 
-const catalog = await getConfiguratorCatalog();
+const [catalog, tariffs] = await Promise.all([getConfiguratorCatalog(), getTariffs()]);
 const leadActionResult =
   !isStaticPreview && Astro.request.method === "POST"
     ? await handleConfiguratorFormPost(await Astro.request.formData(), Astro.request)
@@ -17,33 +20,32 @@ const requestedService = Astro.url.searchParams.get("service");
 const initialService = requestedService === "tv" ? "internet" : requestedService;
 const initialValues: Record<string, ConfiguratorFieldValue> =
   requestedService === "tv" ? { "internet-plan": "internet-100", "internet-tv": true } : {};
+const pageSchema = [
+  buildInternetServiceSchema(tariffs, "/individual/configurator/"),
+  buildOfferCatalogSchema(tariffs, "/individual/configurator/")
+];
 ---
 
 <BaseLayout
   title="Конфигуратор услуг для физических лиц"
   description="Выберите домашний интернет с ТВ или видеонаблюдение, посмотрите стоимость услуг и оборудования, а затем оставьте заявку."
   canonicalPath="/individual/configurator/"
+  schema={pageSchema}
 >
-  <section class="page-intro section-pad compact-intro">
-    <p class="eyebrow">Частным лицам</p>
-    <h1>Соберите свои услуги</h1>
-    <p>
-      Конфигуратор учитывает домашний интернет с ТВ, видеонаблюдение, роутеры, приставки, камеры,
-      архив и дополнительные услуги. Новое поле добавляется в каталог услуги — интерфейс и расчёт
-      остаются общими.
-    </p>
-  </section>
+  <PageIntro
+    class="compact-intro"
+    eyebrow="Частным лицам"
+    title="Соберите свои услуги"
+    description="Конфигуратор учитывает домашний интернет с ТВ, видеонаблюдение, роутеры, приставки, камеры, архив и дополнительные услуги. Новое поле добавляется в каталог услуги — интерфейс и расчёт остаются общими."
+  />
   <ServiceConfigurator
     catalog={catalog}
+    tariffs={tariffs}
     initialService={initialService}
     initialValues={initialValues}
     actionResult={leadActionResult}
     staticPreview={isStaticPreview}
     formAction={Astro.url.pathname}
-    serviceLink={{
-      eyebrow: "Домашнее ТВ",
-      label: "Телевидение",
-      href: "/individual/tv/?tab=about#tv-connect"
-    }}
+    serviceLink={individualTvConfiguratorLink}
   />
 </BaseLayout>

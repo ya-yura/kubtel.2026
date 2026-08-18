@@ -11,6 +11,7 @@ import type {
   ConfiguratorFieldValue,
   ConfiguratorService
 } from "@models/configurator";
+import type { Tariff } from "@models/domain";
 import type { ConfiguratorLeadActionResult } from "@lib/leads/configurator-submission";
 
 type ActionResultLike = {
@@ -32,6 +33,7 @@ type Props = {
   staticPreview?: boolean;
   formAction?: string;
   initialValues?: Record<string, ConfiguratorFieldValue>;
+  tariffs?: Tariff[];
   serviceLink?: ConfiguratorServiceLink | null;
   hideServicePanelTitle?: boolean;
   configuratorEyebrow?: string;
@@ -53,6 +55,7 @@ const {
   staticPreview = false,
   formAction = Astro.url.pathname,
   initialValues = {},
+  tariffs = [],
   serviceLink = null,
   hideServicePanelTitle = false,
   configuratorEyebrow = "Подобрать решение",
@@ -77,6 +80,49 @@ const defaultValues = defaultService ? getDefaultValues(defaultService, initialV
 const defaultPricing = defaultService
   ? calculateConfiguratorPrice(catalog, defaultService.id, defaultValues)
   : null;
+const tariffDetails = tariffs.reduce(
+  (details, tariff) => {
+    const choiceId = `internet-${tariff.speedDownload}`;
+    if (details.some((detail) => detail.choiceId === choiceId)) {
+      return details;
+    }
+
+    details.push({
+      choiceId,
+      description: tariff.benefitDescription,
+      tags: tariff.bestFor
+    });
+    return details;
+  },
+  [] as Array<{ choiceId: string; description: string; tags: string[] }>
+);
+
+const getFieldGroups = (fields: ConfiguratorService["fields"]) => {
+  const groups: Array<{
+    id: string;
+    label: string;
+    fields: ConfiguratorService["fields"];
+    grouped: boolean;
+  }> = [];
+
+  fields.forEach((field) => {
+    const group = field.group;
+    if (!group) {
+      groups.push({ id: field.id, label: "", fields: [field], grouped: false });
+      return;
+    }
+
+    const currentGroup = groups.at(-1);
+    if (currentGroup?.grouped && currentGroup.id === group.id) {
+      currentGroup.fields.push(field);
+      return;
+    }
+
+    groups.push({ id: group.id, label: group.label, fields: [field], grouped: true });
+  });
+
+  return groups;
+};
 
 function getDefaultValues(
   service: ConfiguratorService,
@@ -177,14 +223,42 @@ function getDefaultValues(
               <p>{service.description}</p>
             </div>
             <div class="config-fields">
-              {service.fields.map((field) => (
-                <ConfiguratorField
-                  field={field}
-                  serviceId={service.id}
-                  value={defaultValues[field.id]}
-                  visible={isConfiguratorFieldVisible(field, defaultValues)}
-                />
-              ))}
+              {getFieldGroups(service.fields).map((group) =>
+                group.grouped ? (
+                  <fieldset
+                    class="config-field-group"
+                    data-config-group={group.id}
+                    hidden={
+                      !group.fields.some((field) =>
+                        isConfiguratorFieldVisible(field, defaultValues)
+                      )
+                    }
+                  >
+                    <legend>{group.label}</legend>
+                    <div class="config-field-group-content">
+                      {group.fields.map((field) => (
+                        <ConfiguratorField
+                          field={field}
+                          serviceId={service.id}
+                          value={defaultValues[field.id]}
+                          visible={isConfiguratorFieldVisible(field, defaultValues)}
+                          tariffDetails={field.id === "internet-plan" ? tariffDetails : undefined}
+                        />
+                      ))}
+                    </div>
+                  </fieldset>
+                ) : (
+                  <ConfiguratorField
+                    field={group.fields[0]}
+                    serviceId={service.id}
+                    value={defaultValues[group.fields[0].id]}
+                    visible={isConfiguratorFieldVisible(group.fields[0], defaultValues)}
+                    tariffDetails={
+                      group.fields[0].id === "internet-plan" ? tariffDetails : undefined
+                    }
+                  />
+                )
+              )}
             </div>
             <ul class="config-notes">
               {service.notes.map((note) => (
@@ -377,6 +451,12 @@ function getDefaultValues(
         if (!rule) return;
         field.hidden = !matchesVisibilityRule({ showWhen: JSON.parse(rule) }, values);
       });
+
+      panel.querySelectorAll<HTMLElement>("[data-config-group]").forEach((group) => {
+        group.hidden = !Array.from(
+          group.querySelectorAll<HTMLElement>("[data-config-show-when]")
+        ).some((field) => !field.hidden);
+      });
     };
 
     const getFields = (panel: HTMLElement) => {
@@ -434,6 +514,7 @@ function getDefaultValues(
       if (!service) return;
       const fields = getFields(panel);
       updateFieldVisibility(panel, fields);
+      updateTariffDescription(panel, fields["internet-plan"]);
       const lines: Array<{
         fieldId: string;
         label: string;
@@ -538,6 +619,15 @@ function getDefaultValues(
       if (serviceInput) serviceInput.value = activeService;
       if (configurationInput)
         configurationInput.value = JSON.stringify({ serviceId: activeService, fields });
+    };
+
+    const updateTariffDescription = (panel: HTMLElement, value: unknown) => {
+      const details = panel.querySelector<HTMLElement>("[data-config-tariff-details]");
+      if (!details) return;
+
+      details.querySelectorAll<HTMLElement>("[data-config-tariff-choice]").forEach((detail) => {
+        detail.hidden = detail.dataset.configTariffChoice !== String(value ?? "");
+      });
     };
 
     function getFieldPrice(

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import PageIntro from "@components/ui/PageIntro.astro";
 import { getSitePath } from "@config/site";
 
 const services = [
@@ -29,17 +30,16 @@ const services = [
   description="Интернет, телевидение и облачное видеонаблюдение Kubtel для физических лиц: описание, конфигуратор, приложения и документы."
   canonicalPath="/individual/"
 >
-  <section class="page-intro section-pad compact-intro individual-hero">
-    <p class="eyebrow">Частным лицам</p>
-    <h1>Услуги и расчёт до заявки</h1>
-    <p>
-      Выберите домашний интернет с ТВ или видеонаблюдение, соберите нужный вариант и только после
-      этого оставьте телефон. Цена и состав решения видны заранее.
-    </p>
+  <PageIntro
+    class="compact-intro individual-hero"
+    eyebrow="Частным лицам"
+    title="Услуги и расчёт до заявки"
+    description="Выберите домашний интернет с ТВ или видеонаблюдение, соберите нужный вариант и только после этого оставьте телефон. Цена и состав решения видны заранее."
+  >
     <a class="card-action" href={getSitePath("/individual/configurator/#configurator")}
       >Открыть конфигуратор</a
     >
-  </section>
+  </PageIntro>
   <section class="section-pad individual-service-grid" aria-label="Услуги для физических лиц">
     {
       services.map((service) => (

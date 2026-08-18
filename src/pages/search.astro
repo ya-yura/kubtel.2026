@@ -28,7 +28,7 @@ const routeItems: SearchItem[] = sitemapRoutes.map((route) => ({
 
 const tariffItems: SearchItem[] = tariffs.map((tariff) => ({
   title: tariff.title,
-  href: `/tariffs/#${tariff.slug}`,
+  href: "/individual/configurator/?service=internet#configurator",
   category: "Тариф",
   summary:
     tariff.commercialReview.priceStatus === "confirmed" &&

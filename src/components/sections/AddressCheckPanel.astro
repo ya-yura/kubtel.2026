@@ -86,6 +86,8 @@ function getOptionHint(option: TariffOption): string {
   id="callback-request"
   data-address-check
   data-static-preview={staticPreview ? "true" : undefined}
+  data-contact-phone={SITE.supportPhone}
+  data-contact-email={SITE.supportEmail}
 >
   <span class="visually-hidden" id="address-check" aria-hidden="true"></span>
   <div class="address-copy">
@@ -393,7 +395,14 @@ function getOptionHint(option: TariffOption): string {
     status.setAttribute("tabindex", "-1");
     status.replaceChildren(
       createStatusLine("strong", "Заявка не отправлена с этого адреса."),
-      createStatusLine("span", "Позвоните 8 800 222-17-30 или напишите на kubtel@kubtel.ru."),
+      createStatusLine(
+        "span",
+        "Позвоните " +
+          (panel?.dataset.contactPhone ?? "") +
+          " или напишите на " +
+          (panel?.dataset.contactEmail ?? "") +
+          "."
+      ),
       createStatusLine("span", `Вы выбрали: ${title}, ${price}.`)
     );
 

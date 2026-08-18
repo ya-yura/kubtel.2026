@@ -1,0 +1,51 @@
+---
+import { getSitePath } from "@config/site";
+
+type Props = {
+  variant: "legal" | "budget" | "operator";
+  eyebrow: string;
+  title: string;
+  hint: string;
+  contactLabel: string;
+  email: string;
+  phone: string;
+  phoneHref: string;
+  primaryHref: string;
+  primaryLabel: string;
+  secondaryHref: string;
+  secondaryLabel: string;
+};
+
+const {
+  variant,
+  eyebrow,
+  title,
+  hint,
+  contactLabel,
+  email,
+  phone,
+  phoneHref,
+  primaryHref,
+  primaryLabel,
+  secondaryHref,
+  secondaryLabel
+} = Astro.props;
+---
+
+<article class:list={["business-routing-card", `is-${variant}`]}>
+  <div class="business-routing-card__header">
+    <div>
+      <p class="eyebrow">{eyebrow}</p>
+      <h3>{title}</h3>
+    </div>
+  </div>
+  <p class="business-routing-hint">{hint}</p>
+  <div class="business-routing-contacts" aria-label={contactLabel}>
+    <a href={`mailto:${email}`}>{email}</a>
+    <a href={phoneHref}>{phone}</a>
+  </div>
+  <div class="business-routing-actions">
+    <a class="card-action" href={getSitePath(primaryHref)}>{primaryLabel}</a>
+    <a class="business-link" href={getSitePath(secondaryHref)}>{secondaryLabel}</a>
+  </div>
+</article>

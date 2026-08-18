@@ -19,7 +19,6 @@ const lastModified = "2026-05-08";
 
 export const mainNavItems: NavItem[] = [
   { href: "/individual/configurator/", label: "Услуги" },
-  { href: "/tariffs/", label: "Тарифы" },
   { href: "/news/", label: "Новости" },
   { href: "/connect/", label: "Подключение" },
   { href: "/payment/", label: "Оплата" },
@@ -36,7 +35,6 @@ export const footerNavItems: NavItem[] = [
   { href: "/individual/configurator/", label: "Конфигуратор услуг" },
   { href: "/individual/tv/", label: "Телевидение" },
   { href: "/individual/cctv/", label: "Видеонаблюдение" },
-  { href: "/tariffs/", label: "Тарифы" },
   { href: "/payment/", label: "Оплата" },
   { href: "/devices/", label: "Устройства" },
   { href: "/search/", label: "Поиск" },
@@ -108,16 +106,6 @@ export const sitemapRoutes: SitemapRoute[] = [
       "Онлайн-просмотр, архив, камеры, приложения и публичная оферта Kubtel Watcher для физических лиц.",
     changeFrequency: "weekly",
     priority: 0.88,
-    lastModified
-  },
-  {
-    path: "/tariffs/",
-    label: "Тарифы",
-    title: "Тарифы домашнего интернета",
-    description:
-      "Сравнение тарифов Kubtel для квартиры, семьи, видео, онлайн-учёбы, Smart TV и сценария Интернет + ТВ.",
-    changeFrequency: "weekly",
-    priority: 0.9,
     lastModified
   },
   {

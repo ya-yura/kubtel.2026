@@ -25,7 +25,12 @@ const actionError = actionResult?.error;
   canonicalPath="/business/datacenter-access/"
   pageType="ContactPage"
 >
-  <div class="business-page">
+  <div
+    class="business-page"
+    data-datacenter-page
+    data-business-phone={SITE.businessPhone}
+    data-business-email={SITE.businessEmail}
+  >
     <section class="business-request-hero datacenter-access-hero section-pad">
       <div>
         <p class="eyebrow">ЦОД</p>
@@ -156,6 +161,11 @@ const actionError = actionResult?.error;
 
 <script>
   const dcForm = document.querySelector<HTMLFormElement>("[data-datacenter-access-form]");
+  const datacenterPage = document.querySelector<HTMLElement>("[data-datacenter-page]");
+  const datacenterContacts = {
+    phone: datacenterPage?.dataset.businessPhone ?? "",
+    email: datacenterPage?.dataset.businessEmail ?? ""
+  };
 
   dcForm?.addEventListener("submit", (event) => {
     syncDatacenterAccessSummary(dcForm);
@@ -211,7 +221,11 @@ const actionError = actionResult?.error;
       createDatacenterStatusLine("strong", "Заявка не отправлена с этого адреса."),
       createDatacenterStatusLine(
         "span",
-        "Отправьте данные на kubtel@kubtel.ru или позвоните 8 861 200-10-60."
+        "Отправьте данные на " +
+          datacenterContacts.email +
+          " или позвоните " +
+          datacenterContacts.phone +
+          "."
       )
     );
 

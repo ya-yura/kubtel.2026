@@ -26,6 +26,8 @@ function getOptionalPublicUrl(value: string | undefined): string | null {
 }
 
 const basePath = normalizeBasePath(import.meta.env.BASE_URL ?? "/");
+const unifiedResidentialPhone = "8 800 222-17-30";
+const unifiedCompanyEmail = "kubtel@kubtel.ru";
 
 export const SITE = {
   name: "Kubtel",
@@ -48,12 +50,12 @@ export const SITE = {
   officialContactsUrl: "https://kubtel.ru/about/contactus/",
   maxChatUrl: getOptionalPublicUrl(import.meta.env.PUBLIC_MAX_CHAT_URL),
   vkChatUrl: getOptionalPublicUrl(import.meta.env.PUBLIC_VK_CHAT_URL),
-  supportPhone: "8 800 222-17-30",
-  supportDirectPhone: "8 800 222-17-30",
-  salesPhone: "8 800 222-17-30",
+  supportPhone: unifiedResidentialPhone,
+  supportDirectPhone: unifiedResidentialPhone,
+  salesPhone: unifiedResidentialPhone,
   supportEmail: "support@kubtel.ru",
-  email: "kubtel@kubtel.ru",
-  businessEmail: "kubtel@kubtel.ru",
+  email: unifiedCompanyEmail,
+  businessEmail: unifiedCompanyEmail,
   businessPhone: "8 861 200-10-60",
   budgetEmail: "tender@kubtel.ru",
   budgetPhone: "8 861 200-10-32",

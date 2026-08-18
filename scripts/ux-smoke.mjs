@@ -140,7 +140,7 @@ try {
   await client.send("Emulation.setDeviceMetricsOverride", desktopViewport(), sessionId);
 
   await checkRoute(client, sessionId, "/", "Домашний интернет");
-  await checkRoute(client, sessionId, "/tariffs/", "Тарифы");
+  await checkRoute(client, sessionId, "/tariffs/", "Соберите свои услуги");
   await checkRoute(client, sessionId, "/connect/", "Заявка на подключение");
   await checkRoute(client, sessionId, "/support/", "Поддержка");
   await checkRoute(client, sessionId, "/contacts/", "Контакты");
@@ -460,24 +460,12 @@ async function assertHeaderPhone(client, sessionId, expectedText, expectedHref) 
 async function checkTariffCtaPath(client, sessionId) {
   await setViewport(client, sessionId, desktopViewport());
   await navigate(client, sessionId, "/tariffs/");
-  const load = client.waitForEvent("Page.loadEventFired", { sessionId, timeoutMs: 10000 });
-  await evaluate(
-    client,
-    sessionId,
-    `(() => {
-      const link = document.querySelector('a[href*="/individual/configurator/?service=internet"]');
-      if (!link) return false;
-      link.click();
-      return true;
-    })()`
-  );
-  await load.catch(() => undefined);
   await waitForReady(client, sessionId);
   await assertExpression(
     client,
     sessionId,
     `location.pathname === ${JSON.stringify(routePath("/individual/configurator/"))} && location.search.includes("service=internet")`,
-    "tariff CTA opened the residential configurator"
+    "tariffs route opens the residential configurator"
   );
   await assertExpression(
     client,

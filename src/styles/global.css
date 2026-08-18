@@ -4678,6 +4678,24 @@ body.is-readable :focus-visible {
   text-underline-offset: 0.16em;
 }
 
+.config-tariff-details {
+  background: var(--kb-color-surface-page);
+  border: 1px solid var(--kb-color-border-default);
+  border-radius: var(--kb-shape-card);
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  padding: 0.9rem 1rem;
+}
+
+.config-tariff-details p {
+  margin-bottom: 0;
+}
+
+.config-tariff-details .tag-list {
+  margin: 0;
+}
+
 .config-fieldset {
   margin: 0;
   min-width: 0;
@@ -4685,6 +4703,32 @@ body.is-readable :focus-visible {
 
 .config-fieldset legend {
   padding: 0 0.25rem;
+}
+
+.config-field-group {
+  background: var(--kb-color-overlay-white02);
+  border: 1px solid var(--kb-component-card-border);
+  border-radius: var(--kb-shape-card);
+  margin: 0;
+  min-width: 0;
+  padding: 0.8rem;
+}
+
+.config-field-group legend {
+  color: var(--kb-color-text-secondary);
+  font-size: 0.82rem;
+  font-weight: 800;
+  padding: 0 0.25rem;
+}
+
+.config-field-group-content {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.config-field-group-content > .config-choice-single {
+  border: 0;
+  padding: 0.35rem 0;
 }
 
 .config-choice-grid {

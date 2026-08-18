@@ -1,13 +1,14 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import ServiceConfigurator from "@components/sections/ServiceConfigurator.astro";
-import { getConfiguratorCatalog } from "@lib/content";
+import PageIntro from "@components/ui/PageIntro.astro";
+import { getConfiguratorCatalog, getTariffs } from "@lib/content";
 import { handleConfiguratorFormPost } from "@lib/leads/form-handlers";
 
 const isStaticPreview = import.meta.env.PUBLIC_STATIC_PREVIEW === "true";
 export const prerender = false;
 
-const catalog = await getConfiguratorCatalog();
+const [catalog, tariffs] = await Promise.all([getConfiguratorCatalog(), getTariffs()]);
 
 const leadActionResult =
   !isStaticPreview && Astro.request.method === "POST"
@@ -20,16 +21,15 @@ const leadActionResult =
   description="Заявка на подключение Kubtel: населённый пункт, адрес, тариф и телефон для связи со специалистом."
   canonicalPath="/connect/"
 >
-  <section class="page-intro section-pad compact-intro">
-    <p class="eyebrow">Подключение</p>
-    <h1>Заявка на подключение</h1>
-    <p>
-      Выберите услугу, параметры и увидьте стоимость. Телефон для связи появится после расчёта,
-      когда вы решите, что вариант вам подходит.
-    </p>
-  </section>
+  <PageIntro
+    class="compact-intro"
+    eyebrow="Подключение"
+    title="Заявка на подключение"
+    description="Выберите услугу, параметры и увидьте стоимость. Телефон для связи появится после расчёта, когда вы решите, что вариант вам подходит."
+  />
   <ServiceConfigurator
     catalog={catalog}
+    tariffs={tariffs}
     initialService={Astro.url.searchParams.get("service")}
     actionResult={leadActionResult}
     staticPreview={isStaticPreview}

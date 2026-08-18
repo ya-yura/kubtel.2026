@@ -103,11 +103,15 @@
           "id": "tv-cinema",
           "label": "Кино",
           "type": "checkbox",
+          "group": {
+            "id": "tv-additional",
+            "label": "Дополнительные услуги"
+          },
           "showWhen": {
             "fieldId": "internet-tv",
             "equals": true
           },
-          "help": "Дополнительный пакет к Кубтел ТВ.",
+          "help": "Доступ к онлайн-кинотеатрам START и PREMIER.",
           "priceByFieldIds": ["internet-plan", "house-connection"],
           "monthlyPriceBy": {
             "internet-100|false": 200,
@@ -124,6 +128,10 @@
           "id": "tv-devices",
           "label": "Расширить до 5-ти устройств",
           "type": "checkbox",
+          "group": {
+            "id": "tv-additional",
+            "label": "Дополнительные услуги"
+          },
           "showWhen": {
             "fieldId": "internet-tv",
             "equals": true

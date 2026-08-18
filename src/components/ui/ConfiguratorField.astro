@@ -1,5 +1,9 @@
 ---
-import type { ConfiguratorField, ConfiguratorFieldValue } from "@models/configurator";
+import type {
+  ConfiguratorField,
+  ConfiguratorFieldValue,
+  ConfiguratorTariffDetail
+} from "@models/configurator";
 import { getSitePath } from "@config/site";
 
 type Props = {
@@ -7,9 +11,10 @@ type Props = {
   serviceId: string;
   value?: ConfiguratorFieldValue;
   visible?: boolean;
+  tariffDetails?: ConfiguratorTariffDetail[];
 };
 
-const { field, serviceId, value, visible = true } = Astro.props;
+const { field, serviceId, value, visible = true, tariffDetails = [] } = Astro.props;
 const fieldName = `${serviceId}-${field.id}`;
 const resolvedValue = value ?? field.defaultValue;
 const defaultChoice = field.choices?.find((choice) => {
@@ -48,6 +53,23 @@ const helpLinkHref = field.helpLink ? getSitePath(field.helpLink.href) : undefin
           ))}
         </select>
       </div>
+      {tariffDetails.length > 0 && (
+        <div class="config-tariff-details" data-config-tariff-details>
+          {tariffDetails.map((detail) => (
+            <div
+              data-config-tariff-choice={detail.choiceId}
+              hidden={detail.choiceId !== defaultChoice?.id}
+            >
+              <p>{detail.description}</p>
+              <ul class="tag-list" aria-label="Подходит для">
+                {detail.tags.map((tag) => (
+                  <li>{tag}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
       {field.help && <small>{field.help}</small>}
       {field.helpLink && (
         <a class="config-field-link" href={helpLinkHref}>

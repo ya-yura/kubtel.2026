@@ -2,6 +2,7 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import FaqList from "@components/sections/FaqList.astro";
 import SupportPathways from "@components/sections/SupportPathways.astro";
+import PageIntro from "@components/ui/PageIntro.astro";
 import { getFaqItems } from "@lib/content";
 import { buildFaqSchema } from "@lib/seo/schema";
 
@@ -15,11 +16,12 @@ const pageSchema = buildFaqSchema(faqItems, "/support/");
   canonicalPath="/support/"
   schema={pageSchema}
 >
-  <section class="page-intro section-pad compact-intro">
-    <p class="eyebrow">Поддержка</p>
-    <h1>Контакты поддержки и ответы по услугам</h1>
-    <p>Позвоните напрямую, напишите в поддержку или найдите короткий ответ по частому вопросу.</p>
-  </section>
+  <PageIntro
+    class="compact-intro"
+    eyebrow="Поддержка"
+    title="Контакты поддержки и ответы по услугам"
+    description="Позвоните напрямую, напишите в поддержку или найдите короткий ответ по частому вопросу."
+  />
   <SupportPathways />
   <FaqList items={faqItems} />
 </BaseLayout>

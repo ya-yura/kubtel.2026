@@ -11,10 +11,20 @@ export type ConfiguratorChoice = {
   default?: boolean;
 };
 
+export type ConfiguratorTariffDetail = {
+  choiceId: string;
+  description: string;
+  tags: string[];
+};
+
 export type ConfiguratorField = {
   id: string;
   label: string;
   type: ConfiguratorFieldType;
+  group?: {
+    id: string;
+    label: string;
+  };
   required?: boolean;
   multiple?: boolean;
   help?: string;

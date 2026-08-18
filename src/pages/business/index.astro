@@ -2,6 +2,7 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import BusinessCalculator from "@components/sections/BusinessCalculator.astro";
 import TelephonyCalculatorGroup from "@components/sections/TelephonyCalculatorGroup.astro";
+import BusinessRoutingCard from "@components/ui/BusinessRoutingCard.astro";
 import { getAbsoluteUrl, getPhoneHref, getSitePath, SITE } from "@config/site";
 import {
   businessCalculatorConfigs,
@@ -294,76 +295,48 @@ const pageSchema: JsonLdObject = {
       </div>
 
       <div class="business-routing-grid">
-        <article class="business-routing-card is-legal" aria-labelledby="b2b-route-title">
-          <div class="business-routing-card__header">
-            <div>
-              <p class="eyebrow">B2B</p>
-              <h3 id="b2b-route-title">Для бизнеса</h3>
-            </div>
-          </div>
-          <p class="business-routing-hint">
-            Интернет, телефония, видеонаблюдение, гостевой Wi‑Fi, VPS и размещение для офисов,
-            магазинов, кафе, клиник и складов.
-          </p>
-          <div class="business-routing-contacts" aria-label="Контакты для бизнеса">
-            <a href={`mailto:${SITE.businessEmail}`}>{SITE.businessEmail}</a>
-            <a href={businessPhoneHref}>{SITE.businessPhone}</a>
-          </div>
-          <div class="business-routing-actions">
-            <a class="card-action" href={getSitePath("/business/b2b/")}>Открыть раздел B2B</a>
-            <a class="business-link" href={getSitePath(legalRequestPath)}>Сразу оставить заявку</a>
-          </div>
-        </article>
-
-        <article class="business-routing-card is-budget" aria-labelledby="b2g-route-title">
-          <div class="business-routing-card__header">
-            <div>
-              <p class="eyebrow">B2G</p>
-              <h3 id="b2g-route-title">Для государства</h3>
-            </div>
-          </div>
-          <p class="business-routing-hint">
-            Связь для федеральных и муниципальных учреждений: закупки по 44‑ФЗ и 223‑ФЗ, документы,
-            телефония, интернет и резервирование.
-          </p>
-          <div
-            class="business-routing-contacts"
-            aria-label="Контакты для государственных заказчиков"
-          >
-            <a href={`mailto:${SITE.budgetEmail}`}>{SITE.budgetEmail}</a>
-            <a href={budgetPhoneHref}>{SITE.budgetPhone}</a>
-          </div>
-          <div class="business-routing-actions">
-            <a class="card-action" href={getSitePath("/business/b2g/")}>Открыть раздел B2G</a>
-            <a class="business-link" href={getSitePath(budgetRequestPath)}>Сразу оставить заявку</a>
-          </div>
-        </article>
-
-        <article class="business-routing-card is-operator" aria-labelledby="b2o-route-title">
-          <div class="business-routing-card__header">
-            <div>
-              <p class="eyebrow">B2O</p>
-              <h3 id="b2o-route-title">Для операторов связи</h3>
-            </div>
-          </div>
-          <p class="business-routing-hint">
-            Региональная связность, ЦОД, colocation, cross‑connect, порты и партнёрские условия для
-            операторов и инфраструктурных команд.
-          </p>
-          <div class="business-routing-contacts" aria-label="Контакты для операторов связи">
-            <a href={`mailto:${SITE.businessEmail}`}>{SITE.businessEmail}</a>
-            <a href={businessPhoneHref}>{SITE.businessPhone}</a>
-          </div>
-          <div class="business-routing-actions">
-            <a class="card-action" href={getSitePath("/business/b2o/")}>Открыть раздел B2O</a>
-            <a
-              class="business-link"
-              href={getSitePath(`${requestPath}?segment=b2o&service=operators`)}
-            >
-              Запросить условия
-            </a>
-          </div>
-        </article>
+        <BusinessRoutingCard
+          variant="legal"
+          eyebrow="B2B"
+          title="Для бизнеса"
+          hint="Интернет, телефония, видеонаблюдение, гостевой Wi‑Fi, VPS и размещение для офисов, магазинов, кафе, клиник и складов."
+          contactLabel="Контакты для бизнеса"
+          email={SITE.businessEmail}
+          phone={SITE.businessPhone}
+          phoneHref={businessPhoneHref}
+          primaryHref="/business/b2b/"
+          primaryLabel="Открыть раздел B2B"
+          secondaryHref={legalRequestPath}
+          secondaryLabel="Сразу оставить заявку"
+        />
+        <BusinessRoutingCard
+          variant="budget"
+          eyebrow="B2G"
+          title="Для государства"
+          hint="Связь для федеральных и муниципальных учреждений: закупки по 44‑ФЗ и 223‑ФЗ, документы, телефония, интернет и резервирование."
+          contactLabel="Контакты для государственных заказчиков"
+          email={SITE.budgetEmail}
+          phone={SITE.budgetPhone}
+          phoneHref={budgetPhoneHref}
+          primaryHref="/business/b2g/"
+          primaryLabel="Открыть раздел B2G"
+          secondaryHref={budgetRequestPath}
+          secondaryLabel="Сразу оставить заявку"
+        />
+        <BusinessRoutingCard
+          variant="operator"
+          eyebrow="B2O"
+          title="Для операторов связи"
+          hint="Региональная связность, ЦОД, colocation, cross‑connect, порты и партнёрские условия для операторов и инфраструктурных команд."
+          contactLabel="Контакты для операторов связи"
+          email={SITE.businessEmail}
+          phone={SITE.businessPhone}
+          phoneHref={businessPhoneHref}
+          primaryHref="/business/b2o/"
+          primaryLabel="Открыть раздел B2O"
+          secondaryHref={`${requestPath}?segment=b2o&service=operators`}
+          secondaryLabel="Запросить условия"
+        />
       </div>
     </section>
 

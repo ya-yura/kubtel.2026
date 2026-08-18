@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { SITE } from "@config/site";
 import type { CareerResumeAttachment } from "@lib/careers/resume";
 import type { CareerApplicationSubmission } from "@lib/careers/submission";
 import type { DeliveryResult } from "@lib/integrations/types";
@@ -13,7 +14,7 @@ export async function sendLeadToEmail(
   if (isConfiguratorLead(lead)) {
     return sendEmail(
       {
-        to: env.SALES_EMAIL ?? "kubtel@kubtel.ru",
+        to: env.SALES_EMAIL ?? SITE.email,
         replyTo: lead.customer.email ?? undefined,
         subject: `[${lead.id}] Конфигуратор: ${lead.service.title}`,
         text: [
@@ -41,7 +42,7 @@ export async function sendLeadToEmail(
 
   return sendEmail(
     {
-      to: env.SALES_EMAIL ?? "kubtel@kubtel.ru",
+      to: env.SALES_EMAIL ?? SITE.email,
       subject: `[${lead.id}] Домашнее подключение: ${lead.tariff.title}`,
       text: [
         "Новая заявка с сайта Kubtel",
@@ -71,7 +72,7 @@ export async function sendCareerApplicationToEmail(
 ): Promise<DeliveryResult> {
   return sendEmail(
     {
-      to: env.HR_EMAIL ?? "kubtel@kubtel.ru",
+      to: env.HR_EMAIL ?? SITE.email,
       replyTo: application.applicant.email,
       subject: `[${application.id}] Отклик: ${application.vacancy.title}`,
       text: [
