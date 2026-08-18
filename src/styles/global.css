@@ -4148,6 +4148,23 @@ body.is-readable :focus-visible {
   padding: 1.1rem;
 }
 
+.camera-model-card__media {
+  align-items: center;
+  background: var(--kb-color-overlay-white04);
+  border-radius: var(--kb-shape-card);
+  display: flex;
+  justify-content: center;
+  min-height: 11rem;
+  padding: 1rem;
+}
+
+.camera-model-card__media img {
+  height: 10rem;
+  max-width: 100%;
+  object-fit: contain;
+  width: 100%;
+}
+
 .camera-model-card h3,
 .camera-model-card p {
   margin-bottom: 0;
@@ -4432,6 +4449,17 @@ body.is-readable :focus-visible {
   display: grid;
   gap: 0.1rem;
   padding-bottom: 0.4rem;
+}
+
+.config-summary-lines li.is-estimate {
+  background: var(--kb-color-overlay-accent10);
+  border: 1px solid var(--kb-color-overlay-accent28);
+  border-radius: var(--kb-shape-card);
+  padding: 0.55rem 0.65rem;
+}
+
+.config-summary-lines li.is-estimate strong {
+  color: var(--kb-color-action-primary-background);
 }
 
 .config-summary-lines span {

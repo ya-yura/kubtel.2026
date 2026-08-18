@@ -49,7 +49,7 @@ export const SITE = {
   maxChatUrl: getOptionalPublicUrl(import.meta.env.PUBLIC_MAX_CHAT_URL),
   vkChatUrl: getOptionalPublicUrl(import.meta.env.PUBLIC_VK_CHAT_URL),
   supportPhone: "8 800 222-17-30",
-  supportDirectPhone: "8 861 200-10-10",
+  supportDirectPhone: "8 800 222-17-30",
   salesPhone: "8 800 222-17-30",
   supportEmail: "support@kubtel.ru",
   email: "kubtel@kubtel.ru",

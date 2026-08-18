@@ -42,8 +42,12 @@ export function calculateConfiguratorPrice(
   return {
     service,
     lines,
-    monthlyTotal: lines.reduce((total, line) => total + line.monthlyPrice, 0),
-    oneTimeTotal: lines.reduce((total, line) => total + line.oneTimePrice, 0)
+    monthlyTotal: lines
+      .filter((line) => line.includeInTotal)
+      .reduce((total, line) => total + line.monthlyPrice, 0),
+    oneTimeTotal: lines
+      .filter((line) => line.includeInTotal)
+      .reduce((total, line) => total + line.oneTimePrice, 0)
   };
 }
 
@@ -94,7 +98,9 @@ function calculateFieldLine(
       value: count,
       valueLabel: `${count}${field.unit ? ` ${field.unit}` : ""}`,
       monthlyPrice: count * (field.monthlyPrice ?? 0),
-      oneTimePrice: count * (field.oneTimePrice ?? 0)
+      oneTimePrice: count * (field.oneTimePrice ?? 0),
+      includeInTotal: field.includeInTotal !== false,
+      priceNote: field.priceNote
     };
   }
 
@@ -115,7 +121,9 @@ function calculateFieldLine(
       value: true,
       valueLabel: "Да",
       monthlyPrice: getFieldPrice(field, "monthlyPrice", values),
-      oneTimePrice: getFieldPrice(field, "oneTimePrice", values)
+      oneTimePrice: getFieldPrice(field, "oneTimePrice", values),
+      includeInTotal: field.includeInTotal !== false,
+      priceNote: field.priceNote
     };
   }
 
@@ -146,7 +154,9 @@ function calculateFieldLine(
     value: field.multiple ? selectedIds : selectedIds[0],
     valueLabel: selectedChoices.map((choice) => choice.label).join(", "),
     monthlyPrice: selectedChoices.reduce((total, choice) => total + choice.monthlyPrice, 0),
-    oneTimePrice: selectedChoices.reduce((total, choice) => total + choice.oneTimePrice, 0)
+    oneTimePrice: selectedChoices.reduce((total, choice) => total + choice.oneTimePrice, 0),
+    includeInTotal: field.includeInTotal !== false,
+    priceNote: field.priceNote
   };
 }
 

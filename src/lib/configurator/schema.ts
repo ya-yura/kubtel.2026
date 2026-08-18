@@ -36,6 +36,8 @@ const configuratorFieldSchema = z.object({
   defaultValue: z.union([z.string(), z.number(), z.boolean(), z.array(z.string())]).optional(),
   monthlyPrice: z.number().nonnegative().optional(),
   oneTimePrice: z.number().nonnegative().optional(),
+  includeInTotal: z.boolean().optional(),
+  priceNote: z.string().optional(),
   priceByFieldId: z.string().min(1).optional(),
   priceByFieldIds: z.array(z.string().min(1)).min(1).optional(),
   monthlyPriceBy: z.record(z.string(), z.number().nonnegative()).optional(),
@@ -110,6 +112,10 @@ export const configuratorSchema = z.object({
         id: z.string().min(1),
         title: z.string().min(1),
         price: z.number().nonnegative(),
+        image: z
+          .string()
+          .refine(isAbsoluteUrl, "Ссылка на изображение должна быть абсолютной")
+          .optional(),
         specs: z.array(z.string())
       })
     )

@@ -53,13 +53,24 @@ const { items, group, selected = items[0]?.id } = Astro.props;
       });
     };
 
+    const hashTarget = window.location.hash
+      ? document.getElementById(window.location.hash.slice(1))
+      : null;
+    const hashPanel = hashTarget?.closest<HTMLElement>("[data-tab-panel-id]");
+    const hashSelected = hashPanel?.dataset.tabPanelId;
+
     tabList.querySelectorAll<HTMLButtonElement>("[data-content-tab]").forEach((tab) => {
       tab.addEventListener("click", () => select(tab.dataset.contentTab ?? ""));
     });
 
     const selected =
+      hashSelected ??
       tabList.querySelector<HTMLElement>('[aria-selected="true"]')?.dataset.contentTab;
     if (selected) select(selected);
+
+    if (hashTarget && hashSelected) {
+      window.requestAnimationFrame(() => hashTarget.scrollIntoView({ block: "start" }));
+    }
   });
 </script>
 

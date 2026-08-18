@@ -139,9 +139,11 @@
           "id": "field-work",
           "label": "Выездные работы",
           "type": "checkbox",
-          "help": "Разовая услуга по действующему прайсу.",
+          "help": "От 500 ₽. Точную стоимость специалист сообщит до проведения работ.",
           "monthlyPrice": 0,
-          "oneTimePrice": 500
+          "oneTimePrice": 500,
+          "includeInTotal": false,
+          "priceNote": "От 500 ₽. Точную стоимость специалист сообщит до проведения работ."
         },
         {
           "id": "tv-device",
@@ -177,31 +179,26 @@
         },
         {
           "id": "tv-devices",
-          "label": "Количество устройств просмотра",
-          "type": "counter",
-          "unit": "устр.",
-          "min": 1,
-          "max": 5,
-          "defaultValue": 1,
-          "help": "До 3 устройств включено в базовую подписку. Для 4–5 устройств подключите расширение ниже.",
-          "monthlyPrice": 0,
-          "oneTimePrice": 0,
-          "showWhen": {
-            "fieldId": "internet-tv",
-            "equals": true
-          }
-        },
-        {
-          "id": "tv-extra-devices",
-          "label": "Расширение до 5 устройств",
-          "type": "checkbox",
-          "showWhen": {
-            "fieldId": "internet-tv",
-            "equals": true
-          },
-          "help": "Добавляет 4-е и 5-е устройство к базовой подписке.",
-          "monthlyPrice": 89,
-          "oneTimePrice": 0
+          "label": "Устройства для просмотра",
+          "type": "radio",
+          "defaultValue": "",
+          "help": "Выбор варианта автоматически подключит Кубтел ТВ.",
+          "choices": [
+            {
+              "id": "tv-devices-3",
+              "label": "До 3-х устройств",
+              "description": "Входит в базовую подписку",
+              "monthlyPrice": 0,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "tv-devices-5",
+              "label": "До 5-ти устройств",
+              "description": "Расширение для 4-го и 5-го устройства",
+              "monthlyPrice": 89,
+              "oneTimePrice": 0
+            }
+          ]
         }
       ]
     },
@@ -297,7 +294,7 @@
           "defaultValue": 0,
           "help": "Посмотрите характеристики модели перед добавлением в расчёт.",
           "helpLink": {
-            "label": "Характеристики Kubtel.Dome",
+            "label": "Фото и характеристики Kubtel.Dome",
             "href": "/individual/cctv/?tab=equipment#camera-dome"
           },
           "oneTimePrice": 6500,
@@ -313,7 +310,7 @@
           "defaultValue": 0,
           "help": "Посмотрите характеристики модели перед добавлением в расчёт.",
           "helpLink": {
-            "label": "Характеристики Kubtel.Bullet",
+            "label": "Фото и характеристики Kubtel.Bullet",
             "href": "/individual/cctv/?tab=equipment#camera-bullet"
           },
           "oneTimePrice": 6500,
@@ -1539,22 +1536,28 @@
         "id": "dome",
         "title": "Kubtel.Dome v2",
         "price": 6500,
+        "image": "https://kubtel.ru/assets/img/cctv/kubtelDome.png",
         "specs": [
-          "1920×1080 FullHD",
-          "ИК-подсветка 20–30 м",
-          "PoE, 12 VDC ± 10%",
-          "Оповещения о движении и потере сигнала"
+          "День/ночь: авто, Color Night, ИК-Ч/Б",
+          "Разрешение: 1920×1080 FullHD",
+          "ИК-подсветка: 20–30 м",
+          "Размеры: 94×94×80 мм",
+          "Оповещения: движение, потеря сигнала и др.",
+          "Питание: IEEE802.3af PoE, 12 VDC ± 10%"
         ]
       },
       {
         "id": "bullet",
         "title": "Kubtel.Bullet v2",
         "price": 6500,
+        "image": "https://kubtel.ru/assets/img/cctv/kubtelBullet.png",
         "specs": [
-          "1920×1080 FullHD",
-          "ИК-подсветка 20–30 м",
-          "PoE, 12 VDC ± 10%",
-          "День/ночь и расписание"
+          "День/ночь: авто, Color Night, ИК-Ч/Б, расписание",
+          "Разрешение: 1920×1080 FullHD",
+          "ИК-подсветка: 20–30 м",
+          "Размеры: 200,3×66,5×68,9 мм",
+          "Оповещения: движение, потеря сигнала и др.",
+          "Питание: IEEE802.3af PoE, 12 VDC ± 10%"
         ]
       }
     ]

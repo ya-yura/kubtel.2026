@@ -26,7 +26,7 @@ export async function sendLeadToEmail(
           `Услуга: ${lead.service.title}`,
           ...lead.configuration.lines.map(
             (line) =>
-              `${line.label}: ${line.valueLabel} — ${line.monthlyPrice} руб./мес., ${line.oneTimePrice} руб. разово`
+              `${line.label}: ${line.priceNote ?? `${line.valueLabel} — ${line.monthlyPrice} руб./мес., ${line.oneTimePrice} руб. разово`}`
           ),
           `Итого в месяц: ${lead.configuration.monthlyTotal} руб.`,
           `Разовый платёж: ${lead.configuration.oneTimeTotal} руб.`,

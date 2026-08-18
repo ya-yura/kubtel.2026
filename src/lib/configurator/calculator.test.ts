@@ -66,6 +66,15 @@ const catalog: ConfiguratorCatalog = {
           defaultValue: 0,
           monthlyPrice: 10,
           oneTimePrice: 20
+        },
+        {
+          id: "field-work",
+          label: "Выездные работы",
+          type: "checkbox",
+          monthlyPrice: 0,
+          oneTimePrice: 500,
+          includeInTotal: false,
+          priceNote: "От 500 ₽. Точную стоимость специалист сообщит до проведения работ."
         }
       ]
     }
@@ -122,5 +131,20 @@ describe("calculateConfiguratorPrice", () => {
       "Телевидение",
       "Кино"
     ]);
+  });
+
+  it("keeps estimate-only work in the breakdown without adding it to the total", () => {
+    const result = calculateConfiguratorPrice(catalog, "internet", {
+      plan: "base",
+      "field-work": true
+    });
+
+    expect(result.oneTimeTotal).toBe(0);
+    expect(result.lines[result.lines.length - 1]).toMatchObject({
+      label: "Выездные работы",
+      oneTimePrice: 500,
+      includeInTotal: false,
+      priceNote: "От 500 ₽. Точную стоимость специалист сообщит до проведения работ."
+    });
   });
 });

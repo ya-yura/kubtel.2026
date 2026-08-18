@@ -30,6 +30,8 @@ export type ConfiguratorField = {
   defaultValue?: string | number | boolean | string[];
   monthlyPrice?: number;
   oneTimePrice?: number;
+  includeInTotal?: boolean;
+  priceNote?: string;
   priceByFieldId?: string;
   priceByFieldIds?: string[];
   monthlyPriceBy?: Record<string, number>;
@@ -101,6 +103,7 @@ export type ConfiguratorCatalog = {
       id: string;
       title: string;
       price: number;
+      image?: string;
       specs: string[];
     }>;
   };
@@ -120,6 +123,8 @@ export type ConfiguratorPriceLine = {
   valueLabel: string;
   monthlyPrice: number;
   oneTimePrice: number;
+  includeInTotal: boolean;
+  priceNote?: string;
 };
 
 export type ConfiguratorPrice = {

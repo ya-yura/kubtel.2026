@@ -204,12 +204,11 @@ function getDefaultValues(
       <ul class="config-summary-lines" data-config-summary-lines>
         {
           defaultPricing?.lines.map((line) => (
-            <li>
+            <li class:list={{ "is-estimate": line.includeInTotal === false }}>
               <span>{line.label}</span>
               <strong>
-                {line.valueLabel}
-                {line.monthlyPrice ? ` · ${formatRubles(line.monthlyPrice)} ₽/мес.` : ""}
-                {line.oneTimePrice ? ` · ${formatRubles(line.oneTimePrice)} ₽ разово` : ""}
+                {line.priceNote ??
+                  `${line.valueLabel}${line.monthlyPrice ? ` · ${formatRubles(line.monthlyPrice)} ₽/мес.` : ""}${line.oneTimePrice ? ` · ${formatRubles(line.oneTimePrice)} ₽ разово` : ""}`}
               </strong>
             </li>
           ))
@@ -421,7 +420,14 @@ function getDefaultValues(
       if (!service) return;
       const fields = getFields(panel);
       updateFieldVisibility(panel, fields);
-      const lines: Array<{ label: string; valueLabel: string; monthly: number; once: number }> = [];
+      const lines: Array<{
+        label: string;
+        valueLabel: string;
+        monthly: number;
+        once: number;
+        includeInTotal: boolean;
+        priceNote?: string;
+      }> = [];
 
       service.fields.forEach((field: any) => {
         if (!matchesVisibilityRule(field, fields)) return;
@@ -433,7 +439,9 @@ function getDefaultValues(
               label: field.label,
               valueLabel: `${count}${field.unit ? ` ${field.unit}` : ""}`,
               monthly: count * (field.monthlyPrice ?? 0),
-              once: count * (field.oneTimePrice ?? 0)
+              once: count * (field.oneTimePrice ?? 0),
+              includeInTotal: field.includeInTotal !== false,
+              priceNote: field.priceNote
             });
           }
           return;
@@ -445,7 +453,9 @@ function getDefaultValues(
               label: field.label,
               valueLabel: "Да",
               monthly: getFieldPrice(field, "monthlyPrice", fields),
-              once: getFieldPrice(field, "oneTimePrice", fields)
+              once: getFieldPrice(field, "oneTimePrice", fields),
+              includeInTotal: field.includeInTotal !== false,
+              priceNote: field.priceNote
             });
           }
           return;
@@ -461,14 +471,17 @@ function getDefaultValues(
               label: field.label,
               valueLabel: choice.label,
               monthly: choice.monthlyPrice,
-              once: choice.oneTimePrice
+              once: choice.oneTimePrice,
+              includeInTotal: field.includeInTotal !== false,
+              priceNote: field.priceNote
             });
           }
         });
       });
 
-      const monthly = lines.reduce((total, line) => total + line.monthly, 0);
-      const once = lines.reduce((total, line) => total + line.once, 0);
+      const includedLines = lines.filter((line) => line.includeInTotal);
+      const monthly = includedLines.reduce((total, line) => total + line.monthly, 0);
+      const once = includedLines.reduce((total, line) => total + line.once, 0);
       if (monthlyNode) monthlyNode.textContent = money(monthly);
       if (onceNode) onceNode.textContent = money(once);
       if (titleNode) titleNode.textContent = service.title;
@@ -479,7 +492,10 @@ function getDefaultValues(
             const label = document.createElement("span");
             const value = document.createElement("strong");
             label.textContent = line.label;
-            value.textContent = `${line.valueLabel}${line.monthly ? ` · ${money(line.monthly)} ₽/мес.` : ""}${line.once ? ` · ${money(line.once)} ₽ разово` : ""}`;
+            value.textContent =
+              line.priceNote ??
+              `${line.valueLabel}${line.monthly ? ` · ${money(line.monthly)} ₽/мес.` : ""}${line.once ? ` · ${money(line.once)} ₽ разово` : ""}`;
+            if (!line.includeInTotal) item.classList.add("is-estimate");
             item.append(label, value);
             return item;
           })
@@ -530,11 +546,48 @@ function getDefaultValues(
     serviceTabs.forEach((tab) =>
       tab.addEventListener("click", () => selectService(tab.dataset.configServiceTab ?? ""))
     );
+
+    const syncTvDeviceDependency = (
+      panel: HTMLElement,
+      changedField: HTMLInputElement | HTMLSelectElement
+    ) => {
+      if (activeService !== "internet") return;
+
+      const tvInput = panel.querySelector<HTMLInputElement>(
+        '[data-config-field][data-field-id="internet-tv"]'
+      );
+      const deviceInputs = Array.from(
+        panel.querySelectorAll<HTMLInputElement>('[data-config-field][data-field-id="tv-devices"]')
+      );
+
+      if (!tvInput || deviceInputs.length === 0) return;
+
+      if (
+        changedField.dataset.fieldId === "tv-devices" &&
+        changedField instanceof HTMLInputElement &&
+        changedField.checked
+      ) {
+        tvInput.checked = true;
+      }
+
+      if (changedField.dataset.fieldId === "internet-tv" && !tvInput.checked) {
+        deviceInputs.forEach((input) => {
+          input.checked = false;
+        });
+      }
+    };
+
+    const handleFieldChange = (field: HTMLInputElement | HTMLSelectElement) => {
+      const panel = servicePanels.find((item) => item.dataset.configServicePanel === activeService);
+      if (panel) syncTvDeviceDependency(panel, field);
+      calculate();
+    };
+
     root
       .querySelectorAll<HTMLInputElement | HTMLSelectElement>("[data-config-field]")
       .forEach((field) => {
-        field.addEventListener("input", calculate);
-        field.addEventListener("change", calculate);
+        field.addEventListener("input", () => handleFieldChange(field));
+        field.addEventListener("change", () => handleFieldChange(field));
       });
     root.querySelectorAll<HTMLButtonElement>("[data-config-step]").forEach((button) => {
       button.addEventListener("click", () => {

@@ -14,7 +14,9 @@ const leadActionResult =
   !isStaticPreview && Astro.request.method === "POST"
     ? await handleConfiguratorFormPost(await Astro.request.formData(), Astro.request)
     : undefined;
-const selectedTab = Astro.url.searchParams.get("tab") ?? "about";
+const requestedTab = Astro.url.searchParams.get("tab");
+const availableTabs = ["about", "connect", "equipment", "documents"];
+const selectedTab = requestedTab && availableTabs.includes(requestedTab) ? requestedTab : "about";
 ---
 
 <BaseLayout
@@ -91,19 +93,20 @@ const selectedTab = Astro.url.searchParams.get("tab") ?? "about";
         {
           catalog.cctv.cameraModels.map((camera) => (
             <article class="camera-model-card" id={`camera-${camera.id}`}>
-              <>
-                <div>
-                  <>
-                    <span class="service-category">{camera.price} ₽</span>
-                    <h3>{camera.title}</h3>
-                  </>
+              {camera.image && (
+                <div class="camera-model-card__media">
+                  <img src={camera.image} alt={`Камера ${camera.title}`} loading="lazy" />
                 </div>
-                <ul>
-                  {camera.specs.map((spec) => (
-                    <li>{spec}</li>
-                  ))}
-                </ul>
-              </>
+              )}
+              <div>
+                <span class="service-category">{camera.price} ₽</span>
+                <h3>{camera.title}</h3>
+              </div>
+              <ul>
+                {camera.specs.map((spec) => (
+                  <li>{spec}</li>
+                ))}
+              </ul>
             </article>
           ))
         }

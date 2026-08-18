@@ -131,7 +131,9 @@ function formatTelegramConfiguratorLead(lead: ConfiguratorLeadSubmission): strin
     `Адрес: ${lead.address ? escapeHtml(lead.address) : "уточнить на звонке"}`,
     `Услуга: ${escapeHtml(lead.service.title)}`,
     `Конфигурация: ${escapeHtml(
-      lead.configuration.lines.map((line) => `${line.label}: ${line.valueLabel}`).join("; ")
+      lead.configuration.lines
+        .map((line) => `${line.label}: ${line.priceNote ?? line.valueLabel}`)
+        .join("; ")
     )}`,
     `Стоимость: ${lead.configuration.monthlyTotal} руб./мес. + ${lead.configuration.oneTimeTotal} руб. разово`
   ]
