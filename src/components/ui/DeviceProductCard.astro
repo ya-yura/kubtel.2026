@@ -1,0 +1,44 @@
+---
+import { formatRubles } from "@lib/format";
+import { getSitePath } from "@config/site";
+import type { DeviceProduct } from "@lib/device-catalog";
+
+type Props = DeviceProduct;
+const { id, category, title, summary, image, alt = title, price, specs, detailHref } = Astro.props;
+---
+
+<article class="device-product-card" id={`device-${id}`}>
+  <div class:list={["device-product-card__media", { "is-placeholder": !image }]}>
+    {
+      image ? (
+        <img src={image} alt={alt} loading="lazy" />
+      ) : (
+        <span>Модель подбирается под схему телефонии</span>
+      )
+    }
+  </div>
+  <div class="device-product-card__body">
+    <div class="device-product-card__meta">
+      <span class="service-category">{category}</span>
+      {price !== undefined && <strong>{formatRubles(price)}</strong>}
+    </div>
+    <h3>{title}</h3>
+    <p>{summary}</p>
+    <ul>
+      {specs.map((spec) => <li>{spec}</li>)}
+    </ul>
+    {
+      detailHref && (
+        <a
+          class="device-product-card__link"
+          href={detailHref.startsWith("/") ? getSitePath(detailHref) : detailHref}
+          target={detailHref.startsWith("http") ? "_blank" : undefined}
+          rel={detailHref.startsWith("http") ? "noopener noreferrer" : undefined}
+        >
+          {detailHref.startsWith("http") ? "Подробные характеристики" : "Открыть раздел телефонии"}{" "}
+          →
+        </a>
+      )
+    }
+  </div>
+</article>

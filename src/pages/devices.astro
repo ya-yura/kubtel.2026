@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import DeviceProductCard from "@components/ui/DeviceProductCard.astro";
 import { getSitePath } from "@config/site";
+import { businessDeviceProducts, residentialDeviceProducts } from "@lib/device-catalog";
 
 const deviceGroups = [
   {
@@ -87,8 +89,8 @@ const deviceGroups = [
     <p class="eyebrow">Устройства</p>
     <h1>Оборудование для подключения</h1>
     <p>
-      Категории связаны с соответствующей услугой. Модели, наличие и цены не публикуются без
-      актуального подтверждения поставки; их сообщает менеджер при подборе.
+      Категории связаны с соответствующей услугой. Здесь можно посмотреть реальные модели, основные
+      характеристики и перейти к нужному сценарию подключения.
     </p>
 
     <div class="device-grid">
@@ -117,6 +119,34 @@ const deviceGroups = [
         ))
       }
     </div>
+
+    <section class="section-pad device-products-section" id="home-equipment">
+      <div class="section-heading">
+        <p class="eyebrow">Домашнее подключение</p>
+        <h2>Роутер и ТВ-приставка</h2>
+        <p>
+          Сравните оборудование до заявки: цена и характеристики показаны рядом с фотографией
+          модели.
+        </p>
+      </div>
+      <div class="device-product-grid">
+        {residentialDeviceProducts.map((product) => <DeviceProductCard {...product} />)}
+      </div>
+    </section>
+
+    <section class="section-pad device-products-section" id="business-equipment">
+      <div class="section-heading">
+        <p class="eyebrow">Для бизнеса</p>
+        <h2>Телефоны и SIP-адаптеры</h2>
+        <p>
+          Посмотрите варианты оборудования для рабочих мест. SIP-адаптер подбирается под количество
+          аналоговых линий и схему виртуальной АТС.
+        </p>
+      </div>
+      <div class="device-product-grid">
+        {businessDeviceProducts.map((product) => <DeviceProductCard {...product} />)}
+      </div>
+    </section>
 
     <section class="device-note" aria-label="Как уточнить оборудование">
       <h2>Что подготовить перед разговором</h2>

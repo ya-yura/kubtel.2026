@@ -4478,6 +4478,85 @@ body.is-readable :focus-visible {
   padding-left: 1.15rem;
 }
 
+.device-product-grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.device-product-card {
+  background:
+    linear-gradient(135deg, var(--kb-color-overlay-white07), var(--kb-color-overlay-white02)),
+    var(--kb-component-card-background);
+  border: 1px solid var(--kb-color-border-default);
+  border-radius: var(--kb-shape-card);
+  display: grid;
+  gap: 1rem;
+  overflow: hidden;
+  padding: 1rem;
+}
+
+.device-product-card__media {
+  align-items: center;
+  background: var(--kb-color-surface-page);
+  border-radius: var(--kb-shape-card);
+  display: flex;
+  justify-content: center;
+  min-height: 12rem;
+  padding: 1.25rem;
+}
+
+.device-product-card__media img {
+  height: 11rem;
+  max-width: 100%;
+  object-fit: contain;
+  width: 100%;
+}
+
+.device-product-card__media.is-placeholder {
+  color: var(--kb-color-text-subtle);
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+.device-product-card__body {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.device-product-card__meta {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  justify-content: space-between;
+}
+
+.device-product-card__meta strong {
+  color: var(--kb-color-text-link);
+  font-size: 1.05rem;
+}
+
+.device-product-card h3,
+.device-product-card p {
+  margin-bottom: 0;
+}
+
+.device-product-card ul {
+  display: grid;
+  gap: 0.42rem;
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.device-product-card__link {
+  color: var(--kb-color-text-link);
+  font-weight: 800;
+  justify-self: start;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
 .service-configurator {
   background: var(--kb-component-configurator-background);
 }
@@ -4814,7 +4893,8 @@ body.is-readable :focus-visible {
 @media (min-width: 720px) {
   .individual-service-grid,
   .service-benefit-grid,
-  .camera-model-grid {
+  .camera-model-grid,
+  .device-product-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -4846,7 +4926,8 @@ body.is-readable :focus-visible {
 
 @media (min-width: 980px) {
   .service-benefit-grid,
-  .camera-model-grid {
+  .camera-model-grid,
+  .device-product-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 

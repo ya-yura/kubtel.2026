@@ -2,6 +2,7 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import BusinessCalculator from "@components/sections/BusinessCalculator.astro";
 import TelephonyCalculatorGroup from "@components/sections/TelephonyCalculatorGroup.astro";
+import DeviceProductCard from "@components/ui/DeviceProductCard.astro";
 import PromoImage from "@components/ui/PromoImage.astro";
 import { getAbsoluteUrl, getPhoneHref, getSitePath, SITE } from "@config/site";
 import { getBusinessCalculatorConfig } from "@lib/business/calculator-ui";
@@ -18,6 +19,7 @@ import {
 } from "@lib/business/content";
 import type { JsonLdObject } from "@lib/seo/schema";
 import { getBusinessVisual } from "@lib/visuals";
+import { businessDeviceProducts } from "@lib/device-catalog";
 import "@styles/business-page.css";
 
 type PageEntry =
@@ -708,6 +710,29 @@ const pageSchema: JsonLdObject = isService
             >
               Открыть калькулятор телефонии
             </a>
+          </div>
+        </section>
+      )
+    }
+
+    {
+      isService && entry.slug === "telephony" && (
+        <section
+          class="section-pad device-products-section business-telephony-equipment"
+          id="business-telephony-equipment"
+        >
+          <div class="section-heading">
+            <p class="eyebrow">Оборудование для телефонии</p>
+            <h2>Посмотрите, что входит в решение</h2>
+            <p>
+              Сравните телефоны и SIP-адаптер до заявки. Менеджер подтвердит доступность модели и
+              подберёт конфигурацию под количество сотрудников, номеров и линий.
+            </p>
+          </div>
+          <div class="device-product-grid">
+            {businessDeviceProducts.map((product) => (
+              <DeviceProductCard {...product} />
+            ))}
           </div>
         </section>
       )

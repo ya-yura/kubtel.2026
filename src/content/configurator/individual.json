@@ -64,6 +64,42 @@
           "oneTimePrice": 0
         },
         {
+          "id": "tv-device",
+          "label": "Устройство для ТВ",
+          "type": "radio",
+          "required": true,
+          "showWhen": {
+            "fieldId": "internet-tv",
+            "equals": true
+          },
+          "helpLink": {
+            "label": "Фото и характеристики Vermax UHD300X",
+            "href": "/devices/#device-tv-vermax-uhd300x"
+          },
+          "defaultValue": "tv-device-own",
+          "choices": [
+            {
+              "id": "tv-device-own",
+              "label": "Своя приставка/SMART TV",
+              "monthlyPrice": 0,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "tv-device-rent",
+              "label": "Аренда приставки",
+              "description": "Добавляется ежемесячно",
+              "monthlyPrice": 150,
+              "oneTimePrice": 0
+            },
+            {
+              "id": "tv-device-buy",
+              "label": "ТВ-приставка 4K IPTV Vermax UHD300X — купить",
+              "monthlyPrice": 0,
+              "oneTimePrice": 4000
+            }
+          ]
+        },
+        {
           "id": "tv-cinema",
           "label": "Кино",
           "type": "checkbox",
@@ -85,6 +121,18 @@
           "oneTimePrice": 0
         },
         {
+          "id": "tv-devices",
+          "label": "Расширить до 5-ти устройств",
+          "type": "checkbox",
+          "showWhen": {
+            "fieldId": "internet-tv",
+            "equals": true
+          },
+          "help": "До 3-х устройств входит в базовую подписку. Расширение добавляет 89 ₽ к абонентской плате.",
+          "monthlyPrice": 89,
+          "oneTimePrice": 0
+        },
+        {
           "id": "internet-equipment",
           "label": "Роутер и оборудование",
           "type": "checkbox",
@@ -102,6 +150,10 @@
             "equals": true
           },
           "defaultValue": "router-none",
+          "helpLink": {
+            "label": "Фото и характеристики SNR ADVANCE AC22",
+            "href": "/devices/#device-router-ac22"
+          },
           "choices": [
             {
               "id": "router-none",
@@ -144,61 +196,6 @@
           "oneTimePrice": 500,
           "includeInTotal": false,
           "priceNote": "От 500 ₽. Точную стоимость специалист сообщит до проведения работ."
-        },
-        {
-          "id": "tv-device",
-          "label": "Устройство для ТВ",
-          "type": "radio",
-          "required": true,
-          "showWhen": {
-            "fieldId": "internet-tv",
-            "equals": true
-          },
-          "defaultValue": "tv-device-own",
-          "choices": [
-            {
-              "id": "tv-device-own",
-              "label": "Smart TV или своя приставка",
-              "monthlyPrice": 0,
-              "oneTimePrice": 0
-            },
-            {
-              "id": "tv-device-rent",
-              "label": "Аренда ТВ-приставки",
-              "description": "Добавляется ежемесячно",
-              "monthlyPrice": 150,
-              "oneTimePrice": 0
-            },
-            {
-              "id": "tv-device-buy",
-              "label": "ТВ-приставка 4K IPTV Vermax UHD300X — купить",
-              "monthlyPrice": 0,
-              "oneTimePrice": 4000
-            }
-          ]
-        },
-        {
-          "id": "tv-devices",
-          "label": "Устройства для просмотра",
-          "type": "radio",
-          "defaultValue": "",
-          "help": "Выбор варианта автоматически подключит Кубтел ТВ.",
-          "choices": [
-            {
-              "id": "tv-devices-3",
-              "label": "До 3-х устройств",
-              "description": "Входит в базовую подписку",
-              "monthlyPrice": 0,
-              "oneTimePrice": 0
-            },
-            {
-              "id": "tv-devices-5",
-              "label": "До 5-ти устройств",
-              "description": "Расширение для 4-го и 5-го устройства",
-              "monthlyPrice": 89,
-              "oneTimePrice": 0
-            }
-          ]
         }
       ]
     },

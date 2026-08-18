@@ -2,7 +2,6 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import FaqList from "@components/sections/FaqList.astro";
 import SupportPathways from "@components/sections/SupportPathways.astro";
-import { getPhoneHref, getSitePath, SITE } from "@config/site";
 import { getFaqItems } from "@lib/content";
 
 const faqItems = await getFaqItems();
@@ -16,25 +15,11 @@ const faqItems = await getFaqItems();
 >
   <section class="page-intro section-pad compact-intro">
     <p class="eyebrow">Контакты</p>
-    <h1>Телефоны, почта, адрес и чаты Kubtel</h1>
+    <h1>Как связаться с Kubtel</h1>
     <p>
       Все способы связаться с Kubtel и получить помощь собраны здесь: подключение, техническая
       поддержка, чаты и ответы на частые вопросы.
     </p>
-  </section>
-  <section class="section-pad contact-cards" aria-label="Основные сценарии обращения">
-    <article class="contact-card">
-      <span>Подключение</span>
-      <h2>{SITE.salesPhone}</h2>
-      <p>Для подключения домашнего интернета, уточнения адреса и выбора тарифа.</p>
-      <a class="card-action" href={getPhoneHref(SITE.salesPhone)}>Позвонить</a>
-    </article>
-    <article class="contact-card">
-      <span>Офис</span>
-      <h2>{SITE.officeAddress}</h2>
-      <p>Почта компании: <a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
-      <a class="card-action" href={getSitePath("/about/")}>О компании</a>
-    </article>
   </section>
   <SupportPathways />
   <FaqList items={faqItems} />
