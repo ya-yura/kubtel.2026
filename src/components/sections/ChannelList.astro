@@ -45,18 +45,21 @@ function getChannelLogoSrc(path: string): string {
         data-channel-search
       />
     </label>
-    <div class="channel-filters" role="group" aria-label="Фильтр каналов">
-      <button type="button" class="is-active" data-channel-filter="all">Все каналы</button>
-      {
-        groups.map((group) => (
-          <button type="button" data-channel-filter={group.id}>
-            {group.title}
-          </button>
-        ))
-      }
+    <div class="channel-filter-group">
+      <span class="channel-filter-label">Категория канала</span>
+      <div class="channel-filters" role="group" aria-label="Фильтр каналов">
+        <button type="button" class="is-active" data-channel-filter="all">Все каналы</button>
+        {
+          groups.map((group) => (
+            <button type="button" data-channel-filter={group.id}>
+              {group.title}
+            </button>
+          ))
+        }
+      </div>
     </div>
+    <p class="channel-result" data-channel-result aria-live="polite">Показаны все каналы</p>
   </div>
-  <p class="channel-result" data-channel-result aria-live="polite">Показаны все каналы</p>
   <div class="channel-groups">
     {
       groups.map((group) => (
@@ -203,18 +206,52 @@ function getChannelLogoSrc(path: string): string {
   }
 
   .channel-panel .channel-tools {
-    align-items: end;
+    align-items: start;
+    background: var(--kb-color-surface-soft);
+    border: 1px solid var(--kb-component-card-border);
+    border-radius: var(--kb-shape-card);
+    display: grid;
+    gap: 1rem 1.25rem;
     grid-template-columns: minmax(16rem, 0.75fr) minmax(0, 1.25fr);
+    margin: 1.25rem 0 1rem;
+    padding: 1rem;
+  }
+
+  .channel-panel .channel-filter-group {
+    display: grid;
+    gap: 0.42rem;
+    min-width: 0;
+  }
+
+  .channel-panel .channel-filter-label {
+    color: var(--kb-color-text-secondary);
+    font-size: 0.82rem;
+    font-weight: 800;
   }
 
   .channel-panel .channel-filters {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+    align-content: start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
   }
 
   .channel-panel .channel-filters button {
+    background: var(--kb-color-overlay-white06);
+    border-radius: var(--kb-shape-pill);
+    min-height: 2.35rem;
+    padding: 0.55rem 0.8rem;
     text-align: center;
-    width: 100%;
+    width: auto;
+  }
+
+  .channel-panel .channel-result {
+    border-top: 1px solid var(--kb-component-card-border);
+    color: var(--kb-color-text-secondary);
+    font-size: 0.8rem;
+    grid-column: 1 / -1;
+    margin: 0;
+    padding-top: 0.75rem;
   }
 
   .channel-panel .channel-groups {
@@ -344,10 +381,11 @@ function getChannelLogoSrc(path: string): string {
 
     .channel-panel .channel-tools {
       grid-template-columns: 1fr;
+      padding: 0.85rem;
     }
 
-    .channel-panel .channel-filters {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .channel-panel .channel-result {
+      grid-column: auto;
     }
 
     .channel-panel .channel-group ul.channel-grid {
