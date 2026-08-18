@@ -81,23 +81,55 @@
             {
               "id": "tv-device-own",
               "label": "Своя приставка/SMART TV",
+              "description": "Android TV, Samsung Smart TV или LG Smart TV",
               "monthlyPrice": 0,
               "oneTimePrice": 0
             },
             {
               "id": "tv-device-rent",
               "label": "Аренда приставки",
-              "description": "Добавляется ежемесячно",
-              "monthlyPrice": 150,
+              "description": "Стоимость указана за одну приставку в месяц",
+              "monthlyPrice": 0,
               "oneTimePrice": 0
             },
             {
               "id": "tv-device-buy",
               "label": "ТВ-приставка 4K IPTV Vermax UHD300X — купить",
+              "description": "Цена указана за одну приставку",
               "monthlyPrice": 0,
-              "oneTimePrice": 4000
+              "oneTimePrice": 0
             }
           ]
+        },
+        {
+          "id": "tv-device-rent-count",
+          "label": "Количество приставок в аренду",
+          "type": "counter",
+          "showWhen": {
+            "fieldId": "tv-device",
+            "equals": "tv-device-rent"
+          },
+          "unit": "шт.",
+          "min": 1,
+          "max": 5,
+          "defaultValue": 1,
+          "monthlyPrice": 150,
+          "oneTimePrice": 0
+        },
+        {
+          "id": "tv-device-buy-count",
+          "label": "Количество приставок к покупке",
+          "type": "counter",
+          "showWhen": {
+            "fieldId": "tv-device",
+            "equals": "tv-device-buy"
+          },
+          "unit": "шт.",
+          "min": 1,
+          "max": 5,
+          "defaultValue": 1,
+          "monthlyPrice": 0,
+          "oneTimePrice": 4000
         },
         {
           "id": "tv-cinema",
@@ -172,17 +204,48 @@
             {
               "id": "router-rent",
               "label": "Аренда роутера",
-              "description": "Добавляется ежемесячно",
-              "monthlyPrice": 150,
+              "description": "Стоимость указана за один роутер в месяц",
+              "monthlyPrice": 0,
               "oneTimePrice": 0
             },
             {
               "id": "router-snr-advance",
               "label": "Wi-Fi роутер SNR ADVANCE AC22 — купить",
+              "description": "Цена указана за один роутер",
               "monthlyPrice": 0,
-              "oneTimePrice": 4000
+              "oneTimePrice": 0
             }
           ]
+        },
+        {
+          "id": "router-rent-count",
+          "label": "Количество роутеров в аренду",
+          "type": "counter",
+          "showWhen": {
+            "fieldId": "internet-router",
+            "equals": "router-rent"
+          },
+          "unit": "шт.",
+          "min": 1,
+          "max": 5,
+          "defaultValue": 1,
+          "monthlyPrice": 150,
+          "oneTimePrice": 0
+        },
+        {
+          "id": "router-buy-count",
+          "label": "Количество роутеров к покупке",
+          "type": "counter",
+          "showWhen": {
+            "fieldId": "internet-router",
+            "equals": "router-snr-advance"
+          },
+          "unit": "шт.",
+          "min": 1,
+          "max": 5,
+          "defaultValue": 1,
+          "monthlyPrice": 0,
+          "oneTimePrice": 4000
         },
         {
           "id": "static-ip",

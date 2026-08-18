@@ -4679,13 +4679,12 @@ body.is-readable :focus-visible {
 }
 
 .config-tariff-details {
-  background: var(--kb-color-surface-page);
-  border: 1px solid var(--kb-color-border-default);
-  border-radius: var(--kb-shape-card);
+  align-items: start;
   display: grid;
-  gap: 0.75rem;
+  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   margin-top: 0.75rem;
-  padding: 0.9rem 1rem;
+  padding: 0.1rem 0.1rem 0;
 }
 
 .config-tariff-details p {
@@ -4694,6 +4693,12 @@ body.is-readable :focus-visible {
 
 .config-tariff-details .tag-list {
   margin: 0;
+}
+
+@media (max-width: 42rem) {
+  .config-tariff-details {
+    grid-template-columns: 1fr;
+  }
 }
 
 .config-fieldset {

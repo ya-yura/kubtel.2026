@@ -13,6 +13,12 @@ const configuratorFieldSchema = z.object({
   id: z.string().min(1),
   label: z.string().min(1),
   type: z.enum(["select", "radio", "checkbox", "counter"]),
+  group: z
+    .object({
+      id: z.string().min(1),
+      label: z.string().min(1)
+    })
+    .optional(),
   required: z.boolean().optional(),
   multiple: z.boolean().optional(),
   help: z.string().optional(),

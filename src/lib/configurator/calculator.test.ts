@@ -131,6 +131,53 @@ describe("calculateConfiguratorPrice", () => {
     expect(result.lines.map((line) => line.label)).toEqual(["План", "Новое поле", "Количество"]);
   });
 
+  it("multiplies conditional equipment counters", () => {
+    const quantityCatalog: ConfiguratorCatalog = {
+      ...catalog,
+      services: [
+        {
+          ...catalog.services[0],
+          fields: [
+            ...catalog.services[0].fields,
+            {
+              id: "equipment",
+              label: "Оборудование",
+              type: "radio",
+              required: true,
+              defaultValue: "own",
+              choices: [
+                { id: "own", label: "Своё", monthlyPrice: 0, oneTimePrice: 0 },
+                { id: "rent", label: "Аренда", monthlyPrice: 0, oneTimePrice: 0 }
+              ]
+            },
+            {
+              id: "equipment-count",
+              label: "Количество оборудования",
+              type: "counter",
+              showWhen: { fieldId: "equipment", equals: "rent" },
+              min: 1,
+              max: 5,
+              monthlyPrice: 150,
+              oneTimePrice: 0
+            }
+          ]
+        }
+      ]
+    };
+    const result = calculateConfiguratorPrice(quantityCatalog, "internet", {
+      plan: "base",
+      equipment: "rent",
+      "equipment-count": 3
+    });
+
+    expect(result.monthlyTotal).toBe(950);
+    expect(result.lines.at(-1)).toMatchObject({
+      label: "Количество оборудования",
+      valueLabel: "3",
+      monthlyPrice: 450
+    });
+  });
+
   it("supports checkbox prices that depend on the selected plan", () => {
     const result = calculateConfiguratorPrice(catalog, "internet", {
       plan: "base",
