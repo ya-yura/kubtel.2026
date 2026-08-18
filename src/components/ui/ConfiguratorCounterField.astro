@@ -1,0 +1,56 @@
+---
+import type { ConfiguratorField, ConfiguratorFieldValue } from "@models/configurator";
+import { getSitePath } from "@config/site";
+
+type Props = {
+  field: ConfiguratorField;
+  value?: ConfiguratorFieldValue;
+  visible?: boolean;
+};
+
+const { field, value, visible = true } = Astro.props;
+const resolvedValue = value ?? field.defaultValue;
+const defaultValue =
+  typeof resolvedValue === "string" || typeof resolvedValue === "number"
+    ? resolvedValue
+    : (field.min ?? 0);
+const showWhen = field.showWhen ? JSON.stringify(field.showWhen) : undefined;
+const helpLinkHref = field.helpLink ? getSitePath(field.helpLink.href) : undefined;
+---
+
+<label
+  class="config-field config-counter-field"
+  data-config-show-when={showWhen}
+  data-config-field-container={field.id}
+  hidden={!visible}
+>
+  <span>{field.label}</span>
+  <div class="config-counter-control">
+    <button type="button" data-config-step="-1" aria-label={`Уменьшить: ${field.label}`}>
+      −
+    </button>
+    <input
+      type="number"
+      inputmode="numeric"
+      value={defaultValue}
+      min={field.min}
+      max={field.max}
+      step={field.step ?? 1}
+      data-config-field
+      data-field-id={field.id}
+      data-field-type={field.type}
+      data-monthly={field.monthlyPrice ?? 0}
+      data-once={field.oneTimePrice ?? 0}
+    />
+    <button type="button" data-config-step="1" aria-label={`Увеличить: ${field.label}`}> + </button>
+    {field.unit && <em>{field.unit}</em>}
+  </div>
+  {field.help && <small>{field.help}</small>}
+  {
+    field.helpLink && (
+      <a class="config-field-link" href={helpLinkHref}>
+        {field.helpLink.label} →
+      </a>
+    )
+  }
+</label>

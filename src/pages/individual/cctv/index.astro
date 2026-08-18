@@ -76,12 +76,11 @@ const selectedTab = requestedTab && availableTabs.includes(requestedTab) ? reque
         staticPreview={isStaticPreview}
         formAction={Astro.url.pathname}
       />
-      <section class="section-pad resource-grid cctv-connect-resources">
-        <AppLinks
-          links={catalog.cctv.appLinks}
-          title="Смотрите камеры в приложении Kubtel Watcher"
-        />
-      </section>
+      <AppLinks
+        links={catalog.cctv.appLinks}
+        title="Смотрите камеры в Kubtel Watcher"
+        variant="compact"
+      />
       <section class="section-pad setup-steps">
         <div class="section-heading">
           <p class="eyebrow">Как подключить</p><h2>От выбора архива до работающей камеры</h2>

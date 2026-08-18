@@ -8,6 +8,7 @@ import {
 import ConfiguratorField from "@components/ui/ConfiguratorField.astro";
 import type {
   ConfiguratorCatalog,
+  ConfiguratorField,
   ConfiguratorFieldValue,
   ConfiguratorService
 } from "@models/configurator";
@@ -98,6 +99,19 @@ const tariffDetails = tariffs.reduce(
 );
 
 const getFieldGroups = (fields: ConfiguratorService["fields"]) => {
+  const radioFieldIds = new Set(
+    fields.filter((field) => field.type === "radio").map((field) => field.id)
+  );
+  const dependentFieldIds = new Set(
+    fields
+      .filter(
+        (field) =>
+          field.type === "counter" &&
+          field.showWhen?.equals !== undefined &&
+          radioFieldIds.has(field.showWhen.fieldId)
+      )
+      .map((field) => field.id)
+  );
   const groups: Array<{
     id: string;
     label: string;
@@ -105,24 +119,51 @@ const getFieldGroups = (fields: ConfiguratorService["fields"]) => {
     grouped: boolean;
   }> = [];
 
-  fields.forEach((field) => {
-    const group = field.group;
-    if (!group) {
-      groups.push({ id: field.id, label: "", fields: [field], grouped: false });
-      return;
-    }
+  fields
+    .filter((field) => !dependentFieldIds.has(field.id))
+    .forEach((field) => {
+      const group = field.group;
+      if (!group) {
+        groups.push({ id: field.id, label: "", fields: [field], grouped: false });
+        return;
+      }
 
-    const currentGroup = groups.at(-1);
-    if (currentGroup?.grouped && currentGroup.id === group.id) {
-      currentGroup.fields.push(field);
-      return;
-    }
+      const currentGroup = groups.at(-1);
+      if (currentGroup?.grouped && currentGroup.id === group.id) {
+        currentGroup.fields.push(field);
+        return;
+      }
 
-    groups.push({ id: group.id, label: group.label, fields: [field], grouped: true });
-  });
+      groups.push({ id: group.id, label: group.label, fields: [field], grouped: true });
+    });
 
   return groups;
 };
+
+const getChoiceDependentFields = (fields: ConfiguratorService["fields"]) => {
+  const dependentFields: Record<string, Record<string, ConfiguratorField[]>> = {};
+
+  fields
+    .filter(
+      (field) =>
+        field.type === "counter" &&
+        field.showWhen?.fieldId === parentFieldId &&
+        typeof field.showWhen.equals === "string"
+    )
+    .forEach((field) => {
+      const parentFieldId = field.showWhen?.fieldId as string;
+      const choiceId = field.showWhen?.equals as string;
+      const fieldsByChoice = dependentFields[parentFieldId] ?? {};
+      fieldsByChoice[choiceId] = [...(fieldsByChoice[choiceId] ?? []), field];
+      dependentFields[parentFieldId] = fieldsByChoice;
+    });
+
+  return dependentFields;
+};
+
+const choiceDependentFieldsByService = Object.fromEntries(
+  services.map((service) => [service.id, getChoiceDependentFields(service.fields)])
+);
 
 function getDefaultValues(
   service: ConfiguratorService,
@@ -242,6 +283,10 @@ function getDefaultValues(
                           serviceId={service.id}
                           value={defaultValues[field.id]}
                           visible={isConfiguratorFieldVisible(field, defaultValues)}
+                          choiceDependentFields={
+                            choiceDependentFieldsByService[service.id]?.[field.id]
+                          }
+                          dependentValues={defaultValues}
                           tariffDetails={field.id === "internet-plan" ? tariffDetails : undefined}
                         />
                       ))}
@@ -253,6 +298,10 @@ function getDefaultValues(
                     serviceId={service.id}
                     value={defaultValues[group.fields[0].id]}
                     visible={isConfiguratorFieldVisible(group.fields[0], defaultValues)}
+                    choiceDependentFields={
+                      choiceDependentFieldsByService[service.id]?.[group.fields[0].id]
+                    }
+                    dependentValues={defaultValues}
                     tariffDetails={
                       group.fields[0].id === "internet-plan" ? tariffDetails : undefined
                     }

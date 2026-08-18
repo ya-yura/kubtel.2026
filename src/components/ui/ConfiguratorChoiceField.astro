@@ -1,0 +1,88 @@
+---
+import type { ConfiguratorField, ConfiguratorFieldValue } from "@models/configurator";
+import ConfiguratorCounterField from "@components/ui/ConfiguratorCounterField.astro";
+import { getSitePath } from "@config/site";
+
+type Props = {
+  field: ConfiguratorField;
+  serviceId: string;
+  value?: ConfiguratorFieldValue;
+  visible?: boolean;
+  choiceDependentFields?: Record<string, ConfiguratorField[]>;
+  dependentValues?: Record<string, ConfiguratorFieldValue>;
+};
+
+const {
+  field,
+  serviceId,
+  value,
+  visible = true,
+  choiceDependentFields = {},
+  dependentValues = {}
+} = Astro.props;
+const fieldName = `${serviceId}-${field.id}`;
+const resolvedValue = value ?? field.defaultValue;
+const choiceInputType =
+  field.type === "radio" || (field.type === "checkbox" && !field.multiple) ? "radio" : "checkbox";
+const showWhen = field.showWhen ? JSON.stringify(field.showWhen) : undefined;
+const helpLinkHref = field.helpLink ? getSitePath(field.helpLink.href) : undefined;
+const isChoiceSelected = (choiceId: string, defaultSelected = false) => {
+  if (typeof resolvedValue === "string") return resolvedValue === choiceId;
+  if (Array.isArray(resolvedValue)) return resolvedValue.includes(choiceId);
+  return defaultSelected;
+};
+---
+
+<fieldset
+  class="config-fieldset"
+  data-config-show-when={showWhen}
+  data-config-fieldset={field.id}
+  hidden={!visible}
+>
+  <legend>{field.label}</legend>
+  <div class="config-choice-grid">
+    {
+      field.choices?.map((choice) => (
+        <div class="config-choice-option">
+          <label class="config-choice">
+            <input
+              type={choiceInputType}
+              name={fieldName}
+              value={choice.id}
+              checked={isChoiceSelected(choice.id, choice.default)}
+              data-config-field
+              data-field-id={field.id}
+              data-field-type={choiceInputType}
+              data-field-multiple={field.multiple ? "true" : undefined}
+              data-label={choice.label}
+              data-monthly={choice.monthlyPrice}
+              data-once={choice.oneTimePrice}
+            />
+            <span>
+              <strong>{choice.label}</strong>
+              {choice.description && <small>{choice.description}</small>}
+            </span>
+          </label>
+          {choiceDependentFields[choice.id]?.map(
+            (dependentField) =>
+              dependentField.type === "counter" && (
+                <ConfiguratorCounterField
+                  field={dependentField}
+                  value={dependentValues[dependentField.id]}
+                  visible={isChoiceSelected(choice.id, choice.default)}
+                />
+              )
+          )}
+        </div>
+      ))
+    }
+  </div>
+  {field.help && <small class="config-field-help">{field.help}</small>}
+  {
+    field.helpLink && (
+      <a class="config-field-link" href={helpLinkHref}>
+        {field.helpLink.label} →
+      </a>
+    )
+  }
+</fieldset>

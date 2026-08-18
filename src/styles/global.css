@@ -4265,6 +4265,79 @@ body.is-readable :focus-visible {
   text-transform: uppercase;
 }
 
+.app-links-inline {
+  align-items: center;
+  background: var(--kb-color-overlay-accent10);
+  border: 1px solid var(--kb-color-overlay-accent28);
+  border-radius: var(--kb-shape-panel);
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.65fr);
+  margin: 1rem 0 0;
+  padding: 1rem;
+}
+
+.app-links-inline__copy,
+.app-links-inline__copy p,
+.app-links-inline__copy h3 {
+  margin-bottom: 0;
+}
+
+.app-links-inline__copy {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.app-links-inline__copy h3 {
+  font-size: 1.15rem;
+}
+
+.app-links-inline__copy > p:last-child {
+  color: var(--kb-color-text-secondary);
+  font-size: 0.88rem;
+}
+
+.app-links-inline__links {
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.app-link-chip {
+  align-items: center;
+  background: var(--kb-color-overlay-white055);
+  border: 1px solid var(--kb-component-card-border);
+  border-radius: var(--kb-shape-card);
+  color: inherit;
+  display: grid;
+  gap: 0.12rem 0.5rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: 0.65rem 0.75rem;
+  text-decoration: none;
+}
+
+.app-link-chip:hover,
+.app-link-chip:focus-visible {
+  border-color: var(--kb-color-overlay-accent46);
+}
+
+.app-link-chip span:first-child {
+  color: var(--kb-color-text-secondary);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.app-link-chip strong {
+  grid-column: 1;
+}
+
+.app-link-chip span:last-child {
+  color: var(--kb-color-action-primary-background);
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+
 .resource-link-list {
   display: grid;
   gap: 0.55rem;
@@ -4680,7 +4753,7 @@ body.is-readable :focus-visible {
   align-items: start;
   display: grid;
   gap: 1.25rem;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
   margin-top: 0.75rem;
   padding: 0.1rem 0.1rem 0;
 }
@@ -4738,6 +4811,15 @@ body.is-readable :focus-visible {
   display: grid;
   gap: 0.5rem;
   margin-top: 0.45rem;
+}
+
+.config-choice-option {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.config-choice-option > .config-field {
+  margin-inline: 0.25rem;
 }
 
 .config-choice {
@@ -4952,6 +5034,10 @@ body.is-readable :focus-visible {
   .resource-link-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .app-links-inline__links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 768px) {
@@ -4968,6 +5054,17 @@ body.is-readable :focus-visible {
 
   .configurator-workspace {
     grid-template-columns: minmax(0, 1fr) minmax(280px, 0.38fr);
+  }
+}
+
+@media (max-width: 42rem) {
+  .app-links-inline {
+    grid-template-columns: 1fr;
+    margin-inline: 0;
+  }
+
+  .app-links-inline__links {
+    grid-template-columns: 1fr;
   }
 }
 

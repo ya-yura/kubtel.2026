@@ -5,6 +5,8 @@ import type {
   ConfiguratorTariffDetail
 } from "@models/configurator";
 import { getSitePath } from "@config/site";
+import ConfiguratorChoiceField from "@components/ui/ConfiguratorChoiceField.astro";
+import ConfiguratorCounterField from "@components/ui/ConfiguratorCounterField.astro";
 
 type Props = {
   field: ConfiguratorField;
@@ -12,24 +14,25 @@ type Props = {
   value?: ConfiguratorFieldValue;
   visible?: boolean;
   tariffDetails?: ConfiguratorTariffDetail[];
+  choiceDependentFields?: Record<string, ConfiguratorField[]>;
+  dependentValues?: Record<string, ConfiguratorFieldValue>;
 };
 
-const { field, serviceId, value, visible = true, tariffDetails = [] } = Astro.props;
-const fieldName = `${serviceId}-${field.id}`;
+const {
+  field,
+  serviceId,
+  value,
+  visible = true,
+  tariffDetails = [],
+  choiceDependentFields = {},
+  dependentValues = {}
+} = Astro.props;
 const resolvedValue = value ?? field.defaultValue;
 const defaultChoice = field.choices?.find((choice) => {
   if (typeof resolvedValue === "string") return resolvedValue === choice.id;
   if (Array.isArray(resolvedValue)) return resolvedValue.includes(choice.id);
   return choice.default;
 });
-const defaultValue =
-  typeof resolvedValue === "string" || typeof resolvedValue === "number"
-    ? resolvedValue
-    : field.type === "counter"
-      ? (field.min ?? 0)
-      : "";
-const choiceInputType =
-  field.type === "radio" || (field.type === "checkbox" && !field.multiple) ? "radio" : "checkbox";
 const showWhen = field.showWhen ? JSON.stringify(field.showWhen) : undefined;
 const helpLinkHref = field.helpLink ? getSitePath(field.helpLink.href) : undefined;
 ---
@@ -78,41 +81,7 @@ const helpLinkHref = field.helpLink ? getSitePath(field.helpLink.href) : undefin
       )}
     </label>
   ) : field.type === "counter" ? (
-    <label
-      class="config-field config-counter-field"
-      data-config-show-when={showWhen}
-      hidden={!visible}
-    >
-      <span>{field.label}</span>
-      <div class="config-counter-control">
-        <button type="button" data-config-step="-1" aria-label={`Уменьшить: ${field.label}`}>
-          −
-        </button>
-        <input
-          type="number"
-          inputmode="numeric"
-          value={defaultValue}
-          min={field.min}
-          max={field.max}
-          step={field.step ?? 1}
-          data-config-field
-          data-field-id={field.id}
-          data-field-type={field.type}
-          data-monthly={field.monthlyPrice ?? 0}
-          data-once={field.oneTimePrice ?? 0}
-        />
-        <button type="button" data-config-step="1" aria-label={`Увеличить: ${field.label}`}>
-          +
-        </button>
-        {field.unit && <em>{field.unit}</em>}
-      </div>
-      {field.help && <small>{field.help}</small>}
-      {field.helpLink && (
-        <a class="config-field-link" href={helpLinkHref}>
-          {field.helpLink.label} →
-        </a>
-      )}
-    </label>
+    <ConfiguratorCounterField field={field} value={value} visible={visible} />
   ) : field.type === "checkbox" && !field.choices?.length ? (
     <label
       class="config-choice config-choice-single"
@@ -139,43 +108,13 @@ const helpLinkHref = field.helpLink ? getSitePath(field.helpLink.href) : undefin
       </span>
     </label>
   ) : (
-    <fieldset class="config-fieldset" data-config-show-when={showWhen} hidden={!visible}>
-      <legend>{field.label}</legend>
-      <div class="config-choice-grid">
-        {field.choices?.map((choice) => (
-          <label class="config-choice">
-            <input
-              type={choiceInputType}
-              name={fieldName}
-              value={choice.id}
-              checked={
-                Array.isArray(resolvedValue)
-                  ? resolvedValue.includes(choice.id)
-                  : typeof resolvedValue === "string"
-                    ? resolvedValue === choice.id
-                    : Boolean(choice.default)
-              }
-              data-config-field
-              data-field-id={field.id}
-              data-field-type={choiceInputType}
-              data-field-multiple={field.multiple ? "true" : undefined}
-              data-label={choice.label}
-              data-monthly={choice.monthlyPrice}
-              data-once={choice.oneTimePrice}
-            />
-            <span>
-              <strong>{choice.label}</strong>
-              {choice.description && <small>{choice.description}</small>}
-            </span>
-          </label>
-        ))}
-      </div>
-      {field.help && <small class="config-field-help">{field.help}</small>}
-      {field.helpLink && (
-        <a class="config-field-link" href={helpLinkHref}>
-          {field.helpLink.label} →
-        </a>
-      )}
-    </fieldset>
+    <ConfiguratorChoiceField
+      field={field}
+      serviceId={serviceId}
+      value={value}
+      visible={visible}
+      choiceDependentFields={choiceDependentFields}
+      dependentValues={dependentValues}
+    />
   )
 }
