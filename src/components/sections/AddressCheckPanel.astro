@@ -283,7 +283,7 @@ function getOptionHint(option: TariffOption): string {
 </section>
 
 <script>
-  const panel = document.querySelector("[data-address-check]");
+  const panel = document.querySelector<HTMLElement>("[data-address-check]");
 
   if (panel) {
     const params = new URLSearchParams(window.location.search);
