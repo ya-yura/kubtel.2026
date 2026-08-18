@@ -409,6 +409,8 @@ function getDefaultValues(
 </section>
 
 <script>
+  import { normalizeConfiguratorValues } from "@lib/configurator/calculator";
+
   document.querySelectorAll<HTMLElement>("[data-service-configurator]").forEach((root) => {
     const catalogNode = root.querySelector<HTMLScriptElement>("[data-config-catalog]");
     const catalog = catalogNode?.textContent ? JSON.parse(catalogNode.textContent) : null;
@@ -512,7 +514,14 @@ function getDefaultValues(
       if (!panel || !catalog) return;
       const service = catalog.services.find((item: any) => item.id === activeService);
       if (!service) return;
-      const fields = getFields(panel);
+      const fields = normalizeConfiguratorValues(service, getFields(panel));
+      if (fields["tv-devices"] === true) {
+        panel
+          .querySelectorAll<HTMLInputElement>('[data-config-field][data-field-id="tv-devices"]')
+          .forEach((input) => {
+            input.checked = true;
+          });
+      }
       updateFieldVisibility(panel, fields);
       updateTariffDescription(panel, fields["internet-plan"]);
       const lines: Array<{
@@ -678,12 +687,6 @@ function getDefaultValues(
       const deviceInputs = Array.from(
         panel.querySelectorAll<HTMLInputElement>('[data-config-field][data-field-id="tv-devices"]')
       );
-      const tvDeviceChoice = panel.querySelector<HTMLInputElement>(
-        '[data-config-field][data-field-id="tv-device"]:checked'
-      )?.value;
-      const tvDeviceCount = panel.querySelector<HTMLInputElement>(
-        `[data-config-field][data-field-id="${tvDeviceChoice === "tv-device-buy" ? "tv-device-buy-count" : "tv-device-rent-count"}"]`
-      );
 
       if (!tvInput || deviceInputs.length === 0) return;
 
@@ -693,17 +696,6 @@ function getDefaultValues(
         changedField.checked
       ) {
         tvInput.checked = true;
-      }
-
-      if (
-        tvDeviceCount &&
-        Number(tvDeviceCount.value) > 3 &&
-        deviceInputs.some((input) => !input.checked)
-      ) {
-        tvInput.checked = true;
-        deviceInputs.forEach((input) => {
-          input.checked = true;
-        });
       }
 
       if (changedField.dataset.fieldId === "internet-tv" && !tvInput.checked) {

@@ -318,14 +318,12 @@
           "label": "Срок хранения записей",
           "type": "select",
           "required": true,
-          "defaultValue": "archive-none",
+          "showWhen": {
+            "fieldId": "cctv-access",
+            "equals": "cctv-archive"
+          },
+          "defaultValue": "archive-3",
           "choices": [
-            {
-              "id": "archive-none",
-              "label": "Без архива",
-              "monthlyPrice": 0,
-              "oneTimePrice": 0
-            },
             {
               "id": "archive-3",
               "label": "Архив 3 дня",

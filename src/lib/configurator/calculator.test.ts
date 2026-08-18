@@ -178,6 +178,124 @@ describe("calculateConfiguratorPrice", () => {
     });
   });
 
+  it("automatically includes the five-device TV extension for four or five purchased boxes", () => {
+    const tvCatalog: ConfiguratorCatalog = {
+      ...catalog,
+      services: [
+        {
+          ...catalog.services[0],
+          fields: [
+            ...catalog.services[0].fields,
+            {
+              id: "internet-tv",
+              label: "Телевидение",
+              type: "checkbox",
+              monthlyPrice: 100,
+              oneTimePrice: 0
+            },
+            {
+              id: "tv-device",
+              label: "Устройство для ТВ",
+              type: "radio",
+              choices: [
+                { id: "tv-device-own", label: "Своё", monthlyPrice: 0, oneTimePrice: 0 },
+                { id: "tv-device-buy", label: "Покупка", monthlyPrice: 0, oneTimePrice: 0 }
+              ]
+            },
+            {
+              id: "tv-device-buy-count",
+              label: "Количество приставок к покупке",
+              type: "counter",
+              showWhen: { fieldId: "tv-device", equals: "tv-device-buy" },
+              min: 1,
+              max: 5,
+              oneTimePrice: 4000
+            },
+            {
+              id: "tv-devices",
+              label: "Расширить до 5-ти устройств",
+              type: "checkbox",
+              showWhen: { fieldId: "internet-tv", equals: true },
+              monthlyPrice: 89,
+              oneTimePrice: 0
+            }
+          ]
+        }
+      ]
+    };
+
+    const calculateFor = (count: number) =>
+      calculateConfiguratorPrice(tvCatalog, "internet", {
+        plan: "base",
+        "internet-tv": true,
+        "tv-device": "tv-device-buy",
+        "tv-device-buy-count": count,
+        "tv-devices": false
+      });
+
+    const fourDevices = calculateFor(4);
+    const fiveDevices = calculateFor(5);
+
+    expect(fourDevices.monthlyTotal).toBe(689);
+    expect(fourDevices.oneTimeTotal).toBe(16000);
+    expect(fourDevices.lines).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ fieldId: "tv-devices", monthlyPrice: 89, oneTimePrice: 0 })
+      ])
+    );
+    expect(fiveDevices.monthlyTotal).toBe(689);
+    expect(fiveDevices.oneTimeTotal).toBe(20000);
+  });
+
+  it("only calculates archive storage when archive viewing is selected", () => {
+    const cctvCatalog: ConfiguratorCatalog = {
+      ...catalog,
+      services: [
+        {
+          ...catalog.services[0],
+          id: "cctv",
+          fields: [
+            {
+              id: "cctv-access",
+              label: "Режим просмотра",
+              type: "radio",
+              required: true,
+              choices: [
+                { id: "cctv-online", label: "Без записи", monthlyPrice: 150, oneTimePrice: 0 },
+                { id: "cctv-archive", label: "С архивом", monthlyPrice: 150, oneTimePrice: 0 }
+              ]
+            },
+            {
+              id: "cctv-archive",
+              label: "Срок хранения записей",
+              type: "select",
+              required: true,
+              showWhen: { fieldId: "cctv-access", equals: "cctv-archive" },
+              choices: [
+                { id: "archive-3", label: "Архив 3 дня", monthlyPrice: 300, oneTimePrice: 0 },
+                { id: "archive-7", label: "Архив 7 дней", monthlyPrice: 500, oneTimePrice: 0 }
+              ]
+            }
+          ]
+        }
+      ]
+    };
+
+    expect(
+      calculateConfiguratorPrice(cctvCatalog, "cctv", {
+        "cctv-access": "cctv-online",
+        "cctv-archive": "archive-7"
+      })
+    ).toMatchObject({ monthlyTotal: 150, lines: [{ fieldId: "cctv-access" }] });
+
+    expect(
+      calculateConfiguratorPrice(cctvCatalog, "cctv", {
+        "cctv-access": "cctv-archive",
+        "cctv-archive": "archive-7"
+      })
+    ).toMatchObject({ monthlyTotal: 650 });
+  });
+
   it("supports checkbox prices that depend on the selected plan", () => {
     const result = calculateConfiguratorPrice(catalog, "internet", {
       plan: "base",

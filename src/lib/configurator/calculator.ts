@@ -33,7 +33,7 @@ export function calculateConfiguratorPrice(
   rawValues: unknown
 ): ConfiguratorPrice {
   const service = getConfiguratorService(catalog, serviceId);
-  const values = asValueRecord(rawValues);
+  const values = normalizeConfiguratorValues(service, asValueRecord(rawValues));
   const calculatedLines = service.fields
     .filter((field) => isConfiguratorFieldVisible(field, values))
     .map((field) => calculateFieldLine(field, values[field.id], values))
@@ -50,6 +50,39 @@ export function calculateConfiguratorPrice(
       .filter((line) => line.includeInTotal)
       .reduce((total, line) => total + line.oneTimePrice, 0)
   };
+}
+
+export function normalizeConfiguratorValues(
+  service: ConfiguratorService,
+  values: Record<string, ConfiguratorFieldValue | undefined>
+): Record<string, ConfiguratorFieldValue | undefined> {
+  const normalizedValues = { ...values };
+
+  if (
+    service.id !== "internet" ||
+    ![true, "true", "on"].includes(normalizedValues["internet-tv"] as boolean | string)
+  ) {
+    return normalizedValues;
+  }
+
+  const deviceChoice = normalizedValues["tv-device"];
+  const countFieldId =
+    deviceChoice === "tv-device-buy"
+      ? "tv-device-buy-count"
+      : deviceChoice === "tv-device-rent"
+        ? "tv-device-rent-count"
+        : null;
+  if (!countFieldId) {
+    return normalizedValues;
+  }
+
+  const deviceCount = Number(normalizedValues[countFieldId] ?? 0);
+
+  if (deviceCount > 3) {
+    normalizedValues["tv-devices"] = true;
+  }
+
+  return normalizedValues;
 }
 
 function mergePrivateHouseIntoInternetPlan(
