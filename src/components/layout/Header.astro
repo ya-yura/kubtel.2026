@@ -95,9 +95,6 @@ function isCurrentPath(href: string) {
         >
           Версия для слабовидящих
         </button>
-        <a class="mobile-nav-action" href={getSitePath("/connect/#callback-request")}>
-          Проверить адрес
-        </a>
       </nav>
     </details>
     <button
@@ -111,7 +108,6 @@ function isCurrentPath(href: string) {
     <a class="header-account" href={SITE.accountUrl} target="_blank" rel="noopener noreferrer">
       Личный кабинет
     </a>
-    <a class="header-action" href={getSitePath("/connect/#callback-request")}>Проверить адрес</a>
   </div>
   <script is:inline type="application/json" data-header-phone-config set:html={phoneContext} />
   <script>

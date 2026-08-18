@@ -9,32 +9,59 @@ import { officialNews } from "@content/official-news";
   description="Официальные публикации Kubtel: новости компании, материалы для бизнеса и сообщения об изменениях тарифов."
   canonicalPath="/news/"
 >
-  <section class="section-pad compact-intro news-page">
-    <p class="eyebrow">Новости</p>
-    <h1>Официальные публикации Kubtel</h1>
-    <p>
-      В ленте показаны материалы, уже опубликованные на официальном сайте. Сообщение об изменении
-      тарифа содержит дату вступления, затронутые услуги и основание.
-    </p>
+  <section class="section-pad news-hero" aria-labelledby="news-title">
+    <div class="news-hero__copy">
+      <p class="eyebrow">Новости Kubtel</p>
+      <h1 id="news-title">Важное — в одном месте</h1>
+      <p>
+        Изменения услуг, тарифов и новости компании без лишнего шума. Здесь собраны официальные
+        публикации, к которым можно вернуться в любой момент.
+      </p>
+    </div>
+    <aside class="news-hero__meta" aria-label="О ленте новостей">
+      <span>Официальная лента</span>
+      <strong>{officialNews.length}</strong>
+      <p>публикации компании и сообщения об услугах</p>
+    </aside>
+  </section>
+
+  <section class="section-pad news-feed" aria-labelledby="news-feed-title">
+    <div class="news-feed__heading">
+      <div>
+        <p class="eyebrow">Публикации</p>
+        <h2 id="news-feed-title">Что важно знать абонентам</h2>
+      </div>
+      <span class="news-feed__source">Официальные материалы Kubtel</span>
+    </div>
 
     <div class="news-grid">
       {
-        officialNews.map((item) => (
-          <article class="news-card">
-            <div class="service-card-head">
-              <span class="service-category">{item.category}</span>
+        officialNews.map((item, index) => (
+          <article
+            class:list={[
+              "news-card",
+              {
+                "news-card--feature": index === 0,
+                "news-card--tariff": Boolean(item.effectiveDate)
+              }
+            ]}
+          >
+            <div class="news-card__topline">
+              <span class="news-card__category">{item.category}</span>
               <time>{item.publishedLabel}</time>
             </div>
-            <h2>{item.title}</h2>
-            <p>{item.summary}</p>
+            <div class="news-card__body">
+              <h3>{item.title}</h3>
+              <p>{item.summary}</p>
+            </div>
             {item.effectiveDate && (
-              <dl class="requisite-list">
+              <dl class="news-card__details">
                 <div>
                   <dt>Вступление изменений</dt>
                   <dd>{item.effectiveDate}</dd>
                 </div>
                 <div>
-                  <dt>Затронутые тарифы</dt>
+                  <dt>Затронутые услуги</dt>
                   <dd>{item.affectedTariffs}</dd>
                 </div>
                 <div>
@@ -43,16 +70,24 @@ import { officialNews } from "@content/official-news";
                 </div>
               </dl>
             )}
-            <a class="card-action" href={item.href} target="_blank" rel="noopener noreferrer">
-              Читать на kubtel.ru
+            <a class="news-card__link" href={item.href} target="_blank" rel="noopener noreferrer">
+              <span>Читать публикацию</span>
+              <span aria-hidden="true">↗</span>
             </a>
           </article>
         ))
       }
     </div>
+  </section>
 
-    <a class="business-link" href={SITE.officialNewsUrl} target="_blank" rel="noopener noreferrer">
-      Весь официальный архив новостей
+  <section class="section-pad news-archive-callout" aria-labelledby="news-archive-title">
+    <div>
+      <p class="eyebrow">Официальный архив</p>
+      <h2 id="news-archive-title">Все публикации — на kubtel.ru</h2>
+      <p>Если нужен полный архив сообщений, откройте официальный раздел новостей Kubtel.</p>
+    </div>
+    <a class="card-action" href={SITE.officialNewsUrl} target="_blank" rel="noopener noreferrer">
+      Открыть архив <span aria-hidden="true">↗</span>
     </a>
   </section>
 </BaseLayout>
