@@ -2719,33 +2719,43 @@ input[type="radio"] {
 }
 
 .business-calculator {
-  background: var(--kb-color-surface-raised);
-  border: 1px solid var(--kb-color-border-default);
-  border-radius: var(--kb-shape-card);
+  background: var(--kb-component-calculator-background);
+  border: 1px solid var(--kb-component-calculator-border);
+  border-radius: var(--kb-component-calculator-radius);
   display: grid;
-  gap: 0.85rem;
-  padding: 0.9rem;
+  gap: var(--kb-composition-calculator-workspace-gap);
+  padding: var(--kb-component-card-padding);
 }
 
 .business-calculator-form {
   display: grid;
-  gap: 0.6rem;
+  gap: var(--kb-component-form-gap);
 }
 
 .business-calculator-form label {
-  background: var(--kb-color-surface-raised);
-  border: 1px solid var(--kb-color-border-default);
-  border-radius: var(--kb-shape-card);
-  gap: 0.5rem;
+  background: var(--kb-component-card-background);
+  border: 1px solid var(--kb-component-card-border);
+  border-radius: var(--kb-component-card-radius);
+  gap: var(--kb-layout-grid-gap-compact);
   min-width: 0;
-  padding: 0.68rem;
+  padding: var(--kb-component-card-padding);
+  transition:
+    background-color var(--kb-motion-interaction-duration) var(--kb-motion-interaction-easing),
+    border-color var(--kb-motion-interaction-duration) var(--kb-motion-interaction-easing),
+    box-shadow var(--kb-motion-interaction-duration) var(--kb-motion-interaction-easing);
+}
+
+.business-calculator-form label:not(.calculator-toggle):hover,
+.business-calculator-form label:not(.calculator-toggle):focus-within {
+  border-color: var(--kb-component-card-border-hover);
+  box-shadow: var(--kb-elevation-field-inset);
 }
 
 .business-calculator-form label small {
-  color: var(--kb-color-text-secondary);
-  font-size: 0.86rem;
-  font-weight: 760;
-  line-height: 1.35;
+  color: var(--kb-component-form-hint-color);
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: var(--kb-typography-body-line-height);
 }
 
 .calculator-number-control {
@@ -2754,9 +2764,19 @@ input[type="radio"] {
   border: 1px solid var(--kb-component-input-border);
   border-radius: var(--kb-component-input-radius);
   display: grid;
-  grid-template-columns: 34px minmax(0, 1fr) 34px;
-  min-height: 42px;
+  grid-template-columns: var(--kb-layout-touch-target-min) minmax(0, 1fr) var(
+      --kb-layout-touch-target-min
+    );
+  min-height: var(--kb-component-input-min-height);
   overflow: hidden;
+  transition:
+    border-color var(--kb-motion-interaction-duration) var(--kb-motion-interaction-easing),
+    box-shadow var(--kb-motion-interaction-duration) var(--kb-motion-interaction-easing);
+}
+
+.calculator-number-control:focus-within {
+  border-color: var(--kb-component-input-border-focus);
+  box-shadow: var(--kb-component-input-focus-ring);
 }
 
 .calculator-number-control input {
@@ -2765,28 +2785,49 @@ input[type="radio"] {
   border-left: 1px solid var(--kb-color-border-default);
   border-radius: 0;
   border-right: 1px solid var(--kb-color-border-default);
-  min-height: 42px;
-  padding: 0.5rem 0.65rem;
+  min-height: var(--kb-component-input-min-height);
+  padding: 0.5rem var(--kb-component-input-padding-inline);
   text-align: center;
 }
 
 .calculator-number-control input:focus {
+  border-color: transparent;
   box-shadow: none;
+  outline: 0;
+}
+
+.business-calculator-form input[type="number"] {
+  appearance: textfield;
+  font-variant-numeric: tabular-nums;
+}
+
+.business-calculator-form input[type="number"]::-webkit-inner-spin-button,
+.business-calculator-form input[type="number"]::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
 }
 
 .calculator-step-button {
   align-items: center;
   background: transparent;
   color: var(--kb-color-action-primary-background-active);
+  cursor: pointer;
   display: inline-grid;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 900;
   height: 100%;
   justify-content: center;
+  min-height: var(--kb-layout-touch-target-min);
+  padding: 0;
+  touch-action: manipulation;
 }
 
 .calculator-step-button:hover {
   background: var(--kb-color-surface-warm);
+}
+
+.calculator-step-button:active {
+  background: var(--kb-color-action-secondary-background-active);
 }
 
 .business-calculator-form select {
@@ -2794,8 +2835,8 @@ input[type="radio"] {
   border: 1px solid var(--kb-component-input-border);
   border-radius: var(--kb-component-input-radius);
   color: var(--kb-color-text-primary);
-  min-height: 42px;
-  padding: 0.58rem 0.7rem;
+  min-height: var(--kb-component-select-min-height);
+  padding: 0.58rem var(--kb-component-input-padding-inline);
   width: 100%;
 }
 
@@ -2803,7 +2844,17 @@ input[type="radio"] {
   align-items: center;
   cursor: pointer;
   grid-template-columns: auto 1fr;
-  min-height: 56px;
+  min-height: var(--kb-layout-touch-target-input);
+}
+
+.calculator-toggle:has(input:checked) {
+  background: var(--kb-component-choice-selected-background);
+  border-color: var(--kb-component-choice-selected-border);
+  box-shadow: var(--kb-elevation-selected-subtle);
+}
+
+.calculator-toggle input[type="checkbox"] {
+  margin: 0;
 }
 
 .calculator-toggle small {
@@ -2811,12 +2862,13 @@ input[type="radio"] {
 }
 
 .business-calculator-result {
-  background: var(--kb-color-surface-inverse);
-  border-radius: var(--kb-shape-card);
+  background: var(--kb-component-calculator-result-background);
+  border: 1px solid var(--kb-component-calculator-result-border);
+  border-radius: var(--kb-component-calculator-radius);
   color: var(--kb-color-text-inverse);
   display: grid;
-  gap: 0.75rem;
-  padding: 0.85rem;
+  gap: var(--kb-component-form-gap);
+  padding: var(--kb-component-card-padding);
 }
 
 .business-calculator-result h3 {
@@ -2831,16 +2883,16 @@ input[type="radio"] {
 
 .calculator-total-grid {
   display: grid;
-  gap: 0.5rem;
+  gap: var(--kb-layout-grid-gap-compact);
 }
 
 .calculator-total-grid div {
   background: var(--kb-color-overlay-white-soft);
   border: 1px solid var(--kb-color-overlay-white-border);
-  border-radius: var(--kb-shape-control-small);
+  border-radius: var(--kb-component-card-radius);
   display: grid;
-  gap: 0.25rem;
-  padding: 0.65rem;
+  gap: var(--kb-spacing-1);
+  padding: var(--kb-component-card-padding);
 }
 
 .calculator-total-grid span,
@@ -2857,12 +2909,16 @@ input[type="radio"] {
 
 .calculator-lines {
   display: grid;
-  gap: 0.32rem;
+  gap: var(--kb-spacing-1);
   list-style: none;
   margin: 0;
-  max-height: 190px;
-  overflow: auto;
+  max-height: none;
+  overflow: visible;
   padding: 0;
+}
+
+.business-calculator-result .card-action {
+  width: 100%;
 }
 
 .calculator-lines li {

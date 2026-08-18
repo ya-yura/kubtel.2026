@@ -37,7 +37,7 @@ const payload = JSON.stringify({
         config.fields.map((field) => {
           if (field.kind === "select") {
             return (
-              <label>
+              <label class="calculator-field form-field">
                 <span>{field.label}</span>
                 <select name={field.name} data-calculator-field>
                   {field.options.map((option) => (
@@ -53,7 +53,7 @@ const payload = JSON.stringify({
 
           if (field.kind === "checkbox") {
             return (
-              <label class="calculator-toggle">
+              <label class="calculator-field form-field calculator-toggle">
                 <input
                   name={field.name}
                   type="checkbox"
@@ -67,7 +67,7 @@ const payload = JSON.stringify({
           }
 
           return (
-            <label>
+            <label class="calculator-field form-field">
               <span>{field.label}</span>
               <div class="calculator-number-control">
                 <button

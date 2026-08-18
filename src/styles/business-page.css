@@ -414,7 +414,7 @@
 
 .business-service-select {
   display: grid;
-  gap: 0.45rem;
+  gap: var(--kb-layout-grid-gap-compact);
 }
 
 .business-service-select span {
@@ -425,14 +425,23 @@
 }
 
 .business-service-select select {
-  background: var(--kb-business-surface-panel-strong);
-  border: 1px solid var(--kb-color-overlay-accent42);
-  border-radius: var(--kb-shape-card);
+  background: var(--kb-component-input-background);
+  border: 1px solid var(--kb-component-input-border);
+  border-radius: var(--kb-component-input-radius);
   color: var(--kb-business-text-primary);
   font: inherit;
-  min-height: 48px;
-  padding: 0.7rem 2.5rem 0.7rem 0.85rem;
+  min-height: var(--kb-component-select-min-height);
+  padding: var(--kb-layout-control-padding-block) 2.5rem var(--kb-layout-control-padding-block)
+    var(--kb-component-input-padding-inline);
+  transition:
+    border-color var(--kb-motion-interaction-duration) var(--kb-motion-interaction-easing),
+    box-shadow var(--kb-motion-interaction-duration) var(--kb-motion-interaction-easing);
   width: 100%;
+}
+
+.business-service-select select:hover,
+.business-service-select select:focus {
+  border-color: var(--kb-color-overlay-accent46);
 }
 
 .business-service-list {
@@ -1020,26 +1029,26 @@
 
 .telephony-calculator-tabs {
   display: grid;
-  gap: 0.55rem;
+  gap: var(--kb-layout-grid-gap-compact);
   grid-template-columns: minmax(0, 1fr);
 }
 
 .telephony-calculator-tabs button {
   background: var(--kb-color-overlay-white04);
-  border: 1px solid var(--kb-business-border-default);
-  border-radius: var(--kb-shape-card);
+  border: 1px solid var(--kb-component-card-border);
+  border-radius: var(--kb-component-card-radius);
   color: var(--kb-business-text-secondary);
   cursor: pointer;
   font: inherit;
   font-weight: 800;
-  min-height: 3.25rem;
-  padding: 0.75rem 0.9rem;
+  min-height: var(--kb-layout-touch-target-min);
+  padding: var(--kb-layout-control-padding-block) var(--kb-layout-control-padding-inline);
   text-align: left;
   transition:
-    background var(--kb-motion-duration-base) var(--kb-motion-easing-standard),
-    border-color var(--kb-motion-duration-base) var(--kb-motion-easing-standard),
-    color var(--kb-motion-duration-base) var(--kb-motion-easing-standard),
-    transform var(--kb-motion-duration-base) var(--kb-motion-easing-standard);
+    background-color var(--kb-motion-interaction-duration) var(--kb-motion-interaction-easing),
+    border-color var(--kb-motion-interaction-duration) var(--kb-motion-interaction-easing),
+    color var(--kb-motion-interaction-duration) var(--kb-motion-interaction-easing),
+    transform var(--kb-motion-interaction-duration) var(--kb-motion-interaction-easing);
 }
 
 .telephony-calculator-tabs button:hover,
@@ -1400,8 +1409,9 @@
 .business-page .business-calculator {
   background:
     linear-gradient(135deg, var(--kb-color-overlay-accent12), transparent 38%),
-    var(--kb-business-surface-panel-strong);
-  border-color: var(--kb-business-border-default);
+    var(--kb-component-calculator-background);
+  border-color: var(--kb-component-calculator-border);
+  border-radius: var(--kb-component-calculator-radius);
   box-shadow: var(--kb-elevation-business-panel);
 }
 
@@ -1414,21 +1424,23 @@
   color: var(--kb-color-overlay-frost86);
 }
 
-.business-page .business-calculator-form input,
-.business-page .business-calculator-form select {
+.business-page
+  .business-calculator-form
+  :where(input:not([type="checkbox"]):not([type="radio"]), select) {
   background: var(--kb-color-overlay-business-glass);
   border-color: var(--kb-color-overlay-accent28);
   color: var(--kb-business-text-primary);
 }
 
 .business-page .calculator-number-control {
-  background: var(--kb-color-overlay-business-glass);
-  border-color: var(--kb-color-overlay-accent28);
+  background: var(--kb-component-input-background);
+  border-color: var(--kb-component-input-border);
 }
 
 .business-page .calculator-number-control input {
   background: transparent;
   border-color: var(--kb-color-overlay-accent22);
+  color: var(--kb-business-text-primary);
 }
 
 .business-page .calculator-step-button {
@@ -1439,16 +1451,31 @@
   background: var(--kb-color-overlay-accent16);
 }
 
-.business-page .business-calculator-form input:hover,
-.business-page .business-calculator-form select:hover {
+.business-page .calculator-step-button:active {
+  background: var(--kb-color-overlay-accent24);
+}
+
+.business-page .calculator-toggle:has(input:checked) {
+  background: var(--kb-color-overlay-accent12);
+  border-color: var(--kb-color-overlay-accent46);
+  box-shadow: var(--kb-elevation-selected-subtle);
+}
+
+.business-page
+  .business-calculator-form
+  :where(input:not([type="checkbox"]):not([type="radio"]), select):hover,
+.business-page
+  .business-calculator-form
+  :where(input:not([type="checkbox"]):not([type="radio"]), select):focus {
   border-color: var(--kb-color-overlay-accent46);
 }
 
 .business-page .business-calculator-result {
   background:
     radial-gradient(circle at 100% 0, var(--kb-color-overlay-accent30), transparent 16rem),
-    var(--kb-color-surface-business-canvas-deep);
-  border: 1px solid var(--kb-color-overlay-accent24);
+    var(--kb-component-calculator-result-background);
+  border-color: var(--kb-component-calculator-result-border);
+  border-radius: var(--kb-component-calculator-radius);
 }
 
 .business-page .business-calculator-result .service-category {
@@ -1459,6 +1486,7 @@
 .business-page .calculator-total-grid div {
   background: var(--kb-color-overlay-white055);
   border-color: var(--kb-color-overlay-white11);
+  border-radius: var(--kb-component-card-radius);
 }
 
 .business-page .calculator-total-grid strong,
