@@ -179,26 +179,6 @@ const actionError = actionResult?.error;
                   : undefined}
               />
             </label>
-            {
-              isBudgetRequest && (
-                <>
-                  <label>
-                    Имя и отчество
-                    <input
-                      name="contactPerson"
-                      type="text"
-                      autocomplete="name"
-                      maxlength="120"
-                      required
-                    />
-                  </label>
-                  <label>
-                    Электронная почта
-                    <input name="email" type="email" autocomplete="email" maxlength="120" />
-                  </label>
-                </>
-              )
-            }
           </div>
           <details
             class="b2g-extra-contact"

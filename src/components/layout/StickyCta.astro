@@ -6,7 +6,18 @@ const currentPath =
   basePath && Astro.url.pathname.startsWith(`${basePath}/`)
     ? Astro.url.pathname.slice(basePath.length)
     : Astro.url.pathname;
-const isBusinessPath = currentPath.startsWith("/business/");
+const isBusinessPath = currentPath === "/business" || currentPath.startsWith("/business/");
+const requestedSegment = Astro.url.searchParams.get("segment");
+const businessSegment =
+  requestedSegment === "b2g" || requestedSegment === "government"
+    ? "b2g"
+    : requestedSegment === "b2o" || requestedSegment === "operators"
+      ? "b2o"
+      : currentPath.startsWith("/business/b2g/")
+        ? "b2g"
+        : currentPath.startsWith("/business/b2o/")
+          ? "b2o"
+          : "b2b";
 const quietSections = [
   "/payment/",
   "/documents/",
@@ -22,7 +33,7 @@ const shouldRender = !quietSections.some((path) => currentPath.startsWith(path))
 const label = isBusinessPath ? "Оставить заявку" : "Проверить подключение";
 const hint = isBusinessPath ? "Заявка для бизнеса" : "Адрес и условия уточним по заявке";
 const href = isBusinessPath
-  ? "/business/request/?segment=legal"
+  ? `/business/request/?segment=${businessSegment}`
   : "/individual/configurator/#configurator";
 const actionLabel = isBusinessPath ? "Оставить заявку" : "Проверить";
 ---
