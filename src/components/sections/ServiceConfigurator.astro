@@ -8,7 +8,7 @@ import {
 import ConfiguratorField from "@components/ui/ConfiguratorField.astro";
 import type {
   ConfiguratorCatalog,
-  ConfiguratorField,
+  ConfiguratorField as ConfiguratorFieldModel,
   ConfiguratorFieldValue,
   ConfiguratorService
 } from "@models/configurator";
@@ -141,18 +141,16 @@ const getFieldGroups = (fields: ConfiguratorService["fields"]) => {
 };
 
 const getChoiceDependentFields = (fields: ConfiguratorService["fields"]) => {
-  const dependentFields: Record<string, Record<string, ConfiguratorField[]>> = {};
+  const dependentFields: Record<string, Record<string, ConfiguratorFieldModel[]>> = {};
 
   fields
-    .filter(
-      (field) =>
-        field.type === "counter" &&
-        field.showWhen?.fieldId === parentFieldId &&
-        typeof field.showWhen.equals === "string"
-    )
+    .filter((field) => field.type === "counter" && typeof field.showWhen?.equals === "string")
     .forEach((field) => {
-      const parentFieldId = field.showWhen?.fieldId as string;
-      const choiceId = field.showWhen?.equals as string;
+      const showWhen = field.showWhen;
+      if (!showWhen || typeof showWhen.equals !== "string") return;
+
+      const parentFieldId = showWhen.fieldId;
+      const choiceId = showWhen.equals;
       const fieldsByChoice = dependentFields[parentFieldId] ?? {};
       fieldsByChoice[choiceId] = [...(fieldsByChoice[choiceId] ?? []), field];
       dependentFields[parentFieldId] = fieldsByChoice;
