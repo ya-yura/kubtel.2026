@@ -1,7 +1,9 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import PromoImage from "@components/ui/PromoImage.astro";
 import { SITE } from "@config/site";
 import { officialNews } from "@content/official-news";
+import { promoVisuals } from "@lib/visuals";
 ---
 
 <BaseLayout
@@ -18,11 +20,12 @@ import { officialNews } from "@content/official-news";
         публикации, к которым можно вернуться в любой момент.
       </p>
     </div>
-    <aside class="news-hero__meta" aria-label="О ленте новостей">
-      <span>Официальная лента</span>
-      <strong>{officialNews.length}</strong>
-      <p>публикации компании и сообщения об услугах</p>
-    </aside>
+    <PromoImage
+      visual={promoVisuals.news}
+      class="news-hero__visual"
+      loading="eager"
+      showMeta={false}
+    />
   </section>
 
   <section class="section-pad news-feed" aria-labelledby="news-feed-title">
