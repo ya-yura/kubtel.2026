@@ -46,7 +46,7 @@
           "id": "house-connection",
           "label": "Частный дом",
           "type": "checkbox",
-          "help": "Цена тарифа изменится для частного дома. Разовый PON-комплект включён в расчёт.",
+          "help": "Для частного дома применяется отдельная цена тарифа. Разовый PON-комплект включён в расчёт.",
           "priceByFieldId": "internet-plan",
           "monthlyPriceBy": {
             "internet-100": 390,

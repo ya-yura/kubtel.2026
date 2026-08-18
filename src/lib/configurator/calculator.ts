@@ -34,10 +34,11 @@ export function calculateConfiguratorPrice(
 ): ConfiguratorPrice {
   const service = getConfiguratorService(catalog, serviceId);
   const values = asValueRecord(rawValues);
-  const lines = service.fields
+  const calculatedLines = service.fields
     .filter((field) => isConfiguratorFieldVisible(field, values))
     .map((field) => calculateFieldLine(field, values[field.id], values))
     .filter((line): line is ConfiguratorPriceLine => line !== null);
+  const lines = mergePrivateHouseIntoInternetPlan(service, calculatedLines);
 
   return {
     service,
@@ -49,6 +50,34 @@ export function calculateConfiguratorPrice(
       .filter((line) => line.includeInTotal)
       .reduce((total, line) => total + line.oneTimePrice, 0)
   };
+}
+
+function mergePrivateHouseIntoInternetPlan(
+  service: ConfiguratorService,
+  lines: ConfiguratorPriceLine[]
+): ConfiguratorPriceLine[] {
+  if (service.id !== "internet") {
+    return lines;
+  }
+
+  const planLine = lines.find((line) => line.fieldId === "internet-plan");
+  const houseLine = lines.find((line) => line.fieldId === "house-connection");
+
+  if (!planLine || !houseLine) {
+    return lines;
+  }
+
+  return lines
+    .filter((line) => line.fieldId !== "house-connection")
+    .map((line) =>
+      line.fieldId === "internet-plan"
+        ? {
+            ...line,
+            monthlyPrice: line.monthlyPrice + houseLine.monthlyPrice,
+            oneTimePrice: line.oneTimePrice + houseLine.oneTimePrice
+          }
+        : line
+    );
 }
 
 export function isConfiguratorFieldVisible(

@@ -91,6 +91,33 @@ const catalog: ConfiguratorCatalog = {
   internet: { offers: [], benefits: [], connectionSteps: [] }
 };
 
+const summaryCatalog: ConfiguratorCatalog = {
+  ...catalog,
+  services: [
+    {
+      ...catalog.services[0],
+      fields: [
+        {
+          id: "internet-plan",
+          label: "Тариф интернета",
+          type: "select",
+          required: true,
+          choices: [
+            { id: "internet-100", label: "Интернет 100", monthlyPrice: 500, oneTimePrice: 0 }
+          ]
+        },
+        {
+          id: "house-connection",
+          label: "Частный дом",
+          type: "checkbox",
+          monthlyPrice: 390,
+          oneTimePrice: 4990
+        }
+      ]
+    }
+  ]
+};
+
 describe("calculateConfiguratorPrice", () => {
   it("calculates arbitrary future fields without changing the calculator", () => {
     const result = calculateConfiguratorPrice(catalog, "internet", {
@@ -145,6 +172,24 @@ describe("calculateConfiguratorPrice", () => {
       oneTimePrice: 500,
       includeInTotal: false,
       priceNote: "От 500 ₽. Точную стоимость специалист сообщит до проведения работ."
+    });
+  });
+
+  it("shows the private-house price as part of the internet tariff", () => {
+    const result = calculateConfiguratorPrice(summaryCatalog, "internet", {
+      "internet-plan": "internet-100",
+      "house-connection": true
+    });
+
+    expect(result.monthlyTotal).toBe(890);
+    expect(result.oneTimeTotal).toBe(4990);
+    expect(result.lines).toHaveLength(1);
+    expect(result.lines[0]).toMatchObject({
+      fieldId: "internet-plan",
+      label: "Тариф интернета",
+      valueLabel: "Интернет 100",
+      monthlyPrice: 890,
+      oneTimePrice: 4990
     });
   });
 });

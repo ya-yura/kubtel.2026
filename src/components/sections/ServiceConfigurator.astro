@@ -421,6 +421,7 @@ function getDefaultValues(
       const fields = getFields(panel);
       updateFieldVisibility(panel, fields);
       const lines: Array<{
+        fieldId: string;
         label: string;
         valueLabel: string;
         monthly: number;
@@ -436,6 +437,7 @@ function getDefaultValues(
           const count = Number(value ?? 0);
           if (count > 0) {
             lines.push({
+              fieldId: field.id,
               label: field.label,
               valueLabel: `${count}${field.unit ? ` ${field.unit}` : ""}`,
               monthly: count * (field.monthlyPrice ?? 0),
@@ -450,6 +452,7 @@ function getDefaultValues(
         if (field.type === "checkbox" && !field.choices?.length) {
           if (value === true) {
             lines.push({
+              fieldId: field.id,
               label: field.label,
               valueLabel: "Да",
               monthly: getFieldPrice(field, "monthlyPrice", fields),
@@ -468,6 +471,7 @@ function getDefaultValues(
           const choice = field.choices?.find((item: any) => item.id === id);
           if (choice) {
             lines.push({
+              fieldId: field.id,
               label: field.label,
               valueLabel: choice.label,
               monthly: choice.monthlyPrice,
@@ -478,6 +482,17 @@ function getDefaultValues(
           }
         });
       });
+
+      if (activeService === "internet") {
+        const planLine = lines.find((line) => line.fieldId === "internet-plan");
+        const houseLine = lines.find((line) => line.fieldId === "house-connection");
+
+        if (planLine && houseLine) {
+          planLine.monthly += houseLine.monthly;
+          planLine.once += houseLine.once;
+          lines.splice(lines.indexOf(houseLine), 1);
+        }
+      }
 
       const includedLines = lines.filter((line) => line.includeInTotal);
       const monthly = includedLines.reduce((total, line) => total + line.monthly, 0);
