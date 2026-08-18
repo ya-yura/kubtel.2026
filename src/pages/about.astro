@@ -39,12 +39,19 @@ import { promoVisuals } from "@lib/visuals";
       </p>
     </div>
   </section>
-  <section class="section-pad pathway-grid" aria-labelledby="about-documents-title">
-    <article>
-      <span>Документы</span>
+  <section
+    class="section-pad narrative-section visual-story-split"
+    aria-labelledby="about-documents-title"
+  >
+    <PromoImage visual={promoVisuals.datacenter} class="is-inline" showMeta={false} />
+    <div>
+      <p class="eyebrow">Документы</p>
       <h2 id="about-documents-title">Условия и реквизиты</h2>
-      <p>Юридические данные, условия связи и политика обработки персональных данных.</p>
-      <a href={getSitePath("/documents/")}>Документы</a>
-    </article>
+      <p>
+        Юридические данные, условия связи и политика обработки персональных данных собраны в одном
+        месте — без лишних переходов и поиска по сайту.
+      </p>
+      <a class="card-action" href={getSitePath("/documents/")}>Открыть документы</a>
+    </div>
   </section>
 </BaseLayout>
