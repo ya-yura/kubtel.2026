@@ -5,6 +5,7 @@ import {
   calculateConfiguratorPrice,
   isConfiguratorFieldVisible
 } from "@lib/configurator/calculator";
+import AppLinks from "@components/sections/AppLinks.astro";
 import ConfiguratorField from "@components/ui/ConfiguratorField.astro";
 import type {
   ConfiguratorCatalog,
@@ -224,6 +225,7 @@ function getDefaultValues(
       <div class="configurator-service-tabs" role="tablist" aria-label="Выберите услугу">
         {services.map((service) => (
           <button
+            class="configurator-service-tab"
             type="button"
             role="tab"
             aria-selected={service.id === defaultService?.id ? "true" : "false"}
@@ -234,7 +236,7 @@ function getDefaultValues(
           </button>
         ))}
         {serviceLink && (
-          <a class="configurator-service-tab-link" href={getSitePath(serviceLink.href)}>
+          <a class="configurator-service-tab" href={getSitePath(serviceLink.href)}>
             <span>{serviceLink.eyebrow}</span>
             <strong>{serviceLink.label}</strong>
           </a>
@@ -312,6 +314,13 @@ function getDefaultValues(
                 <li>{note}</li>
               ))}
             </ul>
+            {service.id === "cctv" && (
+              <AppLinks
+                links={catalog.cctv.appLinks}
+                title="Смотрите камеры в Kubtel Watcher"
+                variant="compact"
+              />
+            )}
           </div>
         ))
       }

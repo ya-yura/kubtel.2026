@@ -4102,8 +4102,6 @@ body.is-readable :focus-visible {
 }
 
 .service-tabs button,
-.configurator-service-tabs button,
-.configurator-service-tabs a,
 .channel-filters button {
   background: transparent;
   border: var(--kb-stroke-default) solid transparent;
@@ -4134,11 +4132,6 @@ body.is-readable :focus-visible {
   text-underline-offset: 0.16em;
 }
 
-.configurator-service-tabs button:hover,
-.configurator-service-tabs button:focus-visible,
-.configurator-service-tabs button[aria-selected="true"],
-.configurator-service-tabs a:hover,
-.configurator-service-tabs a:focus-visible,
 .channel-filters button:hover,
 .channel-filters button:focus-visible,
 .channel-filters button.is-active {
@@ -4668,27 +4661,48 @@ body.is-readable :focus-visible {
   margin-bottom: 1rem;
 }
 
-.configurator-service-tabs button,
-.configurator-service-tabs a {
+.configurator-service-tab {
   align-items: start;
-  background: var(--kb-color-overlay-white055);
-  border-color: var(--kb-component-card-border);
+  background: var(--kb-component-tabs-background);
+  border: var(--kb-stroke-default) solid var(--kb-component-card-border);
+  border-radius: var(--kb-component-tabs-radius);
+  box-shadow: none;
+  color: var(--kb-component-tabs-text);
+  cursor: pointer;
   display: grid;
+  font: inherit;
+  font-weight: 800;
   gap: 0.25rem;
   justify-items: start;
+  min-height: var(--kb-component-button-size-medium-min-height);
+  padding: var(--kb-layout-control-padding-block) var(--kb-layout-control-padding-inline);
   text-align: left;
+  text-decoration: none;
+  transform: none;
   white-space: normal;
+  width: 100%;
 }
 
-.configurator-service-tabs button span,
-.configurator-service-tabs a span {
+.configurator-service-tab:hover,
+.configurator-service-tab:focus-visible {
+  background: var(--kb-component-tabs-hover-background);
+  border-color: var(--kb-color-overlay-accent38);
+  color: var(--kb-color-action-primary-background);
+}
+
+.configurator-service-tab[aria-selected="true"] {
+  background: var(--kb-component-tabs-selected-background);
+  border: var(--kb-stroke-strong) solid var(--kb-component-tabs-selected-border);
+  color: var(--kb-component-tabs-selected-text);
+}
+
+.configurator-service-tab span {
   color: var(--kb-color-text-secondary);
   font-size: 0.72rem;
   text-transform: uppercase;
 }
 
-.configurator-service-tabs button strong,
-.configurator-service-tabs a strong {
+.configurator-service-tab strong {
   color: var(--kb-color-text-primary);
   font-family: var(--kb-typography-display-family);
   font-size: 1rem;
@@ -4750,12 +4764,14 @@ body.is-readable :focus-visible {
 }
 
 .config-tariff-details {
-  align-items: start;
-  display: grid;
-  gap: 1.25rem;
-  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  display: block;
   margin-top: 0.75rem;
   padding: 0.1rem 0.1rem 0;
+}
+
+.config-tariff-details > div {
+  display: grid;
+  gap: 0.65rem;
 }
 
 .config-tariff-details p {
@@ -4764,12 +4780,6 @@ body.is-readable :focus-visible {
 
 .config-tariff-details .tag-list {
   margin: 0;
-}
-
-@media (max-width: 42rem) {
-  .config-tariff-details {
-    grid-template-columns: 1fr;
-  }
 }
 
 .config-fieldset {

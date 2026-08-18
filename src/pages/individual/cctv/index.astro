@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
-import AppLinks from "@components/sections/AppLinks.astro";
 import OfferLinks from "@components/sections/OfferLinks.astro";
 import ServiceConfigurator from "@components/sections/ServiceConfigurator.astro";
 import ServiceTabs from "@components/ui/ServiceTabs.astro";
@@ -75,11 +74,6 @@ const selectedTab = requestedTab && availableTabs.includes(requestedTab) ? reque
         actionResult={leadActionResult}
         staticPreview={isStaticPreview}
         formAction={Astro.url.pathname}
-      />
-      <AppLinks
-        links={catalog.cctv.appLinks}
-        title="Смотрите камеры в Kubtel Watcher"
-        variant="compact"
       />
       <section class="section-pad setup-steps">
         <div class="section-heading">
