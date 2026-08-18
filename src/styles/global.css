@@ -617,8 +617,16 @@ summary:focus-visible {
 
 .header-phone {
   display: inline-flex;
+  flex: 0 0 auto;
   font-size: 0.82rem;
   padding-inline: 0.6rem;
+  white-space: nowrap;
+}
+
+.header-readability-toggle,
+.header-account,
+.header-action {
+  flex: 0 0 auto;
 }
 
 .header-account:hover,
@@ -3652,7 +3660,7 @@ body.is-readable :focus-visible {
 
 @media (min-width: 1120px) {
   .site-header {
-    grid-template-columns: auto minmax(0, 1fr) 28rem;
+    grid-template-columns: auto minmax(0, 1fr) 32rem;
   }
 
   .site-nav {
@@ -3662,7 +3670,7 @@ body.is-readable :focus-visible {
   }
 
   .site-header-tools {
-    min-width: 28rem;
+    min-width: 32rem;
   }
 
   .site-nav a:nth-child(n + 8) {
