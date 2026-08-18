@@ -153,8 +153,8 @@ const actionError = actionResult?.error;
         <fieldset class="form-group">
           <legend>Контакт</legend>
           <div class="contact-grid compact-business-grid">
-            <label>
-              {isBudgetRequest ? "Рабочий телефон *" : "Телефон *"}
+            <label class="form-field">
+              <span>{isBudgetRequest ? "Рабочий телефон *" : "Телефон *"}</span>
               <input
                 name="phone"
                 type="tel"
@@ -167,8 +167,8 @@ const actionError = actionResult?.error;
                 required
               />
             </label>
-            <label>
-              {isBudgetRequest ? "Учреждение" : "Компания"}
+            <label class="form-field">
+              <span>{isBudgetRequest ? "Учреждение" : "Компания"}</span>
               <input
                 name="companyName"
                 type="text"
@@ -188,8 +188,8 @@ const actionError = actionResult?.error;
           >
             <summary>Дополнительно для B2G</summary>
             <div class="contact-grid compact-business-grid">
-              <label>
-                Мобильный телефон
+              <label class="form-field">
+                <span>Мобильный телефон</span>
                 <input
                   name="mobilePhone"
                   type="tel"
@@ -226,8 +226,8 @@ const actionError = actionResult?.error;
         <fieldset class="form-group">
           <legend>Заявка</legend>
           <div class="contact-grid compact-business-grid">
-            <label>
-              Тема обращения *
+            <label class="form-field">
+              <span>Тема обращения *</span>
               <select name="service" required>
                 <option value="">Выберите тему</option>
                 <optgroup label="Тип обращения">
@@ -252,8 +252,8 @@ const actionError = actionResult?.error;
                 </optgroup>
               </select>
             </label>
-            <label>
-              Город или адрес объекта
+            <label class="form-field">
+              <span>Город или адрес объекта</span>
               <input
                 name="address"
                 type="text"
@@ -272,7 +272,7 @@ const actionError = actionResult?.error;
         </fieldset>
 
         <label class="message-field">
-          Комментарий
+          <span>Комментарий</span>
           <textarea
             name="configurationSummary"
             rows="4"

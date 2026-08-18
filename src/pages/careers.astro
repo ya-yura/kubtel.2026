@@ -160,12 +160,12 @@ const employmentLabels: Record<JobEmploymentType, string> = {
       <fieldset class="form-group">
         <legend>Контакты кандидата</legend>
         <div class="contact-grid">
-          <label>
-            Имя
+          <label class="form-field">
+            <span>Имя</span>
             <input name="name" type="text" autocomplete="name" maxlength="100" required />
           </label>
-          <label>
-            Телефон
+          <label class="form-field">
+            <span>Телефон</span>
             <input
               name="phone"
               type="tel"
@@ -175,12 +175,12 @@ const employmentLabels: Record<JobEmploymentType, string> = {
               required
             />
           </label>
-          <label>
-            E-mail
+          <label class="form-field">
+            <span>E-mail</span>
             <input name="email" type="email" autocomplete="email" maxlength="120" required />
           </label>
-          <label>
-            Интересующая вакансия
+          <label class="form-field">
+            <span>Интересующая вакансия</span>
             <select name="vacancySlug" required disabled={vacancies.length === 0}>
               <option value="">Выберите вакансию</option>
               {
@@ -192,8 +192,8 @@ const employmentLabels: Record<JobEmploymentType, string> = {
               }
             </select>
           </label>
-          <label>
-            Ссылка на резюме
+          <label class="form-field">
+            <span>Ссылка на резюме</span>
             <input
               name="resumeUrl"
               type="url"
@@ -202,15 +202,15 @@ const employmentLabels: Record<JobEmploymentType, string> = {
               placeholder="https://..."
             />
           </label>
-          <label>
-            Файл резюме
+          <label class="form-field">
+            <span>Файл резюме</span>
             <input name="resumeFile" type="file" accept=".pdf,.doc,.docx,.rtf,.txt" />
           </label>
         </div>
       </fieldset>
 
       <label class="message-field">
-        Дополнительная информация
+        <span>Дополнительная информация</span>
         <textarea
           name="message"
           rows="5"

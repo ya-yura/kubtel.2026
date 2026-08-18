@@ -155,7 +155,7 @@ function getOptionHint(option: TariffOption): string {
     <fieldset class="form-group">
       <legend>Телефон для звонка</legend>
       <div class="contact-grid">
-        <label>
+        <label class="form-field">
           <span>Телефон</span>
           <input
             name="phone"
@@ -167,7 +167,7 @@ function getOptionHint(option: TariffOption): string {
             required
           />
         </label>
-        <label>
+        <label class="form-field">
           <span>Имя, если удобно</span>
           <input name="name" type="text" autocomplete="name" placeholder="Как к вам обращаться" />
         </label>
@@ -245,7 +245,7 @@ function getOptionHint(option: TariffOption): string {
     <fieldset class="form-group">
       <legend>Населённый пункт и адрес, если уже знаете</legend>
       <div class="contact-grid">
-        <label>
+        <label class="form-field">
           <span>Населённый пункт</span>
           <select name="addressCity" autocomplete="address-level2">
             <option value="Краснодар">Краснодар</option>
@@ -253,7 +253,7 @@ function getOptionHint(option: TariffOption): string {
             <option value="manual">Уточнить по телефону</option>
           </select>
         </label>
-        <label>
+        <label class="form-field">
           <span>Район, улица или адрес</span>
           <input
             name="address"

@@ -599,13 +599,14 @@
     var(--kb-business-surface-panel);
   border: 1px solid var(--kb-business-border-default);
   border-radius: var(--kb-shape-card);
-  padding: 1rem;
+  gap: var(--kb-component-form-gap);
+  padding: var(--kb-component-card-padding);
 }
 
 .business-page .business-request-layout.is-compact .form-group,
 .business-page .business-request-layout.is-compact .message-field,
 .business-page .business-request-layout.is-compact .consent-line {
-  padding: 0.85rem;
+  padding: var(--kb-component-card-padding);
 }
 
 .preferred-contact-group {
@@ -647,6 +648,7 @@
 }
 
 .business-page .compact-business-grid {
+  gap: var(--kb-composition-contact-grid-gap);
   grid-template-columns: 1fr;
 }
 
@@ -1331,13 +1333,13 @@
   border: 1px solid var(--kb-business-border-default);
   border-radius: var(--kb-shape-card);
   display: grid;
-  gap: 1rem;
-  padding: 1rem;
+  gap: var(--kb-component-form-gap);
+  padding: var(--kb-component-card-padding);
 }
 
 .datacenter-access-grid {
   display: grid;
-  gap: 0.85rem;
+  gap: var(--kb-composition-contact-grid-gap);
 }
 
 .datacenter-access-grid label,
@@ -1347,8 +1349,8 @@
   border-radius: var(--kb-shape-card);
   color: var(--kb-color-overlay-frost90);
   display: grid;
-  gap: 0.45rem;
-  padding: 0.85rem;
+  gap: var(--kb-layout-grid-gap-compact);
+  padding: var(--kb-component-card-padding);
 }
 
 .datacenter-access-grid input,
@@ -1356,10 +1358,10 @@
 .datacenter-access-works textarea {
   background: var(--kb-color-overlay-business-glass);
   border: 1px solid var(--kb-color-overlay-accent28);
-  border-radius: var(--kb-shape-card);
+  border-radius: var(--kb-component-input-radius);
   color: var(--kb-business-text-primary);
-  min-height: 46px;
-  padding: 0.72rem 0.8rem;
+  min-height: var(--kb-component-input-min-height);
+  padding: 0.8rem var(--kb-component-input-padding-inline);
   width: 100%;
 }
 
@@ -1370,7 +1372,7 @@
 }
 
 .datacenter-access-works textarea {
-  min-height: 140px;
+  min-height: var(--kb-component-textarea-min-height);
   resize: vertical;
 }
 
@@ -1507,7 +1509,8 @@
 .business-page .business-proof-list strong,
 .business-page .form-group legend,
 .business-page .business-request-form label,
-.business-page .business-request-form label span,
+.business-page .business-request-form .form-field > span,
+.business-page .business-request-form .message-field > span,
 .business-page .message-field,
 .business-page .consent-line span {
   color: var(--kb-color-overlay-frost90);
@@ -1517,17 +1520,28 @@
   color: var(--kb-color-overlay-frost62);
 }
 
-.business-page .business-request-form input,
-.business-page .business-request-form select,
-.business-page .business-request-form textarea {
+.business-page
+  .business-request-form
+  :where(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), select, textarea) {
   background: var(--kb-color-overlay-business-glass);
   border-color: var(--kb-color-overlay-accent28);
+  border-radius: var(--kb-component-input-radius);
   color: var(--kb-business-text-primary);
+  min-height: var(--kb-component-input-min-height);
+  padding: 0.8rem var(--kb-component-input-padding-inline);
 }
 
-.business-page .business-request-form input:hover,
-.business-page .business-request-form select:hover,
-.business-page .business-request-form textarea:hover {
+.business-page .business-request-form textarea {
+  min-height: var(--kb-component-textarea-min-height);
+}
+
+.business-page
+  .business-request-form
+  :where(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+    select,
+    textarea
+  ):hover {
   border-color: var(--kb-color-overlay-accent46);
 }
 

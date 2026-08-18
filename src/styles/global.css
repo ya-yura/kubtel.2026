@@ -925,8 +925,29 @@ label span {
   font-weight: 780;
 }
 
+.form-field {
+  align-content: start;
+  display: grid;
+  gap: var(--kb-layout-grid-gap-compact);
+  min-width: 0;
+}
+
+.form-field > span {
+  color: var(--kb-component-form-label-color);
+  font-size: 0.9rem;
+  font-weight: 780;
+  line-height: var(--kb-typography-label-line-height);
+}
+
+.form-field small {
+  color: var(--kb-component-form-hint-color);
+  font-size: 0.78rem;
+  line-height: var(--kb-typography-body-line-height);
+}
+
 input,
-select {
+select,
+textarea {
   background: var(--kb-component-input-background);
   border: 1px solid var(--kb-component-input-border);
   border-radius: var(--kb-component-input-radius);
@@ -944,13 +965,24 @@ input::placeholder {
   color: var(--kb-component-input-placeholder);
 }
 
+textarea {
+  min-height: var(--kb-component-textarea-min-height);
+  resize: vertical;
+}
+
+textarea::placeholder {
+  color: var(--kb-component-input-placeholder);
+}
+
 input:hover,
-select:hover {
+select:hover,
+textarea:hover {
   border-color: var(--kb-component-input-border-hover);
 }
 
 input:focus,
-select:focus {
+select:focus,
+textarea:focus {
   border-color: var(--kb-component-input-border-focus);
   box-shadow: var(--kb-focus-ring-shadow);
 }
@@ -1562,14 +1594,17 @@ input[type="radio"] {
   border: 1px solid var(--kb-color-border-default);
   border-radius: var(--kb-shape-card);
   display: grid;
-  gap: 0.85rem;
+  gap: var(--kb-component-form-gap);
   margin: 0;
-  padding: 1rem;
+  min-width: 0;
+  padding: var(--kb-component-card-padding);
 }
 
 .form-group legend {
   color: var(--kb-color-surface-inverse);
+  font-size: 0.95rem;
   font-weight: 850;
+  line-height: var(--kb-typography-label-line-height);
   padding: 0 0.35rem;
 }
 
@@ -2904,18 +2939,27 @@ input[type="radio"] {
 
 .business-request-form {
   display: grid;
-  gap: 0.9rem;
+  gap: var(--kb-component-form-gap);
 }
 
-.business-request-form select,
-.business-request-form textarea {
+.business-request-form
+  :where(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), select, textarea) {
   background: var(--kb-color-surface-raised);
   border: 1px solid var(--kb-color-border-strong);
-  border-radius: var(--kb-shape-control-small);
+  border-radius: var(--kb-component-input-radius);
   color: var(--kb-color-text-primary);
-  min-height: 44px;
-  padding: 0.75rem 0.8rem;
+  min-height: var(--kb-component-input-min-height);
+  padding: 0.8rem var(--kb-component-input-padding-inline);
   width: 100%;
+}
+
+.business-request-form textarea {
+  min-height: var(--kb-component-textarea-min-height);
+}
+
+.business-request-form .form-group {
+  gap: var(--kb-component-form-gap);
+  padding: var(--kb-component-card-padding);
 }
 
 .message-field,
@@ -2924,8 +2968,15 @@ input[type="radio"] {
   border: 1px solid var(--kb-color-border-default);
   border-radius: var(--kb-shape-card);
   display: grid;
-  gap: 0.65rem;
-  padding: 1rem;
+  gap: var(--kb-layout-grid-gap-compact);
+  padding: var(--kb-component-card-padding);
+}
+
+.message-field > span {
+  color: var(--kb-component-form-label-color);
+  font-size: 0.9rem;
+  font-weight: 780;
+  line-height: var(--kb-typography-label-line-height);
 }
 
 .consent-line {
