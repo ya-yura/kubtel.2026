@@ -39,95 +39,97 @@ const channelsPanelId = `${tabsGroup}-channels`;
 const documentsPanelId = `${tabsGroup}-documents`;
 ---
 
-<ServiceTabs
-  items={[
-    { id: "about", label: "Об услуге и подключение" },
-    { id: "channels", label: "Список каналов" },
-    { id: "documents", label: "Приложения и оферты" }
-  ]}
-  group={tabsGroup}
-  selected={selectedTab}
-/>
-<div class="service-tab-panels" data-tab-panel-group={tabsGroup}>
-  <section id={aboutPanelId} data-tab-panel-id="about" class="section-pad service-content-panel">
-    <div class="section-heading">
-      <p class="eyebrow">Как устроено</p>
-      <h2>Телевидение для абонентов домашнего интернета Kubtel</h2>
-      <p>
-        Кубтел ТВ подключается вместе с домашним интернетом — отдельной услугой без интернета его не
-        продаём. Вы выбираете тариф и оборудование, видите цену, а затем оставляете заявку на
-        проверку адреса.
-      </p>
-    </div>
-    <div class="service-benefit-grid">
-      <article>
-        <strong>177 каналов</strong>
-        <p>Новости, кино, спорт, детские и познавательные каналы в одном списке.</p>
-      </article>
-      <article>
-        <strong>Один пакет</strong>
-        <p>Все доступные каналы собраны вместе — не нужно разбираться в десятках пакетов.</p>
-      </article>
-      <article>
-        <strong>На вашем экране</strong>
-        <p>Smart TV, Android TV или приставка — выберите способ просмотра.</p>
-      </article>
-    </div>
-    <div id="tv-connect" class="tv-connect-block">
-      <div class="section-pad service-inline-note">
-        <p class="eyebrow">Тариф и оборудование</p>
-        <h2>Соберите интернет и ТВ — цену увидите сразу</h2>
+<div class="television-content">
+  <ServiceTabs
+    items={[
+      { id: "about", label: "Об услуге и подключение" },
+      { id: "channels", label: "Список каналов" },
+      { id: "documents", label: "Приложения и оферты" }
+    ]}
+    group={tabsGroup}
+    selected={selectedTab}
+  />
+  <div class="service-tab-panels" data-tab-panel-group={tabsGroup}>
+    <section id={aboutPanelId} data-tab-panel-id="about" class="section-pad service-content-panel">
+      <div class="section-heading">
+        <p class="eyebrow">Как устроено</p>
+        <h2>Телевидение для абонентов домашнего интернета Kubtel</h2>
         <p>
-          Выберите скорость, роутер и способ просмотра. В расчёте сразу появятся ежемесячная плата и
-          разовые расходы.
+          Кубтел ТВ подключается вместе с домашним интернетом — отдельной услугой без интернета его
+          не продаём. Вы выбираете тариф и оборудование, видите цену, а затем оставляете заявку на
+          проверку адреса.
         </p>
       </div>
-      <ServiceConfigurator
-        catalog={catalog}
-        tariffs={tariffs}
-        singleService="internet"
-        initialValues={{ "internet-plan": "internet-100", "internet-tv": true }}
-        hideServicePanelTitle
-        configuratorEyebrow="Тариф с ТВ"
-        configuratorTitle="Домашний интернет + ТВ"
-        configuratorDescription="Телевидение доступно абонентам домашнего интернета Kubtel. Выберите подходящий тариф и оборудование — контакты появятся только на последнем шаге."
-        promiseTitle="Сначала увидите цену"
-        promiseDescription="Единый расчёт интернета, ТВ, оборудования и разовых платежей."
-        summaryNote="Окончательная возможность подключения и условия зависят от адреса."
-        leadTitle="Проверим подключение"
-        leadDescription="Оставьте телефон и, если удобно, адрес. Менеджер проверит техническую возможность, уточнит условия и предложит время подключения."
-        leadCta="Проверить подключение"
-        actionResult={actionResult}
-        staticPreview={staticPreview}
-        formAction={formAction}
-        configuratorId={configuratorId}
-      />
-      <section class="section-pad setup-steps">
-        <div class="section-heading">
-          <p class="eyebrow">После расчёта</p>
-          <h2>Как подключиться</h2>
-          <p>Оставьте заявку — остальное уточним по адресу и выбранному оборудованию.</p>
+      <div class="service-benefit-grid">
+        <article>
+          <strong>177 каналов</strong>
+          <p>Новости, кино, спорт, детские и познавательные каналы в одном списке.</p>
+        </article>
+        <article>
+          <strong>Один пакет</strong>
+          <p>Все доступные каналы собраны вместе — не нужно разбираться в десятках пакетов.</p>
+        </article>
+        <article>
+          <strong>На вашем экране</strong>
+          <p>Smart TV, Android TV или приставка — выберите способ просмотра.</p>
+        </article>
+      </div>
+      <div id="tv-connect" class="tv-connect-block">
+        <div class="section-pad service-inline-note">
+          <p class="eyebrow">Тариф и оборудование</p>
+          <h2>Соберите интернет и ТВ — цену увидите сразу</h2>
+          <p>
+            Выберите скорость, роутер и способ просмотра. В расчёте сразу появятся ежемесячная плата
+            и разовые расходы.
+          </p>
         </div>
-        <ol>{catalog.tv.setupSteps.map((step) => <li>{step}</li>)}</ol>
-        <div class="supported-devices">
-          <p class="eyebrow">Совместимые устройства</p>
-          {catalog.tv.supportedDevices.map((device) => <span>{device}</span>)}
-        </div>
-      </section>
-    </div>
-  </section>
-  <section id={channelsPanelId} data-tab-panel-id="channels" class="service-tab-panel-content">
-    <ChannelList groups={catalog.tv.channelGroups} channelCount={catalog.tv.channelCount} />
-  </section>
-  <section id={documentsPanelId} data-tab-panel-id="documents" class="section-pad resource-grid">
-    <div class="section-heading resource-intro">
-      <p class="eyebrow">После подключения</p>
-      <h2>Приложение и документы для установки</h2>
-      <p>
-        Выберите платформу для просмотра и заранее ознакомьтесь с официальными условиями услуги.
-      </p>
-    </div>
-    <AppLinks links={catalog.tv.appLinks} title="Установить Кубтел ТВ" />
-    <OfferLinks links={catalog.tv.offers} title="Документы и условия" />
-  </section>
+        <ServiceConfigurator
+          catalog={catalog}
+          tariffs={tariffs}
+          singleService="internet"
+          initialValues={{ "internet-plan": "internet-100", "internet-tv": true }}
+          hideServicePanelTitle
+          configuratorEyebrow="Тариф с ТВ"
+          configuratorTitle="Домашний интернет + ТВ"
+          configuratorDescription="Телевидение доступно абонентам домашнего интернета Kubtel. Выберите подходящий тариф и оборудование — контакты появятся только на последнем шаге."
+          promiseTitle="Сначала увидите цену"
+          promiseDescription="Единый расчёт интернета, ТВ, оборудования и разовых платежей."
+          summaryNote="Окончательная возможность подключения и условия зависят от адреса."
+          leadTitle="Проверим подключение"
+          leadDescription="Оставьте телефон и, если удобно, адрес. Менеджер проверит техническую возможность, уточнит условия и предложит время подключения."
+          leadCta="Проверить подключение"
+          actionResult={actionResult}
+          staticPreview={staticPreview}
+          formAction={formAction}
+          configuratorId={configuratorId}
+        />
+        <section class="section-pad setup-steps">
+          <div class="section-heading">
+            <p class="eyebrow">После расчёта</p>
+            <h2>Как подключиться</h2>
+            <p>Оставьте заявку — остальное уточним по адресу и выбранному оборудованию.</p>
+          </div>
+          <ol>{catalog.tv.setupSteps.map((step) => <li>{step}</li>)}</ol>
+          <div class="supported-devices">
+            <p class="eyebrow">Совместимые устройства</p>
+            {catalog.tv.supportedDevices.map((device) => <span>{device}</span>)}
+          </div>
+        </section>
+      </div>
+    </section>
+    <section id={channelsPanelId} data-tab-panel-id="channels" class="service-tab-panel-content">
+      <ChannelList groups={catalog.tv.channelGroups} channelCount={catalog.tv.channelCount} />
+    </section>
+    <section id={documentsPanelId} data-tab-panel-id="documents" class="section-pad resource-grid">
+      <div class="section-heading resource-intro">
+        <p class="eyebrow">После подключения</p>
+        <h2>Приложение и документы для установки</h2>
+        <p>
+          Выберите платформу для просмотра и заранее ознакомьтесь с официальными условиями услуги.
+        </p>
+      </div>
+      <AppLinks links={catalog.tv.appLinks} title="Установить Кубтел ТВ" />
+      <OfferLinks links={catalog.tv.offers} title="Документы и условия" />
+    </section>
+  </div>
 </div>

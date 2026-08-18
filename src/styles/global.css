@@ -4146,6 +4146,17 @@ body.is-readable :focus-visible {
   padding-top: 2rem;
 }
 
+.television-content {
+  min-width: 0;
+  width: 100%;
+}
+
+.television-content > .service-tabs,
+.television-content > .service-tab-panels {
+  min-width: 0;
+  width: 100%;
+}
+
 .service-content-panel .section-heading,
 .setup-steps .section-heading {
   margin-bottom: 1rem;

@@ -1,5 +1,6 @@
 ---
 import type { ChannelGroup } from "@models/configurator";
+import { getSitePath } from "@config/site";
 
 type Props = {
   groups: ChannelGroup[];
@@ -17,6 +18,10 @@ function getChannelInitials(name: string): string {
     .join("")
     .toUpperCase();
 }
+
+function getChannelLogoSrc(path: string): string {
+  return path.startsWith("/") ? getSitePath(path) : path;
+}
 ---
 
 <section class="channel-panel" id="channels" data-channel-list>
@@ -31,7 +36,14 @@ function getChannelInitials(name: string): string {
   <div class="channel-tools">
     <label class="channel-search">
       <span>Поиск по каналам</span>
-      <input type="search" placeholder="Например, Матч или кино" data-channel-search />
+      <input
+        type="search"
+        name="channel-search"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="Например, «Матч» или «кино»…"
+        data-channel-search
+      />
     </label>
     <div class="channel-filters" role="group" aria-label="Фильтр каналов">
       <button type="button" class="is-active" data-channel-filter="all">Все каналы</button>
@@ -64,7 +76,20 @@ function getChannelInitials(name: string): string {
                   <summary class="channel-card-summary">
                     <span class="channel-logo">
                       {channel.logo ? (
-                        <img src={channel.logo} alt="" loading="lazy" decoding="async" />
+                        <>
+                          <img
+                            src={getChannelLogoSrc(channel.logo)}
+                            alt=""
+                            width="64"
+                            height="64"
+                            loading="lazy"
+                            decoding="async"
+                            data-channel-logo
+                          />
+                          <span class="channel-logo-fallback" aria-hidden="true" hidden>
+                            {getChannelInitials(channel.name)}
+                          </span>
+                        </>
                       ) : (
                         <span class="channel-logo-fallback" aria-hidden="true">
                           {getChannelInitials(channel.name)}
@@ -101,6 +126,14 @@ function getChannelInitials(name: string): string {
     const result = root.querySelector<HTMLElement>("[data-channel-result]");
     const empty = root.querySelector<HTMLElement>("[data-channel-empty]");
     let activeCategory = "all";
+
+    root.querySelectorAll<HTMLImageElement>("[data-channel-logo]").forEach((image) => {
+      image.addEventListener("error", () => {
+        image.hidden = true;
+        const fallback = image.parentElement?.querySelector<HTMLElement>(".channel-logo-fallback");
+        if (fallback) fallback.hidden = false;
+      });
+    });
 
     const update = () => {
       const query = (search?.value ?? "").trim().toLocaleLowerCase("ru-RU");
@@ -152,10 +185,44 @@ function getChannelInitials(name: string): string {
   .channel-panel .channel-group ul.channel-grid {
     display: grid;
     gap: 0.65rem;
-    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
     list-style: none;
     margin: 0;
     padding: 0;
+  }
+
+  .channel-panel {
+    margin-inline: auto;
+    max-width: var(--kb-layout-content-max-width);
+    padding: clamp(2rem, 4vw, 4rem) var(--kb-layout-page-inline-padding);
+    width: min(100%, var(--kb-layout-content-max-width));
+  }
+
+  .channel-panel .section-heading {
+    max-width: 48rem;
+  }
+
+  .channel-panel .channel-tools {
+    align-items: end;
+    grid-template-columns: minmax(16rem, 0.75fr) minmax(0, 1.25fr);
+  }
+
+  .channel-panel .channel-filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  }
+
+  .channel-panel .channel-filters button {
+    text-align: center;
+    width: 100%;
+  }
+
+  .channel-panel .channel-groups {
+    gap: 1.25rem;
+  }
+
+  .channel-panel .channel-group {
+    padding: 1.25rem;
   }
 
   .channel-panel .channel-grid > li {
@@ -203,17 +270,21 @@ function getChannelInitials(name: string): string {
     border: 1px solid var(--kb-component-card-border);
     border-radius: var(--kb-shape-control-small);
     display: grid;
-    height: 3.1rem;
+    aspect-ratio: 1;
+    height: 4rem;
     justify-items: center;
     overflow: hidden;
-    width: 3.1rem;
+    width: 4rem;
   }
 
   .channel-logo img {
-    height: 100%;
+    display: block;
+    height: auto;
+    max-height: 100%;
+    max-width: 100%;
     object-fit: contain;
     padding: 0.28rem;
-    width: 100%;
+    width: auto;
   }
 
   .channel-logo-fallback {
@@ -266,6 +337,19 @@ function getChannelInitials(name: string): string {
   }
 
   @media (max-width: 719px) {
+    .channel-panel {
+      padding-inline: 1rem;
+      width: 100%;
+    }
+
+    .channel-panel .channel-tools {
+      grid-template-columns: 1fr;
+    }
+
+    .channel-panel .channel-filters {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .channel-panel .channel-group ul.channel-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -278,8 +362,8 @@ function getChannelInitials(name: string): string {
     }
 
     .channel-logo {
-      height: 2.65rem;
-      width: 2.65rem;
+      height: 3.25rem;
+      width: 3.25rem;
     }
   }
 </style>
