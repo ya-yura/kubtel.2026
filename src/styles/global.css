@@ -2728,8 +2728,9 @@ input[type="radio"] {
 }
 
 .business-calculator-form {
+  align-items: start;
   display: grid;
-  gap: var(--kb-component-form-gap);
+  gap: var(--kb-layout-grid-gap-compact);
 }
 
 .business-calculator-form label {
@@ -2738,7 +2739,7 @@ input[type="radio"] {
   border-radius: var(--kb-component-card-radius);
   gap: var(--kb-layout-grid-gap-compact);
   min-width: 0;
-  padding: var(--kb-component-card-padding);
+  padding: var(--kb-layout-control-padding-inline);
   transition:
     background-color var(--kb-motion-interaction-duration) var(--kb-motion-interaction-easing),
     border-color var(--kb-motion-interaction-duration) var(--kb-motion-interaction-easing),
@@ -2867,8 +2868,8 @@ input[type="radio"] {
   border-radius: var(--kb-component-calculator-radius);
   color: var(--kb-color-text-inverse);
   display: grid;
-  gap: var(--kb-component-form-gap);
-  padding: var(--kb-component-card-padding);
+  gap: var(--kb-layout-grid-gap-compact);
+  padding: var(--kb-layout-control-padding-inline);
 }
 
 .business-calculator-result h3 {
@@ -2892,7 +2893,7 @@ input[type="radio"] {
   border-radius: var(--kb-component-card-radius);
   display: grid;
   gap: var(--kb-spacing-1);
-  padding: var(--kb-component-card-padding);
+  padding: var(--kb-layout-control-padding-inline-compact);
 }
 
 .calculator-total-grid span,
