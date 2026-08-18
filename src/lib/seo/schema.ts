@@ -158,7 +158,7 @@ export function buildOfferCatalogSchema(tariffs: Tariff[], pagePath = "/tariffs/
         position: index + 1,
         name: tariff.title,
         description: tariff.benefitDescription,
-        url: getAbsoluteUrl(`/connect/?tariff=${tariff.slug}#callback-request`),
+        url: getAbsoluteUrl("/individual/configurator/?service=internet#configurator"),
         price: price.total,
         priceCurrency: SITE.currency,
         availability,

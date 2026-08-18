@@ -46,7 +46,7 @@ const tariffItems: SearchItem[] = tariffs.map((tariff) => ({
 
 const serviceItems: SearchItem[] = services.map((service) => ({
   title: service.title,
-  href: `/connect/?service=${service.slug}#callback-request`,
+  href: `/individual/configurator/?service=${service.slug}#configurator`,
   category: "Домашняя услуга",
   summary: service.shortDescription,
   keywords: [

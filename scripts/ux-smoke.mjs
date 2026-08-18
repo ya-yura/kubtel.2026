@@ -141,7 +141,7 @@ try {
 
   await checkRoute(client, sessionId, "/", "Домашний интернет");
   await checkRoute(client, sessionId, "/tariffs/", "Соберите свои услуги");
-  await checkRoute(client, sessionId, "/connect/", "Заявка на подключение");
+  await checkRoute(client, sessionId, "/connect/", "Соберите свои услуги");
   await checkRoute(client, sessionId, "/support/", "Поддержка");
   await checkRoute(client, sessionId, "/contacts/", "Контакты");
   await checkRoute(client, sessionId, "/about/", "Kubtel");
@@ -893,7 +893,7 @@ async function checkBusinessInternetProfiles(client, sessionId) {
 
 async function submitLeadForm(client, sessionId) {
   await setViewport(client, sessionId, desktopViewport());
-  await navigate(client, sessionId, "/connect/");
+  await navigate(client, sessionId, "/individual/configurator/");
   await delay(1300);
   const load = client.waitForEvent("Page.loadEventFired", { sessionId, timeoutMs: 15000 });
   await evaluate(

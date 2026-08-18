@@ -31,7 +31,7 @@ describe("runPrelaunchAudit", () => {
       routes: sitemapRoutes,
       formPages: [
         { path: "/", isOnDemand: true, hasActionResult: true },
-        { path: "/connect/", isOnDemand: true, hasActionResult: true }
+        { path: "/individual/configurator/", isOnDemand: true, hasActionResult: true }
       ],
       env: {},
       legal: {
@@ -63,7 +63,7 @@ describe("runPrelaunchAudit", () => {
       coverageAreas,
       promos,
       routes: sitemapRoutes,
-      formPages: [{ path: "/connect/", isOnDemand: false, hasActionResult: false }],
+      formPages: [{ path: "/individual/configurator/", isOnDemand: false, hasActionResult: false }],
       env: {},
       legal: {
         consentTextConfirmed: false,

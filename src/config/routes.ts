@@ -20,7 +20,6 @@ const lastModified = "2026-05-08";
 export const mainNavItems: NavItem[] = [
   { href: "/individual/configurator/", label: "Услуги" },
   { href: "/news/", label: "Новости" },
-  { href: "/connect/", label: "Подключение" },
   { href: "/payment/", label: "Оплата" },
   { href: "/devices/", label: "Устройства" },
   { href: "/business/", label: "Бизнесу" },
@@ -106,16 +105,6 @@ export const sitemapRoutes: SitemapRoute[] = [
       "Онлайн-просмотр, архив, камеры, приложения и публичная оферта Kubtel Watcher для физических лиц.",
     changeFrequency: "weekly",
     priority: 0.88,
-    lastModified
-  },
-  {
-    path: "/connect/",
-    label: "Подключение",
-    title: "Заявка на подключение",
-    description:
-      "Форма заявки Kubtel: населённый пункт, адрес, тариф и телефон для связи со специалистом.",
-    changeFrequency: "weekly",
-    priority: 0.9,
     lastModified
   },
   {

@@ -21,7 +21,9 @@ const quietSections = [
 const shouldRender = !quietSections.some((path) => currentPath.startsWith(path));
 const label = isBusinessPath ? "Оставить заявку" : "Проверить подключение";
 const hint = isBusinessPath ? "Заявка для бизнеса" : "Адрес и условия уточним по заявке";
-const href = isBusinessPath ? "/business/request/?segment=legal" : "/connect/#callback-request";
+const href = isBusinessPath
+  ? "/business/request/?segment=legal"
+  : "/individual/configurator/#configurator";
 const actionLabel = isBusinessPath ? "Оставить заявку" : "Проверить";
 ---
 

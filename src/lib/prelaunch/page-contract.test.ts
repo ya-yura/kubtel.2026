@@ -2,7 +2,9 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-const pages = [["src/pages/connect.astro", "/connect/"]] as const;
+const pages = [
+  ["src/pages/individual/configurator/index.astro", "/individual/configurator/"]
+] as const;
 
 function readProjectFile(path: string): string {
   return readFileSync(fileURLToPath(new URL(`../../../${path}`, import.meta.url)), "utf8");
@@ -28,6 +30,16 @@ describe("lead form page contract", () => {
 describe("legacy tariffs route contract", () => {
   it("keeps old tariff links pointed at the shared residential configurator", () => {
     const source = readProjectFile("src/pages/tariffs/index.astro");
+
+    expect(source).toContain("export const prerender = false");
+    expect(source).toContain("Astro.redirect");
+    expect(source).toContain("/individual/configurator/");
+  });
+});
+
+describe("legacy connect route contract", () => {
+  it("keeps old connection links pointed at the shared residential configurator", () => {
+    const source = readProjectFile("src/pages/connect.astro");
 
     expect(source).toContain("export const prerender = false");
     expect(source).toContain("Astro.redirect");

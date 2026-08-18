@@ -17,7 +17,7 @@ const deviceGroups = [
       "количество телефонов, ТВ и рабочих мест"
     ],
     terms: "Модель, наличие и формат аренды или покупки сообщает менеджер после подбора.",
-    href: "/connect/?service=internet#callback-request"
+    href: "/individual/configurator/?service=internet#configurator"
   },
   {
     title: "ТВ-приставки",
@@ -31,7 +31,7 @@ const deviceGroups = [
       "номер договора, если ТВ добавляет действующий абонент"
     ],
     terms: "Модель, наличие и формат оплаты сообщаются вместе с условиями подключения ТВ.",
-    href: "/connect/?service=tv#callback-request"
+    href: "/individual/configurator/?service=tv#configurator"
   },
   {
     title: "Smart TV и приложения",
@@ -156,7 +156,7 @@ const deviceGroups = [
         желаемый срок запуска.
       </p>
       <div class="button-row">
-        <a class="card-action" href={getSitePath("/connect/#callback-request")}
+        <a class="card-action" href={getSitePath("/individual/configurator/#configurator")}
           >Домашнее подключение</a
         >
         <a class="business-link" href={getSitePath("/business/request/")}>Заявка для бизнеса</a>
@@ -171,8 +171,9 @@ const deviceGroups = [
         заполнял лишнюю заявку на подключение.
       </p>
       <div class="button-row">
-        <a class="card-action" href={getSitePath("/connect/?service=tv#callback-request")}
-          >Подключить ТВ</a
+        <a
+          class="card-action"
+          href={getSitePath("/individual/configurator/?service=tv#configurator")}>Подключить ТВ</a
         >
         <a class="business-link" href={getSitePath("/contacts/")}>Обратиться в поддержку</a>
       </div>
