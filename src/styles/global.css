@@ -2719,6 +2719,7 @@ input[type="radio"] {
 }
 
 .business-calculator {
+  align-items: start;
   background: var(--kb-component-calculator-background);
   border: 1px solid var(--kb-component-calculator-border);
   border-radius: var(--kb-component-calculator-radius);
@@ -2729,6 +2730,7 @@ input[type="radio"] {
 
 .business-calculator-form {
   align-items: start;
+  align-content: start;
   display: grid;
   gap: var(--kb-layout-grid-gap-compact);
 }
