@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import PromoImage from "@components/ui/PromoImage.astro";
+import { getSitePath } from "@config/site";
 import { promoVisuals } from "@lib/visuals";
 ---
 
@@ -37,5 +38,13 @@ import { promoVisuals } from "@lib/visuals";
         а&nbsp;потому что обещанное правда происходит.
       </p>
     </div>
+  </section>
+  <section class="section-pad pathway-grid" aria-labelledby="about-documents-title">
+    <article>
+      <span>Документы</span>
+      <h2 id="about-documents-title">Условия и реквизиты</h2>
+      <p>Юридические данные, условия связи и политика обработки персональных данных.</p>
+      <a href={getSitePath("/documents/")}>Документы</a>
+    </article>
   </section>
 </BaseLayout>

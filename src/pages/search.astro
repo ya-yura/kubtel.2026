@@ -60,7 +60,7 @@ const serviceItems: SearchItem[] = services.map((service) => ({
 
 const faqSearchItems: SearchItem[] = faqItems.map((item) => ({
   title: item.question,
-  href: "/support/",
+  href: "/contacts/",
   category: "FAQ",
   summary: item.answer,
   keywords: [item.question, item.answer, item.category, ...item.relatedServices]

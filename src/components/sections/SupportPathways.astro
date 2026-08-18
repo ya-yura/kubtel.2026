@@ -1,5 +1,5 @@
 ---
-import { getPhoneHref, getSitePath, SITE } from "@config/site";
+import { getPhoneHref, SITE } from "@config/site";
 import SectionHeading from "@components/ui/SectionHeading.astro";
 
 const chatLinks = [
@@ -43,25 +43,5 @@ const chatLinks = [
         </article>
       )
     }
-  </div>
-  <div class="pathway-grid support-faq-grid">
-    <article>
-      <span>Оплата</span>
-      <h3>Баланс и платежи</h3>
-      <p>Переход к оплате и реквизитам вынесен в отдельный раздел.</p>
-      <a href={getSitePath("/payment/")}>Оплатить</a>
-    </article>
-    <article>
-      <span>Пауза</span>
-      <h3>Добровольная блокировка</h3>
-      <p>Можно сохранить баланс, когда интернет временно не нужен.</p>
-      <a href="#faq">Открыть FAQ</a>
-    </article>
-    <article>
-      <span>Документы</span>
-      <h3>Условия и реквизиты</h3>
-      <p>Юридические данные, условия связи и политика персональных данных.</p>
-      <a href={getSitePath("/documents/")}>Документы</a>
-    </article>
   </div>
 </section>

@@ -395,9 +395,9 @@ summary:focus-visible {
   align-items: center;
   background: var(--kb-component-header-background);
   border-bottom: 1px solid var(--kb-component-header-border);
-  display: flex;
+  display: grid;
   gap: 1rem;
-  justify-content: space-between;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   min-height: var(--kb-component-header-height);
   padding: 0.75rem 1rem;
   position: sticky;
@@ -423,6 +423,14 @@ summary:focus-visible {
 .site-nav {
   display: none;
   gap: 0.25rem;
+  min-width: 0;
+}
+
+.site-header-tools {
+  align-items: center;
+  display: flex;
+  gap: 0.65rem;
+  justify-content: flex-end;
   min-width: 0;
 }
 
@@ -629,11 +637,6 @@ summary:focus-visible {
 .header-readability-toggle {
   min-width: 46px;
   padding-inline: 0.72rem;
-}
-
-.is-homepage .header-account,
-.is-homepage .header-action {
-  display: none;
 }
 
 .homepage-hero {
@@ -871,6 +874,63 @@ body.is-readable .homepage-quick-action--primary strong {
 .homepage-hero__visual .promo-visual {
   box-shadow: var(--kb-elevation-floating);
   min-height: 20rem;
+}
+
+.homepage-news-preview {
+  background: var(--kb-color-surface-raised);
+  border: 1px solid var(--kb-color-border-default);
+  border-radius: var(--kb-shape-panel);
+  display: grid;
+  gap: 0.8rem;
+  padding: 1rem;
+}
+
+.homepage-news-preview__head {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.homepage-news-preview__head .eyebrow {
+  margin-bottom: 0;
+}
+
+.homepage-news-preview__head a {
+  color: var(--kb-color-action-primary-background-active);
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+  white-space: nowrap;
+}
+
+.homepage-news-preview__list {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.homepage-news-preview__item {
+  border-top: 1px solid var(--kb-color-border-default);
+  display: grid;
+  gap: 0.2rem;
+  padding-top: 0.6rem;
+}
+
+.homepage-news-preview__item time {
+  color: var(--kb-color-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 750;
+}
+
+.homepage-news-preview__item strong {
+  color: var(--kb-color-text-primary);
+  display: -webkit-box;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 label {
@@ -3591,8 +3651,18 @@ body.is-readable :focus-visible {
 }
 
 @media (min-width: 1120px) {
+  .site-header {
+    grid-template-columns: auto minmax(0, 1fr) 28rem;
+  }
+
   .site-nav {
     display: flex;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .site-header-tools {
+    min-width: 28rem;
   }
 
   .site-nav a:nth-child(n + 8) {
@@ -3806,6 +3876,7 @@ body.is-readable :focus-visible {
 
 .service-tabs button,
 .configurator-service-tabs button,
+.configurator-service-tabs a,
 .channel-filters button {
   background: transparent;
   border: var(--kb-stroke-default) solid transparent;
@@ -3839,6 +3910,8 @@ body.is-readable :focus-visible {
 .configurator-service-tabs button:hover,
 .configurator-service-tabs button:focus-visible,
 .configurator-service-tabs button[aria-selected="true"],
+.configurator-service-tabs a:hover,
+.configurator-service-tabs a:focus-visible,
 .channel-filters button:hover,
 .channel-filters button:focus-visible,
 .channel-filters button.is-active {
@@ -4222,7 +4295,8 @@ body.is-readable :focus-visible {
   margin-bottom: 1rem;
 }
 
-.configurator-service-tabs button {
+.configurator-service-tabs button,
+.configurator-service-tabs a {
   align-items: start;
   background: var(--kb-color-overlay-white055);
   border-color: var(--kb-component-card-border);
@@ -4233,13 +4307,15 @@ body.is-readable :focus-visible {
   white-space: normal;
 }
 
-.configurator-service-tabs button span {
+.configurator-service-tabs button span,
+.configurator-service-tabs a span {
   color: var(--kb-color-text-secondary);
   font-size: 0.72rem;
   text-transform: uppercase;
 }
 
-.configurator-service-tabs button strong {
+.configurator-service-tabs button strong,
+.configurator-service-tabs a strong {
   color: var(--kb-color-text-primary);
   font-family: var(--kb-typography-display-family);
   font-size: 1rem;

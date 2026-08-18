@@ -3,6 +3,7 @@ import PromoImage from "@components/ui/PromoImage.astro";
 import SeasonalDecorations from "@components/layout/SeasonalDecorations.astro";
 import { HOMEPAGE_CONFIG, isFeatureEnabled } from "@config/homepage";
 import { getPhoneHref, getSitePath, SITE } from "@config/site";
+import { officialNews } from "@content/official-news";
 import { promoVisuals } from "@lib/visuals";
 
 const showHeroVisual = isFeatureEnabled(HOMEPAGE_CONFIG.hero.mode);
@@ -89,6 +90,27 @@ const showHeroVisual = isFeatureEnabled(HOMEPAGE_CONFIG.hero.mode);
           loading="eager"
           fetchpriority="high"
         />
+        <section class="homepage-news-preview" aria-labelledby="homepage-news-title">
+          <div class="homepage-news-preview__head">
+            <p class="eyebrow" id="homepage-news-title">
+              Новости
+            </p>
+            <a href={getSitePath("/news/")}>Все новости</a>
+          </div>
+          <div class="homepage-news-preview__list">
+            {officialNews.slice(0, 3).map((item) => (
+              <a
+                class="homepage-news-preview__item"
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <time>{item.publishedLabel}</time>
+                <strong>{item.title}</strong>
+              </a>
+            ))}
+          </div>
+        </section>
       </div>
     )
   }

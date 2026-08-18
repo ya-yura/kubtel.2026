@@ -1,16 +1,16 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import FaqList from "@components/sections/FaqList.astro";
+import SupportPathways from "@components/sections/SupportPathways.astro";
 import { getPhoneHref, getSitePath, SITE } from "@config/site";
+import { getFaqItems } from "@lib/content";
 
-const chatLinks = [
-  SITE.maxChatUrl ? { label: "MAX", href: SITE.maxChatUrl } : null,
-  SITE.vkChatUrl ? { label: "VK", href: SITE.vkChatUrl } : null
-].filter((item): item is { label: string; href: string } => Boolean(item));
+const faqItems = await getFaqItems();
 ---
 
 <BaseLayout
-  title="Контакты для подключения"
-  description={"Основные сценарии обращения в\u00a0Kubtel: оставить телефон для подключения, обратиться в\u00a0поддержку или уточнить контакты компании."}
+  title="Контакты Kubtel"
+  description={"Телефоны, почта, адрес, чаты и ответы на частые вопросы Kubtel в одном разделе."}
   canonicalPath="/contacts/"
   pageType="ContactPage"
 >
@@ -18,8 +18,8 @@ const chatLinks = [
     <p class="eyebrow">Контакты</p>
     <h1>Телефоны, почта, адрес и чаты Kubtel</h1>
     <p>
-      Страница для тех, кто хочет сам позвонить, написать или найти реквизиты компании. Заявка на
-      подключение остаётся одним из сценариев, но не заменяет контакты.
+      Все способы связаться с Kubtel и получить помощь собраны здесь: подключение, техническая
+      поддержка, чаты и ответы на частые вопросы.
     </p>
   </section>
   <section class="section-pad contact-cards" aria-label="Основные сценарии обращения">
@@ -30,47 +30,12 @@ const chatLinks = [
       <a class="card-action" href={getPhoneHref(SITE.salesPhone)}>Позвонить</a>
     </article>
     <article class="contact-card">
-      <span>Поддержка</span>
-      <h2>{SITE.supportDirectPhone}</h2>
-      <p>Технические вопросы, аварии, начисления, состояние услуги и помощь абонентам.</p>
-      <div class="button-row">
-        <a class="card-action" href={getPhoneHref(SITE.supportDirectPhone)}>Позвонить</a>
-        <a class="business-link" href={`mailto:${SITE.supportEmail}`}>{SITE.supportEmail}</a>
-      </div>
-    </article>
-    {
-      chatLinks.length > 0 && (
-        <article class="contact-card" id="messengers">
-          <span>Чаты</span>
-          <h2>Официальные каналы</h2>
-          <p>Переход откроется в выбранном приложении или браузере.</p>
-          <div class="button-row">
-            {chatLinks.map((chat) => (
-              <a class="card-action" href={chat.href} target="_blank" rel="noopener noreferrer">
-                {chat.label}
-              </a>
-            ))}
-          </div>
-        </article>
-      )
-    }
-    <article class="contact-card">
       <span>Офис</span>
       <h2>{SITE.officeAddress}</h2>
       <p>Почта компании: <a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
       <a class="card-action" href={getSitePath("/about/")}>О компании</a>
     </article>
-    <article class="contact-card">
-      <span>Реквизиты</span>
-      <h2>{SITE.legalName}</h2>
-      <p>ИНН {SITE.inn}, ОГРН {SITE.ogrn}. Полный блок реквизитов и документы вынесены отдельно.</p>
-      <a class="card-action" href={getSitePath("/documents/#requisites")}>Документы</a>
-    </article>
-    <article class="contact-card">
-      <span>Оплата</span>
-      <h2>Оплата физлиц и ИП</h2>
-      <p>Онлайн-оплата, квитанция, банковские реквизиты и условия возврата.</p>
-      <a class="card-action" href={getSitePath("/payment/")}>Способы оплаты</a>
-    </article>
   </section>
+  <SupportPathways />
+  <FaqList items={faqItems} />
 </BaseLayout>

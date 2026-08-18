@@ -19,13 +19,12 @@ const lastModified = "2026-05-08";
 
 export const mainNavItems: NavItem[] = [
   { href: "/individual/configurator/", label: "Услуги" },
-  { href: "/individual/tv/", label: "ТВ" },
   { href: "/tariffs/", label: "Тарифы" },
+  { href: "/news/", label: "Новости" },
   { href: "/connect/", label: "Подключение" },
   { href: "/payment/", label: "Оплата" },
   { href: "/devices/", label: "Устройства" },
   { href: "/business/", label: "Бизнесу" },
-  { href: "/support/", label: "Поддержка" },
   { href: "/search/", label: "Поиск" },
   { href: "/about/", label: "О компании" },
   { href: "/careers/", label: "Вакансии" },
