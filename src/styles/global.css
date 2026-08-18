@@ -4714,6 +4714,14 @@ body.is-readable :focus-visible {
   gap: 1rem;
 }
 
+.configurator-workspace.is-television {
+  grid-template-columns: 1fr;
+}
+
+.configurator-workspace.is-television .configurator-service-panels {
+  display: contents;
+}
+
 .configurator-service-panel,
 .configurator-summary,
 .configurator-lead-form {
@@ -4726,6 +4734,14 @@ body.is-readable :focus-visible {
 .configurator-service-panel {
   display: grid;
   gap: 1rem;
+}
+
+.configurator-television-panel {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  grid-column: 1 / -1;
+  padding: 0;
 }
 
 .configurator-service-intro h3,

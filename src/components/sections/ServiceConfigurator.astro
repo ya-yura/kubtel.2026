@@ -1,5 +1,5 @@
 ---
-import { getSitePath, SITE } from "@config/site";
+import { SITE } from "@config/site";
 import { formatRubles } from "@lib/format";
 import {
   calculateConfiguratorPrice,
@@ -7,6 +7,7 @@ import {
 } from "@lib/configurator/calculator";
 import AppLinks from "@components/sections/AppLinks.astro";
 import ConfiguratorField from "@components/ui/ConfiguratorField.astro";
+import TelevisionContent from "@components/sections/TelevisionContent.astro";
 import type {
   ConfiguratorCatalog,
   ConfiguratorField as ConfiguratorFieldModel,
@@ -37,6 +38,8 @@ type Props = {
   initialValues?: Record<string, ConfiguratorFieldValue>;
   tariffs?: Tariff[];
   serviceLink?: ConfiguratorServiceLink | null;
+  includeTelevision?: boolean;
+  configuratorId?: string;
   hideServicePanelTitle?: boolean;
   configuratorEyebrow?: string;
   configuratorTitle?: string;
@@ -59,6 +62,8 @@ const {
   initialValues = {},
   tariffs = [],
   serviceLink = null,
+  includeTelevision = false,
+  configuratorId = "configurator",
   hideServicePanelTitle = false,
   configuratorEyebrow = "Подобрать решение",
   configuratorTitle = catalog.title,
@@ -75,6 +80,7 @@ const services = singleService
   ? catalog.services.filter((service) => service.id === singleService)
   : catalog.services;
 const defaultService = services.find((service) => service.id === initialService) ?? services[0];
+const hasTelevisionPanel = includeTelevision && Boolean(serviceLink);
 const actionData = actionResult?.data;
 const actionError = actionResult?.error;
 const formStartedAt = Date.now().toString();
@@ -203,7 +209,7 @@ function getDefaultValues(
 
 <section
   class="service-configurator section-pad"
-  id="configurator"
+  id={configuratorId}
   data-service-configurator
   data-static-preview={staticPreview ? "true" : undefined}
   data-initial-service={defaultService?.id}
@@ -236,10 +242,16 @@ function getDefaultValues(
           </button>
         ))}
         {serviceLink && (
-          <a class="configurator-service-tab" href={getSitePath(serviceLink.href)}>
+          <button
+            class="configurator-service-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            data-config-service-tab="tv"
+          >
             <span>{serviceLink.eyebrow}</span>
             <strong>{serviceLink.label}</strong>
-          </a>
+          </button>
         )}
       </div>
     )
@@ -324,6 +336,25 @@ function getDefaultValues(
           </div>
         ))
       }
+      {
+        hasTelevisionPanel && (
+          <div
+            class="configurator-service-panel configurator-television-panel"
+            data-config-service-panel="tv"
+            hidden
+          >
+            <TelevisionContent
+              catalog={catalog}
+              tariffs={tariffs}
+              tabsGroup={`${configuratorId}-tv`}
+              actionResult={actionResult}
+              staticPreview={staticPreview}
+              formAction={formAction}
+              configuratorId={`${configuratorId}-tv-configurator`}
+            />
+          </div>
+        )
+      }
     </div>
 
     <aside class="configurator-summary" aria-label="Расчёт стоимости">
@@ -365,9 +396,9 @@ function getDefaultValues(
 
   <form
     class="configurator-lead-form"
-    id="configurator-lead-form"
+    id={`${configuratorId}-lead-form`}
     method="post"
-    action={staticPreview ? "#configurator" : formAction}
+    action={staticPreview ? `#${configuratorId}` : formAction}
     data-configurator-lead-form
     hidden={!actionData && !actionError}
   >
@@ -380,7 +411,7 @@ function getDefaultValues(
       actionData && (
         <div
           class="form-status is-success"
-          id="configurator-lead-status"
+          id={`${configuratorId}-lead-status`}
           role="status"
           tabindex="-1"
         >
@@ -395,7 +426,12 @@ function getDefaultValues(
     }
     {
       actionError && (
-        <div class="form-status is-error" id="configurator-lead-status" role="alert" tabindex="-1">
+        <div
+          class="form-status is-error"
+          id={`${configuratorId}-lead-status`}
+          role="alert"
+          tabindex="-1"
+        >
           <strong>Заявка не отправлена</strong>
           <span>{actionError.message ?? "Проверьте телефон и согласие на обработку данных."}</span>
         </div>
@@ -474,17 +510,25 @@ function getDefaultValues(
       root.querySelectorAll<HTMLButtonElement>("[data-config-service-tab]")
     );
     const servicePanels = Array.from(
-      root.querySelectorAll<HTMLElement>("[data-config-service-panel]")
+      root.querySelectorAll<HTMLElement>(
+        ".configurator-service-panels > [data-config-service-panel]"
+      )
     );
-    const monthlyNode = root.querySelector<HTMLElement>("[data-config-monthly]");
-    const onceNode = root.querySelector<HTMLElement>("[data-config-once]");
-    const titleNode = root.querySelector<HTMLElement>("[data-config-service-title]");
-    const lineList = root.querySelector<HTMLElement>("[data-config-summary-lines]");
-    const serviceInput = root.querySelector<HTMLInputElement>("[data-config-service-input]");
-    const configurationInput = root.querySelector<HTMLInputElement>(
+    const summaryPanel = root.querySelector<HTMLElement>(
+      ".configurator-workspace > .configurator-summary"
+    );
+    const workspace = root.querySelector<HTMLElement>(".configurator-workspace");
+    const monthlyNode = summaryPanel?.querySelector<HTMLElement>("[data-config-monthly]");
+    const onceNode = summaryPanel?.querySelector<HTMLElement>("[data-config-once]");
+    const titleNode = summaryPanel?.querySelector<HTMLElement>("[data-config-service-title]");
+    const lineList = summaryPanel?.querySelector<HTMLElement>("[data-config-summary-lines]");
+    const leadForm = root.querySelector<HTMLFormElement>(
+      ":scope > form[data-configurator-lead-form]"
+    );
+    const serviceInput = leadForm?.querySelector<HTMLInputElement>("[data-config-service-input]");
+    const configurationInput = leadForm?.querySelector<HTMLInputElement>(
       "[data-config-configuration-input]"
     );
-    const leadForm = root.querySelector<HTMLFormElement>("[data-configurator-lead-form]");
     let activeService =
       root.dataset.initialService ?? servicePanels[0]?.dataset.configServicePanel ?? "";
 
@@ -566,6 +610,12 @@ function getDefaultValues(
     };
 
     const calculate = () => {
+      if (activeService === "tv") {
+        if (summaryPanel) summaryPanel.hidden = true;
+        return;
+      }
+
+      if (summaryPanel) summaryPanel.hidden = false;
       const panel = servicePanels.find((item) => item.dataset.configServicePanel === activeService);
       if (!panel || !catalog) return;
       const service = catalog.services.find((item: any) => item.id === activeService);
@@ -724,6 +774,8 @@ function getDefaultValues(
       servicePanels.forEach((panel) => {
         panel.hidden = panel.dataset.configServicePanel !== serviceId;
       });
+      workspace?.classList.toggle("is-television", serviceId === "tv");
+      if (serviceId === "tv" && leadForm) leadForm.hidden = true;
       calculate();
     };
 
@@ -767,27 +819,39 @@ function getDefaultValues(
       calculate();
     };
 
-    root
-      .querySelectorAll<HTMLInputElement | HTMLSelectElement>("[data-config-field]")
+    const configurablePanels = servicePanels.filter(
+      (panel) => panel.dataset.configServicePanel !== "tv"
+    );
+
+    configurablePanels
+      .flatMap((panel) =>
+        Array.from(
+          panel.querySelectorAll<HTMLInputElement | HTMLSelectElement>("[data-config-field]")
+        )
+      )
       .forEach((field) => {
         field.addEventListener("input", () => handleFieldChange(field));
         field.addEventListener("change", () => handleFieldChange(field));
       });
-    root.querySelectorAll<HTMLButtonElement>("[data-config-step]").forEach((button) => {
-      button.addEventListener("click", () => {
-        const input = button.parentElement?.querySelector<HTMLInputElement>(
-          "input[data-config-field]"
-        );
-        if (!input) return;
-        const step = Number(button.dataset.configStep ?? 1);
-        const next = Math.min(
-          Number(input.max || Infinity),
-          Math.max(Number(input.min || 0), Number(input.value || 0) + step)
-        );
-        input.value = String(next);
-        input.dispatchEvent(new Event("input", { bubbles: true }));
+    configurablePanels
+      .flatMap((panel) =>
+        Array.from(panel.querySelectorAll<HTMLButtonElement>("[data-config-step]"))
+      )
+      .forEach((button) => {
+        button.addEventListener("click", () => {
+          const input = button.parentElement?.querySelector<HTMLInputElement>(
+            "input[data-config-field]"
+          );
+          if (!input) return;
+          const step = Number(button.dataset.configStep ?? 1);
+          const next = Math.min(
+            Number(input.max || Infinity),
+            Math.max(Number(input.min || 0), Number(input.value || 0) + step)
+          );
+          input.value = String(next);
+          input.dispatchEvent(new Event("input", { bubbles: true }));
+        });
       });
-    });
 
     root
       .querySelector<HTMLButtonElement>("[data-open-configurator-lead]")
