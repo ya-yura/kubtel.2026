@@ -130,27 +130,15 @@ const showHeroVisual = isFeatureEnabled(HOMEPAGE_CONFIG.hero.mode);
                 rel="noopener noreferrer"
                 aria-label={`${social.label}: ${social.description}`}
               >
-                <span
-                  class:list={[
-                    "homepage-social-link__mark",
-                    `homepage-social-link__mark--${social.id}`
-                  ]}
-                  aria-hidden="true"
-                >
-                  {social.id === "vk" ? (
-                    <svg viewBox="0 0 48 48" focusable="false">
-                      <text x="24" y="31" text-anchor="middle">
-                        vk
-                      </text>
-                    </svg>
-                  ) : (
-                    <svg viewBox="0 0 48 48" focusable="false">
-                      <path d="M10 16a7 7 0 0 1 7-7h14a7 7 0 0 1 7 7v8a7 7 0 0 1-7 7h-9l-6 5v-5h-1a7 7 0 0 1-7-7z" />
-                      <circle cx="19" cy="20" r="2" />
-                      <circle cx="24" cy="20" r="2" />
-                      <circle cx="29" cy="20" r="2" />
-                    </svg>
-                  )}
+                <span class="homepage-social-link__mark" aria-hidden="true">
+                  <img
+                    src={getSitePath(`/assets/social/${social.id}.svg`)}
+                    alt=""
+                    width="48"
+                    height="48"
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </span>
                 <span class="homepage-social-link__copy">
                   <strong>{social.label}</strong>
