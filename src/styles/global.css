@@ -2979,10 +2979,6 @@ input[type="radio"] {
   margin-bottom: 0;
 }
 
-.business-calculator-result .service-category {
-  justify-self: start;
-}
-
 .calculator-total-grid {
   display: grid;
   gap: var(--kb-layout-grid-gap-compact);
@@ -3253,13 +3249,6 @@ input[type="radio"] {
 
 .career-vacancy-card p {
   margin-bottom: 0;
-}
-
-.career-vacancy-card > .service-category,
-.career-vacancy-card > div:first-child > .service-category {
-  justify-self: start;
-  max-width: 100%;
-  width: fit-content;
 }
 
 .career-vacancy-meta {
@@ -4414,7 +4403,10 @@ body.is-readable :focus-visible {
   color: var(--kb-color-action-primary-background);
   font-size: 0.76rem;
   font-weight: 850;
+  justify-self: start;
+  max-width: 100%;
   padding: 0.38rem 0.62rem;
+  width: fit-content;
 }
 
 .resource-grid {
