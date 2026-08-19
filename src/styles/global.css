@@ -615,6 +615,93 @@ summary:focus-visible {
   white-space: nowrap;
 }
 
+.header-location summary {
+  background: var(--kb-color-surface-section);
+  border: 1px solid var(--kb-color-border-default);
+  border-radius: var(--kb-shape-control-small);
+  gap: var(--kb-layout-control-gap);
+  min-height: var(--kb-layout-touch-target-min);
+  padding: var(--kb-layout-control-gap) var(--kb-layout-control-padding-inline-compact);
+  transition:
+    background-color var(--kb-motion-duration-fast) var(--kb-motion-easing-standard),
+    border-color var(--kb-motion-duration-fast) var(--kb-motion-easing-standard),
+    box-shadow var(--kb-motion-duration-fast) var(--kb-motion-easing-standard);
+}
+
+.header-location summary:hover,
+.header-location[open] summary {
+  background: var(--kb-color-surface-warm);
+  border-color: var(--kb-color-overlay-accent28);
+  box-shadow: var(--kb-elevation-field-inset);
+}
+
+.header-location-mark {
+  background: var(--kb-color-surface-warm);
+  border: 1px solid var(--kb-color-overlay-accent28);
+  border-radius: var(--kb-shape-pill);
+  display: inline-block;
+  height: 1.55rem;
+  position: relative;
+  width: 1.55rem;
+}
+
+.header-location-mark::before {
+  border: 1.5px solid var(--kb-color-action-primary-background);
+  border-radius: 50% 50% 50% 0;
+  content: "";
+  height: 0.55rem;
+  left: 0.42rem;
+  position: absolute;
+  top: 0.34rem;
+  transform: rotate(-45deg);
+  width: 0.55rem;
+}
+
+.header-location-mark::after {
+  background: var(--kb-color-action-primary-background);
+  border-radius: var(--kb-shape-pill);
+  content: "";
+  height: 0.2rem;
+  left: 0.6rem;
+  position: absolute;
+  top: 0.52rem;
+  width: 0.2rem;
+}
+
+.header-location-copy {
+  display: grid;
+  gap: var(--kb-layout-control-gap);
+  min-width: 0;
+  text-align: left;
+}
+
+.header-location-copy small {
+  color: var(--kb-color-text-subtle);
+  font-size: 0.64rem;
+  font-weight: 760;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.header-location-copy strong {
+  color: var(--kb-color-text-primary);
+  font-size: 0.78rem;
+  font-weight: 820;
+  line-height: 1;
+  max-width: 8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-location-caret {
+  border-bottom: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+  height: 0.42rem;
+  margin-left: var(--kb-layout-control-gap);
+  transform: rotate(45deg) translateY(-0.12rem);
+  width: 0.42rem;
+}
+
 .header-location summary::-webkit-details-marker,
 .mobile-nav-location summary::-webkit-details-marker {
   display: none;
