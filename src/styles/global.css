@@ -597,6 +597,88 @@ summary:focus-visible {
   white-space: nowrap;
 }
 
+.header-location {
+  display: none;
+  position: relative;
+}
+
+.header-location summary,
+.mobile-nav-location summary {
+  align-items: center;
+  color: var(--kb-color-text-secondary);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 0.82rem;
+  font-weight: 760;
+  gap: var(--kb-layout-control-gap);
+  list-style: none;
+  white-space: nowrap;
+}
+
+.header-location summary::-webkit-details-marker,
+.mobile-nav-location summary::-webkit-details-marker {
+  display: none;
+}
+
+.header-location summary:hover,
+.header-location[open] summary,
+.mobile-nav-location summary:hover,
+.mobile-nav-location[open] summary {
+  color: var(--kb-color-text-primary);
+}
+
+.header-location-popover {
+  background: var(--kb-color-overlay-white98);
+  border: 1px solid var(--kb-color-border-default);
+  border-radius: var(--kb-shape-card);
+  box-shadow: var(--kb-elevation-floating);
+  min-width: 12rem;
+  padding: var(--kb-layout-control-padding-inline-compact);
+  position: absolute;
+  right: 0;
+  top: calc(100% + var(--kb-layout-control-gap));
+  z-index: var(--kb-layer-menu);
+}
+
+.header-location-popover strong {
+  color: var(--kb-color-text-primary);
+  display: block;
+  font-size: 0.82rem;
+  margin-bottom: var(--kb-layout-control-gap);
+}
+
+.header-location-popover ul,
+.mobile-nav-location ul {
+  display: grid;
+  gap: var(--kb-layout-control-gap);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.header-location-popover li,
+.mobile-nav-location li {
+  color: var(--kb-color-text-secondary);
+  font-size: 0.82rem;
+  padding: var(--kb-layout-control-gap) 0;
+}
+
+.mobile-nav-location {
+  border-top: 1px solid var(--kb-color-border-default);
+  margin-top: var(--kb-layout-control-gap);
+  padding: var(--kb-layout-control-gap) var(--kb-layout-control-padding-inline-compact) 0;
+}
+
+.mobile-nav-location summary {
+  min-height: 2.75rem;
+  width: 100%;
+}
+
+.mobile-nav-location ul {
+  padding: var(--kb-layout-control-gap) var(--kb-layout-control-padding-inline-compact)
+    var(--kb-layout-control-gap) 0;
+}
+
 .header-readability-toggle,
 .header-account {
   flex: 0 0 auto;
@@ -4072,6 +4154,14 @@ body.is-readable :focus-visible {
   }
 
   .mobile-nav {
+    display: none;
+  }
+
+  .header-location {
+    display: block;
+  }
+
+  .mobile-nav-location {
     display: none;
   }
 }

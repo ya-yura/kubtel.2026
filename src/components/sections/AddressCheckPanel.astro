@@ -248,8 +248,7 @@ function getOptionHint(option: TariffOption): string {
         <label class="form-field">
           <span>Населённый пункт</span>
           <select name="addressCity" autocomplete="address-level2">
-            <option value="Краснодар">Краснодар</option>
-            <option value="Краснодарский край">Другой населённый пункт Краснодарского края</option>
+            {SITE.serviceLocations.map((location) => <option value={location}>{location}</option>)}
             <option value="manual">Уточнить по телефону</option>
           </select>
         </label>

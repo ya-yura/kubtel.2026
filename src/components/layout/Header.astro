@@ -48,8 +48,10 @@ function isCurrentPath(href: string) {
     {
       mainNavItems.map((item) => (
         <a
-          href={getSitePath(item.href)}
-          aria-current={isCurrentPath(item.href) ? "page" : undefined}
+          href={item.external ? item.href : getSitePath(item.href)}
+          target={item.external ? "_blank" : undefined}
+          rel={item.external ? "noopener noreferrer" : undefined}
+          aria-current={!item.external && isCurrentPath(item.href) ? "page" : undefined}
         >
           {item.label}
         </a>
@@ -57,6 +59,18 @@ function isCurrentPath(href: string) {
     }
   </nav>
   <div class="site-header-tools">
+    <details class="header-location">
+      <summary>
+        <span>{SITE.serviceLocations[0]}</span>
+        <span aria-hidden="true">⌄</span>
+      </summary>
+      <div class="header-location-popover">
+        <strong>Зона подключения</strong>
+        <ul>
+          {SITE.serviceLocations.map((location) => <li>{location}</li>)}
+        </ul>
+      </div>
+    </details>
     <a class="header-phone" href={getPhoneHref(headerPhone)} data-header-phone>
       {headerPhone}
     </a>
@@ -69,13 +83,21 @@ function isCurrentPath(href: string) {
         {
           mainNavItems.map((item) => (
             <a
-              href={getSitePath(item.href)}
-              aria-current={isCurrentPath(item.href) ? "page" : undefined}
+              href={item.external ? item.href : getSitePath(item.href)}
+              target={item.external ? "_blank" : undefined}
+              rel={item.external ? "noopener noreferrer" : undefined}
+              aria-current={!item.external && isCurrentPath(item.href) ? "page" : undefined}
             >
               {item.label}
             </a>
           ))
         }
+        <details class="mobile-nav-location">
+          <summary>Зона подключения</summary>
+          <ul>
+            {SITE.serviceLocations.map((location) => <li>{location}</li>)}
+          </ul>
+        </details>
         <a
           class="mobile-nav-account"
           href={SITE.accountUrl}

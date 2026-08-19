@@ -73,6 +73,17 @@ export const SITE = {
   themeColor: "#c43d87",
   shortDescription: "Местная команда связи для жителей и\u00a0бизнеса Краснодара.",
   areaServed: "Краснодар",
+  serviceLocations: [
+    "Краснодар",
+    "Динская",
+    "Анапа",
+    "Тимашевск",
+    "Яблоновский",
+    "Тлюстенхабль",
+    "Агроном",
+    "Дружелюбный",
+    "Новая Адыгея"
+  ],
   countryCode: "RU",
   currency: "RUB",
   dateModified: "2026-05-07",

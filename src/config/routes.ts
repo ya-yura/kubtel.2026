@@ -1,6 +1,7 @@
 export type NavItem = {
   href: string;
   label: string;
+  external?: boolean;
 };
 
 export type SitemapRoute = {
@@ -21,6 +22,7 @@ export const mainNavItems: NavItem[] = [
   { href: "/individual/configurator/", label: "Услуги" },
   { href: "/news/", label: "Новости" },
   { href: "/payment/", label: "Оплата" },
+  { href: "http://speedtest.kubtel.ru/", label: "Тест скорости", external: true },
   { href: "/devices/", label: "Устройства" },
   { href: "/business/", label: "Бизнесу" },
   { href: "/search/", label: "Поиск" },
