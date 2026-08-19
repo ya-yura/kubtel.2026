@@ -263,9 +263,7 @@ function isCurrentPath(href: string) {
           option.setAttribute("aria-pressed", String(isSelected));
         });
 
-        document.dispatchEvent(
-          new CustomEvent("kubtel:location-change", { detail: { location } })
-        );
+        document.dispatchEvent(new CustomEvent("kubtel:location-change", { detail: { location } }));
       }
 
       locationOptions.forEach((option) => {
@@ -277,7 +275,8 @@ function isCurrentPath(href: string) {
           }
 
           setLocation(location);
-          document.querySelectorAll<HTMLDetailsElement>(".header-location, .mobile-nav-location")
+          document
+            .querySelectorAll<HTMLDetailsElement>(".header-location, .mobile-nav-location")
             .forEach((details) => details.removeAttribute("open"));
         });
       });
