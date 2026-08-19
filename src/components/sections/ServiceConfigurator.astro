@@ -543,8 +543,12 @@ function getDefaultValues(
     const configurationInput = leadForm?.querySelector<HTMLInputElement>(
       "[data-config-configuration-input]"
     );
+    const requestedService = new URLSearchParams(window.location.search).get("service");
     let activeService =
-      root.dataset.initialService ?? servicePanels[0]?.dataset.configServicePanel ?? "";
+      requestedService === "tv" &&
+      servicePanels.some((panel) => panel.dataset.configServicePanel === "tv")
+        ? "tv"
+        : (root.dataset.initialService ?? servicePanels[0]?.dataset.configServicePanel ?? "");
 
     const money = (value: number) => new Intl.NumberFormat("ru-RU").format(value);
 
