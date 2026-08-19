@@ -48,8 +48,13 @@ export const SITE = {
   officialDocumentsUrl: "https://kubtel.ru/docs/",
   officialNewsUrl: "https://kubtel.ru/about/news/",
   officialContactsUrl: "https://kubtel.ru/about/contactus/",
-  maxChatUrl: getOptionalPublicUrl(import.meta.env.PUBLIC_MAX_CHAT_URL),
-  vkChatUrl: getOptionalPublicUrl(import.meta.env.PUBLIC_VK_CHAT_URL),
+  maxChatUrl:
+    getOptionalPublicUrl(import.meta.env.PUBLIC_MAX_CHAT_URL) ??
+    "https://max.ru/id2311128247_1_bot",
+  vkChatUrl:
+    getOptionalPublicUrl(import.meta.env.PUBLIC_VK_CHAT_URL) ?? "https://vk.me/club40805692",
+  vkGroupUrl: "https://vk.ru/kubtel",
+  maxGroupUrl: "https://max.ru/channel_kubtel",
   supportPhone: unifiedResidentialPhone,
   supportDirectPhone: unifiedResidentialPhone,
   salesPhone: unifiedResidentialPhone,
@@ -74,6 +79,23 @@ export const SITE = {
   audience:
     "Жители Краснодара, которым нужен надёжный домашний интернет, живой сервис и понятные условия."
 } as const;
+
+export const SOCIAL_LINKS = [
+  {
+    id: "vk",
+    label: "ВКонтакте",
+    shortLabel: "VK",
+    href: SITE.vkGroupUrl,
+    description: "Новости и объявления"
+  },
+  {
+    id: "max",
+    label: "MAX",
+    shortLabel: "MAX",
+    href: SITE.maxGroupUrl,
+    description: "Новости и общение"
+  }
+] as const;
 
 export function getAbsoluteUrl(path = "/"): string {
   return new URL(getSitePath(path), `${SITE.origin}/`).href;

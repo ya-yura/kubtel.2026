@@ -81,6 +81,8 @@ const services = singleService
   : catalog.services;
 const defaultService = services.find((service) => service.id === initialService) ?? services[0];
 const hasTelevisionPanel = includeTelevision && Boolean(serviceLink);
+const initialActiveService =
+  initialService === "tv" && hasTelevisionPanel ? "tv" : defaultService?.id;
 const actionData = actionResult?.data;
 const actionError = actionResult?.error;
 const formStartedAt = Date.now().toString();
@@ -212,7 +214,7 @@ function getDefaultValues(
   id={configuratorId}
   data-service-configurator
   data-static-preview={staticPreview ? "true" : undefined}
-  data-initial-service={defaultService?.id}
+  data-initial-service={initialActiveService}
 >
   <div class="configurator-heading">
     <div>
@@ -234,7 +236,7 @@ function getDefaultValues(
             class="configurator-service-tab"
             type="button"
             role="tab"
-            aria-selected={service.id === defaultService?.id ? "true" : "false"}
+            aria-selected={service.id === initialActiveService ? "true" : "false"}
             data-config-service-tab={service.id}
           >
             <span>{service.eyebrow}</span>
@@ -246,7 +248,7 @@ function getDefaultValues(
             class="configurator-service-tab"
             type="button"
             role="tab"
-            aria-selected="false"
+            aria-selected={initialActiveService === "tv" ? "true" : "false"}
             data-config-service-tab="tv"
           >
             <span>{serviceLink.eyebrow}</span>
@@ -264,7 +266,7 @@ function getDefaultValues(
           <div
             class="configurator-service-panel"
             data-config-service-panel={service.id}
-            hidden={service.id !== defaultService?.id}
+            hidden={service.id !== initialActiveService}
           >
             <div class="configurator-service-intro">
               {!hideServicePanelTitle && (
@@ -341,7 +343,7 @@ function getDefaultValues(
           <div
             class="configurator-service-panel configurator-television-panel"
             data-config-service-panel="tv"
-            hidden
+            hidden={initialActiveService !== "tv"}
           >
             <TelevisionContent
               catalog={catalog}
@@ -357,7 +359,11 @@ function getDefaultValues(
       }
     </div>
 
-    <aside class="configurator-summary" aria-label="Расчёт стоимости">
+    <aside
+      class="configurator-summary"
+      aria-label="Расчёт стоимости"
+      hidden={initialActiveService === "tv"}
+    >
       <p class="eyebrow">Ваш расчёт</p>
       <h3 data-config-service-title>{defaultService?.title}</h3>
       <div class="config-total-block">
@@ -504,20 +510,28 @@ function getDefaultValues(
   import { normalizeConfiguratorValues } from "@lib/configurator/calculator";
 
   document.querySelectorAll<HTMLElement>("[data-service-configurator]").forEach((root) => {
-    const catalogNode = root.querySelector<HTMLScriptElement>("[data-config-catalog]");
+    const catalogNode = root.querySelector<HTMLScriptElement>(
+      ":scope > script[data-config-catalog]"
+    );
     const catalog = catalogNode?.textContent ? JSON.parse(catalogNode.textContent) : null;
     const serviceTabs = Array.from(
-      root.querySelectorAll<HTMLButtonElement>("[data-config-service-tab]")
-    );
-    const servicePanels = Array.from(
-      root.querySelectorAll<HTMLElement>(
-        ".configurator-service-panels > [data-config-service-panel]"
+      root.querySelectorAll<HTMLButtonElement>(
+        ":scope > .configurator-service-tabs > [data-config-service-tab]"
       )
     );
-    const summaryPanel = root.querySelector<HTMLElement>(
-      ".configurator-workspace > .configurator-summary"
+    const servicePanelsContainer = root.querySelector<HTMLElement>(
+      ":scope > .configurator-workspace > .configurator-service-panels"
     );
-    const workspace = root.querySelector<HTMLElement>(".configurator-workspace");
+    const servicePanels = servicePanelsContainer
+      ? Array.from(servicePanelsContainer.children).filter(
+          (panel): panel is HTMLElement =>
+            panel instanceof HTMLElement && panel.matches("[data-config-service-panel]")
+        )
+      : [];
+    const summaryPanel = root.querySelector<HTMLElement>(
+      ":scope > .configurator-workspace > .configurator-summary"
+    );
+    const workspace = root.querySelector<HTMLElement>(":scope > .configurator-workspace");
     const monthlyNode = summaryPanel?.querySelector<HTMLElement>("[data-config-monthly]");
     const onceNode = summaryPanel?.querySelector<HTMLElement>("[data-config-once]");
     const titleNode = summaryPanel?.querySelector<HTMLElement>("[data-config-service-title]");
@@ -853,8 +867,8 @@ function getDefaultValues(
         });
       });
 
-    root
-      .querySelector<HTMLButtonElement>("[data-open-configurator-lead]")
+    summaryPanel
+      ?.querySelector<HTMLButtonElement>("[data-open-configurator-lead]")
       ?.addEventListener("click", () => {
         calculate();
         if (leadForm) {
@@ -862,8 +876,8 @@ function getDefaultValues(
           leadForm.querySelector<HTMLInputElement>('input[name="phone"]')?.focus();
         }
       });
-    root
-      .querySelector<HTMLButtonElement>("[data-close-configurator-lead]")
+    leadForm
+      ?.querySelector<HTMLButtonElement>("[data-close-configurator-lead]")
       ?.addEventListener("click", () => {
         if (leadForm) leadForm.hidden = true;
       });

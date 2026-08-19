@@ -3,8 +3,8 @@ import { getPhoneHref, SITE } from "@config/site";
 import SectionHeading from "@components/ui/SectionHeading.astro";
 
 const chatLinks = [
-  SITE.maxChatUrl ? { label: "MAX", href: SITE.maxChatUrl } : null,
-  SITE.vkChatUrl ? { label: "VK", href: SITE.vkChatUrl } : null
+  SITE.vkChatUrl ? { label: "Написать в VK", href: SITE.vkChatUrl } : null,
+  SITE.maxChatUrl ? { label: "Написать в MAX", href: SITE.maxChatUrl } : null
 ].filter((item): item is { label: string; href: string } => Boolean(item));
 
 const officeMapUrl = `https://yandex.ru/maps/?text=${encodeURIComponent(SITE.officeAddress)}`;

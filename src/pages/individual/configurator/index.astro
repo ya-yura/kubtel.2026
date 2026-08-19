@@ -17,7 +17,7 @@ const leadActionResult =
     ? await handleConfiguratorFormPost(await Astro.request.formData(), Astro.request)
     : undefined;
 const requestedService = Astro.url.searchParams.get("service");
-const initialService = requestedService === "tv" ? "internet" : requestedService;
+const initialService = requestedService;
 const initialValues: Record<string, ConfiguratorFieldValue> =
   requestedService === "tv" ? { "internet-plan": "internet-100", "internet-tv": true } : {};
 const pageSchema = [

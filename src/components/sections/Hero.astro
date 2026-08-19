@@ -2,7 +2,7 @@
 import PromoImage from "@components/ui/PromoImage.astro";
 import SeasonalDecorations from "@components/layout/SeasonalDecorations.astro";
 import { HOMEPAGE_CONFIG, isFeatureEnabled } from "@config/homepage";
-import { getPhoneHref, getSitePath, SITE } from "@config/site";
+import { getPhoneHref, getSitePath, SITE, SOCIAL_LINKS } from "@config/site";
 import { officialNews } from "@content/official-news";
 import { promoVisuals } from "@lib/visuals";
 
@@ -107,6 +107,39 @@ const showHeroVisual = isFeatureEnabled(HOMEPAGE_CONFIG.hero.mode);
               >
                 <time>{item.publishedLabel}</time>
                 <strong>{item.title}</strong>
+              </a>
+            ))}
+          </div>
+        </section>
+        <section class="homepage-social-links" aria-labelledby="homepage-social-title">
+          <div class="homepage-social-links__head">
+            <div>
+              <p class="eyebrow" id="homepage-social-title">
+                Социальные ресурсы
+              </p>
+              <h2>Kubtel на связи онлайн</h2>
+            </div>
+            <span>Новости и общение</span>
+          </div>
+          <div class="homepage-social-links__grid">
+            {SOCIAL_LINKS.map((social) => (
+              <a
+                class="homepage-social-link"
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${social.label}: ${social.description}`}
+              >
+                <span class="homepage-social-link__mark" aria-hidden="true">
+                  {social.shortLabel}
+                </span>
+                <span class="homepage-social-link__copy">
+                  <strong>{social.label}</strong>
+                  <small>{social.description}</small>
+                </span>
+                <span class="homepage-social-link__arrow" aria-hidden="true">
+                  ↗
+                </span>
               </a>
             ))}
           </div>
