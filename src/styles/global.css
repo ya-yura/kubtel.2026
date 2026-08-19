@@ -2721,11 +2721,12 @@ input[type="radio"] {
 .business-segment-card,
 .business-detail-card,
 .business-request-summary {
+  align-content: start;
   background: var(--kb-color-surface-raised);
   border: 1px solid var(--kb-color-border-default);
   border-radius: var(--kb-shape-card);
   display: grid;
-  gap: 0.9rem;
+  gap: var(--kb-layout-grid-gap-compact);
   padding: 1.15rem;
   transition:
     border-color var(--kb-motion-duration-base) var(--kb-motion-easing-standard),
@@ -3086,8 +3087,9 @@ input[type="radio"] {
 }
 
 .business-request-layout {
+  align-items: start;
   display: grid;
-  gap: 1rem;
+  gap: var(--kb-layout-card-gap);
   padding-top: 1rem;
 }
 
