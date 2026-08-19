@@ -981,16 +981,45 @@ body.is-readable .homepage-quick-action--primary strong {
 
 .homepage-social-link__mark {
   align-items: center;
-  background: var(--kb-color-overlay-accent10);
-  border: 1px solid var(--kb-color-overlay-accent28);
-  border-radius: var(--kb-shape-pill);
-  color: var(--kb-color-action-primary-background);
+  background: var(--kb-color-status-info-text);
+  border: 1px solid var(--kb-color-status-info-text);
+  border-radius: var(--kb-shape-control-small);
   display: inline-flex;
-  font-size: 0.72rem;
-  font-weight: 900;
+  height: 2.4rem;
   justify-content: center;
   min-width: 2.4rem;
-  padding: 0.35rem 0.42rem;
+  padding: 0;
+  width: 2.4rem;
+}
+
+.homepage-social-link__mark--max {
+  background: linear-gradient(
+    135deg,
+    var(--kb-color-status-info-text),
+    var(--kb-color-action-primary-background-active)
+  );
+  border-color: transparent;
+}
+
+.homepage-social-link__mark svg {
+  display: block;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.homepage-social-link__mark--vk svg text {
+  fill: var(--kb-color-surface-raised);
+  font-family: var(--kb-typography-body-family);
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.homepage-social-link__mark--max svg path {
+  fill: var(--kb-color-surface-raised);
+}
+
+.homepage-social-link__mark--max svg circle {
+  fill: var(--kb-color-action-primary-background);
 }
 
 .homepage-social-link__copy {
