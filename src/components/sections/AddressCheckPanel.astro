@@ -290,6 +290,7 @@ function getOptionHint(option: TariffOption): string {
     const requestedPhone = params.get("phone");
     const requestedTariff = params.get("tariff");
     const addressInput = panel.querySelector<HTMLInputElement>('input[name="address"]');
+    const citySelect = panel.querySelector<HTMLSelectElement>('select[name="addressCity"]');
     const phoneInput = panel.querySelector<HTMLInputElement>('input[name="phone"]');
     const formStatus = panel.querySelector<HTMLElement>("#lead-form-status");
     const tariffInputs = Array.from(
@@ -307,6 +308,30 @@ function getOptionHint(option: TariffOption): string {
     if (requestedPhone && phoneInput) {
       phoneInput.value = requestedPhone;
     }
+
+    function syncSelectedLocation(location: string | null | undefined) {
+      const option = Array.from(citySelect?.options ?? []).find(
+        (candidate) => candidate.value === location
+      );
+
+      if (option && citySelect) {
+        citySelect.value = option.value;
+      }
+    }
+
+    let storedLocation = "";
+    try {
+      storedLocation = window.localStorage.getItem("kubtel-selected-location") ?? "";
+    } catch {
+      storedLocation = "";
+    }
+    syncSelectedLocation(storedLocation);
+
+    document.addEventListener("kubtel:location-change", (event) => {
+      const location = (event as CustomEvent<{ location?: string }>).detail?.location;
+
+      syncSelectedLocation(location);
+    });
 
     const requestedInput = tariffInputs.find((input) => input.value === requestedTariff);
     if (requestedInput) {

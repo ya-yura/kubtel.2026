@@ -61,13 +61,26 @@ function isCurrentPath(href: string) {
   <div class="site-header-tools">
     <details class="header-location">
       <summary>
-        <span>{SITE.serviceLocations[0]}</span>
+        <span data-location-current>{SITE.serviceLocations[0]}</span>
         <span aria-hidden="true">⌄</span>
       </summary>
       <div class="header-location-popover">
         <strong>Зона подключения</strong>
         <ul>
-          {SITE.serviceLocations.map((location) => <li>{location}</li>)}
+          {
+            SITE.serviceLocations.map((location) => (
+              <li>
+                <button
+                  class="header-location-option"
+                  type="button"
+                  data-location-option={location}
+                  aria-pressed={location === SITE.serviceLocations[0] ? "true" : "false"}
+                >
+                  {location}
+                </button>
+              </li>
+            ))
+          }
         </ul>
       </div>
     </details>
@@ -93,9 +106,24 @@ function isCurrentPath(href: string) {
           ))
         }
         <details class="mobile-nav-location">
-          <summary>Зона подключения</summary>
+          <summary>
+            Зона подключения: <span data-location-current>{SITE.serviceLocations[0]}</span>
+          </summary>
           <ul>
-            {SITE.serviceLocations.map((location) => <li>{location}</li>)}
+            {
+              SITE.serviceLocations.map((location) => (
+                <li>
+                  <button
+                    class="header-location-option"
+                    type="button"
+                    data-location-option={location}
+                    aria-pressed={location === SITE.serviceLocations[0] ? "true" : "false"}
+                  >
+                    {location}
+                  </button>
+                </li>
+              ))
+            }
           </ul>
         </details>
         <a
@@ -177,6 +205,84 @@ function isCurrentPath(href: string) {
 
         return `tel:+${normalizedDigits}`;
       }
+    })();
+  </script>
+  <script>
+    (() => {
+      const storageKey = "kubtel-selected-location";
+      const locationOptions = Array.from(
+        document.querySelectorAll<HTMLButtonElement>("[data-location-option]")
+      );
+      const currentLocationLabels = Array.from(
+        document.querySelectorAll<HTMLElement>("[data-location-current]")
+      );
+      const defaultLocation = currentLocationLabels[0]?.textContent?.trim() ?? "";
+
+      if (locationOptions.length === 0) {
+        return;
+      }
+
+      const availableLocations = new Set(
+        locationOptions
+          .map((option) => option.dataset.locationOption)
+          .filter((location): location is string => Boolean(location))
+      );
+
+      function getStoredLocation() {
+        try {
+          const storedLocation = window.localStorage.getItem(storageKey);
+          return storedLocation && availableLocations.has(storedLocation)
+            ? storedLocation
+            : defaultLocation;
+        } catch {
+          return defaultLocation;
+        }
+      }
+
+      function setLocation(location: string, persist = true) {
+        if (!availableLocations.has(location)) {
+          return;
+        }
+
+        if (persist) {
+          try {
+            window.localStorage.setItem(storageKey, location);
+          } catch {
+            // Storage can be unavailable in private browsing; the current page still updates.
+          }
+        }
+
+        currentLocationLabels.forEach((label) => {
+          label.textContent = location;
+        });
+
+        locationOptions.forEach((option) => {
+          const isSelected = option.dataset.locationOption === location;
+
+          option.classList.toggle("is-selected", isSelected);
+          option.setAttribute("aria-pressed", String(isSelected));
+        });
+
+        document.dispatchEvent(
+          new CustomEvent("kubtel:location-change", { detail: { location } })
+        );
+      }
+
+      locationOptions.forEach((option) => {
+        option.addEventListener("click", () => {
+          const location = option.dataset.locationOption;
+
+          if (!location) {
+            return;
+          }
+
+          setLocation(location);
+          document.querySelectorAll<HTMLDetailsElement>(".header-location, .mobile-nav-location")
+            .forEach((details) => details.removeAttribute("open"));
+        });
+      });
+
+      setLocation(getStoredLocation(), false);
     })();
   </script>
 </header>

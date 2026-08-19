@@ -660,7 +660,34 @@ summary:focus-visible {
 .mobile-nav-location li {
   color: var(--kb-color-text-secondary);
   font-size: 0.82rem;
-  padding: var(--kb-layout-control-gap) 0;
+  padding: 0;
+}
+
+.header-location-option {
+  align-items: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--kb-shape-control-small);
+  box-shadow: none;
+  color: var(--kb-color-text-secondary);
+  display: flex;
+  font-size: 0.82rem;
+  font-weight: 650;
+  justify-content: flex-start;
+  min-height: 2.25rem;
+  padding: var(--kb-layout-control-gap) var(--kb-layout-control-padding-inline-compact);
+  text-align: left;
+  transform: none;
+  width: 100%;
+}
+
+.header-location-option:hover,
+.header-location-option.is-selected {
+  background: var(--kb-color-surface-warm);
+  border-color: var(--kb-color-overlay-accent20);
+  box-shadow: none;
+  color: var(--kb-color-action-primary-background-active);
+  transform: none;
 }
 
 .mobile-nav-location {
