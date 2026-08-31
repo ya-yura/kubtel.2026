@@ -117,7 +117,7 @@ export function calculateTelephony(
   return finalizeCalculation(
     accumulator,
     input,
-    `Телефония: ${formatPortCount(input.ports)}, ${input.phoneNumbers} номеров`
+    `Телефония: ${formatPortCount(input.ports)}, ${formatNumberCount(input.phoneNumbers)}`
   );
 }
 
@@ -165,7 +165,7 @@ export function calculateProTelephony(
     input,
     monthly,
     oneTime,
-    `Серия ПРО: ${input.phoneNumbers} номеров ТФОП, ${input.externalLines} соединительных линий, ${getTariffLabel(input.tariff)}`
+    `Серия ПРО: ${formatNumberCount(input.phoneNumbers, true)}, ${formatLineCount(input.externalLines, true)}, ${getTariffLabel(input.tariff)}`
   );
 }
 
@@ -188,7 +188,7 @@ export function calculateVirtualPbxTelephony(
     input,
     monthly,
     oneTime,
-    `Виртуальная АТС: ${formatPortCount(input.ports, true)}, ${input.phoneNumbers} номеров ТФОП, ${input.externalLines} внешних линий, ${getConnectionLabel(input.connectionType)}, ${getTariffLabel(input.tariff)}`
+    `Виртуальная АТС: ${formatPortCount(input.ports, true)}, ${formatNumberCount(input.phoneNumbers, true)}, ${formatLineCount(input.externalLines)}, ${getConnectionLabel(input.connectionType)}, ${getTariffLabel(input.tariff)}`
   );
 }
 
@@ -323,10 +323,10 @@ function getTariffLabel(tariff: TelephonyTariff): string {
   return tariff === "unlimited" ? "безлимитный тариф" : "повременный тариф";
 }
 
-export function formatPortCount(quantity: number, internal = false): string {
-  const forms = internal
-    ? ["внутренний порт", "внутренних порта", "внутренних портов"]
-    : ["порт", "порта", "портов"];
+export function formatRussianQuantity(
+  quantity: number,
+  forms: readonly [string, string, string]
+): string {
   const absoluteQuantity = Math.abs(quantity) % 100;
   const lastDigit = absoluteQuantity % 10;
   const formIndex =
@@ -339,6 +339,31 @@ export function formatPortCount(quantity: number, internal = false): string {
           : 2;
 
   return `${quantity} ${forms[formIndex]}`;
+}
+
+export function formatPortCount(quantity: number, internal = false): string {
+  return formatRussianQuantity(
+    quantity,
+    internal
+      ? ["внутренний порт", "внутренних порта", "внутренних портов"]
+      : ["порт", "порта", "портов"]
+  );
+}
+
+function formatNumberCount(quantity: number, tfop = false): string {
+  return formatRussianQuantity(
+    quantity,
+    tfop ? ["номер ТФОП", "номера ТФОП", "номеров ТФОП"] : ["номер", "номера", "номеров"]
+  );
+}
+
+function formatLineCount(quantity: number, connection = false): string {
+  return formatRussianQuantity(
+    quantity,
+    connection
+      ? ["соединительная линия", "соединительные линии", "соединительных линий"]
+      : ["внешняя линия", "внешние линии", "внешних линий"]
+  );
 }
 
 function createAccumulator(): {

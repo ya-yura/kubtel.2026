@@ -40,7 +40,7 @@ const formatAdditionalDigitalPorts = (quantity: number) => {
           ? "порта"
           : "портов";
 
-  return `${amount} дополнительн${quantity === 1 ? "ый" : "ых"} цифровой${quantity === 1 ? "" : "х"} ${noun}`;
+  return `${amount} дополнительн${quantity === 1 ? "ый" : "ых"} цифров${quantity === 1 ? "ой" : "ых"} ${noun}`;
 };
 ---
 
@@ -505,7 +505,7 @@ const formatAdditionalDigitalPorts = (quantity: number) => {
         pricing.pro.installation + Math.max(phoneNumbers, externalLines) * pricing.pro.portOneTime;
       pushCalculatedLine(
         result,
-        `${label}: ${phoneNumbers} номеров ТФОП, ${externalLines} линий`,
+        `${label}: ${formatNumberCount(phoneNumbers, true)}, ${formatLineCount(externalLines, true)}`,
         monthly,
         oneTime,
         tariff === "timed" ? "местный трафик: 0,60 ₽/мин." : "местный трафик включён"
@@ -527,7 +527,7 @@ const formatAdditionalDigitalPorts = (quantity: number) => {
       Math.max(externalLines - 1, 0) * pricing.virtualPbx.extraExternalLineOneTime;
     pushCalculatedLine(
       result,
-      `${label}: ${formatPortCount(ports, true)}, ${phoneNumbers} номеров, ${externalLines} линий`,
+      `${label}: ${formatPortCount(ports, true)}, ${formatNumberCount(phoneNumbers)}, ${formatLineCount(externalLines)}`,
       monthly,
       oneTime,
       tariff === "timed" ? "местный трафик: 0,60 ₽/мин." : "местный трафик включён"
@@ -665,10 +665,10 @@ const formatAdditionalDigitalPorts = (quantity: number) => {
       }
 
       if (config.telephonyVariant === "pro") {
-        return `Серия ПРО: ${values.phoneNumbers} номеров ТФОП, ${values.externalLines} соединительных линий`;
+        return `Серия ПРО: ${formatNumberCount(Number(values.phoneNumbers), true)}, ${formatLineCount(Number(values.externalLines), true)}`;
       }
 
-      return `Виртуальная АТС: ${formatPortCount(Number(values.ports), true)}, ${values.phoneNumbers} номеров, ${values.externalLines} внешних линий`;
+      return `Виртуальная АТС: ${formatPortCount(Number(values.ports), true)}, ${formatNumberCount(Number(values.phoneNumbers))}, ${formatLineCount(Number(values.externalLines))}`;
     }
 
     if (type === "vps") {
@@ -712,9 +712,31 @@ const formatAdditionalDigitalPorts = (quantity: number) => {
   }
 
   function formatPortCount(quantity: number, internal = false) {
-    const forms = internal
-      ? ["внутренний порт", "внутренних порта", "внутренних портов"]
-      : ["порт", "порта", "портов"];
+    return formatRussianQuantity(
+      quantity,
+      internal
+        ? ["внутренний порт", "внутренних порта", "внутренних портов"]
+        : ["порт", "порта", "портов"]
+    );
+  }
+
+  function formatNumberCount(quantity: number, tfop = false) {
+    return formatRussianQuantity(
+      quantity,
+      tfop ? ["номер ТФОП", "номера ТФОП", "номеров ТФОП"] : ["номер", "номера", "номеров"]
+    );
+  }
+
+  function formatLineCount(quantity: number, connection = false) {
+    return formatRussianQuantity(
+      quantity,
+      connection
+        ? ["соединительная линия", "соединительные линии", "соединительных линий"]
+        : ["внешняя линия", "внешние линии", "внешних линий"]
+    );
+  }
+
+  function formatRussianQuantity(quantity: number, forms: [string, string, string]) {
     const absoluteQuantity = Math.abs(quantity) % 100;
     const lastDigit = absoluteQuantity % 10;
     const formIndex =

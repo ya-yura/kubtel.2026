@@ -96,6 +96,9 @@ describe("business calculators", () => {
 
     expect(result.monthly).toBe(2140);
     expect(result.oneTime).toBe(5465);
+    expect(result.summary).toContain("6 внутренних портов");
+    expect(result.summary).toContain("3 номера ТФОП");
+    expect(result.summary).toContain("2 внешние линии");
   });
 
   it("returns required consultation when a selected price is missing", () => {
