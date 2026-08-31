@@ -1,6 +1,5 @@
 ---
 import BusinessCalculator from "@components/sections/BusinessCalculator.astro";
-import { getSitePath } from "@config/site";
 import { telephonyCalculatorConfigs, type TelephonyVariant } from "@lib/business/calculator-ui";
 
 type Props = {
@@ -67,7 +66,7 @@ const telephonyTariffFiles = [
         <div data-telephony-panel={variant.id} hidden={index !== 0}>
           <BusinessCalculator
             config={telephonyCalculatorConfigs[variant.id]}
-            requestPath={getSitePath(requestPath)}
+            requestPath={requestPath}
           />
         </div>
       ))
