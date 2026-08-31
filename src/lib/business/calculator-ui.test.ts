@@ -63,10 +63,20 @@ describe("business calculator UI config", () => {
     );
     expect(telephonyCalculatorConfigs["virtual-pbx"].fields).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ name: "ports", min: 2, max: 30 }),
+        expect.objectContaining({
+          name: "ports",
+          label: "Количество внутренних портов",
+          min: 2,
+          max: 30
+        }),
         expect.objectContaining({ name: "phoneNumbers", min: 1, max: 30 }),
         expect.objectContaining({ name: "externalLines", min: 1, max: 30 })
       ])
+    );
+    expect(telephonyCalculatorConfigs["virtual-pbx"].lead).toContain("внутренние порты");
+    expect(telephonyCalculatorConfigs.basic.sourceNote).toContain("с учётом НДС");
+    expect(telephonyCalculatorConfigs["virtual-pbx"].glossary).toContainEqual(
+      expect.objectContaining({ term: "Внутренний порт" })
     );
   });
 

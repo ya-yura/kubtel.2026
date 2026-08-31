@@ -117,7 +117,7 @@ export function calculateTelephony(
   return finalizeCalculation(
     accumulator,
     input,
-    `Телефония: ${input.ports} портов, ${input.phoneNumbers} номеров`
+    `Телефония: ${formatPortCount(input.ports)}, ${input.phoneNumbers} номеров`
   );
 }
 
@@ -145,7 +145,7 @@ export function calculateMultichannelTelephony(
     input,
     monthly,
     oneTime,
-    `Многоканальный телефон: ${input.ports} портов, ${getConnectionLabel(input.connectionType)}, ${getTariffLabel(input.tariff)}`
+    `Многоканальный телефон: ${formatPortCount(input.ports)}, ${getConnectionLabel(input.connectionType)}, ${getTariffLabel(input.tariff)}`
   );
 }
 
@@ -188,7 +188,7 @@ export function calculateVirtualPbxTelephony(
     input,
     monthly,
     oneTime,
-    `Виртуальная АТС: ${input.ports} портов, ${input.phoneNumbers} номеров ТФОП, ${input.externalLines} внешних линий, ${getConnectionLabel(input.connectionType)}, ${getTariffLabel(input.tariff)}`
+    `Виртуальная АТС: ${formatPortCount(input.ports, true)}, ${input.phoneNumbers} номеров ТФОП, ${input.externalLines} внешних линий, ${getConnectionLabel(input.connectionType)}, ${getTariffLabel(input.tariff)}`
   );
 }
 
@@ -321,6 +321,24 @@ function getConnectionLabel(connectionType: TelephonyConnectionType): string {
 
 function getTariffLabel(tariff: TelephonyTariff): string {
   return tariff === "unlimited" ? "безлимитный тариф" : "повременный тариф";
+}
+
+export function formatPortCount(quantity: number, internal = false): string {
+  const forms = internal
+    ? ["внутренний порт", "внутренних порта", "внутренних портов"]
+    : ["порт", "порта", "портов"];
+  const absoluteQuantity = Math.abs(quantity) % 100;
+  const lastDigit = absoluteQuantity % 10;
+  const formIndex =
+    absoluteQuantity >= 11 && absoluteQuantity <= 14
+      ? 2
+      : lastDigit === 1
+        ? 0
+        : lastDigit >= 2 && lastDigit <= 4
+          ? 1
+          : 2;
+
+  return `${quantity} ${forms[formIndex]}`;
 }
 
 function createAccumulator(): {

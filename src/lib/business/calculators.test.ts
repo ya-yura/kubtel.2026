@@ -7,6 +7,7 @@ import {
   calculateProTelephony,
   calculateTelephony,
   calculateVirtualPbxTelephony,
+  formatPortCount,
   calculateVps,
   type BusinessPricingCatalog
 } from "@lib/business/calculators";
@@ -37,14 +38,29 @@ describe("business calculators", () => {
     expect(result.monthly).toBe(100);
     expect(result.requiredConsultation).toBe(true);
     expect(result.unknownItems).toContain("telephony.port");
+    expect(result.summary).toContain("2 порта");
   });
 
   it("calculates ordinary telephony by connection type and tariff", () => {
     const result = calculateOrdinaryTelephony({ connectionType: "digital", tariff: "unlimited" });
 
     expect(result.monthly).toBe(555);
-    expect(result.oneTime).toBe(155);
+    expect(result.oneTime).toBe(1000);
     expect(result.requiredConsultation).toBe(false);
+  });
+
+  it("uses the fixed one-time payment for analog ordinary connection", () => {
+    const result = calculateOrdinaryTelephony({ connectionType: "analog", tariff: "timed" });
+
+    expect(result.monthly).toBe(0);
+    expect(result.oneTime).toBe(5000);
+  });
+
+  it("declines port quantities in Russian summaries", () => {
+    expect(formatPortCount(1)).toBe("1 порт");
+    expect(formatPortCount(2)).toBe("2 порта");
+    expect(formatPortCount(5)).toBe("5 портов");
+    expect(formatPortCount(2, true)).toBe("2 внутренних порта");
   });
 
   it("calculates multichannel telephony for 2–30 ports", () => {

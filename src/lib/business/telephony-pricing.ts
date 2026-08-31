@@ -1,9 +1,21 @@
 export type TelephonyConnectionType = "analog" | "digital";
 export type TelephonyTariff = "unlimited" | "timed";
 
+/**
+ * Тарифы калькуляторов телефонии, в рублях.
+ *
+ * Как обновлять цены: измените нужное числовое значение ниже. Все калькуляторы
+ * получают данные из этого объекта, поэтому отдельно править формулы интерфейса
+ * не нужно. Суммы услуг телефонии указаны с учётом НДС.
+ *
+ * После изменения файла запустите `npm run build`: цены встраиваются в
+ * сгенерированный Astro-сайт и должны попасть в новую production-сборку.
+ */
 export const telephonyPricing = {
   ordinary: {
-    connectionOneTime: { analog: 244, digital: 155 },
+    // Разовый платёж за обычное подключение: фиксированная сумма по типу линии.
+    connectionOneTime: { analog: 5000, digital: 1000 },
+    // Суммы из разделов 2.1 и 2.2 номенклатуры относятся к ежемесячной части.
     monthly: { unlimited: 555, timed: 0 },
     trafficPerMinute: 0.6
   },

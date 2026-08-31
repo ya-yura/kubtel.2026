@@ -14,6 +14,17 @@ const variants: Array<{ id: TelephonyVariant; label: string }> = [
   { id: "pro", label: "Серия ПРО" },
   { id: "virtual-pbx", label: "Виртуальная АТС" }
 ];
+const telephonyTariffFiles = [
+  {
+    href: "https://kubtel.ru/files/file/tariffs-megafon.pdf",
+    label:
+      "Тарифы на услуги внутризоновой, междугородней и международной связи ОАО «Мегафон» для абонентов Краснодарского края"
+  },
+  {
+    href: "https://kubtel.ru/files/file/tariffs-iptel.pdf",
+    label: "Звонок через набор индивидуального пин-кода доступа (7)"
+  }
+];
 ---
 
 <section class="section-pad telephony-calculator-group" data-telephony-calculator-group>
@@ -24,6 +35,15 @@ const variants: Array<{ id: TelephonyVariant; label: string }> = [
       В каждом сценарии свои параметры и формула: тип подключения, тариф, порты, номера и линии.
       Абонентская плата и единовременный платёж показаны раздельно.
     </p>
+    <nav class="telephony-tariff-links" aria-label="Файлы с тарифами дальней связи">
+      {
+        telephonyTariffFiles.map((file) => (
+          <a class="business-link" href={file.href} target="_blank" rel="noopener noreferrer">
+            {file.label}
+          </a>
+        ))
+      }
+    </nav>
   </div>
 
   <div class="telephony-calculator-tabs" role="tablist" aria-label="Сценарий телефонии">

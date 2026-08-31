@@ -184,7 +184,7 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
     lead: "Укажите SIP-порты, номера, одновременные линии и собственные сервисы Kubtel. Неподтверждённые позиции передаются менеджеру для индивидуального расчёта.",
     submitLabel: "Оставить заявку",
     sourceNote:
-      "Доступность и состав услуг сверены с официальной страницей Kubtel. Внутризоновая, междугородная и международная связь оказываются по агентской схеме и в этот расчёт не входят.",
+      "Доступность и состав услуг сверены с официальной страницей Kubtel. Внутризоновая, междугородная и международная связь оказываются по агентской схеме и в этот расчёт не входят. Все суммы в калькуляторах телефонии указаны с учётом НДС. Услуга «Выбор номера» рассчитывается индивидуально в зависимости от категории номера.",
     sourceUrl: "https://kubtel.ru/legal/smallbusiness/tel/",
     sourceLabel: "Официальная страница телефонии Kubtel",
     fields: [
@@ -539,7 +539,7 @@ export const businessCalculatorConfigs: Record<CalculatorType, BusinessCalculato
 };
 
 const telephonySourceNote =
-  "Формулы и цены перенесены из заявки 213727 «Новая номенклатура». Платежи за местный трафик указаны отдельно и не входят в фиксированную абонентскую плату.";
+  "Формулы и цены перенесены из заявки 213727 «Новая номенклатура». Суммы разделов 2.1 и 2.2 относятся к ежемесячной части. Все суммы в калькуляторах телефонии указаны с учётом НДС. Платежи за местный трафик указаны отдельно и не входят в фиксированную абонентскую плату. Для обычного подключения единовременный платёж фиксирован: 1 000 ₽ для цифрового и 5 000 ₽ для аналогового подключения. Услуга «Выбор номера» рассчитывается индивидуально в зависимости от категории номера.";
 
 const telephonyGlossary: CalculatorGlossaryItem[] = [
   {
@@ -554,6 +554,14 @@ const telephonyGlossary: CalculatorGlossaryItem[] = [
     term: "Внешняя линия",
     description: "один одновременный внешний разговор в виртуальной АТС."
   }
+];
+
+const virtualPbxGlossary: CalculatorGlossaryItem[] = [
+  {
+    term: "Внутренний порт",
+    description: "подключение телефона, устройства или сотрудника к виртуальной АТС."
+  },
+  ...telephonyGlossary.slice(1)
 ];
 
 export const telephonyCalculatorConfigs: Record<TelephonyVariant, BusinessCalculatorConfig> = {
@@ -685,7 +693,7 @@ export const telephonyCalculatorConfigs: Record<TelephonyVariant, BusinessCalcul
     telephonyVariant: "virtual-pbx",
     serviceSlug: "telephony-virtual-pbx",
     title: "Виртуальная АТС",
-    lead: "Соберите виртуальную АТС: тип подключения, тариф, порты, номера ТФОП и внешние линии.",
+    lead: "Соберите виртуальную АТС: тип подключения, внутренние порты, номера ТФОП и внешние линии.",
     submitLabel: "Оставить заявку",
     sourceNote: telephonySourceNote,
     fields: [
@@ -713,7 +721,7 @@ export const telephonyCalculatorConfigs: Record<TelephonyVariant, BusinessCalcul
       {
         kind: "number",
         name: "ports",
-        label: "Количество портов",
+        label: "Количество внутренних портов",
         min: 2,
         max: 30,
         step: 1,
@@ -739,7 +747,7 @@ export const telephonyCalculatorConfigs: Record<TelephonyVariant, BusinessCalcul
       }
     ],
     lines: [{ kind: "telephony", label: "Виртуальная АТС" }],
-    glossary: telephonyGlossary
+    glossary: virtualPbxGlossary
   }
 };
 

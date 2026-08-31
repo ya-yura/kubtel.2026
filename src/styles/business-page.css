@@ -1027,6 +1027,15 @@
   gap: 1rem;
 }
 
+.telephony-tariff-links {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.telephony-tariff-links .business-link {
+  justify-self: start;
+}
+
 .telephony-calculator-tabs {
   display: grid;
   gap: var(--kb-layout-grid-gap-compact);

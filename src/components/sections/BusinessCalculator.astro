@@ -20,6 +20,28 @@ const payload = JSON.stringify({
   telephonyPricing,
   requestPath
 }).replace(/</g, "\\u003c");
+const formatTelephonyPrice = (value: number) =>
+  `${new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 0 }).format(value)} ₽`;
+const virtualPbxDigitalSetup = telephonyPricing.virtualPbx.setup.digital;
+const virtualPbxAnalogSetup = telephonyPricing.virtualPbx.setup.analog;
+const virtualPbxDigitalBase = virtualPbxDigitalSetup.base;
+const virtualPbxAnalogBase = virtualPbxAnalogSetup.base;
+const virtualPbxDigitalAdditional = virtualPbxDigitalSetup.additional;
+const formatAdditionalDigitalPorts = (quantity: number) => {
+  const amount = quantity === 1 ? "один" : quantity === 4 ? "четыре" : String(quantity);
+  const lastTwoDigits = quantity % 100;
+  const lastDigit = quantity % 10;
+  const noun =
+    lastTwoDigits >= 11 && lastTwoDigits <= 14
+      ? "портов"
+      : lastDigit === 1
+        ? "порт"
+        : lastDigit >= 2 && lastDigit <= 4
+          ? "порта"
+          : "портов";
+
+  return `${amount} дополнительн${quantity === 1 ? "ый" : "ых"} цифровой${quantity === 1 ? "" : "х"} ${noun}`;
+};
 ---
 
 <section class="section-pad business-calculator-section" id={calculatorId}>
@@ -144,6 +166,54 @@ const payload = JSON.stringify({
                 </>
               ))}
             </dl>
+          </details>
+        )
+      }
+      {
+        config.telephonyVariant === "virtual-pbx" && (
+          <details class="calculator-glossary">
+            <summary>Расшифровка калькулятора</summary>
+            <p>
+              Предоставление внутреннего цифрового порта в рамках виртуальной АТС —{" "}
+              {formatTelephonyPrice(telephonyPricing.virtualPbx.portMonthly.digital)}/мес.;
+              аналогового внутреннего порта —{" "}
+              {formatTelephonyPrice(telephonyPricing.virtualPbx.portMonthly.analog)}/мес.
+            </p>
+            <p>Организация виртуальной АТС, одного номера ТФОП, одной внешней линии и:</p>
+            <ul>
+              {virtualPbxDigitalBase.map((option) => (
+                <li>
+                  до {option.ports} цифровых портов ({formatTelephonyPrice(option.price)})
+                </li>
+              ))}
+              {virtualPbxAnalogBase.map((option) => (
+                <li>
+                  до {option.ports} аналоговых портов ({formatTelephonyPrice(option.price)})
+                </li>
+              ))}
+            </ul>
+            <p>Выделение дополнительных цифровых портов в рамках существующей виртуальной АТС:</p>
+            <ul>
+              {virtualPbxDigitalAdditional.map((option) => (
+                <li>
+                  {formatAdditionalDigitalPorts(option.ports)} —{" "}
+                  {formatTelephonyPrice(option.price)}
+                </li>
+              ))}
+            </ul>
+            <p>
+              Выделение дополнительного номера ТФОП без возможности выбора номера в рамках
+              виртуальной АТС —{" "}
+              {formatTelephonyPrice(telephonyPricing.virtualPbx.extraNumberOneTime)}.
+            </p>
+            <p>
+              Выделение дополнительной внешней линии в рамках виртуальной АТС —{" "}
+              {formatTelephonyPrice(telephonyPricing.virtualPbx.extraExternalLineOneTime)}.
+            </p>
+            <p>
+              Услуга «Выбор номера» рассчитывается индивидуально в зависимости от категории
+              выбранного номера.
+            </p>
           </details>
         )
       }
@@ -416,7 +486,7 @@ const payload = JSON.stringify({
       );
       pushCalculatedLine(
         result,
-        `${label}: ${ports} портов`,
+        `${label}: ${formatPortCount(ports)}`,
         monthly,
         oneTime,
         tariff === "timed" ? "местный трафик: 0,60 ₽/мин." : "местный трафик включён"
@@ -457,7 +527,7 @@ const payload = JSON.stringify({
       Math.max(externalLines - 1, 0) * pricing.virtualPbx.extraExternalLineOneTime;
     pushCalculatedLine(
       result,
-      `${label}: ${ports} портов, ${phoneNumbers} номеров, ${externalLines} линий`,
+      `${label}: ${formatPortCount(ports, true)}, ${phoneNumbers} номеров, ${externalLines} линий`,
       monthly,
       oneTime,
       tariff === "timed" ? "местный трафик: 0,60 ₽/мин." : "местный трафик включён"
@@ -591,14 +661,14 @@ const payload = JSON.stringify({
       }
 
       if (config.telephonyVariant === "multichannel") {
-        return `Многоканальный телефон: ${values.ports} портов`;
+        return `Многоканальный телефон: ${formatPortCount(Number(values.ports))}`;
       }
 
       if (config.telephonyVariant === "pro") {
         return `Серия ПРО: ${values.phoneNumbers} номеров ТФОП, ${values.externalLines} соединительных линий`;
       }
 
-      return `Виртуальная АТС: ${values.ports} портов, ${values.phoneNumbers} номеров, ${values.externalLines} внешних линий`;
+      return `Виртуальная АТС: ${formatPortCount(Number(values.ports), true)}, ${values.phoneNumbers} номеров, ${values.externalLines} внешних линий`;
     }
 
     if (type === "vps") {
@@ -639,5 +709,23 @@ const payload = JSON.stringify({
       currency: "RUB",
       maximumFractionDigits: 0
     }).format(value);
+  }
+
+  function formatPortCount(quantity: number, internal = false) {
+    const forms = internal
+      ? ["внутренний порт", "внутренних порта", "внутренних портов"]
+      : ["порт", "порта", "портов"];
+    const absoluteQuantity = Math.abs(quantity) % 100;
+    const lastDigit = absoluteQuantity % 10;
+    const formIndex =
+      absoluteQuantity >= 11 && absoluteQuantity <= 14
+        ? 2
+        : lastDigit === 1
+          ? 0
+          : lastDigit >= 2 && lastDigit <= 4
+            ? 1
+            : 2;
+
+    return `${quantity} ${forms[formIndex]}`;
   }
 </script>

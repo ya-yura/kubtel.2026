@@ -109,7 +109,6 @@ const telephonyAgencyRoutes = [
     text: "Цена зависит от страны, типа сети и направления, поэтому единый калькулятор давал бы неверный результат."
   }
 ];
-const telephonyAgencyTariffsUrl = "https://kubtel.ru/files/file/tariffs-megafon.pdf";
 const hotspotPlans = [
   {
     title: "Базовый",
@@ -475,14 +474,6 @@ const pageSchema: JsonLdObject = {
                             </article>
                           ))}
                         </div>
-                        <a
-                          class="business-link"
-                          href={telephonyAgencyTariffsUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          Официальные тарифы по направлениям, PDF
-                        </a>
                       </section>
                     </>
                   ) : item.slug === "wifi-auth" ? (
