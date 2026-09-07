@@ -13,6 +13,12 @@ type Props = {
 
 const { config, requestPath: requestPathProp } = Astro.props;
 const calculatorId = `business-calculator-${config.id ?? config.type}`;
+const isSimpleChoiceFlow = config.telephonyVariant === "basic";
+const sourceNotes = config.sourceNote
+  ? Array.isArray(config.sourceNote)
+    ? config.sourceNote
+    : [config.sourceNote]
+  : [];
 const requestPath = getSitePath(requestPathProp ?? "/business/request/");
 const payload = JSON.stringify({
   config,
@@ -22,6 +28,26 @@ const payload = JSON.stringify({
 }).replace(/</g, "\\u003c");
 const formatTelephonyPrice = (value: number) =>
   `${new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 0 }).format(value)} ₽`;
+const formatTrafficPrice = (value: number) =>
+  `${new Intl.NumberFormat("ru-RU", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value)} ₽/мин.`;
+const getSimpleChoiceDescription = (fieldName: string, optionValue: string) => {
+  if (fieldName === "connectionType") {
+    const price =
+      telephonyPricing.ordinary.connectionOneTime[
+        optionValue as keyof typeof telephonyPricing.ordinary.connectionOneTime
+      ];
+    return `${formatTelephonyPrice(price)} разово`;
+  }
+
+  if (optionValue === "timed") {
+    return `${formatTelephonyPrice(telephonyPricing.ordinary.monthly.timed)}/мес. + ${formatTrafficPrice(telephonyPricing.ordinary.trafficPerMinute)}`;
+  }
+
+  return `${formatTelephonyPrice(telephonyPricing.ordinary.monthly.unlimited)}/мес., местные звонки включены`;
+};
 const virtualPbxDigitalSetup = telephonyPricing.virtualPbx.setup.digital;
 const virtualPbxAnalogSetup = telephonyPricing.virtualPbx.setup.analog;
 const virtualPbxDigitalBase = virtualPbxDigitalSetup.base;
@@ -54,14 +80,50 @@ const formatAdditionalDigitalPorts = (quantity: number) => {
   <div class="business-calculator" data-business-calculator>
     <script is:inline type="application/json" data-calculator-config set:html={payload} />
 
-    <form class="business-calculator-form" data-calculator-form>
-      <div class="calculator-form-intro">
-        <span class="calculator-form-kicker">Параметры</span>
-        <p>Выберите настройки услуги — итог обновится автоматически.</p>
-      </div>
+    <form
+      class:list={[
+        "business-calculator-form",
+        { "business-calculator-form--simple": isSimpleChoiceFlow }
+      ]}
+      data-calculator-form
+    >
+      {
+        !isSimpleChoiceFlow && (
+          <div class="calculator-form-intro">
+            <span class="calculator-form-kicker">Параметры</span>
+            <p>Выберите настройки услуги — итог обновится автоматически.</p>
+          </div>
+        )
+      }
       {
         config.fields.map((field, fieldIndex) => {
           if (field.kind === "select") {
+            if (isSimpleChoiceFlow) {
+              return (
+                <fieldset class="calculator-choice-group">
+                  <legend>{field.label}</legend>
+                  <div class="calculator-choice-options">
+                    {field.options.map((option) => (
+                      <label class="calculator-choice-option">
+                        <input
+                          class="visually-hidden"
+                          type="radio"
+                          name={field.name}
+                          value={option.value}
+                          checked={option.value === field.value}
+                          data-calculator-field
+                        />
+                        <span class="calculator-choice-card">
+                          <strong>{option.label}</strong>
+                          <small>{getSimpleChoiceDescription(field.name, option.value)}</small>
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
+              );
+            }
+
             return (
               <label class="calculator-field form-field" data-calculator-field-card>
                 <span class="calculator-field-heading">
@@ -142,7 +204,7 @@ const formatAdditionalDigitalPorts = (quantity: number) => {
     </form>
 
     <aside class="business-calculator-result" aria-live="polite">
-      <span class="service-category">Расчёт</span>
+      <span class="service-category">Итого</span>
       <h3 data-calculator-summary>Конфигурация</h3>
       <div class="calculator-total-grid">
         <div>
@@ -154,20 +216,29 @@ const formatAdditionalDigitalPorts = (quantity: number) => {
           <strong data-calculator-onetime>По запросу</strong>
         </div>
       </div>
-      <ul class="calculator-lines" data-calculator-lines></ul>
+      <ul class="calculator-lines" data-calculator-lines hidden={isSimpleChoiceFlow}></ul>
       <p class="calculator-note" data-calculator-note>
         Финальная цена фиксируется после проверки площадки и&nbsp;коммерческих условий.
       </p>
+      <a class="card-action" href={requestPath} data-calculator-cta>{config.submitLabel}</a>
       {
-        config.sourceNote && (
-          <ul class="calculator-note calculator-note-list">
-            {(Array.isArray(config.sourceNote) ? config.sourceNote : [config.sourceNote]).map(
-              (note) => (
+        sourceNotes.length > 0 &&
+          (config.telephonyVariant ? (
+            <details class="calculator-glossary calculator-conditions">
+              <summary>Условия расчёта</summary>
+              <ul class="calculator-note calculator-note-list">
+                {sourceNotes.map((note) => (
+                  <li>{note}</li>
+                ))}
+              </ul>
+            </details>
+          ) : (
+            <ul class="calculator-note calculator-note-list">
+              {sourceNotes.map((note) => (
                 <li>{note}</li>
-              )
-            )}
-          </ul>
-        )
+              ))}
+            </ul>
+          ))
       }
       {
         config.sourceUrl && (
@@ -241,7 +312,6 @@ const formatAdditionalDigitalPorts = (quantity: number) => {
           </details>
         )
       }
-      <a class="card-action" href={requestPath} data-calculator-cta>{config.submitLabel}</a>
     </aside>
   </div>
 </section>
@@ -375,6 +445,13 @@ const formatAdditionalDigitalPorts = (quantity: number) => {
     form
       .querySelectorAll<HTMLInputElement | HTMLSelectElement>("[data-calculator-field]")
       .forEach((field) => {
+        if (field instanceof HTMLInputElement && field.type === "radio") {
+          if (field.checked) {
+            values[field.name] = field.value;
+          }
+          return;
+        }
+
         if (field instanceof HTMLInputElement && field.type === "checkbox") {
           values[field.name] = field.checked;
           return;

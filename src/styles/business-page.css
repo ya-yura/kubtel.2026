@@ -1459,6 +1459,95 @@
   margin: 0;
 }
 
+.business-page .business-calculator-form--simple {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  gap: 1.15rem;
+  grid-template-columns: minmax(0, 1fr);
+  padding: 0;
+}
+
+.business-page .calculator-choice-group {
+  border: 0;
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  min-width: 0;
+  padding: 0;
+}
+
+.business-page .calculator-choice-group legend {
+  color: var(--kb-color-overlay-frost90);
+  font-size: 0.9rem;
+  font-weight: 800;
+  margin-bottom: 0.55rem;
+  padding: 0;
+}
+
+.business-page .calculator-choice-options {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
+}
+
+.business-page .business-calculator-form--simple .calculator-choice-option {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+}
+
+.business-page .business-calculator-form--simple .calculator-choice-option:hover,
+.business-page .business-calculator-form--simple .calculator-choice-option:focus-within {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.business-page .calculator-choice-card {
+  background: var(--kb-color-overlay-white-subtle);
+  border: 1px solid var(--kb-color-overlay-accent18);
+  border-radius: var(--kb-component-card-radius);
+  display: grid;
+  gap: 0.2rem;
+  min-height: var(--kb-layout-touch-target-input);
+  padding: 0.8rem 0.9rem;
+  transition:
+    background-color var(--kb-motion-interaction-duration) var(--kb-motion-interaction-easing),
+    border-color var(--kb-motion-interaction-duration) var(--kb-motion-interaction-easing),
+    box-shadow var(--kb-motion-interaction-duration) var(--kb-motion-interaction-easing);
+}
+
+.business-page .calculator-choice-card strong {
+  color: var(--kb-color-overlay-frost90);
+  font-size: 0.9rem;
+}
+
+.business-page .calculator-choice-card small {
+  color: var(--kb-color-overlay-frost70);
+  font-size: 0.76rem;
+  font-weight: 650;
+}
+
+.business-page .calculator-choice-option:hover .calculator-choice-card {
+  border-color: var(--kb-color-overlay-accent32);
+}
+
+.business-page .calculator-choice-option input:checked + .calculator-choice-card {
+  background: var(--kb-color-overlay-accent14);
+  border-color: var(--kb-color-overlay-accent46);
+  box-shadow: var(--kb-elevation-selected-subtle);
+}
+
+.business-page .calculator-choice-option input:focus-visible + .calculator-choice-card {
+  box-shadow: var(--kb-component-input-focus-ring);
+}
+
+.business-page .calculator-lines[hidden] {
+  display: none;
+}
+
 .business-page .business-calculator-form label {
   background: var(--kb-color-overlay-white-subtle);
   border-color: var(--kb-color-overlay-accent18);
