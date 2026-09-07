@@ -1417,21 +1417,80 @@
 }
 
 .business-page .business-calculator {
+  align-items: start;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
+.business-page .business-calculator-form {
+  align-content: start;
+  align-self: start;
   background:
-    linear-gradient(135deg, var(--kb-color-overlay-accent12), transparent 38%),
+    linear-gradient(135deg, var(--kb-color-overlay-accent12), transparent 54%),
     var(--kb-component-calculator-background);
-  border-color: var(--kb-component-calculator-border);
+  border: 1px solid var(--kb-component-calculator-border);
   border-radius: var(--kb-component-calculator-radius);
   box-shadow: var(--kb-elevation-business-panel);
+  gap: 0.75rem;
+  padding: clamp(0.85rem, 2vw, 1.25rem);
+}
+
+.business-page .calculator-form-intro {
+  display: grid;
+  gap: 0.2rem;
+  grid-column: 1 / -1;
+  margin-bottom: 0.15rem;
+}
+
+.business-page .calculator-form-kicker {
+  color: var(--kb-business-accent-primary);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.business-page .calculator-form-intro p {
+  color: var(--kb-color-overlay-frost70);
+  font-size: 0.88rem;
+  margin: 0;
 }
 
 .business-page .business-calculator-form label {
   background: var(--kb-color-overlay-white-subtle);
   border-color: var(--kb-color-overlay-accent18);
+  gap: 0.55rem;
+  padding: 0.8rem;
 }
 
-.business-page .business-calculator-form label span {
+.business-page .business-calculator-form label > span:not(.calculator-field-heading),
+.business-page .calculator-field-heading > span:last-child {
   color: var(--kb-color-overlay-frost86);
+}
+
+.business-page .calculator-field-heading {
+  align-items: center;
+  display: flex;
+  gap: 0.55rem;
+}
+
+.business-page .calculator-field-step {
+  align-items: center;
+  background: var(--kb-color-overlay-accent16);
+  border: 1px solid var(--kb-color-overlay-accent32);
+  border-radius: var(--kb-shape-pill);
+  color: var(--kb-business-accent-primary) !important;
+  display: inline-flex;
+  flex: 0 0 1.45rem;
+  font-size: 0.72rem;
+  font-weight: 850;
+  height: 1.45rem;
+  justify-content: center;
+  line-height: 1;
+  width: 1.45rem;
 }
 
 .business-page
@@ -1486,6 +1545,7 @@
     var(--kb-component-calculator-result-background);
   border-color: var(--kb-component-calculator-result-border);
   border-radius: var(--kb-component-calculator-radius);
+  align-self: start;
 }
 
 .business-page .business-calculator-result .service-category {

@@ -55,12 +55,21 @@ const formatAdditionalDigitalPorts = (quantity: number) => {
     <script is:inline type="application/json" data-calculator-config set:html={payload} />
 
     <form class="business-calculator-form" data-calculator-form>
+      <div class="calculator-form-intro">
+        <span class="calculator-form-kicker">Параметры</span>
+        <p>Выберите настройки услуги — итог обновится автоматически.</p>
+      </div>
       {
-        config.fields.map((field) => {
+        config.fields.map((field, fieldIndex) => {
           if (field.kind === "select") {
             return (
-              <label class="calculator-field form-field">
-                <span>{field.label}</span>
+              <label class="calculator-field form-field" data-calculator-field-card>
+                <span class="calculator-field-heading">
+                  <span class="calculator-field-step" aria-hidden="true">
+                    {fieldIndex + 1}
+                  </span>
+                  <span>{field.label}</span>
+                </span>
                 <select name={field.name} data-calculator-field>
                   {field.options.map((option) => (
                     <option value={option.value} selected={option.value === field.value}>
@@ -89,8 +98,13 @@ const formatAdditionalDigitalPorts = (quantity: number) => {
           }
 
           return (
-            <label class="calculator-field form-field">
-              <span>{field.label}</span>
+            <label class="calculator-field form-field" data-calculator-field-card>
+              <span class="calculator-field-heading">
+                <span class="calculator-field-step" aria-hidden="true">
+                  {fieldIndex + 1}
+                </span>
+                <span>{field.label}</span>
+              </span>
               <div class="calculator-number-control">
                 <button
                   type="button"
