@@ -22,6 +22,10 @@ const telephonyTariffFiles = [
   {
     href: "https://kubtel.ru/files/file/tariffs-iptel.pdf",
     label: "Звонок через набор индивидуального пин-кода доступа (7)"
+  },
+  {
+    href: "https://kubtel.ru/legal/smallbusiness/tel/#service",
+    label: "Сервисные услуги"
   }
 ];
 ---
@@ -32,17 +36,7 @@ const telephonyTariffFiles = [
     <h2>Выберите сценарий подключения</h2>
     <p>
       В каждом сценарии свои параметры и формула: тип подключения, тариф, порты, номера и линии.
-      Абонентская плата и единовременный платёж показаны раздельно.
     </p>
-    <nav class="telephony-tariff-links" aria-label="Файлы с тарифами дальней связи">
-      {
-        telephonyTariffFiles.map((file) => (
-          <a class="business-link" href={file.href} target="_blank" rel="noopener noreferrer">
-            {file.label}
-          </a>
-        ))
-      }
-    </nav>
   </div>
 
   <div class="telephony-calculator-tabs" role="tablist" aria-label="Сценарий телефонии">
@@ -72,6 +66,16 @@ const telephonyTariffFiles = [
       ))
     }
   </div>
+
+  <nav class="telephony-tariff-links" aria-label="Тарифные файлы и сервисные услуги">
+    {
+      telephonyTariffFiles.map((file) => (
+        <a class="business-link" href={file.href} target="_blank" rel="noopener noreferrer">
+          {file.label}
+        </a>
+      ))
+    }
+  </nav>
 </section>
 
 <script>

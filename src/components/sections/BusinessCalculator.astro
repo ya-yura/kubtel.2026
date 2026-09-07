@@ -144,7 +144,17 @@ const formatAdditionalDigitalPorts = (quantity: number) => {
       <p class="calculator-note" data-calculator-note>
         Финальная цена фиксируется после проверки площадки и&nbsp;коммерческих условий.
       </p>
-      {config.sourceNote && <p class="calculator-note">{config.sourceNote}</p>}
+      {
+        config.sourceNote && (
+          <ul class="calculator-note calculator-note-list">
+            {(Array.isArray(config.sourceNote) ? config.sourceNote : [config.sourceNote]).map(
+              (note) => (
+                <li>{note}</li>
+              )
+            )}
+          </ul>
+        )
+      }
       {
         config.sourceUrl && (
           <p class="calculator-note">
@@ -183,12 +193,12 @@ const formatAdditionalDigitalPorts = (quantity: number) => {
             <ul>
               {virtualPbxDigitalBase.map((option) => (
                 <li>
-                  до {option.ports} цифровых портов ({formatTelephonyPrice(option.price)})
+                  до {option.ports} цифровых портов — {formatTelephonyPrice(option.price)}
                 </li>
               ))}
               {virtualPbxAnalogBase.map((option) => (
                 <li>
-                  до {option.ports} аналоговых портов ({formatTelephonyPrice(option.price)})
+                  до {option.ports} аналоговых портов — {formatTelephonyPrice(option.price)}
                 </li>
               ))}
             </ul>
@@ -320,17 +330,18 @@ const formatAdditionalDigitalPorts = (quantity: number) => {
       );
 
       if (noteNode) {
+        noteNode.hidden = !result.forceIndividual && !hasQuoteItems;
         noteNode.textContent = result.forceIndividual
           ? `Персональный расчёт: ${result.unknownItems.join(", ")}.`
           : hasQuoteItems
             ? `${showKnownTotals ? "По запросу" : "Индивидуальный расчёт"}: ${result.unknownItems.join(", ")}.`
-            : "Расчёт можно передать в\u00a0заявку вместе с выбранной конфигурацией.";
+            : "";
       }
 
-      const params = new URLSearchParams({
-        service: config.serviceSlug,
-        configurationSummary: buildConfigurationText(summary, result, showKnownTotals)
-      });
+      const requestUrl = new URL(requestPath, document.baseURI);
+      const params = requestUrl.searchParams;
+      params.set("service", config.serviceSlug);
+      params.set("configurationSummary", buildConfigurationText(summary, result, showKnownTotals));
 
       if (canPublishEstimate && result.hasMonthly) {
         params.set("monthlyEstimate", String(result.monthly));
@@ -340,8 +351,7 @@ const formatAdditionalDigitalPorts = (quantity: number) => {
         params.set("oneTimeEstimate", String(result.oneTime));
       }
 
-      const separator = requestPath.includes("?") ? "&" : "?";
-      submitLink.href = `${requestPath}${separator}${params.toString()}`;
+      submitLink.href = requestUrl.toString();
     }
   });
 

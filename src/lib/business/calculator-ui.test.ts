@@ -74,7 +74,9 @@ describe("business calculator UI config", () => {
       ])
     );
     expect(telephonyCalculatorConfigs["virtual-pbx"].lead).toContain("внутренние порты");
-    expect(telephonyCalculatorConfigs.basic.sourceNote).toContain("с учётом НДС");
+    expect(telephonyCalculatorConfigs.basic.sourceNote).toEqual(
+      expect.arrayContaining(["Все суммы в калькуляторах телефонии указаны с учётом НДС."])
+    );
     expect(telephonyCalculatorConfigs["virtual-pbx"].glossary).toContainEqual(
       expect.objectContaining({ term: "Внутренний порт" })
     );

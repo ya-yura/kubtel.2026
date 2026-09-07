@@ -71,10 +71,9 @@ export const businessDeviceProducts: DeviceProduct[] = [
     id: "sip-dect-kx-tgp600",
     category: "IP-телефон",
     title: "KX-TGP600 — SIP-DECT",
-    summary: "Беспроводная телефония для офиса: одна база и несколько трубок.",
+    summary: "Снят с продаж. Беспроводная телефония для офиса: одна база и несколько трубок.",
     image: `${officialDevicesPath}/KX-TGP600_s.png`,
     alt: "SIP-DECT телефон KX-TGP600",
-    price: 11900,
     specs: [
       "До 8 трубок на одной базе",
       "До 8 одновременных разговоров",

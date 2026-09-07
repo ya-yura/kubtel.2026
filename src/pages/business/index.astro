@@ -95,20 +95,6 @@ const internetOfficeProfiles = [
   }
 ];
 
-const telephonyAgencyRoutes = [
-  {
-    title: "Внутризоновая связь",
-    text: "Тарификацию по направлениям определяет оператор дальней связи; Kubtel подключает услугу как агент."
-  },
-  {
-    title: "Междугородная связь",
-    text: "Стоимость зависит от конкретного направления и берётся из официальной таблицы оператора дальней связи."
-  },
-  {
-    title: "Международная связь",
-    text: "Цена зависит от страны, типа сети и направления, поэтому единый калькулятор давал бы неверный результат."
-  }
-];
 const hotspotPlans = [
   {
     title: "Базовый",
@@ -173,7 +159,8 @@ const serviceTabs: ServiceTab[] = [
     slug: "telephony",
     title: "Телефония",
     badge: "Калькулятор",
-    summary: "Собственные услуги Kubtel и официальные тарифы оператора дальней связи.",
+    summary:
+      "Кубтел является оператором местной связи и предлагает современные услуги связи для офиса, отдела продаж, колл-центра, филиальной сети или госучреждения",
     options: ["SIP-порты", "городские номера", "линии", "ВАТС", "автооператор"],
     config: businessCalculatorConfigs.telephony
   },
@@ -455,27 +442,7 @@ const pageSchema: JsonLdObject = {
                       </div>
                     </section>
                   ) : item.slug === "telephony" ? (
-                    <>
-                      <TelephonyCalculatorGroup requestPath={legalRequestPath} />
-                      <section class="hotspot-plan-panel telephony-agency-panel">
-                        <div class="section-heading is-tight">
-                          <p class="eyebrow">Агентская схема</p>
-                          <h3>Внутризоновая, междугородная и международная связь</h3>
-                          <p>
-                            Эти направления оказывает оператор дальней связи, а Kubtel выступает
-                            агентом. Поэтому они не считаются отдельными калькуляторами.
-                          </p>
-                        </div>
-                        <div class="hotspot-plan-grid">
-                          {telephonyAgencyRoutes.map((route) => (
-                            <article>
-                              <h3>{route.title}</h3>
-                              <p>{route.text}</p>
-                            </article>
-                          ))}
-                        </div>
-                      </section>
-                    </>
+                    <TelephonyCalculatorGroup requestPath={legalRequestPath} />
                   ) : item.slug === "wifi-auth" ? (
                     <section class="hotspot-plan-panel" aria-label="Тарифы Hot-spot">
                       <div class="section-heading is-tight">

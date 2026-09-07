@@ -130,7 +130,7 @@ const b2gServiceScenarios = [
   },
   {
     title: "Телефония и ВАТС",
-    text: "Помогаем разобрать местную и IP-телефонию, количество разговоров, номера, оборудование и запись разговоров."
+    text: "Помогаем разобрать телефонию, количество разговоров, номера, оборудование и запись разговоров."
   },
   {
     title: "Hot-spot и ЛВС",
@@ -153,11 +153,6 @@ const b2gFaq = [
     answer:
       "Заявка с сайта маркируется как B2G; целевой ориентир первичной обратной связи - до 30 минут в рабочее время."
   }
-];
-const telephonyGuides = [
-  "Если нет готового ТЗ, опишите задачу обычными словами: новый офис, модернизация старой связи, колл-центр или снижение расходов на междугородную связь.",
-  "В калькуляторе внешние линии названы как одновременные внешние разговоры, а SIP-порты - как сотрудники или устройства.",
-  "Для сложных схем менеджер уточнит оборудование, населённый пункт, текущего оператора и требования к записи разговоров."
 ];
 const colocationFaq = [
   {
@@ -318,11 +313,41 @@ const pageSchema: JsonLdObject = isService
           {isService ? "Услуга для организаций" : `${routeSlug.toUpperCase()} · отдельный маршрут`}
         </p>
         <h1>{entry.title}</h1>
-        <p>{isService ? entry.businessBenefit : entry.summary}</p>
+        {
+          isService && entry.slug === "telephony" ? (
+            <p>
+              Вы можете рассчитать необходимую услугу телефонии при помощи наших калькуляторов.
+              Также Вы можете описать что Вам нужно (сколько сотрудников звонит, сколько разговоров
+              идёт одновременно, нужны ли дополнительные номера, ВАТС и запись разговоров) и наши
+              менеджеры подберут и предложат необходимую услугу.
+            </p>
+          ) : (
+            <p>{isService ? entry.businessBenefit : entry.summary}</p>
+          )
+        }
         <div class="business-actions">
-          <a class="card-action" href={getSitePath(entryRequestPath)}>
-            {isService ? entry.ctaLabel : entry.ctaLabel}
-          </a>
+          {
+            isService && entry.slug === "telephony" ? (
+              <>
+                <a
+                  class="card-action"
+                  href={getSitePath("/business/?calculator=telephony#business-calculators")}
+                >
+                  Открыть калькулятор
+                </a>
+                <a
+                  class="business-link"
+                  href={getSitePath("/business/request/?segment=legal&service=telephony")}
+                >
+                  Описать задачу и оставить заявку
+                </a>
+              </>
+            ) : (
+              <a class="card-action" href={getSitePath(entryRequestPath)}>
+                {entry.ctaLabel}
+              </a>
+            )
+          }
           <a class="business-link" href={getSitePath("/business/")}>Все бизнес-услуги</a>
         </div>
       </div>
@@ -353,7 +378,7 @@ const pageSchema: JsonLdObject = isService
     </section>
 
     {
-      isService ? (
+      isService && entry.slug !== "telephony" ? (
         <section class="section-pad business-detail-grid">
           <article class="business-detail-card">
             <p class="eyebrow">Что входит</p>
@@ -387,7 +412,7 @@ const pageSchema: JsonLdObject = isService
             </div>
           </article>
         </section>
-      ) : (
+      ) : !isService ? (
         <section class="section-pad business-detail-grid">
           <article class="business-detail-card">
             <p class="eyebrow">Решение</p>
@@ -409,7 +434,7 @@ const pageSchema: JsonLdObject = isService
             </ul>
           </article>
         </section>
-      )
+      ) : null
     }
 
     {
@@ -667,49 +692,6 @@ const pageSchema: JsonLdObject = isService
                 <p>{item.answer}</p>
               </article>
             ))}
-          </div>
-        </section>
-      )
-    }
-
-    {
-      isService && entry.slug === "telephony" && (
-        <section class="section-pad telephony-service-options">
-          <div class="section-heading">
-            <p class="eyebrow">Телефония</p>
-            <h2>Четыре услуги, которые считаются в калькуляторе</h2>
-            <p>
-              Телефония не сводится к одному ползунку: отдельно считаются SIP-порты, городские
-              номера, одновременные внешние разговоры и функции виртуальной АТС.
-            </p>
-          </div>
-          <div class="business-card-grid">
-            {[
-              "Сотрудники и устройства",
-              "Городские номера",
-              "Одновременные внешние разговоры",
-              "Виртуальная АТС, автооператор и запись"
-            ].map((item) => (
-              <article class="business-card">
-                <span class="service-category">Калькулятор</span>
-                <h3>{item}</h3>
-                <p>Позиция попадает в итоговую конфигурацию и передаётся менеджеру в заявке.</p>
-              </article>
-            ))}
-          </div>
-          <div class="telephony-guide-panel">
-            <h3>Если нет готового ТЗ</h3>
-            <ul class="business-mini-list">
-              {telephonyGuides.map((item) => (
-                <li>{item}</li>
-              ))}
-            </ul>
-            <a
-              class="card-action"
-              href={getSitePath("/business/?calculator=telephony#business-calculators")}
-            >
-              Открыть калькулятор телефонии
-            </a>
           </div>
         </section>
       )

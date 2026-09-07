@@ -1030,6 +1030,7 @@
 .telephony-tariff-links {
   display: grid;
   gap: 0.65rem;
+  margin-top: 1.5rem;
 }
 
 .telephony-tariff-links .business-link {

@@ -823,10 +823,10 @@ async function checkBusinessCalculator(client, sessionId) {
     `(() => {
       const panel = document.querySelector('[data-service-panel="telephony"]');
       const text = panel?.innerText ?? "";
-      return text.includes("Внутризоновая связь") &&
-        text.includes("Междугородная связь") &&
-        text.includes("Международная связь") &&
-        panel?.querySelector('a[href="https://kubtel.ru/files/file/tariffs-megafon.pdf"]') !== null;
+      return !text.includes("Агентская схема") &&
+        panel?.querySelectorAll('.telephony-tariff-links a').length === 3 &&
+        panel?.querySelector('a[href="https://kubtel.ru/files/file/tariffs-megafon.pdf"]') !== null &&
+        panel?.querySelector('a[href="https://kubtel.ru/legal/smallbusiness/tel/#service"]') !== null;
     })()`,
     "telephony directions are shown as official tariff links, not calculators"
   );
