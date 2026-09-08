@@ -33,7 +33,11 @@ const formatTrafficPrice = (value: number) =>
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   }).format(value)} ₽/мин.`;
-const getSimpleChoiceDescription = (fieldName: string, optionValue: string) => {
+const getChoiceDescription = (fieldName: string, optionValue: string) => {
+  if (config.telephonyVariant !== "basic") {
+    return undefined;
+  }
+
   if (fieldName === "connectionType") {
     const price =
       telephonyPricing.ordinary.connectionOneTime[
@@ -88,22 +92,16 @@ const formatAdditionalDigitalPorts = (quantity: number) => {
       data-calculator-form
     >
       {
-        !isSimpleChoiceFlow && (
-          <div class="calculator-form-intro">
-            <span class="calculator-form-kicker">Параметры</span>
-            <p>Выберите настройки услуги — итог обновится автоматически.</p>
-          </div>
-        )
-      }
-      {
-        config.fields.map((field, fieldIndex) => {
+        config.fields.map((field) => {
           if (field.kind === "select") {
-            if (isSimpleChoiceFlow) {
-              return (
-                <fieldset class="calculator-choice-group">
-                  <legend>{field.label}</legend>
-                  <div class="calculator-choice-options">
-                    {field.options.map((option) => (
+            return (
+              <fieldset class="calculator-choice-group">
+                <legend>{field.label}</legend>
+                <div class="calculator-choice-options">
+                  {field.options.map((option) => {
+                    const description = getChoiceDescription(field.name, option.value);
+
+                    return (
                       <label class="calculator-choice-option">
                         <input
                           class="visually-hidden"
@@ -115,32 +113,16 @@ const formatAdditionalDigitalPorts = (quantity: number) => {
                         />
                         <span class="calculator-choice-card">
                           <strong>{option.label}</strong>
-                          <small>{getSimpleChoiceDescription(field.name, option.value)}</small>
+                          {description && <small>{description}</small>}
                         </span>
                       </label>
-                    ))}
-                  </div>
-                </fieldset>
-              );
-            }
-
-            return (
-              <label class="calculator-field form-field" data-calculator-field-card>
-                <span class="calculator-field-heading">
-                  <span class="calculator-field-step" aria-hidden="true">
-                    {fieldIndex + 1}
-                  </span>
-                  <span>{field.label}</span>
-                </span>
-                <select name={field.name} data-calculator-field>
-                  {field.options.map((option) => (
-                    <option value={option.value} selected={option.value === field.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-                {field.help && <small>{field.help}</small>}
-              </label>
+                    );
+                  })}
+                </div>
+                {field.help && !isSimpleChoiceFlow && (
+                  <small class="calculator-choice-help">{field.help}</small>
+                )}
+              </fieldset>
             );
           }
 
@@ -160,13 +142,8 @@ const formatAdditionalDigitalPorts = (quantity: number) => {
           }
 
           return (
-            <label class="calculator-field form-field" data-calculator-field-card>
-              <span class="calculator-field-heading">
-                <span class="calculator-field-step" aria-hidden="true">
-                  {fieldIndex + 1}
-                </span>
-                <span>{field.label}</span>
-              </span>
+            <label class="calculator-field form-field">
+              <span>{field.label}</span>
               <div class="calculator-number-control">
                 <button
                   type="button"

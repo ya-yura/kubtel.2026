@@ -1428,50 +1428,22 @@
 .business-page .business-calculator-form {
   align-content: start;
   align-self: start;
-  background:
-    linear-gradient(135deg, var(--kb-color-overlay-accent12), transparent 54%),
-    var(--kb-component-calculator-background);
-  border: 1px solid var(--kb-component-calculator-border);
-  border-radius: var(--kb-component-calculator-radius);
-  box-shadow: var(--kb-elevation-business-panel);
-  gap: 0.75rem;
-  padding: clamp(0.85rem, 2vw, 1.25rem);
-}
-
-.business-page .calculator-form-intro {
-  display: grid;
-  gap: 0.2rem;
-  grid-column: 1 / -1;
-  margin-bottom: 0.15rem;
-}
-
-.business-page .calculator-form-kicker {
-  color: var(--kb-business-accent-primary);
-  font-size: 0.72rem;
-  font-weight: 850;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.business-page .calculator-form-intro p {
-  color: var(--kb-color-overlay-frost70);
-  font-size: 0.88rem;
-  margin: 0;
-}
-
-.business-page .business-calculator-form--simple {
   background: transparent;
   border: 0;
   box-shadow: none;
-  gap: 1.15rem;
-  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
   padding: 0;
+}
+
+.business-page .business-calculator-form--simple {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .business-page .calculator-choice-group {
   border: 0;
   display: grid;
   gap: 0.55rem;
+  grid-column: 1 / -1;
   margin: 0;
   min-width: 0;
   padding: 0;
@@ -1491,7 +1463,7 @@
   grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
 }
 
-.business-page .business-calculator-form--simple .calculator-choice-option {
+.business-page .business-calculator-form label.calculator-choice-option {
   background: transparent;
   border: 0;
   cursor: pointer;
@@ -1499,8 +1471,8 @@
   position: relative;
 }
 
-.business-page .business-calculator-form--simple .calculator-choice-option:hover,
-.business-page .business-calculator-form--simple .calculator-choice-option:focus-within {
+.business-page .business-calculator-form label.calculator-choice-option:hover,
+.business-page .business-calculator-form label.calculator-choice-option:focus-within {
   border-color: transparent;
   box-shadow: none;
 }
@@ -1530,6 +1502,13 @@
   font-weight: 650;
 }
 
+.business-page .calculator-choice-help {
+  color: var(--kb-color-overlay-frost70);
+  font-size: 0.78rem;
+  font-weight: 650;
+  line-height: var(--kb-typography-body-line-height);
+}
+
 .business-page .calculator-choice-option:hover .calculator-choice-card {
   border-color: var(--kb-color-overlay-accent32);
 }
@@ -1555,31 +1534,8 @@
   padding: 0.8rem;
 }
 
-.business-page .business-calculator-form label > span:not(.calculator-field-heading),
-.business-page .calculator-field-heading > span:last-child {
+.business-page .business-calculator-form label > span {
   color: var(--kb-color-overlay-frost86);
-}
-
-.business-page .calculator-field-heading {
-  align-items: center;
-  display: flex;
-  gap: 0.55rem;
-}
-
-.business-page .calculator-field-step {
-  align-items: center;
-  background: var(--kb-color-overlay-accent16);
-  border: 1px solid var(--kb-color-overlay-accent32);
-  border-radius: var(--kb-shape-pill);
-  color: var(--kb-business-accent-primary) !important;
-  display: inline-flex;
-  flex: 0 0 1.45rem;
-  font-size: 0.72rem;
-  font-weight: 850;
-  height: 1.45rem;
-  justify-content: center;
-  line-height: 1;
-  width: 1.45rem;
 }
 
 .business-page
