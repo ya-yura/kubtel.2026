@@ -1,0 +1,6 @@
+---
+// Keep the documented CMS entry point stable while the static Decap shell
+// remains in public/admin. The redirect preserves /admin/config.yml as the
+// config base and works for both SSR and static preview hosting.
+return Astro.redirect("/admin/index.html", 302);
+---

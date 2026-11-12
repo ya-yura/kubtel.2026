@@ -11,7 +11,8 @@
 - GitHub-репозитория;
 - локальной рабочей папки;
 - JSON-файлов контента;
-- Strapi CMS scaffold для B2C+B2B контента;
+- Decap CMS для редакторского доступа к JSON-контенту через GitHub;
+- Strapi CMS scaffold как необязательный будущий контур для сложных ролей;
 - Astro-шаблонов и компонентов;
 - production-переменных окружения на хостинге;
 - проверочных команд `npm`.
@@ -57,7 +58,8 @@
 
 Что должен иметь:
 
-- доступ к репозиторию с правом создать ветку или pull request.
+- approved-доступ к `/admin/` и GitHub OAuth;
+- права только на content collections и создание draft/PR по политике репозитория.
 
 Что может делать:
 
@@ -218,6 +220,12 @@ UX smoke запускается отдельно, когда dev-сервер у
 ```bash
 npm run dev
 npm run test:ux
+```
+
+Если сервер поднят не на стандартном порту, передайте его явно:
+
+```bash
+UX_SMOKE_BASE_URL=http://127.0.0.1:4327 npm run test:ux
 ```
 
 ## Strapi CMS MVP
@@ -494,7 +502,7 @@ npm run test:ux
 ### На production
 
 1. Убедиться, что production env настроены на хостинге.
-2. Выполнить deploy из согласованной ветки.
+2. Запустить защищённый `Deploy production` для согласованного SHA или release tag. Workflow собирает immutable container image и активирует его через `ops/kubtel-container-release.sh`.
 3. После deploy проверить:
 
 ```text

@@ -51,7 +51,7 @@ npm run test:ux
 - ключевые B2C и B2B маршруты на desktop;
 - отсутствие горизонтального overflow;
 - `/api/health.json`;
-- legacy B2B redirect `/legal/smallbusiness/inet/ -> /business/internet/`;
+- legacy B2B redirect `/legal/smallbusiness/inet/ -> /business/request/?service=internet`;
 - переход из тарифной CTA в форму подключения;
 - mobile sticky CTA и mobile menu;
 - отправка тестовой заявки и success-состояние формы.
@@ -63,7 +63,7 @@ npm run test:ux
 - DNS домена резолвится на production-хостинг.
 - SSL валиден.
 - HTTP/WWW/слеши ведут на единый canonical.
-- `/`, `/tariffs/`, `/connect/`, `/support/`, `/contacts/`, `/about/` отвечают без 404.
+- `/`, `/individual/configurator/`, `/support/`, `/contacts/`, `/about/` отвечают без 404; `/tariffs/` и `/connect/` дают штатные 301 в конфигуратор.
 - `/api/health.json` отвечает `status: "ok"`.
 - Форма заявки отправляется с production и доходит в CRM, Telegram или серверный outbox.
 - Analytics получает событие `lead_submitted`.

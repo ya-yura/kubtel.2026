@@ -20,6 +20,7 @@ import {
 import type { JsonLdObject } from "@lib/seo/schema";
 import { getBusinessVisual } from "@lib/visuals";
 import { businessDeviceProducts } from "@lib/device-catalog";
+import { legacyBusinessServiceSlugs } from "@lib/redirects/business-legacy";
 import "@styles/business-page.css";
 
 type PageEntry =
@@ -31,7 +32,13 @@ export const prerender = true;
 export function getStaticPaths() {
   return [
     ...businessServices
-      .filter((entry) => entry.slug !== "datacenter-access")
+      .filter(
+        (entry) =>
+          entry.slug !== "datacenter-access" &&
+          !legacyBusinessServiceSlugs.includes(
+            entry.slug as (typeof legacyBusinessServiceSlugs)[number]
+          )
+      )
       .map((entry) => ({
         params: { slug: entry.slug },
         props: { kind: "service", entry } satisfies PageEntry

@@ -141,7 +141,11 @@
       "border": { "value": "{component.card.border}", "type": "color" },
       "featuredBorder": { "value": "{interaction.selected.border}", "type": "color" },
       "featuredBackground": { "value": "{interaction.selected.background}", "type": "color" },
-      "radius": { "value": "{component.card.radius}", "type": "borderRadius" }
+      "radius": { "value": "{component.card.radius}", "type": "borderRadius" },
+      "padding": { "value": "{layout.card.paddingCompact}", "type": "dimension" },
+      "gap": { "value": "{layout.card.gapCompact}", "type": "dimension" },
+      "itemGap": { "value": "{layout.stack.gapTight}", "type": "dimension" },
+      "priceGap": { "value": "{layout.stack.gapMicro}", "type": "dimension" }
     },
     "serviceCard": {
       "background": { "value": "{component.card.background}", "type": "color" },
@@ -158,12 +162,39 @@
       "text": { "value": "{color.text.onBusiness}", "type": "color" },
       "mutedText": { "value": "{color.text.onBusinessMuted}", "type": "color" }
     },
+    "businessAudienceNav": {
+      "background": { "value": "{component.businessServiceSelector.background}", "type": "color" },
+      "border": { "value": "{component.businessServiceSelector.border}", "type": "color" },
+      "hoverBackground": {
+        "value": "{component.businessServiceSelector.selectedBackground}",
+        "type": "color"
+      },
+      "hoverBorder": {
+        "value": "{component.businessServiceSelector.hoverBorder}",
+        "type": "color"
+      },
+      "text": { "value": "{component.businessServiceSelector.text}", "type": "color" },
+      "accent": { "value": "{component.button.primary.background}", "type": "color" },
+      "gap": { "value": "{layout.grid.gapCompact}", "type": "dimension" },
+      "marginTop": { "value": "{layout.grid.gap}", "type": "dimension" },
+      "linkGap": { "value": "{layout.control.gap}", "type": "dimension" },
+      "linkMinHeight": { "value": "{component.button.size.small.minHeight}", "type": "dimension" },
+      "linkPaddingBlock": { "value": "{layout.control.paddingBlock}", "type": "dimension" },
+      "linkPaddingInline": {
+        "value": "{layout.control.paddingInlineCompact}",
+        "type": "dimension"
+      },
+      "codeFontSize": { "value": "{typography.caption.size}", "type": "fontSize" },
+      "codeFontWeight": { "value": "{typography.label.weight}", "type": "fontWeight" },
+      "linkFontWeight": { "value": "{typography.strong.weight}", "type": "fontWeight" }
+    },
     "calculator": {
       "background": { "value": "{color.surface.businessPanelStrong}", "type": "color" },
       "border": { "value": "{color.border.business}", "type": "color" },
       "resultBackground": { "value": "{color.surface.businessCanvasDeep}", "type": "color" },
       "resultBorder": { "value": "{color.border.business}", "type": "color" },
-      "radius": { "value": "{shape.panel}", "type": "borderRadius" }
+      "radius": { "value": "{shape.panel}", "type": "borderRadius" },
+      "resultLineGap": { "value": "{layout.stack.gapMicro}", "type": "dimension" }
     },
     "statusBadge": {
       "successBackground": { "value": "{color.status.success.background}", "type": "color" },

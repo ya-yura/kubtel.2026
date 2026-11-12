@@ -1,0 +1,13 @@
+.git
+.github
+.astro
+dist
+node_modules
+.lead-outbox
+*.log
+.env
+.env.*
+!.env.example
+docs
+hotspot-skins
+coverage

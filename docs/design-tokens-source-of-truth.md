@@ -79,6 +79,10 @@ Production CSS should consume component or semantic variables:
 - tabs/status/table/accordion/sticky CTA: matching `--kb-component-*` contracts;
 - business pages: `--kb-business-*` only for B2B-specific semantics.
 
+Do not reference `--kb-spacing-*`, `--kb-font-*`, `--kb-radius-*`, `--kb-shadow-*`, raw color scales or `--kb-z-*` from production UI. These primitives are inputs to semantic/component/composition tokens; `design:audit` rejects direct use outside the design-system showcase.
+
+For a new UI pattern, add the contract to `components.json` and add a layout recipe to `compositions.json` only when it governs a reusable page arrangement. Add a theme override when the new contract has theme-dependent values. Do not create component tokens for content-only differences.
+
 ## Exceptions
 
 Approved current exceptions are explicit and checked by `design:audit`:
@@ -91,3 +95,5 @@ All other source-level static raw colors are violations.
 ## Governance
 
 CMS may choose presets only: theme, variant, density, alignment, accent, composition and status visibility. CMS must not store raw hex, raw CSS length values, box shadows, transitions, z-index, arbitrary classes, inline CSS or token JSON.
+
+Repository agents follow the implementation and responsive review checklist in the root `AGENTS.md`. `npm run design:audit` must pass with no direct primitive, unknown token, legacy value, raw motion, radius, shadow, z-index or unregistered breakpoint violations.

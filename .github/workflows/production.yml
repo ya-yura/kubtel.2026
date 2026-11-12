@@ -1,0 +1,115 @@
+name: Deploy production
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Commit SHA or release tag to deploy"
+        required: true
+        default: "main"
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Validate release
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.source.outputs.sha }}
+    steps:
+      - name: Checkout requested release
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
+      - name: Record immutable source SHA
+        id: source
+        shell: bash
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund --legacy-peer-deps
+
+      - name: Run release checks and build
+        run: npm run format:check && npm test && npm run launch:check
+
+      - name: Build immutable production image
+        run: docker build --pull --tag "kubtel:${{ steps.source.outputs.sha }}" --label "org.opencontainers.image.revision=${{ steps.source.outputs.sha }}" .
+
+      - name: Export production image
+        run: docker save "kubtel:${{ steps.source.outputs.sha }}" | gzip > "kubtel-${{ steps.source.outputs.sha }}.image.tar.gz"
+
+      - name: Upload container artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kubtel-${{ steps.source.outputs.sha }}
+          path: kubtel-${{ steps.source.outputs.sha }}.image.tar.gz
+          if-no-files-found: error
+          retention-days: 14
+
+  deploy:
+    name: Deploy approved release
+    needs: validate
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ secrets.PRODUCTION_URL }}
+    steps:
+      - name: Download release artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: kubtel-${{ needs.validate.outputs.sha }}
+
+      - name: Configure pinned SSH host key
+        shell: bash
+        env:
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          set -Eeuo pipefail
+          install -d -m 700 "$HOME/.ssh"
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/known_hosts"
+
+      - name: Install deploy key
+        shell: bash
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          set -Eeuo pipefail
+          umask 077
+          printf '%s\n' "$DEPLOY_SSH_KEY" > "$HOME/.ssh/kubtel_deploy"
+
+      - name: Upload and activate release
+        shell: bash
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          RELEASE_SHA: ${{ needs.validate.outputs.sha }}
+        run: |
+          set -Eeuo pipefail
+          [[ "$RELEASE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          archive="kubtel-${RELEASE_SHA}.image.tar.gz"
+          remote_archive="/home/${DEPLOY_USER}/${archive}"
+          scp -P "$DEPLOY_PORT" -i "$HOME/.ssh/kubtel_deploy" "$archive" "${DEPLOY_USER}@${DEPLOY_HOST}:${remote_archive}"
+          ssh -p "$DEPLOY_PORT" -i "$HOME/.ssh/kubtel_deploy" "${DEPLOY_USER}@${DEPLOY_HOST}" \
+            "sudo -n /usr/local/sbin/kubtel-container-release --sha ${RELEASE_SHA} --image kubtel:${RELEASE_SHA} --archive ${remote_archive}"
+
+      - name: Verify public health endpoint
+        shell: bash
+        env:
+          PRODUCTION_URL: ${{ secrets.PRODUCTION_URL }}
+        run: curl --fail --silent --show-error --retry 10 --retry-delay 3 "${PRODUCTION_URL%/}/api/health.json"

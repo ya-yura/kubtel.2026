@@ -39,7 +39,7 @@ export async function runDesignAudit() {
       rawShadow: 0,
       rawZIndex: 0,
       mediaBreakpointViolations: 0,
-      primitiveUsageWarnings: 0
+      directPrimitiveTokenViolations: 0
     }
   };
 
@@ -68,7 +68,7 @@ export function formatAuditReport(report) {
     `Raw shadow declarations: ${report.counts.rawShadow}`,
     `Raw z-index declarations: ${report.counts.rawZIndex}`,
     `Media breakpoint violations: ${report.counts.mediaBreakpointViolations}`,
-    `Primitive usage warnings: ${report.counts.primitiveUsageWarnings}`
+    `Direct primitive token violations: ${report.counts.directPrimitiveTokenViolations}`
   ];
 
   if (report.errors.length) {
@@ -143,8 +143,8 @@ function scanLines(source, relPath, report) {
       primitiveUsagePattern.test(line) &&
       relPath !== "src/pages/design-system.astro"
     ) {
-      report.counts.primitiveUsageWarnings += 1;
-      report.warnings.push(`${relPath}:${lineNumber} direct primitive token: ${line.trim()}`);
+      report.counts.directPrimitiveTokenViolations += 1;
+      report.errors.push(`${relPath}:${lineNumber} direct primitive token: ${line.trim()}`);
     }
 
     if (

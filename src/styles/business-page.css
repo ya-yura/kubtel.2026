@@ -127,6 +127,39 @@
   gap: 0.65rem;
 }
 
+.business-audience-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kb-component-business-audience-nav-gap);
+  margin-top: var(--kb-component-business-audience-nav-margin-top);
+}
+
+.business-audience-nav a {
+  align-items: center;
+  background: var(--kb-component-business-audience-nav-background);
+  border: var(--kb-stroke-default) solid var(--kb-component-business-audience-nav-border);
+  border-radius: var(--kb-shape-control-small);
+  color: var(--kb-component-business-audience-nav-text);
+  display: inline-flex;
+  font-weight: var(--kb-component-business-audience-nav-link-font-weight);
+  gap: var(--kb-component-business-audience-nav-link-gap);
+  min-height: var(--kb-component-business-audience-nav-link-min-height);
+  padding: var(--kb-component-business-audience-nav-link-padding-block)
+    var(--kb-component-business-audience-nav-link-padding-inline);
+}
+
+.business-audience-nav a:hover,
+.business-audience-nav a:focus-visible {
+  background: var(--kb-component-business-audience-nav-hover-background);
+  border-color: var(--kb-component-business-audience-nav-hover-border);
+}
+
+.business-audience-nav a span {
+  color: var(--kb-component-business-audience-nav-accent);
+  font-size: var(--kb-component-business-audience-nav-code-font-size);
+  font-weight: var(--kb-component-business-audience-nav-code-font-weight);
+}
+
 .business-quick-actions > *,
 .business-actions > * {
   max-width: 100%;
@@ -1715,6 +1748,11 @@
 }
 
 @media (max-width: 719px) {
+  .business-page .business-compact-hero h1 {
+    font-size: var(--kb-typography-business-hero-mobile-size);
+    overflow-wrap: normal;
+  }
+
   .business-page .section-pad {
     padding-left: 0;
     padding-right: 0;

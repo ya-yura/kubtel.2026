@@ -4,7 +4,8 @@
     "selector": ":root",
     "colorScheme": "light",
     "overrides": {
-      "color.surface.page": { "value": "{color.neutral.0}", "type": "color" },
+      "color.surface.page": { "value": "{color.brand.blueMist}", "type": "color" },
+      "color.surface.section": { "value": "{color.brand.blueMist}", "type": "color" },
       "color.surface.raised": { "value": "{color.neutral.0}", "type": "color" },
       "color.text.primary": { "value": "{color.neutral.950}", "type": "color" }
     }

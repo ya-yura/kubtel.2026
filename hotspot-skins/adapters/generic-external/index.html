@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Guest Wi-Fi | External Portal</title>
+    <link rel="stylesheet" href="portal.css" />
+  </head>
+  <body>
+    <main class="cp-page" id="main-content">
+      <div class="cp-shell">
+        <header class="cp-topbar">
+          <div class="cp-brand">
+            <img class="cp-brand-logo" src="logo-wordmark.svg" alt="Кубтел" />
+            <div class="cp-brand-text">
+              <strong class="cp-venue">Гостевой Wi-Fi</strong>
+              <span class="cp-network">External captive portal</span>
+            </div>
+          </div>
+          <button class="cp-lang" type="button" data-language-toggle>ENG</button>
+        </header>
+
+        <section class="cp-card has-side-slot" aria-labelledby="login-title">
+          <div class="cp-main">
+            <div class="cp-copy">
+              <span class="cp-kicker">Публичный Wi-Fi</span>
+              <h1 class="cp-title" id="login-title">Подключение к интернету</h1>
+              <p class="cp-lead">
+                Этот шаблон подходит для внешнего портала: Meraki EXCAP, UniFi External Portal,
+                Eltex/Aruba/Huawei/Ruckus/Ruijie и облачных сервисов.
+              </p>
+            </div>
+
+            <!-- Replace /authorize with your portal backend. Preserve controller query params server-side before granting access. -->
+            <form class="cp-form" method="post" action="/authorize" data-cp-form>
+              <fieldset class="cp-fieldset">
+                <label class="cp-field" for="phone">
+                  <span class="cp-label">Телефон</span>
+                  <span class="cp-phone">
+                    <span class="cp-prefix">+7</span>
+                    <input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      inputmode="tel"
+                      autocomplete="tel"
+                      placeholder="999 123-45-67"
+                      required
+                      data-phone-input
+                    />
+                  </span>
+                </label>
+
+                <button
+                  class="cp-button cp-button-secondary"
+                  type="button"
+                  data-code-request
+                  data-countdown="60"
+                >
+                  Получить код
+                </button>
+
+                <label class="cp-field" for="code">
+                  <span class="cp-label">Код</span>
+                  <input
+                    class="cp-control"
+                    id="code"
+                    name="code"
+                    type="text"
+                    inputmode="numeric"
+                    autocomplete="one-time-code"
+                    required
+                    data-code-input
+                  />
+                </label>
+
+                <label class="cp-consent">
+                  <input type="checkbox" name="consent" value="yes" required data-consent-input />
+                  <span>
+                    Я принимаю правила доступа и даю согласие на обработку персональных данных.
+                    <a class="cp-link" href="/terms" target="_blank">Полные условия</a>
+                  </span>
+                </label>
+              </fieldset>
+
+              <p class="cp-message" role="status" aria-live="polite" data-form-message></p>
+              <div class="cp-actions">
+                <button class="cp-button cp-button-primary" type="submit">Подключиться</button>
+                <a class="cp-button cp-button-ghost" href="/terms">Правила доступа</a>
+              </div>
+            </form>
+          </div>
+
+          <aside class="cp-side-slot" data-enabled="true">
+            <strong>Акция или объявление</strong>
+            <p>
+              Промо-блок не мешает авторизации и может быть скрыт атрибутом data-enabled="false".
+            </p>
+            <a class="cp-link" href="/">Подробнее</a>
+          </aside>
+
+          <footer class="cp-footer">
+            <p>Служба поддержки: <a href="tel:+78002221730">8 (800) 222-17-30</a></p>
+          </footer>
+        </section>
+      </div>
+    </main>
+    <script src="portal.js"></script>
+  </body>
+</html>

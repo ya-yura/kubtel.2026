@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta http-equiv="refresh" content="$(refresh-timeout-secs)" />
+    <title>Guest Wi-Fi | Status</title>
+    <link rel="stylesheet" href="portal.css" />
+  </head>
+  <body>
+    <main class="cp-page">
+      <div class="cp-shell">
+        <header class="cp-topbar">
+          <div class="cp-brand">
+            <img class="cp-brand-logo" src="logo-wordmark.svg" alt="Кубтел" />
+            <div class="cp-brand-text">
+              <strong class="cp-venue">Гостевой Wi-Fi</strong>
+              <span class="cp-network">$(hostname)</span>
+            </div>
+          </div>
+        </header>
+
+        <section class="cp-card" aria-labelledby="status-title">
+          <div class="cp-main">
+            <div class="cp-copy">
+              <h1 class="cp-title" id="status-title">Вы подключены</h1>
+              <p class="cp-lead">Ниже показаны параметры текущей Wi-Fi сессии.</p>
+            </div>
+
+            <div class="cp-status-grid">
+              <div class="cp-status-row"><span>Пользователь</span><strong>$(username)</strong></div>
+              <div class="cp-status-row"><span>IP-адрес</span><strong>$(ip)</strong></div>
+              <div class="cp-status-row"><span>MAC-адрес</span><strong>$(mac)</strong></div>
+              <div class="cp-status-row"><span>В сети</span><strong>$(uptime)</strong></div>
+              <div class="cp-status-row"><span>Трафик</span><strong>$(bytes-in-nice) / $(bytes-out-nice)</strong></div>
+              $(if session-time-left)
+              <div class="cp-status-row"><span>Осталось</span><strong>$(session-time-left)</strong></div>
+              $(endif)
+            </div>
+
+            <form class="cp-form" action="$(link-logout)" name="logout" method="post">
+              <div class="cp-actions">
+                <a class="cp-button cp-button-primary" href="$(link-orig)">Продолжить</a>
+                <button class="cp-button cp-button-ghost" type="submit">Отключиться</button>
+              </div>
+            </form>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

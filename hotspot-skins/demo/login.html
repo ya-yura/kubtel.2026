@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Kubtel Guest Wi-Fi | Авторизация</title>
+    <link rel="stylesheet" href="../core/portal.css" />
+  </head>
+  <body>
+    <a class="cp-skip" href="#main-content">К содержанию</a>
+    <main class="cp-page" id="main-content" tabindex="-1">
+      <div class="cp-shell">
+        <header class="cp-topbar" aria-label="Портал гостевого Wi-Fi">
+          <div class="cp-brand">
+            <img class="cp-brand-logo" src="../assets/logo-wordmark.svg" alt="Кубтел" />
+            <div class="cp-brand-text">
+              <strong class="cp-venue" data-ru="Гостевой Wi-Fi" data-en="Guest Wi-Fi"
+                >Гостевой Wi-Fi</strong
+              >
+              <span
+                class="cp-network"
+                data-ru="Cafe / Hotel / Office"
+                data-en="Cafe / Hotel / Office"
+              >
+                Cafe / Hotel / Office
+              </span>
+            </div>
+          </div>
+          <button class="cp-lang" type="button" data-language-toggle>ENG</button>
+        </header>
+
+        <section class="cp-card has-side-slot" aria-labelledby="login-title">
+          <div class="cp-main">
+            <div class="cp-copy">
+              <span class="cp-kicker" data-ru="Безопасный доступ" data-en="Secure access"
+                >Безопасный доступ</span
+              >
+              <h1
+                class="cp-title"
+                id="login-title"
+                data-ru="Подключение к интернету"
+                data-en="Internet connection"
+              >
+                Подключение к интернету
+              </h1>
+              <p
+                class="cp-lead"
+                data-ru="Подтвердите номер телефона, примите правила доступа и продолжайте пользоваться сетью."
+                data-en="Confirm your phone number, accept the access rules and continue online."
+              >
+                Подтвердите номер телефона, примите правила доступа и продолжайте пользоваться
+                сетью.
+              </p>
+            </div>
+
+            <div class="cp-tabs" role="tablist" aria-label="Способ идентификации" data-auth-tabs>
+              <button
+                class="cp-tab"
+                type="button"
+                role="tab"
+                aria-selected="true"
+                aria-controls="sms-panel"
+                data-auth-tab
+              >
+                SMS
+              </button>
+              <button
+                class="cp-tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="call-panel"
+                data-auth-tab
+              >
+                Call
+              </button>
+              <button
+                class="cp-tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="voucher-panel"
+                data-auth-tab
+              >
+                Code
+              </button>
+            </div>
+
+            <section class="cp-auth-panel" id="sms-panel" role="tabpanel">
+              <!-- Replace action/method/names with the target gateway contract. Demo uses data-demo-next. -->
+              <form
+                class="cp-form"
+                action="status.html"
+                method="get"
+                data-cp-form
+                data-demo-next="status.html"
+              >
+                <fieldset class="cp-fieldset">
+                  <label class="cp-field" for="sms-phone">
+                    <span class="cp-label" data-ru="Телефон" data-en="Phone">Телефон</span>
+                    <span class="cp-phone">
+                      <span class="cp-prefix">+7</span>
+                      <input
+                        id="sms-phone"
+                        name="phone"
+                        type="tel"
+                        inputmode="tel"
+                        autocomplete="tel"
+                        placeholder="999 123-45-67"
+                        data-placeholder-ru="999 123-45-67"
+                        data-placeholder-en="999 123-45-67"
+                        required
+                        data-phone-input
+                      />
+                    </span>
+                    <small
+                      class="cp-hint"
+                      data-ru="Используется только для идентификации доступа."
+                      data-en="Used only for access identification."
+                    >
+                      Используется только для идентификации доступа.
+                    </small>
+                  </label>
+
+                  <button
+                    class="cp-button cp-button-secondary"
+                    type="button"
+                    data-code-request
+                    data-countdown="45"
+                  >
+                    Получить код
+                  </button>
+
+                  <label class="cp-field" for="sms-code">
+                    <span class="cp-label" data-ru="Код из SMS" data-en="SMS code">Код из SMS</span>
+                    <input
+                      class="cp-control"
+                      id="sms-code"
+                      name="code"
+                      type="text"
+                      inputmode="numeric"
+                      autocomplete="one-time-code"
+                      placeholder="0000"
+                      data-placeholder-ru="0000"
+                      data-placeholder-en="0000"
+                      required
+                      data-code-input
+                    />
+                  </label>
+
+                  <label class="cp-consent">
+                    <input type="checkbox" name="consent" value="yes" data-consent-input />
+                    <span>
+                      <span
+                        data-ru="Я принимаю правила пользования сетью и даю согласие на обработку персональных данных."
+                        data-en="I accept the network rules and consent to personal data processing."
+                      >
+                        Я принимаю правила пользования сетью и даю согласие на обработку
+                        персональных данных.
+                      </span>
+                      <a
+                        class="cp-link"
+                        href="agreement.html"
+                        data-ru="Полные условия"
+                        data-en="Full terms"
+                      >
+                        Полные условия
+                      </a>
+                    </span>
+                  </label>
+                </fieldset>
+
+                <p class="cp-message" role="status" aria-live="polite" data-form-message></p>
+                <div class="cp-actions">
+                  <button
+                    class="cp-button cp-button-primary"
+                    type="submit"
+                    data-ru="Подключиться"
+                    data-en="Connect"
+                  >
+                    Подключиться
+                  </button>
+                  <a
+                    class="cp-button cp-button-ghost"
+                    href="agreement.html"
+                    data-ru="Правила доступа"
+                    data-en="Access rules"
+                  >
+                    Правила доступа
+                  </a>
+                </div>
+              </form>
+            </section>
+
+            <section class="cp-auth-panel" id="call-panel" role="tabpanel" hidden>
+              <form
+                class="cp-form"
+                action="redirect.html"
+                method="get"
+                data-cp-form
+                data-demo-next="redirect.html"
+              >
+                <fieldset class="cp-fieldset">
+                  <label class="cp-field" for="call-phone">
+                    <span class="cp-label" data-ru="Телефон" data-en="Phone">Телефон</span>
+                    <span class="cp-phone">
+                      <span class="cp-prefix">+7</span>
+                      <input
+                        id="call-phone"
+                        name="phone"
+                        type="tel"
+                        inputmode="tel"
+                        autocomplete="tel"
+                        placeholder="999 123-45-67"
+                        data-placeholder-ru="999 123-45-67"
+                        data-placeholder-en="999 123-45-67"
+                        required
+                        data-phone-input
+                      />
+                    </span>
+                  </label>
+
+                  <label class="cp-consent">
+                    <input type="checkbox" name="consent" value="yes" data-consent-input />
+                    <span>
+                      <span
+                        data-ru="Я принимаю правила пользования сетью и даю согласие на обработку персональных данных."
+                        data-en="I accept the network rules and consent to personal data processing."
+                      >
+                        Я принимаю правила пользования сетью и даю согласие на обработку
+                        персональных данных.
+                      </span>
+                      <a
+                        class="cp-link"
+                        href="agreement.html"
+                        data-ru="Полные условия"
+                        data-en="Full terms"
+                      >
+                        Полные условия
+                      </a>
+                    </span>
+                  </label>
+                </fieldset>
+
+                <p class="cp-message" role="status" aria-live="polite" data-form-message></p>
+                <div class="cp-actions">
+                  <button
+                    class="cp-button cp-button-primary"
+                    type="submit"
+                    data-ru="Получить номер"
+                    data-en="Get call number"
+                  >
+                    Получить номер
+                  </button>
+                  <a
+                    class="cp-button cp-button-ghost"
+                    href="agreement.html"
+                    data-ru="Правила доступа"
+                    data-en="Access rules"
+                  >
+                    Правила доступа
+                  </a>
+                </div>
+              </form>
+            </section>
+
+            <section class="cp-auth-panel" id="voucher-panel" role="tabpanel" hidden>
+              <form
+                class="cp-form"
+                action="status.html"
+                method="get"
+                data-cp-form
+                data-demo-next="status.html"
+              >
+                <fieldset class="cp-fieldset">
+                  <label class="cp-field" for="voucher-number">
+                    <span class="cp-label" data-ru="Номер ваучера" data-en="Voucher number"
+                      >Номер ваучера</span
+                    >
+                    <input
+                      class="cp-control"
+                      id="voucher-number"
+                      name="voucher"
+                      type="text"
+                      autocomplete="one-time-code"
+                      required
+                      data-voucher-input
+                    />
+                  </label>
+
+                  <label class="cp-field" for="voucher-code">
+                    <span class="cp-label" data-ru="Код" data-en="Code">Код</span>
+                    <input
+                      class="cp-control"
+                      id="voucher-code"
+                      name="code"
+                      type="text"
+                      autocomplete="one-time-code"
+                      required
+                      data-voucher-input
+                    />
+                  </label>
+
+                  <label class="cp-consent">
+                    <input type="checkbox" name="consent" value="yes" data-consent-input />
+                    <span>
+                      <span
+                        data-ru="Я принимаю правила пользования сетью и даю согласие на обработку персональных данных."
+                        data-en="I accept the network rules and consent to personal data processing."
+                      >
+                        Я принимаю правила пользования сетью и даю согласие на обработку
+                        персональных данных.
+                      </span>
+                      <a
+                        class="cp-link"
+                        href="agreement.html"
+                        data-ru="Полные условия"
+                        data-en="Full terms"
+                      >
+                        Полные условия
+                      </a>
+                    </span>
+                  </label>
+                </fieldset>
+
+                <p class="cp-message" role="status" aria-live="polite" data-form-message></p>
+                <div class="cp-actions">
+                  <button
+                    class="cp-button cp-button-primary"
+                    type="submit"
+                    data-ru="Войти по коду"
+                    data-en="Use code"
+                  >
+                    Войти по коду
+                  </button>
+                  <a
+                    class="cp-button cp-button-ghost"
+                    href="agreement.html"
+                    data-ru="Правила доступа"
+                    data-en="Access rules"
+                  >
+                    Правила доступа
+                  </a>
+                </div>
+              </form>
+            </section>
+          </div>
+
+          <aside class="cp-side-slot" data-enabled="true" aria-label="Акция">
+            <strong data-ru="Акция для гостей" data-en="Guest offer">Акция для гостей</strong>
+            <p
+              data-ru="Блок можно отключить, заменить на баннер заведения или использовать для объявления о правилах сети."
+              data-en="This block can be disabled, replaced with venue promotion or used for network notices."
+            >
+              Блок можно отключить, заменить на баннер заведения или использовать для объявления о
+              правилах сети.
+            </p>
+            <a
+              class="cp-link"
+              href="https://kubtel.ru/connect/"
+              data-ru="Подробнее"
+              data-en="Learn more"
+              >Подробнее</a
+            >
+          </aside>
+
+          <footer class="cp-footer">
+            <p>
+              <span data-ru="Служба поддержки:" data-en="Support:">Служба поддержки:</span>
+              <a href="tel:+78612001010">8 (861) 200-10-10</a>
+              <span data-ru="или" data-en="or">или</span>
+              <a href="tel:+78002221730">8 (800) 222-17-30</a>
+            </p>
+            <p
+              data-ru="Услуга предоставляется ООО «Кубань-Телеком»"
+              data-en="Service is provided by Kuban-Telecom LLC"
+            >
+              Услуга предоставляется ООО «Кубань-Телеком»
+            </p>
+          </footer>
+        </section>
+      </div>
+    </main>
+    <script src="../core/portal.js"></script>
+  </body>
+</html>

@@ -170,6 +170,10 @@
     }
   },
   "typography": {
+    "strong": { "weight": { "value": "{font.weight.strong}", "type": "fontWeight" } },
+    "businessHero": {
+      "mobileSize": { "value": "clamp(1.75rem, 9vw, 2.35rem)", "type": "fontSize" }
+    },
     "display": {
       "family": { "value": "{font.family.display}", "type": "fontFamily" },
       "size": { "value": "{font.size.displayLg}", "type": "fontSize" },
@@ -241,11 +245,17 @@
     },
     "card": {
       "padding": { "value": "{spacing.6}", "type": "dimension" },
-      "gap": { "value": "{spacing.5}", "type": "dimension" }
+      "gap": { "value": "{spacing.5}", "type": "dimension" },
+      "paddingCompact": { "value": "{spacing.5}", "type": "dimension" },
+      "gapCompact": { "value": "{spacing.5}", "type": "dimension" }
     },
     "grid": {
       "gap": { "value": "{spacing.6}", "type": "dimension" },
       "gapCompact": { "value": "{spacing.4}", "type": "dimension" }
+    },
+    "stack": {
+      "gapMicro": { "value": "{spacing.1}", "type": "dimension" },
+      "gapTight": { "value": "{spacing.2}", "type": "dimension" }
     }
   },
   "shape": {

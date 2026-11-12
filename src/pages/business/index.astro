@@ -14,6 +14,7 @@ import {
   businessServices,
   getBusinessSegmentPath
 } from "@lib/business/content";
+import { legacyBusinessServiceSlugs } from "@lib/redirects/business-legacy";
 import { formatRubles } from "@lib/format";
 import type { JsonLdObject } from "@lib/seo/schema";
 import "@styles/business-page.css";
@@ -98,7 +99,7 @@ const internetOfficeProfiles = [
 const hotspotPlans = [
   {
     title: "Базовый",
-    monthlyPrice: 1500,
+    monthlyPrice: 2000,
     features: [
       "авторизация по звонку без лимита",
       "брендированная стартовая страница",
@@ -108,7 +109,7 @@ const hotspotPlans = [
   },
   {
     title: "Стандарт",
-    monthlyPrice: 2000,
+    monthlyPrice: 3000,
     features: [
       "возможности базового тарифа",
       "пакет 100 SMS для авторизации",
@@ -118,7 +119,7 @@ const hotspotPlans = [
   },
   {
     title: "Премиум",
-    monthlyPrice: 3000,
+    monthlyPrice: 3500,
     features: [
       "возможности стандартного тарифа",
       "авторизация по ваучеру",
@@ -200,6 +201,22 @@ const serviceTabs: ServiceTab[] = [
 ];
 
 function getBusinessEntryHref(slug: string) {
+  if (legacyBusinessServiceSlugs.includes(slug as (typeof legacyBusinessServiceSlugs)[number])) {
+    if (slug === "telephony") {
+      return "/business/?calculator=telephony#business-calculators";
+    }
+
+    if (["cctv", "wifi-auth", "vps", "vdi"].includes(slug)) {
+      return `/business/?calculator=${slug}#business-calculators`;
+    }
+
+    return `/business/request/?service=${slug}`;
+  }
+
+  if (slug === "datacenter-access") {
+    return "/business/datacenter-access/";
+  }
+
   return `/business/${slug}/`;
 }
 
@@ -240,6 +257,11 @@ const pageSchema: JsonLdObject = {
   <div class="business-page">
     <section class="business-compact-hero section-pad">
       <div>
+        <nav class="business-audience-nav" aria-label="Разделы для разных организаций">
+          <a href={getSitePath("/business/b2b/")}>Бизнесу <span>B2B</span></a>
+          <a href={getSitePath("/business/b2g/")}>Госзаказчикам <span>B2G</span></a>
+          <a href={getSitePath("/business/b2o/")}>Операторам связи <span>B2O</span></a>
+        </nav>
         <p class="eyebrow">ЦОД в Краснодаре · связь для бизнеса</p>
         <h1>Размещение оборудования и услуги связи</h1>
         <p>

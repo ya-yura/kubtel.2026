@@ -1,0 +1,357 @@
+backend:
+  name: github
+  repo: ya-yura/kubtel.2026
+  branch: main
+
+local_backend: true
+publish_mode: editorial_workflow
+media_folder: public/uploads
+public_folder: /uploads
+locale: ru
+
+collections:
+  - name: tariffs
+    label: Тарифы
+    label_singular: Тариф
+    folder: src/content/tariffs
+    create: true
+    format: json
+    extension: json
+    slug: "{{slug}}"
+    summary: "{{title}} — {{priceMonth}} ₽/мес"
+    fields:
+      - { label: Название, name: title, widget: string }
+      - {
+          label: Slug,
+          name: slug,
+          widget: string,
+          hint: "Не меняйте slug опубликованной записи без задачи на redirect."
+        }
+      - {
+          label: Аудитория,
+          name: audience,
+          widget: list,
+          field: { label: Сегмент, name: value, widget: string }
+        }
+      - { label: Скорость загрузки, name: speedDownload, widget: number, value_type: int, min: 0 }
+      - {
+          label: Скорость отдачи,
+          name: speedUpload,
+          widget: number,
+          value_type: int,
+          min: 0,
+          required: false
+        }
+      - { label: Цена в месяц, name: priceMonth, widget: number, value_type: int, min: 0 }
+      - {
+          label: Промо-цена,
+          name: promoPrice,
+          widget: number,
+          value_type: int,
+          min: 0,
+          required: false
+        }
+      - { label: Период промо, name: promoPeriod, widget: string, required: false }
+      - { label: Описание пользы, name: benefitDescription, widget: text }
+      - {
+          label: Подходит для,
+          name: bestFor,
+          widget: list,
+          field: { label: Сценарий, name: value, widget: string }
+        }
+      - {
+          label: Включённые услуги,
+          name: includedServices,
+          widget: list,
+          field: { label: Услуга, name: value, widget: string }
+        }
+      - {
+          label: Доступные опции,
+          name: availableOptions,
+          widget: list,
+          field:
+            {
+              label: Опция,
+              name: value,
+              widget: select,
+              options: [routerRent, staticIp, tvPack, cctv]
+            }
+        }
+      - {
+          label: Стоимость подключения,
+          name: connectionPrice,
+          widget: number,
+          value_type: int,
+          min: 0,
+          required: false
+        }
+      - {
+          label: Аренда роутера,
+          name: routerRentPrice,
+          widget: number,
+          value_type: int,
+          min: 0,
+          required: false
+        }
+      - {
+          label: Статический IP,
+          name: staticIpPrice,
+          widget: number,
+          value_type: int,
+          min: 0,
+          required: false
+        }
+      - { label: Показывать как рекомендуемый, name: isFeatured, widget: boolean, default: false }
+      - { label: Порядок, name: sortOrder, widget: number, value_type: int, default: 10 }
+      - label: Статус источника
+        name: contentSource
+        widget: object
+        fields:
+          - {
+              label: Статус,
+              name: status,
+              widget: select,
+              options: [confirmed, needs_verification, draft],
+              default: draft
+            }
+          - {
+              label: Тип источника,
+              name: type,
+              widget: select,
+              options:
+                [kubtel_team, public_site, legacy_site, technical_audit, editorial_assumption]
+            }
+          - { label: Название источника, name: label, widget: string }
+          - { label: Дата сверки, name: checkedAt, widget: string, required: false }
+          - {
+              label: Ответственная роль,
+              name: responsible,
+              widget: select,
+              options: [commercial, operations, coverage, content]
+            }
+          - { label: Примечание, name: note, widget: text }
+      - label: Коммерческая проверка
+        name: commercialReview
+        widget: object
+        fields:
+          - {
+              label: Общий статус,
+              name: status,
+              widget: select,
+              options: [confirmed, needs_verification, draft],
+              default: draft
+            }
+          - {
+              label: Цена,
+              name: priceStatus,
+              widget: select,
+              options: [confirmed, needs_verification, draft],
+              default: draft
+            }
+          - {
+              label: Скорость,
+              name: speedStatus,
+              widget: select,
+              options: [confirmed, needs_verification, draft],
+              default: draft
+            }
+          - {
+              label: Опции,
+              name: optionsStatus,
+              widget: select,
+              options: [confirmed, needs_verification, draft],
+              default: draft
+            }
+          - {
+              label: Подключение,
+              name: connectionStatus,
+              widget: select,
+              options: [confirmed, needs_verification, draft],
+              default: draft
+            }
+          - {
+              label: Нужные подтверждения,
+              name: requiredEvidence,
+              widget: list,
+              field: { label: Подтверждение, name: value, widget: string }
+            }
+          - { label: Примечание, name: note, widget: text }
+      - label: Доказательство
+        name: proof
+        widget: object
+        fields:
+          - { label: Название, name: label, widget: string }
+          - { label: Значение, name: value, widget: string }
+          - {
+              label: Статус,
+              name: status,
+              widget: select,
+              options: [confirmed, needs_verification, draft],
+              default: draft
+            }
+
+  - name: services
+    label: Услуги
+    label_singular: Услуга
+    folder: src/content/services
+    create: true
+    format: json
+    extension: json
+    slug: "{{slug}}"
+    summary: "{{title}}"
+    fields:
+      - { label: Название, name: title, widget: string }
+      - { label: Slug, name: slug, widget: string }
+      - { label: Категория, name: category, widget: string }
+      - { label: Краткое описание, name: shortDescription, widget: text }
+      - { label: Полное описание, name: fullDescription, widget: text }
+      - {
+          label: Преимущества,
+          name: benefits,
+          widget: list,
+          field: { label: Преимущество, name: value, widget: string }
+        }
+      - {
+          label: Связанные тарифы,
+          name: relatedTariffs,
+          widget: list,
+          field: { label: Slug тарифа, name: value, widget: string }
+        }
+      - label: Факты
+        name: facts
+        widget: list
+        fields:
+          - { label: Название, name: label, widget: string }
+          - { label: Значение, name: value, widget: string }
+          - {
+              label: Статус,
+              name: status,
+              widget: select,
+              options: [confirmed, needs_verification, draft],
+              default: draft
+            }
+      - label: Статус источника
+        name: contentSource
+        widget: object
+        fields:
+          - {
+              label: Статус,
+              name: status,
+              widget: select,
+              options: [confirmed, needs_verification, draft],
+              default: draft
+            }
+          - {
+              label: Тип источника,
+              name: type,
+              widget: select,
+              options:
+                [kubtel_team, public_site, legacy_site, technical_audit, editorial_assumption]
+            }
+          - { label: Название источника, name: label, widget: string }
+          - { label: Дата сверки, name: checkedAt, widget: string, required: false }
+          - {
+              label: Ответственная роль,
+              name: responsible,
+              widget: select,
+              options: [commercial, operations, coverage, content]
+            }
+          - { label: Примечание, name: note, widget: text }
+
+  - name: faq
+    label: FAQ
+    label_singular: Вопрос
+    folder: src/content/faq
+    create: true
+    format: json
+    extension: json
+    slug: "{{slug}}"
+    summary: "{{question}}"
+    fields:
+      - { label: Вопрос, name: question, widget: string }
+      - { label: Ответ, name: answer, widget: text }
+      - { label: Категория, name: category, widget: string }
+      - { label: Приоритет, name: priority, widget: number, value_type: int, default: 10 }
+      - {
+          label: Связанные услуги,
+          name: relatedServices,
+          widget: list,
+          field: { label: Slug услуги, name: value, widget: string }
+        }
+      - label: Доказательство
+        name: proof
+        widget: object
+        fields:
+          - { label: Название, name: label, widget: string }
+          - { label: Значение, name: value, widget: string }
+          - {
+              label: Статус,
+              name: status,
+              widget: select,
+              options: [confirmed, needs_verification, draft],
+              default: draft
+            }
+      - label: Статус источника
+        name: contentSource
+        widget: object
+        fields:
+          - {
+              label: Статус,
+              name: status,
+              widget: select,
+              options: [confirmed, needs_verification, draft],
+              default: draft
+            }
+          - {
+              label: Тип источника,
+              name: type,
+              widget: select,
+              options:
+                [kubtel_team, public_site, legacy_site, technical_audit, editorial_assumption]
+            }
+          - { label: Название источника, name: label, widget: string }
+          - { label: Дата сверки, name: checkedAt, widget: string, required: false }
+          - {
+              label: Ответственная роль,
+              name: responsible,
+              widget: select,
+              options: [commercial, operations, coverage, content]
+            }
+          - { label: Примечание, name: note, widget: text }
+
+  - name: careers
+    label: Вакансии
+    label_singular: Вакансия
+    folder: src/content/careers
+    create: true
+    format: json
+    extension: json
+    slug: "{{slug}}"
+    summary: "{{title}}"
+    fields:
+      - { label: Название, name: title, widget: string }
+      - { label: Slug, name: slug, widget: string }
+      - { label: Отдел, name: department, widget: string }
+      - { label: Локация, name: location, widget: string }
+      - {
+          label: Тип занятости,
+          name: employmentType,
+          widget: select,
+          options: [full_time, part_time, shift, contract, internship]
+        }
+      - { label: Статус, name: status, widget: select, options: [open, paused, closed] }
+      - { label: Краткое описание, name: shortDescription, widget: text }
+      - {
+          label: Требования,
+          name: requirements,
+          widget: list,
+          field: { label: Требование, name: value, widget: string }
+        }
+      - {
+          label: Условия,
+          name: conditions,
+          widget: list,
+          field: { label: Условие, name: value, widget: string }
+        }
+      - { label: Активна, name: isActive, widget: boolean, default: true }
+      - { label: Порядок, name: sortOrder, widget: number, value_type: int, default: 10 }

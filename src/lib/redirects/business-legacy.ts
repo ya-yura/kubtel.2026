@@ -20,6 +20,16 @@ const legacyBusinessRedirects: Record<string, string> = {
   "/business/vdi/": "/business/?calculator=vdi#business-calculators"
 };
 
+export const legacyBusinessServiceSlugs = [
+  "internet",
+  "static-ip",
+  "telephony",
+  "cctv",
+  "wifi-auth",
+  "vps",
+  "vdi"
+] as const;
+
 export function getLegacyBusinessRedirect(pathname: string): string | null {
   return legacyBusinessRedirects[normalizeLegacyPathname(pathname)] ?? null;
 }

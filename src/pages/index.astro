@@ -1,8 +1,11 @@
 ---
 import Hero from "@components/sections/Hero.astro";
+import HomepageControlDeck from "@components/sections/HomepageControlDeck.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { getServices } from "@lib/content";
 
 export const prerender = false;
+const services = await getServices();
 ---
 
 <BaseLayout
@@ -11,4 +14,5 @@ export const prerender = false;
   canonicalPath="/"
 >
   <Hero />
+  <HomepageControlDeck services={services} />
 </BaseLayout>

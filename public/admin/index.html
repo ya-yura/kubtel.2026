@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kubtel — редактор контента</title>
+    <style>
+      body {
+        color: #20242a;
+        font:
+          16px/1.5 system-ui,
+          sans-serif;
+        margin: 0;
+      }
+      .local-admin-help {
+        background: #eef4ff;
+        border: 1px solid #c3ccd7;
+        border-radius: 20px;
+        margin: 4rem auto;
+        max-width: 42rem;
+        padding: 2rem;
+      }
+      .local-admin-help h1 {
+        margin-top: 0;
+      }
+      .local-admin-help code {
+        background: #fff;
+        border-radius: 6px;
+        padding: 0.15rem 0.35rem;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      if (window.location.protocol === "file:") {
+        document.body.innerHTML = `
+          <main class="local-admin-help">
+            <h1>Откройте CMS через локальный сервер</h1>
+            <p>Браузеры блокируют загрузку <code>config.yml</code> из адреса <code>file://</code>. Это штатное ограничение безопасности, а не ошибка CMS.</p>
+            <p>В корне проекта выполните <code>npm run dev</code>, затем откройте <code>http://127.0.0.1:4321/admin/</code>.</p>
+            <p>На боевом сервере используйте <code>https://ваш-домен/admin/</code>.</p>
+          </main>`;
+      } else {
+        const script = document.createElement("script");
+        script.src = "https://unpkg.com/decap-cms@3.8.3/dist/decap-cms.js";
+        document.body.appendChild(script);
+      }
+    </script>
+  </body>
+</html>

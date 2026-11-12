@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Guest Wi-Fi | Login</title>
+    <link rel="stylesheet" href="portal.css" />
+  </head>
+  <body>
+    $(if chap-id)
+    <form name="sendin" action="$(link-login-only)" method="post" style="display: none">
+      <input type="hidden" name="username" />
+      <input type="hidden" name="password" />
+      <input type="hidden" name="dst" value="$(link-orig)" />
+      <input type="hidden" name="popup" value="true" />
+    </form>
+    <script src="md5.js"></script>
+    <script>
+      function mikrotikLogin(form) {
+        document.sendin.username.value = form.username.value;
+        document.sendin.password.value = hexMD5("$(chap-id)" + form.password.value + "$(chap-challenge)");
+        document.sendin.submit();
+        return false;
+      }
+    </script>
+    $(endif)
+
+    <a class="cp-skip" href="#main-content">К содержанию</a>
+    <main class="cp-page" id="main-content" tabindex="-1">
+      <div class="cp-shell">
+        <header class="cp-topbar">
+          <div class="cp-brand">
+            <img class="cp-brand-logo" src="logo-wordmark.svg" alt="Кубтел" />
+            <div class="cp-brand-text">
+              <strong class="cp-venue">Гостевой Wi-Fi</strong>
+              <span class="cp-network">$(hostname)</span>
+            </div>
+          </div>
+          <button class="cp-lang" type="button" data-language-toggle>ENG</button>
+        </header>
+
+        <section class="cp-card has-side-slot" aria-labelledby="login-title">
+          <div class="cp-main">
+            $(if error)
+            <div class="cp-alert" data-tone="error">
+              <strong>Не удалось подключить</strong>
+              <span>$(error)</span>
+            </div>
+            $(endif)
+
+            <div class="cp-copy">
+              <span class="cp-kicker" data-ru="Публичный Wi-Fi" data-en="Public Wi-Fi">Публичный Wi-Fi</span>
+              <h1 class="cp-title" id="login-title" data-ru="Подключение к интернету" data-en="Internet connection">
+                Подключение к интернету
+              </h1>
+              <p
+                class="cp-lead"
+                data-ru="Подтвердите номер телефона или используйте выданный код. Номер нужен для идентификации доступа."
+                data-en="Confirm your phone number or use the code provided. The phone is used for access identification."
+              >
+                Подтвердите номер телефона или используйте выданный код. Номер нужен для идентификации доступа.
+              </p>
+            </div>
+
+            <div class="cp-tabs" role="tablist" aria-label="Способ идентификации" data-auth-tabs>
+              <button class="cp-tab" type="button" role="tab" aria-selected="true" aria-controls="sms-panel" data-auth-tab>
+                SMS
+              </button>
+              <button class="cp-tab" type="button" role="tab" aria-selected="false" aria-controls="call-panel" data-auth-tab>
+                Call
+              </button>
+              <button class="cp-tab" type="button" role="tab" aria-selected="false" aria-controls="voucher-panel" data-auth-tab>
+                Code
+              </button>
+            </div>
+
+            <section class="cp-auth-panel" id="sms-panel" role="tabpanel">
+              <!-- MikroTik native auth: username = phone, password = SMS code. Bind "Получить код" to your SMS service if used. -->
+              <form
+                class="cp-form"
+                name="login"
+                action="$(link-login-only)"
+                method="post"
+                $(if chap-id)
+                onsubmit="return mikrotikLogin(this)"
+                $(endif)
+                data-cp-form
+              >
+                <input type="hidden" name="dst" value="$(link-orig)" />
+                <input type="hidden" name="popup" value="true" />
+
+                <label class="cp-field" for="sms-phone">
+                  <span class="cp-label" data-ru="Телефон" data-en="Phone">Телефон</span>
+                  <span class="cp-phone">
+                    <span class="cp-prefix">+7</span>
+                    <input id="sms-phone" name="username" type="tel" inputmode="tel" autocomplete="tel" placeholder="999 123-45-67" required data-phone-input />
+                  </span>
+                </label>
+
+                <button class="cp-button cp-button-secondary" type="button" data-code-request data-countdown="60">
+                  Получить код
+                </button>
+
+                <label class="cp-field" for="sms-code">
+                  <span class="cp-label" data-ru="Код из SMS" data-en="SMS code">Код из SMS</span>
+                  <input class="cp-control" id="sms-code" name="password" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="0000" required data-code-input />
+                </label>
+
+                <label class="cp-consent">
+                  <input type="checkbox" name="consent" value="yes" required data-consent-input />
+                  <span>
+                    <span data-ru="Я принимаю правила доступа и даю согласие на обработку персональных данных." data-en="I accept access rules and consent to personal data processing.">
+                      Я принимаю правила доступа и даю согласие на обработку персональных данных.
+                    </span>
+                    <a class="cp-link" href="agreement.html" target="_blank">Полные условия</a>
+                  </span>
+                </label>
+
+                <p class="cp-message" role="status" aria-live="polite" data-form-message></p>
+                <div class="cp-actions">
+                  <button class="cp-button cp-button-primary" type="submit" data-ru="Подключиться" data-en="Connect">
+                    Подключиться
+                  </button>
+                  <a class="cp-button cp-button-ghost" href="$(link-login-only)" data-ru="Обновить" data-en="Refresh">Обновить</a>
+                </div>
+              </form>
+            </section>
+
+            <section class="cp-auth-panel" id="call-panel" role="tabpanel" hidden>
+              <!-- Callback flow usually belongs to external Hotspot service; submit phone as username when mapped through RADIUS. -->
+              <form class="cp-form" action="$(link-login-only)" method="post" data-cp-form>
+                <input type="hidden" name="dst" value="$(link-orig)" />
+                <input type="hidden" name="popup" value="true" />
+                <input type="hidden" name="password" value="callback" />
+
+                <label class="cp-field" for="call-phone">
+                  <span class="cp-label" data-ru="Телефон" data-en="Phone">Телефон</span>
+                  <span class="cp-phone">
+                    <span class="cp-prefix">+7</span>
+                    <input id="call-phone" name="username" type="tel" inputmode="tel" autocomplete="tel" placeholder="999 123-45-67" required data-phone-input />
+                  </span>
+                </label>
+
+                <label class="cp-consent">
+                  <input type="checkbox" name="consent" value="yes" required data-consent-input />
+                  <span>
+                    <span data-ru="Я принимаю правила доступа и даю согласие на обработку персональных данных." data-en="I accept access rules and consent to personal data processing.">
+                      Я принимаю правила доступа и даю согласие на обработку персональных данных.
+                    </span>
+                    <a class="cp-link" href="agreement.html" target="_blank">Полные условия</a>
+                  </span>
+                </label>
+
+                <p class="cp-message" role="status" aria-live="polite" data-form-message></p>
+                <div class="cp-actions">
+                  <button class="cp-button cp-button-primary" type="submit" data-ru="Продолжить по звонку" data-en="Continue by call">
+                    Продолжить по звонку
+                  </button>
+                  <a class="cp-button cp-button-ghost" href="$(link-login-only)" data-ru="Обновить" data-en="Refresh">Обновить</a>
+                </div>
+              </form>
+            </section>
+
+            <section class="cp-auth-panel" id="voucher-panel" role="tabpanel" hidden>
+              <form class="cp-form" action="$(link-login-only)" method="post" data-cp-form>
+                <input type="hidden" name="dst" value="$(link-orig)" />
+                <input type="hidden" name="popup" value="true" />
+
+                <label class="cp-field" for="voucher-login">
+                  <span class="cp-label" data-ru="Номер ваучера" data-en="Voucher number">Номер ваучера</span>
+                  <input class="cp-control" id="voucher-login" name="username" type="text" autocomplete="one-time-code" required data-voucher-input />
+                </label>
+
+                <label class="cp-field" for="voucher-password">
+                  <span class="cp-label" data-ru="Код" data-en="Code">Код</span>
+                  <input class="cp-control" id="voucher-password" name="password" type="text" autocomplete="one-time-code" required data-voucher-input />
+                </label>
+
+                <label class="cp-consent">
+                  <input type="checkbox" name="consent" value="yes" required data-consent-input />
+                  <span>
+                    <span data-ru="Я принимаю правила доступа и даю согласие на обработку персональных данных." data-en="I accept access rules and consent to personal data processing.">
+                      Я принимаю правила доступа и даю согласие на обработку персональных данных.
+                    </span>
+                    <a class="cp-link" href="agreement.html" target="_blank">Полные условия</a>
+                  </span>
+                </label>
+
+                <p class="cp-message" role="status" aria-live="polite" data-form-message></p>
+                <div class="cp-actions">
+                  <button class="cp-button cp-button-primary" type="submit" data-ru="Войти по коду" data-en="Use code">
+                    Войти по коду
+                  </button>
+                  <a class="cp-button cp-button-ghost" href="$(link-login-only)" data-ru="Обновить" data-en="Refresh">Обновить</a>
+                </div>
+              </form>
+            </section>
+          </div>
+
+          <aside class="cp-side-slot" data-enabled="false" aria-label="Акция">
+            <strong>Акция для гостей</strong>
+            <p>Включите этот блок, если на точке нужен баннер, промокод или важное объявление.</p>
+            <a class="cp-link" href="https://kubtel.ru/">Подробнее</a>
+          </aside>
+
+          <footer class="cp-footer">
+            <p>
+              <span data-ru="Служба поддержки:" data-en="Support:">Служба поддержки:</span>
+              <a href="tel:+78612001010">8 (861) 200-10-10</a>
+              <span data-ru="или" data-en="or">или</span>
+              <a href="tel:+78002221730">8 (800) 222-17-30</a>
+            </p>
+            <p>Услуга предоставляется ООО «Кубань-Телеком»</p>
+          </footer>
+        </section>
+      </div>
+    </main>
+    <script src="portal.js"></script>
+  </body>
+</html>

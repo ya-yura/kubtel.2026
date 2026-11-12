@@ -1,0 +1,85 @@
+---
+import { getPhoneHref, getSitePath, SITE } from "@config/site";
+import { getResidentialServiceVisual } from "@lib/visuals";
+import type { Service } from "@models/domain";
+
+type Props = {
+  services: Service[];
+};
+
+const { services } = Astro.props;
+const serviceLabels: Record<string, string> = {
+  connectivity: "Интернет",
+  media: "Телевидение",
+  security: "Видеонаблюдение"
+};
+const featuredServices = services
+  .filter((service) => ["internet", "tv", "cctv"].includes(service.slug))
+  .slice(0, 3);
+---
+
+<section class="section-pad home-deck" id="home-services" aria-labelledby="home-deck-title">
+  <div class="home-deck__heading">
+    <div>
+      <p class="eyebrow">Главное на старте</p>
+      <h2 id="home-deck-title">Всё нужное — в одном месте</h2>
+    </div>
+    <p>Выберите услугу, оплатите счёт или сразу передайте вопрос специалисту.</p>
+  </div>
+
+  <div class="home-service-rail" aria-label="Основные услуги">
+    {
+      featuredServices.map((service) => {
+        const visual = getResidentialServiceVisual(service.slug);
+        return (
+          <a class="home-service-card" href={getSitePath(`/individual/${service.slug}/`)}>
+            <div class="home-service-card__media">
+              <img src={getSitePath(visual.src)} alt="" width="180" height="112" loading="lazy" />
+            </div>
+            <div class="home-service-card__body">
+              <span>{serviceLabels[service.category] ?? service.category}</span>
+              <h3>{service.title}</h3>
+              <p>{service.shortDescription}</p>
+              <strong>
+                Подробнее <span aria-hidden="true">↗</span>
+              </strong>
+            </div>
+          </a>
+        );
+      })
+    }
+  </div>
+
+  <div class="home-tools" aria-label="Действия абонента">
+    <a
+      class="home-tool home-tool--accent"
+      href={SITE.paymentUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span class="home-tool__icon" aria-hidden="true">↗</span>
+      <span><strong>Оплатить услуги</strong><small>Официальная страница оплаты</small></span>
+    </a>
+    <a class="home-tool" href={SITE.accountUrl} target="_blank" rel="noopener noreferrer">
+      <span class="home-tool__icon" aria-hidden="true">⌂</span>
+      <span><strong>Личный кабинет</strong><small>Баланс, услуги и договор</small></span>
+    </a>
+    <a class="home-tool" href={getSitePath("/support/")}>
+      <span class="home-tool__icon" aria-hidden="true">?</span>
+      <span><strong>Нужна помощь</strong><small>Поддержка и ответы на вопросы</small></span>
+    </a>
+    <a class="home-tool" href={getSitePath("/business/")}>
+      <span class="home-tool__icon" aria-hidden="true">⌘</span>
+      <span><strong>Для бизнеса</strong><small>Связь и инфраструктура</small></span>
+    </a>
+  </div>
+
+  <div class="home-deck__contact">
+    <div>
+      <p class="eyebrow">Живой человек на связи</p>
+      <h2>Не нашли нужное?</h2>
+      <p>Позвоните — поможем выбрать услугу и уточним возможность подключения по адресу.</p>
+    </div>
+    <a class="card-action" href={getPhoneHref(SITE.salesPhone)}>{SITE.salesPhone}</a>
+  </div>
+</section>

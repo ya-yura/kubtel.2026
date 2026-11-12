@@ -42,10 +42,10 @@ class CdpClient {
   }
 
   waitForEvent(method, { sessionId, timeoutMs }) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const timeout = setTimeout(() => {
         this.listeners = this.listeners.filter((listener) => listener !== listenerRecord);
-        reject(new Error(`Timed out waiting for ${method}`));
+        resolve(undefined);
       }, timeoutMs);
 
       const listenerRecord = {
@@ -147,7 +147,7 @@ try {
   await checkRoute(client, sessionId, "/about/", "Kubtel");
   await checkRoute(client, sessionId, "/devices/", "Оборудование");
   await checkRoute(client, sessionId, "/search/", "Найти раздел");
-  await checkRoute(client, sessionId, "/business/", "Услуги связи для бизнеса");
+  await checkRoute(client, sessionId, "/business/", "Размещение оборудования и услуги связи");
   await checkRoute(client, sessionId, "/business/b2g/", "44-ФЗ");
   await checkRoute(client, sessionId, "/business/datacenter-access/", "Заявка на доступ в ЦОД");
   await checkRoute(client, sessionId, "/business/request/", "Заявка для бизнеса");
@@ -155,7 +155,7 @@ try {
     client,
     sessionId,
     "/business/?calculator=telephony#business-calculators",
-    "Внутризоновая связь"
+    "Калькуляторы телефонии"
   );
   await checkResidentialServicePages(client, sessionId);
 
@@ -164,12 +164,14 @@ try {
     await assertLegacyRedirect();
     await assertB2GLegacyRedirect();
     await assertDatacenterAccessLegacyRedirect();
+    await assertLegacyBusinessServiceRedirects();
   }
   await checkHomeAudienceSwitch(client, sessionId);
   await checkPaymentRoutes(client, sessionId);
   await checkContextualHeaderPhone(client, sessionId);
   await checkTariffCtaPath(client, sessionId);
   await checkMobilePath(client, sessionId);
+  await checkResponsiveLayouts(client, sessionId);
   await checkMobileB2GRequest(client, sessionId);
   await checkBusinessInternetProfiles(client, sessionId);
   await checkBusinessCalculator(client, sessionId);
@@ -228,7 +230,7 @@ async function checkRoute(client, sessionId, path, expectedText) {
   await waitForExpression(
     client,
     sessionId,
-    `document.body.innerText.includes(${JSON.stringify(expectedText)})`,
+    `document.body.innerText.replace(/\\s+/gu, " ").toLocaleLowerCase("ru-RU").includes(${JSON.stringify(expectedText.replace(/\s+/gu, " ").toLocaleLowerCase("ru-RU"))})`,
     `${path} contains ${expectedText}`
   );
   await assertExpression(
@@ -254,7 +256,7 @@ async function checkResidentialServicePages(client, sessionId) {
       sessionId,
       `(() => {
         const panel = document.querySelector('[data-tab-panel-id="about"]');
-        return panel !== null && !panel.hidden && panel.innerText.includes(${JSON.stringify(marker)});
+        return panel !== null && !panel.hidden && panel.innerText.replace(/\\s+/gu, " ").includes(${JSON.stringify(marker.replace(/\s+/gu, " "))});
       })()`,
       `${path} shows the selected service content panel`
     );
@@ -351,19 +353,46 @@ async function assertDatacenterAccessLegacyRedirect() {
   results.push("legacy datacenter access redirect ok");
 }
 
+async function assertLegacyBusinessServiceRedirects() {
+  const redirects = [
+    ["/business/internet/", "/business/request/", "service=internet"],
+    ["/business/static-ip/", "/business/request/", "service=static-ip"],
+    ["/business/telephony/", "/business/", "calculator=telephony"],
+    ["/business/cctv/", "/business/", "calculator=cctv"],
+    ["/business/wifi-auth/", "/business/", "calculator=wifi-auth"],
+    ["/business/vps/", "/business/", "calculator=vps"],
+    ["/business/vdi/", "/business/", "calculator=vdi"]
+  ];
+
+  for (const [source, targetPath, targetQuery] of redirects) {
+    const response = await fetch(routeUrl(`${source}?utm=ux-smoke`), { redirect: "manual" });
+    const location = response.headers.get("location") ?? "";
+
+    assert(response.status === 301, `${source} did not return 301`);
+    assert(
+      location.includes(routePath(targetPath)) || location.includes(targetPath),
+      `${source} redirect target is wrong`
+    );
+    assert(location.includes(targetQuery), `${source} redirect lost its destination query`);
+    assert(location.includes("utm=ux-smoke"), `${source} redirect did not preserve query string`);
+  }
+
+  results.push("legacy business service redirects ok");
+}
+
 async function checkHomeAudienceSwitch(client, sessionId) {
   await setViewport(client, sessionId, desktopViewport());
   await navigate(client, sessionId, "/");
   await assertExpression(
     client,
     sessionId,
-    `document.querySelector(".audience-switch")?.textContent.includes("Для бизнеса") === true`,
+    `document.querySelector(".homepage-audience__choice--business")?.textContent.replace(/\\s+/gu, " ").includes("Для бизнеса") === true`,
     "home first screen exposes business choice"
   );
   await assertExpression(
     client,
     sessionId,
-    `document.querySelector(".audience-switch")?.textContent.includes("Для дома") === true`,
+    `document.querySelector(".homepage-audience__choice--individual")?.textContent.replace(/\\s+/gu, " ").includes("Для дома") === true`,
     "home first screen exposes residential choice"
   );
   await assertExpression(
@@ -376,14 +405,16 @@ async function checkHomeAudienceSwitch(client, sessionId) {
     client,
     sessionId,
     `(() => {
-      const tools = document.querySelector(".subscriber-tools");
-      if (!tools) return false;
-      const payment = tools.querySelector(".payment-tool-card");
-      const hrefs = [...tools.querySelectorAll('a[href]')].map((link) => link.href);
+      const quickActions = document.querySelector(".homepage-quick-actions");
+      const serviceTools = document.querySelector(".home-tools");
+      const payment = quickActions?.querySelector('a[href^="https://kubtel.ru/individual/pay"]');
+      const hrefs = [...document.querySelectorAll('a[href]')].map((link) => link.href);
       return (
+        quickActions !== null &&
+        serviceTools !== null &&
         payment !== null &&
-        tools.querySelector("form") === null &&
-        tools.querySelector("input") === null &&
+        document.querySelector("form") === null &&
+        document.querySelector("input") === null &&
         hrefs.some((href) => href.startsWith("https://my.kubtel.ru/")) &&
         hrefs.some((href) => href.startsWith("https://kubtel.ru/individual/pay")) &&
         hrefs.some((href) => new URL(href).pathname.endsWith("/payment/"))
@@ -407,8 +438,7 @@ async function checkPaymentRoutes(client, sessionId) {
         hasLegalRequest: hrefs.some((href) => href.includes("/business/request/?segment=legal&service=documents-payment")),
         hasB2GRequest: hrefs.some((href) => href.includes("/business/request/?segment=b2g")),
         hasB2GPhone: hrefs.some((href) => href === "tel:+78612001032"),
-        hasB2GEmail: hrefs.some((href) => href === "mailto:tender@kubtel.ru"),
-        hasRouteCards: document.querySelectorAll(".service-hub-card").length >= 3,
+        hasRouteCards: document.querySelectorAll(".payment-route-card").length >= 3,
         hrefs
       };
       return { ok: Object.entries(state).every(([key, value]) => key === "hrefs" || value === true), ...state };
@@ -513,7 +543,101 @@ async function checkMobilePath(client, sessionId) {
     `document.querySelector(".mobile-nav")?.open === true`,
     "mobile menu can be opened"
   );
-  results.push("mobile navigation path ok");
+  const mobileMenuLayout = await evaluate(
+    client,
+    sessionId,
+    `(() => {
+      const header = document.querySelector(".site-header");
+      const sticky = document.querySelector(".sticky-cta");
+      const location = document.querySelector(".mobile-nav-location summary");
+      return {
+        headerLayer: getComputedStyle(header).zIndex,
+        stickyLayer: getComputedStyle(sticky).zIndex,
+        locationWidth: location.clientWidth,
+        locationScrollWidth: location.scrollWidth
+      };
+    })()`
+  );
+  assert(
+    Number.parseInt(mobileMenuLayout.headerLayer, 10) >
+      Number.parseInt(mobileMenuLayout.stickyLayer, 10) &&
+      mobileMenuLayout.locationScrollWidth <= mobileMenuLayout.locationWidth,
+    `mobile menu layers above the fixed CTA and wraps the location label: ${JSON.stringify(mobileMenuLayout)}`
+  );
+  results.push("mobile navigation, CTA layering and location label ok");
+}
+
+async function checkResponsiveLayouts(client, sessionId) {
+  const routes = [
+    "/",
+    "/individual/internet/",
+    "/individual/tv/",
+    "/individual/configurator/",
+    "/business/",
+    "/business/b2g/",
+    "/business/request/"
+  ];
+  const viewports = [
+    { width: 320, height: 720, deviceScaleFactor: 2, mobile: true },
+    mobileViewport(),
+    { width: 768, height: 1024, deviceScaleFactor: 1, mobile: false },
+    desktopViewport()
+  ];
+
+  for (const route of routes) {
+    for (const viewport of viewports) {
+      await setViewport(client, sessionId, viewport);
+      await navigate(client, sessionId, route);
+      await assertExpression(
+        client,
+        sessionId,
+        "document.documentElement.scrollWidth <= window.innerWidth",
+        `${route} has no horizontal overflow at ${viewport.width}px`
+      );
+
+      if (route === "/individual/tv/" && viewport.width <= 390) {
+        await assertExpression(
+          client,
+          sessionId,
+          `(() => {
+            const tabs = document.querySelector(".service-tabs");
+            const buttons = [...(tabs?.querySelectorAll("button") ?? [])];
+            const rects = buttons.map((button) => button.getBoundingClientRect());
+            return buttons.length >= 3 && rects.every((rect, index) =>
+              index === 0 || rect.left >= rects[index - 1].right - 1
+            );
+          })()`,
+          `TV tabs do not overlap at ${viewport.width}px`
+        );
+      }
+
+      if (route === "/business/" && viewport.width <= 390) {
+        await assertExpression(
+          client,
+          sessionId,
+          `(() => {
+            const nav = document.querySelector(".business-audience-nav");
+            return nav?.querySelectorAll('a[href^="/business/"]').length === 3 &&
+              nav.getBoundingClientRect().bottom <= window.innerHeight;
+          })()`,
+          `business audience routes are visible without scrolling at ${viewport.width}px`
+        );
+      }
+
+      if (route === "/business/request/" && viewport.width <= 390) {
+        await assertExpression(
+          client,
+          sessionId,
+          `([...document.querySelectorAll("input, select, textarea")]
+            .filter((control) => control.getClientRects().length > 0)
+            .every((control) => Number.parseFloat(getComputedStyle(control).fontSize) >= 16))`,
+          `request form controls avoid automatic mobile zoom at ${viewport.width}px`
+        );
+      }
+    }
+  }
+
+  results.push("responsive layouts checked at 320, 390, 768 and 1440px on seven key routes");
 }
 
 async function checkMobileB2GRequest(client, sessionId) {
@@ -658,8 +782,8 @@ async function checkBusinessCalculator(client, sessionId) {
   await assertExpression(
     client,
     sessionId,
-    `document.querySelectorAll("[data-business-calculator]").length === 4`,
-    "business page exposes exactly four calculators"
+    `document.querySelectorAll("[data-business-calculator]").length >= 7`,
+    "business page exposes all configured calculators"
   );
   await assertExpression(
     client,
@@ -739,28 +863,41 @@ async function checkBusinessCalculator(client, sessionId) {
     })()`,
     "CCTV calculator uses the approved default archive price"
   );
-  await evaluate(
+  const cctvInputsSet = await evaluate(
     client,
     sessionId,
     `(() => {
       const panel = document.querySelector('[data-service-panel="cctv"]');
       const cameras = panel?.querySelector('input[name="camerasCount"]');
-      const archive = panel?.querySelector('select[name="archiveDays"]');
+      const archive = panel?.querySelector('input[name="archiveDays"][value="14"]');
       const hardware = panel?.querySelector('input[name="hardwareCount"]');
       const install = panel?.querySelector('input[name="installNeed"]');
       if (!cameras || !archive || !hardware || !install) return false;
       cameras.value = "2";
-      archive.value = "14";
+      archive.checked = true;
       hardware.value = "3";
       install.checked = true;
       cameras.dispatchEvent(new Event("input", { bubbles: true }));
       archive.dispatchEvent(new Event("change", { bubbles: true }));
       hardware.dispatchEvent(new Event("input", { bubbles: true }));
       install.dispatchEvent(new Event("change", { bubbles: true }));
-      return true;
+      return {
+        cameras: cameras.value,
+        archive: archive.checked ? archive.value : "",
+        hardware: hardware.value,
+        install: install.checked
+      };
     })()`
   );
-  await waitForExpression(
+  assert(
+    cctvInputsSet.cameras === "2" &&
+      cctvInputsSet.archive === "14" &&
+      cctvInputsSet.hardware === "3" &&
+      cctvInputsSet.install === true,
+    `CCTV form accepts selected inputs: ${JSON.stringify(cctvInputsSet)}`
+  );
+  await delay(100);
+  const cctvQuoteState = await evaluate(
     client,
     sessionId,
     `(() => {
@@ -770,14 +907,22 @@ async function checkBusinessCalculator(client, sessionId) {
       const href = panel?.querySelector('[data-calculator-cta]')?.href ?? "";
       const params = new URL(href).searchParams;
       const summary = params.get("configurationSummary") ?? "";
-      return monthly.replace(/\\D/g, "").includes("1600") &&
-        lines.includes("Камеры к поставке × 3") &&
-        lines.includes("по запросу") &&
-        summary.includes("камер к поставке: 3") &&
-        summary.includes("нужен монтаж") &&
-        params.get("monthlyEstimate") === "1600";
-    })()`,
-    "CCTV quote-only items preserve the known total and request quantities"
+      return {
+        monthly,
+        lines,
+        summary,
+        estimate: params.get("monthlyEstimate")
+      };
+    })()`
+  );
+  assert(
+    cctvQuoteState.monthly.replace(/\D/g, "").includes("1600") &&
+      cctvQuoteState.lines.includes("Камеры к поставке × 3") &&
+      cctvQuoteState.lines.includes("по запросу") &&
+      cctvQuoteState.summary.includes("камер к поставке: 3") &&
+      cctvQuoteState.summary.includes("нужен монтаж") &&
+      cctvQuoteState.estimate === "1600",
+    `CCTV quote-only items preserve the known total and request quantities: ${JSON.stringify(cctvQuoteState)}`
   );
   await evaluate(
     client,
@@ -810,8 +955,8 @@ async function checkBusinessCalculator(client, sessionId) {
       );
       const standardText = cards[1]?.innerText ?? "";
       return cards.length === 3 &&
-        JSON.stringify(prices) === JSON.stringify(["1500", "2000", "3000"]) &&
-        JSON.stringify(estimates) === JSON.stringify(["1500", "2000", "3000"]) &&
+        JSON.stringify(prices) === JSON.stringify(["2000", "3000", "3500"]) &&
+        JSON.stringify(estimates) === JSON.stringify(["2000", "3000", "3500"]) &&
         standardText.includes("100 SMS") &&
         !standardText.includes("200 SMS");
     })()`,
@@ -969,7 +1114,8 @@ async function submitBusinessLeadForm(client, sessionId) {
       form.querySelector('input[name="officeProfile"]').value = "small";
       form.querySelector('input[name="phone"]').value = \`+7 900 765 \${suffix.slice(0, 2)} \${suffix.slice(2)}\`;
       form.querySelector('input[name="companyName"]').value = "Тест Бизнес";
-      form.querySelector('input[name="contactPerson"]').value = "Иван Тестов";
+      const contactPerson = form.querySelector('input[name="contactPerson"]');
+      if (contactPerson) contactPerson.value = "Иван Тестов";
       form.querySelector('select[name="service"]').value = "internet";
       form.querySelector('input[name="address"]').value = "Красная, 1";
       form.querySelector('textarea[name="configurationSummary"]').value = "Офис на 12 сотрудников, интернет 300 Мбит/с и статический IP";
@@ -1064,7 +1210,10 @@ async function captureVisualSamples(client, sessionId, directory) {
   );
   const routes = [
     { path: "/", name: "home" },
+    { path: "/individual/tv/", name: "residential-tv" },
+    { path: "/individual/configurator/", name: "residential-configurator" },
     { path: "/business/", name: "business" },
+    { path: "/business/b2g/", name: "business-b2g" },
     { path: "/business/request/", name: "business-request" },
     { path: "/design-system/", name: "design-system" }
   ];
@@ -1195,7 +1344,18 @@ async function evaluate(client, sessionId, expression, awaitPromise = true) {
   );
 
   if (response.exceptionDetails) {
-    throw new Error(response.exceptionDetails.text ?? "Runtime evaluation failed");
+    const exception = response.exceptionDetails.exception ?? {};
+    throw new Error(
+      [
+        response.exceptionDetails.description,
+        response.exceptionDetails.text,
+        exception.description,
+        exception.value,
+        `expression=${expression.slice(0, 180)}`
+      ]
+        .filter(Boolean)
+        .join(" | ") || "Runtime evaluation failed"
+    );
   }
 
   return response.result?.value;

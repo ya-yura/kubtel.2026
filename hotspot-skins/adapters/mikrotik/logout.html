@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Guest Wi-Fi | Logout</title>
+    <link rel="stylesheet" href="portal.css" />
+  </head>
+  <body>
+    <main class="cp-page">
+      <div class="cp-shell">
+        <header class="cp-topbar">
+          <div class="cp-brand">
+            <img class="cp-brand-logo" src="logo-wordmark.svg" alt="Кубтел" />
+            <div class="cp-brand-text">
+              <strong class="cp-venue">Гостевой Wi-Fi</strong>
+              <span class="cp-network">$(hostname)</span>
+            </div>
+          </div>
+        </header>
+
+        <section class="cp-card" aria-labelledby="logout-title">
+          <div class="cp-main">
+            <div class="cp-copy">
+              <h1 class="cp-title" id="logout-title">Сессия завершена</h1>
+              <p class="cp-lead">Доступ к гостевой сети отключен.</p>
+            </div>
+            <div class="cp-actions single">
+              <a class="cp-button cp-button-primary" href="$(link-login-only)">Подключиться снова</a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
