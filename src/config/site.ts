@@ -27,7 +27,8 @@ function getOptionalPublicUrl(value: string | undefined): string | null {
 
 const basePath = normalizeBasePath(import.meta.env.BASE_URL ?? "/");
 const unifiedResidentialPhone = "8 800 222-17-30";
-const unifiedCompanyEmail = "kubtel@kubtel.ru";
+const unifiedCompanyEmail =
+  process.env.SALES_EMAIL?.trim() || import.meta.env.SALES_EMAIL?.trim() || "support@kubtel.ru";
 
 export const SITE = {
   name: "Kubtel",
@@ -58,7 +59,7 @@ export const SITE = {
   supportPhone: unifiedResidentialPhone,
   supportDirectPhone: unifiedResidentialPhone,
   salesPhone: unifiedResidentialPhone,
-  supportEmail: "support@kubtel.ru",
+  supportEmail: unifiedCompanyEmail,
   email: unifiedCompanyEmail,
   businessEmail: unifiedCompanyEmail,
   businessPhone: "8 861 200-10-60",

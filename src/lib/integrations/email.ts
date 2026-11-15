@@ -14,7 +14,7 @@ export async function sendLeadToEmail(
   if (isConfiguratorLead(lead)) {
     return sendEmail(
       {
-        to: env.SALES_EMAIL ?? SITE.email,
+        to: env.SALES_EMAIL?.trim() || SITE.email,
         replyTo: lead.customer.email ?? undefined,
         subject: `[${lead.id}] Конфигуратор: ${lead.service.title}`,
         text: [
@@ -42,7 +42,7 @@ export async function sendLeadToEmail(
 
   return sendEmail(
     {
-      to: env.SALES_EMAIL ?? SITE.email,
+      to: env.SALES_EMAIL?.trim() || SITE.email,
       subject: `[${lead.id}] Домашнее подключение: ${lead.tariff.title}`,
       text: [
         "Новая заявка с сайта Kubtel",
@@ -108,13 +108,24 @@ export async function sendBusinessLeadToEmail(
 ): Promise<DeliveryResult> {
   return sendEmail(
     {
-      to: lead.routing.recipientEmail,
+      to: resolveBusinessLeadEmailRecipient(lead, env),
       replyTo: lead.contact.email ?? undefined,
       subject: buildBusinessLeadEmailSubject(lead),
       text: buildBusinessLeadEmailText(lead)
     },
     env
   );
+}
+
+export function resolveBusinessLeadEmailRecipient(
+  lead: { routing: Pick<BusinessLeadSubmission["routing"], "pipeline" | "recipientEmail"> },
+  env: NodeJS.ProcessEnv = process.env
+): string {
+  if (lead.routing.pipeline === "b2g") {
+    return lead.routing.recipientEmail;
+  }
+
+  return env.SALES_EMAIL?.trim() || lead.routing.recipientEmail;
 }
 
 export function buildBusinessLeadEmailSubject(lead: BusinessLeadSubmission): string {

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildBusinessLeadEmailSubject,
   buildBusinessLeadEmailText,
+  resolveBusinessLeadEmailRecipient,
   sendBusinessLeadToEmail
 } from "@lib/integrations/email";
 import { buildBusinessLeadSubmission } from "@lib/leads/business-submission";
@@ -35,6 +36,36 @@ function createBudgetLead() {
     }
   });
 }
+
+describe("resolveBusinessLeadEmailRecipient", () => {
+  it("uses the centralized sales address for business requests", () => {
+    expect(
+      resolveBusinessLeadEmailRecipient(
+        {
+          routing: {
+            pipeline: "b2b",
+            recipientEmail: "support@kubtel.ru"
+          }
+        },
+        { SALES_EMAIL: "sales@example.ru" }
+      )
+    ).toBe("sales@example.ru");
+  });
+
+  it("keeps B2G requests routed to the dedicated budget address", () => {
+    expect(
+      resolveBusinessLeadEmailRecipient(
+        {
+          routing: {
+            pipeline: "b2g",
+            recipientEmail: "tender@kubtel.ru"
+          }
+        },
+        { SALES_EMAIL: "sales@example.ru" }
+      )
+    ).toBe("tender@kubtel.ru");
+  });
+});
 
 describe("business lead email delivery", () => {
   it("formats a budget request for the dedicated recipient", () => {

@@ -1190,7 +1190,7 @@ async function submitBusinessLeadForm(client, sessionId) {
       const text = document.querySelector(".form-status")?.innerText ?? "";
       const isStaticPreview = form?.dataset.staticPreview === "true";
       return form?.querySelector('input[name="officeProfile"]')?.value === "small" &&
-        (isStaticPreview ? text.includes("kubtel@kubtel.ru") : text.includes("KBT-B2B-"));
+        (isStaticPreview ? text.includes("support@kubtel.ru") : text.includes("KBT-B2B-"));
     })()`,
     "business lead form preserves office profile and confirms delivery mode"
   );

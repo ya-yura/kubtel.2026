@@ -37,7 +37,7 @@ describe("buildBusinessLeadSubmission", () => {
     expect(lead.qualification.leadScore).toBeGreaterThanOrEqual(50);
     expect(lead.qualification.qualification).toMatch(/mql|sql/);
     expect(lead.routing.pipeline).toBe("b2b");
-    expect(lead.routing.recipientEmail).toBe("kubtel@kubtel.ru");
+    expect(lead.routing.recipientEmail).toBe("support@kubtel.ru");
     expect(lead.configuration.summary).toContain("300 Мбит/с");
   });
 

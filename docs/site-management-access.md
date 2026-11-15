@@ -106,22 +106,23 @@
 
 Шаблон лежит в `.env.example`. Локальный `.env` и production env не хранятся в git.
 
-| Переменная                 | Назначение                                    |
-| -------------------------- | --------------------------------------------- |
-| `PUBLIC_SITE_URL`          | боевой HTTPS origin сайта                     |
-| `CRM_WEBHOOK_URL`          | endpoint CRM для заявок                       |
-| `CRM_WEBHOOK_SECRET`       | секрет подписи CRM-запроса, если используется |
-| `TELEGRAM_BOT_TOKEN`       | токен Telegram-бота                           |
-| `TELEGRAM_SALES_CHAT_ID`   | чат отдела продаж                             |
-| `ANALYTICS_WEBHOOK_URL`    | endpoint серверной аналитики                  |
-| `ANALYTICS_WEBHOOK_SECRET` | секрет аналитического webhook                 |
-| `LEAD_OUTBOX_DIR`          | путь серверного резерва заявок                |
-| `CMS_PROVIDER`             | `local` или `strapi`                          |
-| `CMS_PREVIEW_MODE`         | режим preview для CMS                         |
-| `CMS_FALLBACK_TO_LOCAL`    | fallback на local content при ошибке CMS      |
-| `STRAPI_URL`               | server-only URL Strapi                        |
-| `STRAPI_API_TOKEN`         | server-only API token Strapi                  |
-| `STRAPI_PREVIEW_SECRET`    | секрет preview                                |
+| Переменная                 | Назначение                                                                                                                                                   |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `PUBLIC_SITE_URL`          | боевой HTTPS origin сайта                                                                                                                                    |
+| `SALES_EMAIL`              | единый адрес отдела продаж: контакты сайта и получатели заявок B2C/B2B; для статической сборки задается при build, для серверного сайта читается при запуске |
+| `CRM_WEBHOOK_URL`          | endpoint CRM для заявок                                                                                                                                      |
+| `CRM_WEBHOOK_SECRET`       | секрет подписи CRM-запроса, если используется                                                                                                                |
+| `TELEGRAM_BOT_TOKEN`       | токен Telegram-бота                                                                                                                                          |
+| `TELEGRAM_SALES_CHAT_ID`   | чат отдела продаж                                                                                                                                            |
+| `ANALYTICS_WEBHOOK_URL`    | endpoint серверной аналитики                                                                                                                                 |
+| `ANALYTICS_WEBHOOK_SECRET` | секрет аналитического webhook                                                                                                                                |
+| `LEAD_OUTBOX_DIR`          | путь серверного резерва заявок                                                                                                                               |
+| `CMS_PROVIDER`             | `local` или `strapi`                                                                                                                                         |
+| `CMS_PREVIEW_MODE`         | режим preview для CMS                                                                                                                                        |
+| `CMS_FALLBACK_TO_LOCAL`    | fallback на local content при ошибке CMS                                                                                                                     |
+| `STRAPI_URL`               | server-only URL Strapi                                                                                                                                       |
+| `STRAPI_API_TOKEN`         | server-only API token Strapi                                                                                                                                 |
+| `STRAPI_PREVIEW_SECRET`    | секрет preview                                                                                                                                               |
 
 Если CRM/Telegram не настроены, заявка сохраняется в outbox. Для production это резервный режим, а не полноценная замена CRM.
 

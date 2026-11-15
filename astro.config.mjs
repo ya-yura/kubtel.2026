@@ -19,6 +19,9 @@ export default defineConfig({
   output: staticPreview ? "static" : "server",
   trailingSlash: "always",
   vite: {
+    // SALES_EMAIL is rendered into public contact links and must stay the
+    // single configuration source for displayed and routed sales addresses.
+    envPrefix: ["PUBLIC_", "SALES_EMAIL"],
     // The repository lives below O:/Dev, which contains another app's Vite
     // workspace config. Keep Astro's build scoped to this project.
     configFile: false,
