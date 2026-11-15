@@ -66,7 +66,6 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: production
-      url: ${{ secrets.PRODUCTION_URL }}
     steps:
       - name: Download release artifact
         uses: actions/download-artifact@v4
