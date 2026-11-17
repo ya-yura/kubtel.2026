@@ -14,6 +14,7 @@ import {
   businessServices,
   getBusinessSegmentPath
 } from "@lib/business/content";
+import { hotspotPlans } from "@lib/business/hotspot";
 import { legacyBusinessServiceSlugs } from "@lib/redirects/business-legacy";
 import { formatRubles } from "@lib/format";
 import type { JsonLdObject } from "@lib/seo/schema";
@@ -96,38 +97,6 @@ const internetOfficeProfiles = [
   }
 ];
 
-const hotspotPlans = [
-  {
-    title: "Базовый",
-    monthlyPrice: 2000,
-    features: [
-      "авторизация по звонку без лимита",
-      "брендированная стартовая страница",
-      "рекламный баннер",
-      "база посетителей и мультиязычность"
-    ]
-  },
-  {
-    title: "Стандарт",
-    monthlyPrice: 3000,
-    features: [
-      "возможности базового тарифа",
-      "пакет 100 SMS для авторизации",
-      "перенаправление после авторизации",
-      "управление трафиком"
-    ]
-  },
-  {
-    title: "Премиум",
-    monthlyPrice: 3500,
-    features: [
-      "возможности стандартного тарифа",
-      "авторизация по ваучеру",
-      "периодическое перенаправление",
-      "до трёх страниц для перенаправления"
-    ]
-  }
-];
 const vdiPackages = [
   {
     title: "Виртуальное рабочее место",
@@ -504,6 +473,9 @@ const pageSchema: JsonLdObject = {
                       >
                         Официальное описание Hot-spot Kubtel
                       </a>
+                      <a class="business-link" href={getSitePath("/business/hotspot/")}>
+                        Как работает Hotspot и какой тариф выбрать
+                      </a>
                     </section>
                   ) : item.slug === "vdi" ? (
                     <section
@@ -546,6 +518,9 @@ const pageSchema: JsonLdObject = {
                         rel="noopener noreferrer"
                       >
                         Официальное описание VDI Kubtel
+                      </a>
+                      <a class="business-link" href={getSitePath("/business/virtualization/")}>
+                        Виртуализация: серверы VPS и рабочие места VDI
                       </a>
                     </section>
                   ) : (

@@ -130,6 +130,26 @@ export const sitemapRoutes: SitemapRoute[] = [
     lastModified
   },
   {
+    path: "/business/hotspot/",
+    label: "Hotspot для бизнеса",
+    title: "Гостевой Wi‑Fi Hotspot для бизнеса в Краснодаре",
+    description:
+      "Гостевой Wi‑Fi для кафе, магазинов, отелей и клиник: авторизация посетителей, брендированная страница входа и тарифы Hotspot.",
+    changeFrequency: "weekly",
+    priority: 0.9,
+    lastModified: "2026-11-17"
+  },
+  {
+    path: "/business/virtualization/",
+    label: "Виртуализация для бизнеса",
+    title: "Виртуализация для бизнеса в Краснодаре — VPS и VDI",
+    description:
+      "Виртуальные серверы VPS/VDS для 1С и CRM и виртуальные рабочие места VDI: подбор конфигурации для компаний в Краснодаре.",
+    changeFrequency: "weekly",
+    priority: 0.88,
+    lastModified: "2026-11-17"
+  },
+  {
     path: "/business/b2b/",
     label: "B2B",
     title: "B2B: связь для бизнеса",

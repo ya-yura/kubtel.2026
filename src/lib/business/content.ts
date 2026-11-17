@@ -176,6 +176,39 @@ export const businessServices: BusinessService[] = [
       "Гостевой Wi‑Fi Hot-spot Kubtel для публичных точек: авторизация посетителей, доступ в интернет и заявка на запуск услуги."
   },
   {
+    slug: "hotspot",
+    title: "Гостевой Wi‑Fi Hotspot для бизнеса",
+    category: "Публичный Wi‑Fi",
+    summary:
+      "Гостевая Wi‑Fi-сеть для кафе, гостиниц, магазинов и других публичных точек с выбором тарифа, страницы входа и способа авторизации.",
+    businessBenefit:
+      "Организуйте отдельный доступ в интернет для посетителей, настройте брендированную страницу входа и выберите подходящий набор функций Hotspot.",
+    proofPoints: [
+      { label: "Тарифы", value: "3 плана от 2 000 ₽ в месяц", status: "confirmed" },
+      { label: "Вход", value: "звонок, SMS или ваучер по тарифу", status: "confirmed" },
+      { label: "Объекты", value: "кафе, магазины, отели, клиники", status: "confirmed" }
+    ],
+    ctaLabel: "Подключить Hotspot",
+    priority: "P1",
+    audience: ["кафе", "отели", "магазины", "салоны", "клиники"],
+    options: [
+      "тариф и способы авторизации",
+      "брендированная страница входа",
+      "SMS-пакет",
+      "показ баннера и перенаправление после входа"
+    ],
+    calculatorFields: [
+      "тип и адрес точки",
+      "количество точек",
+      "подходящий тариф",
+      "сценарий Wi‑Fi"
+    ],
+    relatedServices: ["internet", "wifi-auth"],
+    seoTitle: "Гостевой Wi‑Fi Hotspot для бизнеса в Краснодаре",
+    seoDescription:
+      "Подключите Hotspot в Краснодаре: гостевой Wi‑Fi для кафе, магазинов и отелей, авторизация посетителей и тарифы от 2 000 ₽ в месяц."
+  },
+  {
     slug: "vps",
     title: "VPS/VDS",
     category: "Инфраструктура",
@@ -220,6 +253,34 @@ export const businessServices: BusinessService[] = [
     seoTitle: "Виртуальное рабочее место для бизнеса",
     seoDescription:
       "VDI Kubtel для бизнеса: аренда виртуального рабочего места для сотрудников и масштабирования рабочих мест."
+  },
+  {
+    slug: "virtualization",
+    title: "Виртуализация для бизнеса: VPS и VDI",
+    category: "Виртуальная инфраструктура",
+    summary:
+      "Виртуальные серверы VPS/VDS и удалённые рабочие места VDI для приложений и сотрудников компании.",
+    businessBenefit:
+      "Подберите формат под задачу: виртуальный сервер для 1С, CRM и других бизнес-систем или готовое рабочее место с удалённым доступом.",
+    proofPoints: [
+      { label: "VPS/VDS", value: "ресурсы сервера под конфигурацию", status: "confirmed" },
+      { label: "VDI", value: "2 ядра, 4 ГБ ОЗУ, 50 ГБ HDD в базовом профиле", status: "confirmed" },
+      { label: "Подбор", value: "по числу пользователей и нагрузке", status: "confirmed" }
+    ],
+    ctaLabel: "Подобрать виртуальную инфраструктуру",
+    priority: "P1",
+    audience: ["компании с 1С и CRM", "удалённые команды", "филиальные сети", "IT-отделы"],
+    options: ["VPS/VDS или VDI", "CPU и RAM", "диск и операционная система", "число рабочих мест"],
+    calculatorFields: [
+      "назначение сервера",
+      "число пользователей",
+      "ресурсы",
+      "требования к доступу"
+    ],
+    relatedServices: ["vps", "vdi", "colocation"],
+    seoTitle: "Виртуализация для бизнеса в Краснодаре — VPS и VDI",
+    seoDescription:
+      "Виртуализация для бизнеса в Краснодаре: VPS/VDS для 1С и CRM, VDI для удалённых рабочих мест. Подбор ресурсов и заявка в Kubtel."
   },
   {
     slug: "colocation",
@@ -279,7 +340,7 @@ export const businessSegments: BusinessSegment[] = [
       "Открытие объекта, переезд, плохой текущий канал, ограничения мобильного интернета или запуск гостевого Wi‑Fi.",
     ctaLabel: "Подобрать связь для объекта",
     fields: ["тип объекта", "адрес", "услуги", "срок запуска"],
-    serviceSlugs: ["internet", "telephony", "cctv", "wifi-auth"],
+    serviceSlugs: ["internet", "telephony", "cctv", "hotspot", "virtualization"],
     seoTitle: "Связь для бизнеса в\u00a0Краснодаре",
     seoDescription:
       "Kubtel для малого, среднего и крупного бизнеса: интернет, телефония, видеонаблюдение и Wi‑Fi-авторизация."
@@ -314,7 +375,7 @@ export const businessSegments: BusinessSegment[] = [
       "e-mail по желанию",
       "удобный канал связи"
     ],
-    serviceSlugs: ["internet", "telephony", "wifi-auth", "static-ip"],
+    serviceSlugs: ["internet", "telephony", "hotspot", "static-ip"],
     seoTitle: "B2G: связь для государственных заказчиков",
     seoDescription:
       "КУБАНЬ-ТЕЛЕКОМ для государственных заказчиков: услуги связи по 44-ФЗ и 223-ФЗ, регистрация в ЕИС, аккредитация на федеральных ЭТП и контакты сектора B2G."

@@ -148,6 +148,10 @@ try {
   await checkRoute(client, sessionId, "/devices/", "Оборудование");
   await checkRoute(client, sessionId, "/search/", "Найти раздел");
   await checkRoute(client, sessionId, "/business/", "Размещение оборудования и услуги связи");
+  await checkRoute(client, sessionId, "/business/hotspot/", "Гостевой Wi‑Fi Hotspot для бизнеса");
+  await checkRoute(client, sessionId, "/business/virtualization/", "Виртуализация для бизнеса");
+  await checkSeoLandingMetadata(client, sessionId, "/business/hotspot/");
+  await checkSeoLandingMetadata(client, sessionId, "/business/virtualization/");
   await checkRoute(client, sessionId, "/business/b2g/", "44-ФЗ");
   await checkRoute(client, sessionId, "/business/datacenter-access/", "Заявка на доступ в ЦОД");
   await checkRoute(client, sessionId, "/business/request/", "Заявка для бизнеса");
@@ -240,6 +244,25 @@ async function checkRoute(client, sessionId, path, expectedText) {
     `${path} has no horizontal overflow on desktop`
   );
   results.push(`desktop route ok: ${path}`);
+}
+
+async function checkSeoLandingMetadata(client, sessionId, path) {
+  await navigate(client, sessionId, path);
+  await assertExpression(
+    client,
+    sessionId,
+    `(() => {
+      const canonical = document.querySelector('link[rel="canonical"]')?.href ?? "";
+      const robots = document.querySelector('meta[name="robots"]')?.content ?? "";
+      const title = document.title;
+      return canonical.endsWith(${JSON.stringify(path)}) &&
+        robots === "index,follow" &&
+        title.includes("| Kubtel") &&
+        !title.includes("| Kubtel | Kubtel");
+    })()`,
+    `${path} has canonical, indexable robots and a non-duplicated title`
+  );
+  results.push(`SEO metadata ok: ${path}`);
 }
 
 async function checkResidentialServicePages(client, sessionId) {
@@ -1213,6 +1236,8 @@ async function captureVisualSamples(client, sessionId, directory) {
     { path: "/individual/tv/", name: "residential-tv" },
     { path: "/individual/configurator/", name: "residential-configurator" },
     { path: "/business/", name: "business" },
+    { path: "/business/hotspot/", name: "business-hotspot" },
+    { path: "/business/virtualization/", name: "business-virtualization" },
     { path: "/business/b2g/", name: "business-b2g" },
     { path: "/business/request/", name: "business-request" },
     { path: "/design-system/", name: "design-system" }

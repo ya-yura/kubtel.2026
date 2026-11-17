@@ -6,6 +6,7 @@ import DeviceProductCard from "@components/ui/DeviceProductCard.astro";
 import PromoImage from "@components/ui/PromoImage.astro";
 import { getAbsoluteUrl, getPhoneHref, getSitePath, SITE } from "@config/site";
 import { getBusinessCalculatorConfig } from "@lib/business/calculator-ui";
+import { hotspotPlans } from "@lib/business/hotspot";
 import {
   businessSegments,
   businessServices,
@@ -19,6 +20,7 @@ import {
 } from "@lib/business/content";
 import type { JsonLdObject } from "@lib/seo/schema";
 import { getBusinessVisual } from "@lib/visuals";
+import { formatRubles } from "@lib/format";
 import { businessDeviceProducts } from "@lib/device-catalog";
 import { legacyBusinessServiceSlugs } from "@lib/redirects/business-legacy";
 import "@styles/business-page.css";
@@ -178,11 +180,47 @@ const colocationFaq = [
       "Да, плановый визит оформляется отдельной заявкой с площадкой, датой, длительностью и описанием работ; обычно её подают не менее чем за 24 часа."
   }
 ];
+const hotspotFaq = [
+  {
+    question: "Сколько стоит гостевой Wi‑Fi Hotspot?",
+    answer:
+      "Тариф «Базовый» стоит 2 000 ₽ в месяц, «Стандарт» — 3 000 ₽, «Премиум» — 3 500 ₽. Состав функций у каждого тарифа отличается."
+  },
+  {
+    question: "Какие способы авторизации можно подключить?",
+    answer:
+      "Во всех тарифах доступна авторизация по звонку. В «Стандарт» и «Премиум» входит пакет из 100 SMS, а «Премиум» также поддерживает вход по ваучеру."
+  },
+  {
+    question: "Можно ли оформить страницу входа в стиле компании?",
+    answer:
+      "Да, в тарифы входит брендированная стартовая страница. В заявке укажите название компании и пожелания к оформлению."
+  }
+];
+const virtualizationFaq = [
+  {
+    question: "Чем VPS/VDS отличается от виртуального рабочего места VDI?",
+    answer:
+      "VPS/VDS — виртуальный сервер для размещения приложений и сервисов компании. VDI — готовое виртуальное рабочее место, к которому сотрудник подключается удалённо."
+  },
+  {
+    question: "Можно ли подобрать сервер для 1С или CRM?",
+    answer:
+      "Да. При заявке укажите используемую систему, число пользователей и ожидаемую нагрузку — специалисты уточнят конфигурацию VPS/VDS."
+  },
+  {
+    question: "Какой профиль у виртуального рабочего места?",
+    answer:
+      "Базовый профиль VDI включает 2 ядра, 4 ГБ оперативной памяти и 50 ГБ HDD. Другие параметры и состав программ обсуждаются при подборе."
+  }
+];
 const entryRequestPath = isGovernmentSegment
   ? b2gRequestPath
   : !isService
     ? segmentRequestPath
-    : getBusinessEntryHref(entry.slug);
+    : entry.slug === "hotspot" || entry.slug === "virtualization"
+      ? `/business/request/?segment=legal&service=${entry.slug}`
+      : getBusinessEntryHref(entry.slug);
 
 const segmentRouteItems = [
   {
@@ -243,6 +281,10 @@ function getBusinessEntryHref(slug: string) {
 
   if (slug === "internet" || slug === "static-ip") {
     return `/business/request/?service=${slug}`;
+  }
+
+  if (slug === "hotspot" || slug === "virtualization") {
+    return `/business/${slug}/`;
   }
 
   if (slug === "telephony") {
@@ -484,6 +526,138 @@ const pageSchema: JsonLdObject = isService
           </div>
           <div class="business-faq-grid" aria-label="Вопросы о размещении оборудования">
             {colocationFaq.map((item) => (
+              <article>
+                <h3>{item.question}</h3>
+                <p>{item.answer}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {
+      isService && entry.slug === "hotspot" && (
+        <section class="section-pad colocation-seo-section" aria-labelledby="hotspot-details-title">
+          <div class="section-heading">
+            <p class="eyebrow">Гостевой Wi‑Fi в Краснодаре</p>
+            <h2 id="hotspot-details-title">Hotspot для кафе, магазинов и других публичных точек</h2>
+            <p>
+              Hotspot создаёт отдельный сценарий доступа в интернет для посетителей. Можно выбрать
+              способ входа, показать брендированную страницу, а в подходящих тарифах — настроить
+              SMS-авторизацию, рекламный баннер и переход на страницу компании.
+            </p>
+          </div>
+          <div class="hotspot-plan-grid">
+            {hotspotPlans.map((plan) => (
+              <article class="business-card">
+                <span class="service-category">Hotspot</span>
+                <h3>Тариф «{plan.title}»</h3>
+                <p class="hotspot-plan-price">
+                  <strong>{formatRubles(plan.monthlyPrice)}</strong>
+                  <span>в месяц</span>
+                </p>
+                <ul class="business-mini-list">
+                  {plan.features.map((feature) => (
+                    <li>{feature}</li>
+                  ))}
+                </ul>
+                <a
+                  class="card-action"
+                  href={getSitePath(
+                    `/business/request/?segment=legal&service=hotspot&monthlyEstimate=${plan.monthlyPrice}&configurationSummary=${encodeURIComponent(`Hotspot, тариф ${plan.title} — ${formatRubles(plan.monthlyPrice)} в месяц.`)}`
+                  )}
+                >
+                  Оставить заявку
+                </a>
+              </article>
+            ))}
+          </div>
+          <div class="section-heading is-tight">
+            <p class="eyebrow">Подключение</p>
+            <h2>Что указать для подбора Hotspot</h2>
+            <p>
+              Сообщите адрес и тип объекта, сколько публичных зон Wi‑Fi нужно подключить, и какой
+              сценарий важен: вход по звонку, SMS или ваучеру, брендирование, показ рекламы или
+              перенаправление. Специалист поможет выбрать тариф и уточнит условия подключения.
+            </p>
+          </div>
+          <div class="business-faq-grid" aria-label="Частые вопросы о Hotspot">
+            {hotspotFaq.map((item) => (
+              <article>
+                <h3>{item.question}</h3>
+                <p>{item.answer}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {
+      isService && entry.slug === "virtualization" && (
+        <section
+          class="section-pad colocation-seo-section"
+          aria-labelledby="virtualization-details-title"
+        >
+          <div class="section-heading">
+            <p class="eyebrow">Виртуальная инфраструктура</p>
+            <h2 id="virtualization-details-title">Серверы и рабочие места в виртуальной среде</h2>
+            <p>
+              Для бизнес-задач Kubtel предлагает два формата: VPS/VDS, чтобы запускать серверные
+              приложения, и VDI, чтобы предоставить сотрудникам удалённые рабочие места. Параметры
+              подбираются по задачам компании и числу пользователей.
+            </p>
+          </div>
+          <div class="business-card-grid">
+            <article class="business-card">
+              <span class="service-category">VPS/VDS</span>
+              <h3>Виртуальный сервер для 1С, CRM и приложений</h3>
+              <p>
+                Разместите бизнес-систему на виртуальном сервере без покупки собственного
+                оборудования. При подборе учитываются операционная система, процессор, память,
+                диски, IP-адреса и требования к резервному копированию.
+              </p>
+              <a
+                class="card-action"
+                href={getSitePath("/business/?calculator=vps#business-calculators")}
+              >
+                Рассчитать VPS/VDS
+              </a>
+            </article>
+            <article class="business-card">
+              <span class="service-category">VDI</span>
+              <h3>Виртуальное рабочее место сотрудника</h3>
+              <p>
+                Базовый профиль включает 2 ядра, 4 ГБ оперативной памяти и 50 ГБ HDD. Сотрудники
+                могут подключаться к рабочей среде удалённо; состав программ и дополнительные
+                требования нужно указать в заявке.
+              </p>
+              <a
+                class="card-action"
+                href={getSitePath("/business/request/?segment=legal&service=vdi")}
+              >
+                Запросить VDI
+              </a>
+            </article>
+          </div>
+          <div class="section-heading is-tight">
+            <p class="eyebrow">Подбор конфигурации</p>
+            <h2>Что сообщить для расчёта</h2>
+            <p>
+              Опишите приложения или рабочие сценарии, число пользователей, требования к ресурсам и
+              способу доступа. Для VPS/VDS можно начать с калькулятора, а для VDI — оставить заявку
+              с числом рабочих мест и нужными программами.
+            </p>
+            <a
+              class="business-link"
+              href={getSitePath("/business/request/?segment=legal&service=virtualization")}
+            >
+              Запросить подбор виртуализации
+            </a>
+          </div>
+          <div class="business-faq-grid" aria-label="Частые вопросы о виртуализации">
+            {virtualizationFaq.map((item) => (
               <article>
                 <h3>{item.question}</h3>
                 <p>{item.answer}</p>
